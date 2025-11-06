@@ -1018,6 +1018,9 @@
     const GH_IMAGES_ROOT = 'images';
     let   GH_TOKEN = localStorage.getItem('ctr:gh:token') || '';
 
+    function apiPath(p){ return (p||'').split('/').map(encodeURIComponent).join('/'); }
+    function stripLeadingSlash(p){ return (p||'').replace(/^\/+/, ''); }
+
     function ensureToken(){
       if (!GH_TOKEN) {
         GH_TOKEN = prompt('Paste a GitHub Personal Access Token (repo contents permission):') || '';
@@ -1046,7 +1049,8 @@
 
     async function getRepoFile(path){
       try {
-        return await gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${encodeURIComponent(path)}?ref=${GH_BRANCH}`);
+        const enc = apiPath(path);
+        return await gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${enc}?ref=${encodeURIComponent(GH_BRANCH)}`);
       } catch (e) {
         if (String(e.message).includes('Not Found')) return null;
         throw e;
@@ -1054,11 +1058,11 @@
     }
 
     async function putRepoFile(path, base64Content, message){
-      let sha;
       const existing = await getRepoFile(path);
-      if (existing && existing.sha) sha = existing.sha;
+      const sha = existing?.sha;
+      const enc = apiPath(path);
 
-      return gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${encodeURIComponent(path)}`, {
+      const res = await gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${enc}`, {
         method: 'PUT',
         body: JSON.stringify({
           message,
@@ -1067,6 +1071,8 @@
           ...(sha ? { sha } : {})
         })
       });
+
+      return res; // let callers inspect .content.path / .html_url
     }
 
     function dataUrlInfo(dataUrl){
@@ -1097,12 +1103,17 @@
 
     async function uploadDataImageForPost(slug, dateIso, dataUrl, hintName='image'){
       const info = dataUrlInfo(dataUrl);
-      if (!info) return dataUrl;
+      if (!info) return dataUrl; // already a path; nothing to upload
+
       const ext = mimeToExt(info.mime);
       const dir = `${GH_IMAGES_ROOT}/${yyyymm(dateIso)}/${slug}`;
       const file = `${dir}/${safeFilename(hintName)}.${ext}`;
+
+      // commit the image (no leading slash in path)
       await putRepoFile(file, info.b64, `image: ${slug}/${hintName}.${ext}`);
-      return `${file}`;
+
+      // return repo-relative path (project-pages safe)
+      return file;
     }
 
     async function uploadAndRewriteInlineImages(slug, dateIso, bodyMarkdown, bodyHtml, imageStore){
@@ -1147,7 +1158,7 @@
         date: data.date,
         readMinutes: data.readMinutes || 1,
         featured: !!data.featured,
-        cover: data.cover?.src || null,
+        cover: data.cover?.src ? stripLeadingSlash(data.cover.src) : null,
         url: `${data.slug}.html`
       };
     }
@@ -1186,7 +1197,9 @@
         // Upload cover if needed
         if (data.cover?.src && /^data:/i.test(data.cover.src)) {
           const path = await uploadDataImageForPost(data.slug, data.date, data.cover.src, 'cover');
-          data.cover.src = path;
+          data.cover.src = stripLeadingSlash(path);
+        } else if (data.cover?.src) {
+          data.cover.src = stripLeadingSlash(data.cover.src);
         }
 
         // Upload inline images and rewrite body
@@ -1203,22 +1216,30 @@
         data.status = 'published';
         localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(data));
 
-        // Minimal post entry for lists
+        // Minimal post entry for lists (no leading slash in cover)
         const entry = normalize({
           ...data,
-          cover: data.cover ? { src: data.cover.src, alt: data.cover.alt || '' } : null
+          cover: data.cover ? { src: stripLeadingSlash(data.cover.src), alt: data.cover.alt || '' } : null
         });
 
         // 1) Update posts.json
         await pushPostsJson(entry);
 
-        // 2) Build and commit the standalone HTML page (THIS IS THE NEW BIT)
+        // 2) Build and commit the standalone HTML page
         const html = buildArticleHtml(data);
-        await putRepoFile(
-          `${entry.url}`,                 // e.g. "testtest.html"
+        const htmlRes = await putRepoFile(
+          `${entry.url}`,           // e.g., "testtesttest.html"
           b64utf8(html),
-          `page: ${entry.slug}.html`      // commit message
+          `page: ${entry.slug}.html`
         );
+
+        // Diagnostics so you can confirm where it landed
+        console.log('HTML commit response:', {
+          path: htmlRes.content?.path,
+          sha: htmlRes.content?.sha,
+          url: htmlRes.content?.html_url
+        });
+        if (!htmlRes.content?.path) throw new Error('HTML commit returned no content.path');
 
         statusMsg.textContent = 'Published ✓ — page and posts.json committed';
         setTimeout(()=> statusMsg.textContent = '', 2500);
