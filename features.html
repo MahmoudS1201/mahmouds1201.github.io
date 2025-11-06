@@ -259,7 +259,7 @@
     </div>
   </footer>
 
-  <script>
+    <script>
     // ---------------------------
     // Utilities
     // ---------------------------
@@ -271,7 +271,7 @@
 
     // ---------------------------
     // Data sources (posts.json -> local cache -> demo)
-    // posts.json item shape you use:
+    // Expected shape:
     // { slug, title, section, tags, author, excerpt, date, readMinutes, featured, cover, url }
     // ---------------------------
     async function fetchPostsJson(){
@@ -295,9 +295,9 @@
     }
 
     const DEMO = [
-      { title:'Street Art as Unofficial Syllabus', url:'article/street-art-syllabus.html', date:'2025-10-01', section:'Essay', excerpt:'What murals teach us about place, politics, and public imagination.', readMinutes:7, cover:'https://picsum.photos/600/375?4' },
-      { title:'Life as an Archivist', url:'article/life-as-an-archivist.html', date:'2025-09-28', section:'Interview', excerpt:'On preserving local histories beyond institutions.', readMinutes:12, cover:'https://picsum.photos/600/375?5' },
-      { title:'Films that Map the Diaspora', url:'article/films-that-map-the-diaspora.html', date:'2025-09-22', section:'Review', excerpt:'Must-see films regarding the diaspora far and wide.', readMinutes:9, cover:'https://picsum.photos/600/375?6' }
+      { title:'Street Art as Unofficial Syllabus', url:'article/street-art-syllabus.html', date:'2025-10-01', section:'Essay', excerpt:'What murals teach us about place, politics, and public imagination.', readMinutes:7, cover:'https://picsum.photos/600/375?4', featured:true },
+      { title:'Life as an Archivist', url:'article/life-as-an-archivist.html', date:'2025-09-28', section:'Interview', excerpt:'On preserving local histories beyond institutions.', readMinutes:12, cover:'https://picsum.photos/600/375?5', featured:false },
+      { title:'Films that Map the Diaspora', url:'article/films-that-map-the-diaspora.html', date:'2025-09-22', section:'Review', excerpt:'Must-see films regarding the diaspora far and wide.', readMinutes:9, cover:'https://picsum.photos/600/375?6', featured:true }
     ];
 
     function normalize(p){
@@ -310,24 +310,25 @@
         date: p.date || p.publishedAt || '',
         read: p.readMinutes || '',
         tags: Array.isArray(p.tags)? p.tags.join(', ') : (p.tags || ''),
-        featured: !!p.featured,
+        featured: !!p.featured, // <-- critical
         cover: p.cover || 'https://picsum.photos/600/375?random',
         author: p.author || 'Camila Tiburcio Rubio'
       };
     }
 
-    let POSTS = [];
+    let POSTS = [];      // all posts (raw normalized)
+    let CURRENT = [];    // the list currently rendered (only featured here)
 
     // ---------------------------
     // Render: Hero + Grid
     // ---------------------------
     function pickHero(items){
       const featured = items.filter(p => p.featured).sort(byNewest);
-      return (featured[0] || items.slice().sort(byNewest)[0]) || null;
+      return (featured[0] || null);
     }
 
     function fillHero(post){
-      if(!post) return;
+      if(!post) return; // leaves your default hero copy as-is if no featured posts exist
       const heroImg = $('#heroImg');
       heroImg.src = post.cover || heroImg.src;
       heroImg.alt = post.title || 'Feature hero image';
@@ -336,7 +337,6 @@
       const ex = $('#heroExcerpt'); ex.textContent = post.excerpt || ex.textContent;
       const rd = $('#heroRead'); rd.textContent = (post.read ? `${post.read} min read` : '');
       const link = $('#heroLink'); link.href = post.href || '#';
-      // avatar left as-is (you don’t store author avatars yet)
     }
 
     function buildCard(post){
@@ -360,11 +360,13 @@
       article.dataset.section = post.section || '';
       article.dataset.title = post.title || '';
       article.dataset.tags = post.tags || '';
+      article.dataset.date = post.date || '';
 
       return tpl;
     }
 
     function renderGrid(items){
+      CURRENT = items.slice(); // keep what we're showing
       const grid = $('#grid');
       grid.innerHTML = '';
       items.forEach(p => grid.appendChild(buildCard(p)));
@@ -413,27 +415,15 @@
         const items = Array.from(grid.children).filter(el => el.matches('article.card'));
         const mode = sortSel.value;
 
-        const readDate = el => {
-          const txt = el.querySelector('.meta')?.textContent || '';
-          // We already keep original order by POSTS; for real sort, track date in dataset:
-          return new Date(el.dataset.date || 0).getTime();
-        };
-
         if (mode === 'title') {
           items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
         } else if (mode === 'old') {
-          items.sort((a,b)=> readDate(a) - readDate(b));
+          items.sort((a,b)=> new Date(a.dataset.date||0) - new Date(b.dataset.date||0));
         } else {
-          items.sort((a,b)=> readDate(b) - readDate(a));
+          items.sort((a,b)=> new Date(b.dataset.date||0) - new Date(a.dataset.date||0));
         }
 
         items.forEach(it => grid.appendChild(it));
-      });
-
-      // seed dataset.date for sorting
-      $$('#grid article.card').forEach((el, i) => {
-        const p = POSTS[i];
-        if (p) el.dataset.date = p.date || '';
       });
 
       apply();
@@ -453,28 +443,29 @@
     });
 
     (async function init(){
-      // 1) posts.json
+      // 1) Try posts.json
       const j = await fetchPostsJson();
       if (j && j.length) {
         POSTS = j.map(normalize).sort(byNewest);
       } else {
-        // 2) local published
+        // 2) Fallback to locally published (from admin)
         const local = loadPublishedLocal();
         if (local.length) {
           POSTS = local.map(normalize).sort(byNewest);
         } else {
-          // 3) demo
+          // 3) Demo
           POSTS = DEMO.map(normalize).sort(byNewest);
         }
       }
 
-      // Hero
-      const hero = pickHero(POSTS);
+      // ***** ONLY SHOW FEATURED *****
+      const FEATURED = POSTS.filter(p => p.featured);
+      // Hero shows most recent featured (if any). If none, default hero stays.
+      const hero = FEATURED.length ? FEATURED.slice().sort(byNewest)[0] : null;
       if (hero) fillHero(hero);
 
-      // Grid (exclude hero if it also appears in list to avoid duplicate feel)
-      const list = POSTS.slice(); // you can keep hero duplicated if desired
-      renderGrid(list);
+      // Grid: ONLY featured posts
+      renderGrid(FEATURED);
     })();
   </script>
 </body>
