@@ -268,82 +268,59 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    // ---- Demo content (replace with your JSON later) ----
-    const POSTS = [
-      {
-        title: "Behind the Scenes of the Ustedes No Son Reparteros Na' Conference",
-        section: "Community",
-        href: "article/behind-the-scenes-conference.html",
-        excerpt: "Learn about the details of the creation and turnout of the conference.",
-        date: "2025-09-20T09:00:00Z",
-        read: 6,
-        tags: ["Community","Event","Reparto"],
-        img: "https://picsum.photos/600/400?7"
-      },
-      {
-        title: "Photo essay: Cuba's Underground Economy",
-        section: "Visual",
-        href: "article/photo-essay-cuba-underground.html",
-        excerpt: "A look at life in Cuba from a local perspective.",
-        date: "2025-09-18T09:00:00Z",
-        read: 4,
-        tags: ["Photo","Cuba","Economy"],
-        img: "https://picsum.photos/600/400?8"
-      },
-      {
-        title: "The Inefficiency of Efficiency Homes",
-        section: "Memoirs",
-        href: "article/inefficiency-of-efficiency-homes.html",
-        excerpt: "Stories of the growing popularity of efficiency homes in Miami.",
-        date: "2025-09-15T09:00:00Z",
-        read: 3,
-        tags: ["Miami","Housing","Memoir"],
-        img: "https://picsum.photos/600/400?9"
-      },
-      {
-        title: "Street Art as Unofficial Syllabus",
-        section: "Essay",
-        href: "article/street-art-syllabus.html",
-        excerpt: "What murals teach us about place, politics, and public imagination.",
-        date: "2025-10-01T09:00:00Z",
-        read: 7,
-        tags: ["Miami","Politics","Public Space"],
-        img: "https://picsum.photos/600/375?4"
-      },
-      {
-        title: "Life as an Archivist",
-        section: "Interview",
-        href: "article/life-as-an-archivist.html",
-        excerpt: "On preserving local histories beyond institutions.",
-        date: "2025-09-28T09:00:00Z",
-        read: 12,
-        tags: ["Archives","Practice","Interview"],
-        img: "https://picsum.photos/600/375?5"
-      },
-      {
-        title: "Films that Map the Diaspora",
-        section: "Review",
-        href: "article/films-that-map-the-diaspora.html",
-        excerpt: "Must see films regarding the diaspora far and wide.",
-        date: "2025-09-22T09:00:00Z",
-        read: 9,
-        tags: ["Film","Diaspora","Review"],
-        img: "https://picsum.photos/600/375?6"
-      },
-      ...Array.from({length: 18}, (_,i) => ({
-        title: `Notebook ${i+1}: Field Notes`,
-        section: ["Essay","Interview","Review","Visual","Community","Memoirs"][i%6],
-        href: `article/notebook-${i+1}.html`,
-        excerpt: "Quick reflections from the archive and the street.",
-        date: new Date(Date.UTC(2025, 8, 1 + i)).toISOString(), // Sep 2025
-        read: (i%10)+3,
-        tags: ["Notes","Fieldwork"],
-        img: `https://picsum.photos/seed/notebook${i}/600/400`
-      }))
-    ];
-    // ------------------------------------------------------
+    // ---------- Data loading (posts.json -> localStorage -> demo) ----------
+    async function fetchPostsJson(){
+      try{
+        const res = await fetch('posts.json', { cache: 'no-store' });
+        if(!res.ok) throw new Error('bad status');
+        const data = await res.json();
+        return Array.isArray(data) ? data : null;
+      }catch{ return null; }
+    }
 
-    // Elements
+    function loadPublishedLocal(){
+      const out=[];
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(k && k.startsWith('ctr:admin:published:')){
+          try{
+            const obj = JSON.parse(localStorage.getItem(k));
+            if(obj && obj.title) out.push(obj);
+          }catch{}
+        }
+      }
+      return out;
+    }
+
+    const DEMO = [
+      { title:'Street Art as Unofficial Syllabus', section:'Essay', url:'article/street-art-syllabus.html', excerpt:'What murals teach us about place, politics, and public imagination.', date:'2025-10-01', readMinutes:7, tags:['Miami','Politics','Public Space'], cover:'https://picsum.photos/600/375?4' },
+      { title:'Life as an Archivist', section:'Interview', url:'article/life-as-an-archivist.html', excerpt:'On preserving local histories beyond institutions.', date:'2025-09-28', readMinutes:12, tags:['Archives','Practice','Interview'], cover:'https://picsum.photos/600/375?5' },
+      { title:'Films that Map the Diaspora', section:'Review', url:'article/films-that-map-the-diaspora.html', excerpt:'Must see films regarding the diaspora far and wide.', date:'2025-09-22', readMinutes:9, tags:['Film','Diaspora','Review'], cover:'https://picsum.photos/600/375?6' }
+    ];
+
+    function normalize(p){
+      const href = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
+      const cover = p.cover || 'https://picsum.photos/seed/ctr-latest/600/400';
+      const read = p.readMinutes || p.read || '';
+      const tags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(s=>s.trim()) : []);
+      return {
+        title: p.title || '',
+        section: p.section || '',
+        href,
+        excerpt: p.excerpt || p.description || '',
+        date: p.date || p.publishedAt || '',
+        read,
+        tags,
+        img: cover
+      };
+    }
+
+    function fmtDate(iso){
+      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch { return iso || ''; }
+    }
+
+    // ---------- Elements ----------
     const listEl = document.getElementById('list');
     const pageNumEl = document.getElementById('pageNum');
     const pageTotalEl = document.getElementById('pageTotal');
@@ -359,7 +336,8 @@
     const qInline  = document.getElementById('q-inline');
     const qMobile  = document.getElementById('q-mobile');
 
-    // State
+    // ---------- State ----------
+    let POSTS = []; // normalized full list
     let state = {
       filter: 'all',
       sort: 'new',
@@ -368,36 +346,39 @@
       q: ''
     };
 
-    function normalize(s){ return (s||'').toLowerCase(); }
-    function fmtDate(iso){
-      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
-      catch { return iso; }
-    }
-
     function rowHTML(p){
       return `
       <article class="list-row">
         <img class="thumb" src="${p.img}" alt="${p.title}">
         <div class="flex-1">
-          <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section}</a>
+          <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section || 'Article'}</a>
           <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
-          <p class="text-ink-500 mt-2">${p.excerpt}</p>
-          <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)} • ${p.read} min</div>
+          <p class="text-ink-500 mt-2">${p.excerpt || ''}</p>
+          <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read ? ` • ${p.read} min` : ''}</div>
         </div>
       </article>`;
     }
 
+    function normalizeText(s){ return (s||'').toLowerCase(); }
+
     function applyFilters(posts){
+      // section
       let out = state.filter === 'all' ? posts.slice() : posts.filter(p => p.section === state.filter);
+      // search
       if (state.q){
-        const q = normalize(state.q);
-        out = out.filter(p => normalize(p.title).includes(q) || (p.tags||[]).join(' ').toLowerCase().includes(q));
+        const q = normalizeText(state.q);
+        out = out.filter(p =>
+          normalizeText(p.title).includes(q) ||
+          normalizeText(p.excerpt).includes(q) ||
+          (p.tags||[]).join(' ').toLowerCase().includes(q)
+        );
       }
+      // sort
       out.sort((a,b) => {
         if (state.sort === 'new') return new Date(b.date) - new Date(a.date);
         if (state.sort === 'old') return new Date(a.date) - new Date(b.date);
         if (state.sort === 'read') return (a.read||0) - (b.read||0);
-        if (state.sort === 'title') return a.title.localeCompare(b.title);
+        if (state.sort === 'title') return (a.title||'').localeCompare(b.title||'');
         return 0;
       });
       return out;
@@ -422,7 +403,7 @@
       nextBtn.disabled = state.page >= pages;
     }
 
-    // Events
+    // ---------- Events ----------
     chips.forEach(chip => chip.addEventListener('click', () => {
       chips.forEach(c => c.dataset.active = 'false');
       chip.dataset.active = 'true';
@@ -444,8 +425,19 @@
     prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
     nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
 
-    // Init
-    render();
+    // ---------- Init ----------
+    (async function init(){
+      const j = await fetchPostsJson();
+      if (j && j.length){
+        POSTS = j.map(normalize);
+      } else {
+        const local = loadPublishedLocal();
+        POSTS = (local.length ? local : DEMO).map(normalize);
+      }
+      // default sort newest
+      POSTS.sort((a,b)=> new Date(b.date) - new Date(a.date));
+      render();
+    })();
   </script>
 </body>
 </html>
