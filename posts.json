@@ -1,5 +1,18 @@
 [
   {
+    "slug": "try",
+    "title": "Try",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Try",
+    "date": "2025-11-06T01:46",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/try/cover.jpg",
+    "url": "try.html"
+  },
+  {
     "slug": "testtesttest",
     "title": "TestTestTest",
     "section": "Essay",

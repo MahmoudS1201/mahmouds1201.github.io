@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Try — Camila Tiburcio Rubio</title>
+          <meta name="description" content="Try" />
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+          <script src="https://cdn.tailwindcss.com"></script>
+          <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  fontFamily: {
+                    sans: ['Inter','system-ui','sans-serif'],
+                    serif: ['Source Serif 4','Georgia','serif']
+                  },
+                  colors: {
+                    ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+                    cream: '#FAF7F2',
+                    accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+                  },
+                  boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+                }
+              }
+            }
+          </script>
+          <style>
+            .u-underline{position:relative}
+            .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
+            .u-underline:hover:after{transform:scaleX(1)}
+            .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
+            .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
+            .prose p{margin:.8em 0;line-height:1.7}
+            .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
+            .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+            blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+            #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
+            blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
+            blockquote { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.75; color: #1A1A1A; }
+            figure { margin: 1.75rem 0; text-align: center; }
+            figure img { border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+            figcaption { font-size: 0.9rem; color: #9CA3AF; margin-top: 0.5rem; font-style: italic; }
+    
+            .shareCard{ background: rgba(197,61,47,.04); border: 1px solid rgba(0,0,0,.06); box-shadow: 0 10px 30px rgba(0,0,0,.04); padding: 12px 14px; gap: 12px; display:flex; align-items:center; width:fit-content; border-radius:9999px; }
+            .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color: Black; user-select:none; margin-right:2px; }
+    
+            .socialContainer{ width: 40px; height: 40px; border-radius: 12px; background: transparent; border: 1px solid rgba(0,0,0,.10); color: #3A3A3A; display:flex; align-items:center; justify-content:center; transition: transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease; text-decoration:none; cursor:pointer; }
+            .socialContainer:hover,.socialContainer:focus-visible{ background: rgba(197,61,47,.08); border-color: rgba(197,61,47,.35); color: #C53D2F; transform: translateY(-1px); }
+            .socialContainer:active{ transform: scale(.97); }
+            .containerX:hover{ background: rgba(0,0,0,.06); color:#000; border-color: rgba(0,0,0,.25); }
+            .containerFB:hover{ background: rgba(24,119,242,.10); color:#1877F2; border-color: rgba(24,119,242,.35); }
+            .containerMail:hover{ background: rgba(107,114,128,.10); color:#6B7280; border-color: rgba(107,114,128,.35); }
+            .containerCopy:hover{ background: rgba(5,150,105,.10); color:#059669; border-color: rgba(5,150,105,.35); }
+            .socialContainer svg.fill-icon path { fill: currentColor; }
+            .xSvg{ width:16px; height:16px; color:inherit; }
+            .socialSvg{ width:18px; height:18px; color:inherit; }
+            .clipboard-svg{ width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    
+            .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
+            .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
+            .prose { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: 0.01em; color: #1F1F1F; }
+            .prose h1, .prose h2, .prose h3 { font-family: 'Source Serif 4', Georgia, serif; letter-spacing: -0.01em; font-weight: 700; color: #0E0E0E; }
+            .prose h2 { font-size: 1.8rem; line-height: 1.3; margin-top: 2.2rem; margin-bottom: 1.1rem; font-weight: 700; letter-spacing: -0.01em; color: #0E0E0E; }
+            .prose p { margin: 1.1em 0; }
+            .prose blockquote { font-size: 1.1rem; font-style: italic; border-left: 3px solid #C53D2F; padding-left: 1.25rem; color: #3A3A3A; background: rgba(197,61,47,.03); border-radius: 0.25rem; }
+            .prose blockquote .quote-cite { display: block; text-align: right; font-size: 0.875rem; font-style: normal; color: #9CA3AF; margin-top: 0.5rem; }
+    
+            article.prose { animation: fadeIn 0.4s ease-out; }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+            ::selection { background: rgba(197,61,47,0.15); }
+          </style>
+        </head>
+    
+        <body class="bg-cream text-ink-900 antialiased">
+          <div id="progress-bar"></div>
+    
+          <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+              <div class="flex items-center gap-1">
+                <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-12 w-12 object-contain" />
+                <a href="/" class="font-serif text-xl">Camila Tiburcio Rubio</a>
+              </div>
+              <a class="u-underline text-sm" href="/">← Back to Home</a>
+            </div>
+          </header>
+    
+          <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
+            <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">
+              Essay
+            </div>
+    
+            <h1 class="font-serif text-4xl sm:text-5xl mt-3 leading-tight">
+              Try
+            </h1>
+    
+            <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Try</p>
+    
+            <div class="mt-4 flex items-center justify-center gap-3 text-sm">
+              <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+                <img src="./camila.jpg" alt="Camila Tiburcio Rubio" class="w-full h-full object-cover"/>
+              </div>
+              <div class="text-left">
+                <div class="font-medium">By Camila Tiburcio Rubio</div>
+                <div class="text-ink-300">
+                  November 6, 2025
+                  • 1 min read
+                </div>
+              </div>
+            </div>
+    
+            
+          </section>
+    
+          
+          <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <img class="hero-img" src="images/2025/11/try/cover.jpg" alt=""/>
+            
+          </figure>
+    
+          <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <article class="prose prose-neutral max-w-none"><p>Try<br/><figure><img src="data:image/jpeg;base64,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" alt="Try"><figcaption>Insert caption here</figcaption></figure></p></article>
+    
+            <div class="mt-10 not-prose flex justify-center">
+              <div class="shareCard" role="group" aria-label="Share">
+                <span class="shareLabel">Share</span>
+    
+                <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener">
+                  <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
+                    <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
+                  </svg>
+                </a>
+    
+                <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener">
+                  <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
+                  </svg>
+                </a>
+    
+                <a id="share-mail" class="socialContainer containerMail" aria-label="Share via Email">
+                  <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+                  </svg>
+                </a>
+    
+                <button id="share-copy" class="socialContainer containerCopy" aria-label="Copy link" type="button">
+                  <svg class="clipboard-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+    
+            <section class="mt-12 border-t border-black/10 pt-6">
+              <div class="flex items-start gap-4">
+                <img src="./camila.jpg"
+                          alt="Photo of Camila Tiburcio Rubio"
+                          class="w-14 h-14 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold">Camila Tiburcio Rubio</p>
+                  <p class="text-sm text-ink-300 mt-1">
+                    Writer and cultural researcher focusing on Cuba and the Caribbean,
+                    Masters Candidate in Latin America and Caribbean Studies at NYU.
+                  </p>
+                </div>
+              </div>
+            </section>
+    
+            <nav class="mt-10 flex justify-between text-sm text-ink-500">
+              <span class="opacity-60">← Previous Article</span>
+              <span class="opacity-60">Next Article →</span>
+            </nav>
+          </main>
+    
+          <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+              <div>
+                <div class="-ml-1.5">
+                  <div class="flex items-center gap-1">
+                    <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                    <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+                  </div>
+                </div>
+                <p class="mt-2 text-ink-400 text-sm max-w-xs">
+                  Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+                </p>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+                <ul class="space-y-2">
+                  <li><a href="/features" class="u-underline">Features</a></li>
+                  <li><a href="/latest" class="u-underline">Latest</a></li>
+                  <li><a href="/sections" class="u-underline">Sections</a></li>
+                </ul>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+                <ul class="space-y-2">
+                  <li><a href="/mission" class="u-underline">Mission</a></li>
+                  <li><a href="/contributors" class="u-underline">Contributors</a></li>
+                  <li><a href="/contact" class="u-underline">Contact</a></li>
+                </ul>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+                <ul class="space-y-2">
+                  <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+                  <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+                  <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+                </ul>
+              </div>
+            </div>
+    
+            <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+              © 2025 Camila Tiburcio Rubio. All rights reserved.
+            </div>
+          </footer>
+    
+          <script>
+            (function(){
+              const bar = document.getElementById('progress-bar');
+              function onScroll(){
+                const max = document.body.scrollHeight - innerHeight;
+                const pct = Math.max(0, Math.min(100, (scrollY / max) * 100));
+                bar.style.width = pct + '%';
+              }
+              window.addEventListener('scroll', onScroll, {passive:true});
+              onScroll();
+            })();
+    
+            (function addDropcap(){
+              const firstP = document.querySelector('article.prose p');
+              if(firstP) firstP.classList.add('dropcap');
+            })();
+    
+            (function(){
+              const url  = encodeURIComponent(location.href);
+              const text = encodeURIComponent(document.title || 'Check this out');
+    
+              const x    = document.getElementById('share-x');
+              const fb   = document.getElementById('share-fb');
+              const mail = document.getElementById('share-mail');
+              const copy = document.getElementById('share-copy');
+    
+              if (x)   x.href   = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
+              if (fb)  fb.href  = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+              if (mail){
+                mail.href = 'mailto:?subject=' + text + '&body=' + url;
+                mail.addEventListener('click', async (e) => {
+                  if (navigator.share) {
+                    e.preventDefault();
+                    try { await navigator.share({ title: document.title, url: location.href }); } catch {}
+                  }
+                });
+              }
+    
+              if (copy){
+                copy.addEventListener('click', async () => {
+                  try {
+                    await navigator.clipboard.writeText(location.href);
+                    copy.style.transform = 'scale(0.96)';
+                    setTimeout(()=>{ copy.style.transform = ''; }, 120);
+                  } catch {
+                    alert("Couldn't copy the link.");
+                  }
+                });
+              }
+            })();
+          </script>
+        </body>
+        </html>
