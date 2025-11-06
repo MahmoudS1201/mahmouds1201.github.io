@@ -170,7 +170,7 @@
     </div>
   </footer>
 
-  <script>
+    <script>
     // Utilities
     const $ = s => document.querySelector(s);
 
@@ -233,7 +233,7 @@
         if (it.section.toLowerCase().includes(t)) score += 2;
         if (hay.includes(t)) score += 1;
       }
-      // Freshness nudge: newer gets a tiny bonus (~ up to +3 for recent)
+      // Freshness nudge
       const d = new Date(it.date).getTime();
       if (!Number.isNaN(d)){
         const months = (Date.now() - d) / (1000*60*60*24*30);
@@ -242,17 +242,52 @@
       return score;
     }
 
+    // --- NEW helpers for dynamic section list ---
+    function computeSectionSet(items){
+      const set = new Set();
+      items.forEach(it => {
+        const s = (it.section || '').trim();
+        if (s) set.add(s);
+      });
+      return set;
+    }
+
+    function computeAllowedSections(rawItems, query){
+      const qTerms = words(query);
+      const arr = rawItems.map(normalizeItem).map(it => {
+        it._score = scoreItem(it, qTerms);
+        return it;
+      });
+      const matched = qTerms.length ? arr.filter(it => it._score > 0) : arr;
+      return computeSectionSet(matched);
+    }
+
+    // Build full section list once
+    function populateSectionsAll(items){
+      const sel = document.getElementById('sectionFilter');
+      const set = new Set(items.map(i => (i.section || '').trim()).filter(Boolean));
+      sel.innerHTML = '<option value="">All sections</option>' +
+        Array.from(set).sort().map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    // Hide/disable options that have no matches for current query
+    function updateSectionOptions(allowedSet){
+      const sel = document.getElementById('sectionFilter');
+      const keepVal = sel.value;
+
+      Array.from(sel.options).forEach(opt => {
+        if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; }
+        const ok = allowedSet.has(opt.value);
+        opt.hidden = !ok;
+        opt.disabled = !ok;
+      });
+
+      if (keepVal && !allowedSet.has(keepVal)) sel.value = '';
+    }
+
     function formatDate(iso){
       try{ return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch{ return ''; }
-    }
-
-    function populateSections(items){
-      const sel = document.getElementById('sectionFilter');
-      const set = new Set(items.map(i => (i.section || '').trim()).filter(Boolean));
-      const keep = sel.value;
-      sel.innerHTML = '<option value="">All sections</option>' + Array.from(set).sort().map(s => `<option value="${s}">${s}</option>`).join('');
-      if (keep && set.has(keep)) sel.value = keep;
     }
 
     function render(results, qTerms){
@@ -315,19 +350,16 @@
       const qTerms = words(query);
       let arr = items.map(normalizeItem).filter(it => !section || it.section === section);
 
-      // Compute scores (even if not sorting by best, scores help tie-breaks)
       for (const it of arr) it._score = scoreItem(it, qTerms);
 
-      // Filter out non-matching if there's a query
       if (qTerms.length) arr = arr.filter(it => it._score > 0);
 
-      // Sorting
       arr.sort((a,b) => {
         if (sort === 'dateAsc')  return new Date(a.date) - new Date(b.date);
         if (sort === 'dateDesc') return new Date(b.date) - new Date(a.date);
         if (sort === 'titleAsc') return (a.title||'').localeCompare(b.title||'');
         if (sort === 'titleDesc')return (b.title||'').localeCompare(a.title||'');
-        // 'best' (or default): score desc, then date desc, then title asc
+        // 'best': score desc, then date desc, then title asc
         const s = (b._score - a._score);
         if (s) return s;
         const d = (new Date(b.date) - new Date(a.date));
@@ -344,7 +376,7 @@
     // Init
     (function init(){
       const allRaw = loadPublished();
-      populateSections(allRaw);
+      populateSectionsAll(allRaw); // build full section list once
 
       const qInput = document.getElementById('q');
       const clearQ = document.getElementById('clearQ');
@@ -359,11 +391,15 @@
         const q = qInput.value.trim();
         const section = sectionSel.value;
         const sort = sortSel.value || 'best';
+
+        // shrink Section options to only those with matches
+        const allowed = computeAllowedSections(allRaw, q);
+        updateSectionOptions(allowed);
+
         const { results, qTerms } = applyFilters(allRaw, q, section, sort);
         render(results, qTerms);
 
-        // Toggle clear button
-        if (q.length) clearQ.classList.remove('hidden'); else clearQ.classList.add('hidden');
+        clearQ.classList.toggle('hidden', q.length === 0);
       }
 
       // Update URL (no reload)
