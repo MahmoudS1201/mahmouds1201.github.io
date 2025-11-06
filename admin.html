@@ -1214,7 +1214,19 @@
         data.bodyHtml     = expanded.bodyHtml;
 
         data.status = 'published';
-        localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(data));
+
+        // store only a tiny record so we don't exceed localStorage quota
+        const tiny = (({ slug, title, date, readMinutes, section, author, excerpt, status }) =>
+          ({ slug, title, date, readMinutes, section, author, excerpt, status }))(data);
+
+        try {
+          localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(tiny));
+        } catch (e) {
+          console.warn('Skipping published cache (quota):', e);
+        }
+
+        // free up space after successful publish
+        try { localStorage.removeItem('ctr:admin:draft'); } catch {}
 
         // Minimal post entry for lists (no leading slash in cover)
         const entry = normalize({
