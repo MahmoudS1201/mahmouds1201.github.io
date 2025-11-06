@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Latest — Camila Tiburcio Rubio</title>
+
+  <!-- Fonts + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline { position: relative; }
+    .u-underline::after {
+      content: ''; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%;
+      background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+    }
+    .u-underline:hover::after { transform: scaleX(1); }
+    ::selection { background: rgba(197,61,47,0.15); }
+
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
+    .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
+
+    .list-row { display:flex; flex-direction:column; gap:1rem; padding:1.25rem; }
+    @media (min-width: 640px){ .list-row{ flex-direction:row; padding:1.75rem; } }
+    .thumb { width:100%; height:160px; object-fit:cover; border-radius:0.75rem; }
+    @media (min-width: 640px){ .thumb{ width:15rem; height:10rem; } }
+  </style>
+
+  <!-- Canonical / Social (update domain when live) -->
+  <link rel="canonical" href="https://example.com/latest" />
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Latest — Camila Tiburcio Rubio">
+  <meta property="og:description" content="Fresh essays, interviews, reviews, and visual stories.">
+  <meta property="og:url" content="https://example.com/latest">
+  <meta property="og:image" content="https://picsum.photos/1200/630?latest">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="bg-cream text-ink-900 antialiased">
+
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="Home.html#newsletter" class="u-underline">Subscribe</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand -->
+        <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="features.html">Features</a>
+          <a class="u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
+          <a class="u-underline" href="Home.html#sections">Sections</a>
+          <a class="u-underline" href="about2.html">About</a>
+        </nav>
+
+        <!-- Desktop search -->
+        <div class="hidden md:flex items-center gap-4">
+          <label class="relative" aria-label="Search latest">
+            <input id="q-desktop" type="search" placeholder="Search latest…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+          </label>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <div class="md:hidden">
+          <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
+      <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
+        <a class="block u-underline" href="features.html">Features</a>
+        <a class="block u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
+        <a class="block u-underline" href="Home.html#sections">Sections</a>
+        <a class="block u-underline" href="about2.html">About</a>
+        <label class="relative block mt-3" aria-label="Search latest">
+          <input id="q-mobile" type="search" placeholder="Search latest…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+        </label>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page header -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <div class="flex items-end justify-between">
+      <div>
+        <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">Browse</div>
+        <h1 class="font-serif text-4xl sm:text-5xl leading-tight mt-1">Latest</h1>
+        <p class="text-ink-500 mt-2">Newest posts across all sections.</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2">
+        <label class="text-sm text-ink-500" for="sort">Sort by</label>
+        <select id="sort" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="read">Read time</option>
+          <option value="title">Title (A–Z)</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Controls -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
+      <!-- Section chips -->
+      <div class="flex flex-wrap gap-2">
+        <button class="chip" data-filter="all" data-active="true" aria-pressed="true">All</button>
+        <button class="chip" data-filter="Essay">Essay</button>
+        <button class="chip" data-filter="Interview">Interview</button>
+        <button class="chip" data-filter="Review">Review</button>
+        <button class="chip" data-filter="Visual">Visual</button>
+        <button class="chip" data-filter="Community">Community</button>
+        <button class="chip" data-filter="Memoirs">Memoirs</button>
+      </div>
+
+      <!-- Search + page size -->
+      <div class="flex items-center gap-3">
+        <label class="sr-only" for="q-inline">Search title or tags</label>
+        <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full" />
+        <label class="text-sm text-ink-500" for="pageSize">Per page</label>
+        <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
+          <option>5</option>
+          <option selected>9</option>
+          <option>12</option>
+          <option>18</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- List + Sidebar -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
+    <!-- List -->
+    <div class="lg:col-span-2">
+      <div id="list" class="card divide-y divide-black/10">
+        <!-- rows injected by JS -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-6 flex items-center justify-between">
+        <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
+        <div class="text-sm text-ink-300">
+          Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
+        </div>
+        <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="card p-6">
+        <h3 class="font-serif text-xl">About</h3>
+        <p class="text-ink-500 mt-2">A blog documenting and expanding upon Camila’s research, interests, and experiences.</p>
+        <a href="about2.html" class="mt-3 inline-block u-underline">Read More About the Author</a>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="font-serif text-xl">Newsletter</h3>
+        <p class="text-ink-500 mt-2">Monthly roundup of essays, interviews, and events.</p>
+        <form class="mt-4 flex gap-2" method="post" action="/subscribe">
+          <input type="email" name="email" placeholder="you@example.com" required class="flex-1 px-4 py-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-accent/40 outline-none" />
+          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Subscribe</button>
+        </form>
+        <p class="text-xs text-ink-300 mt-2">By subscribing you agree to our terms.</p>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+
+      <!-- Explore -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline" aria-current="page">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Follow -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline" target="_blank" rel="me noopener">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline" target="_blank" rel="me noopener">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline" target="_blank" rel="me noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Year + mobile menu
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      menuToggle.setAttribute('aria-expanded', String(!isHidden));
+    });
+
+    // ---- Demo content (replace with your JSON later) ----
+    const POSTS = [
+      {
+        title: "Behind the Scenes of the Ustedes No Son Reparteros Na' Conference",
+        section: "Community",
+        href: "article/behind-the-scenes-conference.html",
+        excerpt: "Learn about the details of the creation and turnout of the conference.",
+        date: "2025-09-20T09:00:00Z",
+        read: 6,
+        tags: ["Community","Event","Reparto"],
+        img: "https://picsum.photos/600/400?7"
+      },
+      {
+        title: "Photo essay: Cuba's Underground Economy",
+        section: "Visual",
+        href: "article/photo-essay-cuba-underground.html",
+        excerpt: "A look at life in Cuba from a local perspective.",
+        date: "2025-09-18T09:00:00Z",
+        read: 4,
+        tags: ["Photo","Cuba","Economy"],
+        img: "https://picsum.photos/600/400?8"
+      },
+      {
+        title: "The Inefficiency of Efficiency Homes",
+        section: "Memoirs",
+        href: "article/inefficiency-of-efficiency-homes.html",
+        excerpt: "Stories of the growing popularity of efficiency homes in Miami.",
+        date: "2025-09-15T09:00:00Z",
+        read: 3,
+        tags: ["Miami","Housing","Memoir"],
+        img: "https://picsum.photos/600/400?9"
+      },
+      {
+        title: "Street Art as Unofficial Syllabus",
+        section: "Essay",
+        href: "article/street-art-syllabus.html",
+        excerpt: "What murals teach us about place, politics, and public imagination.",
+        date: "2025-10-01T09:00:00Z",
+        read: 7,
+        tags: ["Miami","Politics","Public Space"],
+        img: "https://picsum.photos/600/375?4"
+      },
+      {
+        title: "Life as an Archivist",
+        section: "Interview",
+        href: "article/life-as-an-archivist.html",
+        excerpt: "On preserving local histories beyond institutions.",
+        date: "2025-09-28T09:00:00Z",
+        read: 12,
+        tags: ["Archives","Practice","Interview"],
+        img: "https://picsum.photos/600/375?5"
+      },
+      {
+        title: "Films that Map the Diaspora",
+        section: "Review",
+        href: "article/films-that-map-the-diaspora.html",
+        excerpt: "Must see films regarding the diaspora far and wide.",
+        date: "2025-09-22T09:00:00Z",
+        read: 9,
+        tags: ["Film","Diaspora","Review"],
+        img: "https://picsum.photos/600/375?6"
+      },
+      ...Array.from({length: 18}, (_,i) => ({
+        title: `Notebook ${i+1}: Field Notes`,
+        section: ["Essay","Interview","Review","Visual","Community","Memoirs"][i%6],
+        href: `article/notebook-${i+1}.html`,
+        excerpt: "Quick reflections from the archive and the street.",
+        date: new Date(Date.UTC(2025, 8, 1 + i)).toISOString(), // Sep 2025
+        read: (i%10)+3,
+        tags: ["Notes","Fieldwork"],
+        img: `https://picsum.photos/seed/notebook${i}/600/400`
+      }))
+    ];
+    // ------------------------------------------------------
+
+    // Elements
+    const listEl = document.getElementById('list');
+    const pageNumEl = document.getElementById('pageNum');
+    const pageTotalEl = document.getElementById('pageTotal');
+    const countShownEl = document.getElementById('countShown');
+    const countTotalEl = document.getElementById('countTotal');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    const sortSel = document.getElementById('sort');
+    const pageSizeSel = document.getElementById('pageSize');
+    const qDesktop = document.getElementById('q-desktop');
+    const qInline  = document.getElementById('q-inline');
+    const qMobile  = document.getElementById('q-mobile');
+
+    // State
+    let state = {
+      filter: 'all',
+      sort: 'new',
+      page: 1,
+      pageSize: parseInt(pageSizeSel.value,10) || 9,
+      q: ''
+    };
+
+    function normalize(s){ return (s||'').toLowerCase(); }
+    function fmtDate(iso){
+      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch { return iso; }
+    }
+
+    function rowHTML(p){
+      return `
+      <article class="list-row">
+        <img class="thumb" src="${p.img}" alt="${p.title}">
+        <div class="flex-1">
+          <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section}</a>
+          <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
+          <p class="text-ink-500 mt-2">${p.excerpt}</p>
+          <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)} • ${p.read} min</div>
+        </div>
+      </article>`;
+    }
+
+    function applyFilters(posts){
+      let out = state.filter === 'all' ? posts.slice() : posts.filter(p => p.section === state.filter);
+      if (state.q){
+        const q = normalize(state.q);
+        out = out.filter(p => normalize(p.title).includes(q) || (p.tags||[]).join(' ').toLowerCase().includes(q));
+      }
+      out.sort((a,b) => {
+        if (state.sort === 'new') return new Date(b.date) - new Date(a.date);
+        if (state.sort === 'old') return new Date(a.date) - new Date(b.date);
+        if (state.sort === 'read') return (a.read||0) - (b.read||0);
+        if (state.sort === 'title') return a.title.localeCompare(b.title);
+        return 0;
+      });
+      return out;
+    }
+
+    function render(){
+      const filtered = applyFilters(POSTS);
+      const total = filtered.length;
+      const pages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.page > pages) state.page = pages;
+
+      const start = (state.page - 1) * state.pageSize;
+      const pageItems = filtered.slice(start, start + state.pageSize);
+
+      listEl.innerHTML = pageItems.map(rowHTML).join('');
+      pageNumEl.textContent = String(state.page);
+      pageTotalEl.textContent = String(pages);
+      countShownEl.textContent = String(pageItems.length);
+      countTotalEl.textContent = String(total);
+
+      prevBtn.disabled = state.page <= 1;
+      nextBtn.disabled = state.page >= pages;
+    }
+
+    // Events
+    chips.forEach(chip => chip.addEventListener('click', () => {
+      chips.forEach(c => c.dataset.active = 'false');
+      chip.dataset.active = 'true';
+      chip.setAttribute('aria-pressed','true');
+      state.filter = chip.dataset.filter || 'all';
+      state.page = 1;
+      render();
+    }));
+
+    [qDesktop, qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+      state.q = e.target.value;
+      state.page = 1;
+      render();
+    }));
+
+    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
+
+    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
+    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
+
+    // Init
+    render();
+  </script>
+</body>
+</html>

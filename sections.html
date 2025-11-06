@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sections — Camila Tiburcio Rubio</title>
+
+  <!-- Fonts + Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline { position: relative; }
+    .u-underline::after {
+      content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%;
+      background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+    }
+    .u-underline:hover::after { transform:scaleX(1); }
+    ::selection { background: rgba(197,61,47,0.15); }
+
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .tab { padding:.55rem .9rem; border-radius:9999px; border:1px solid rgba(0,0,0,.1); font-weight:600; }
+    .tab[data-active="true"] { background:rgba(197,61,47,.1); color:#C53D2F; border-color:rgba(197,61,47,.35); }
+
+    .feat-img { aspect-ratio:16/9; width:100%; object-fit:cover; }
+    .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
+    .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
+
+    @media (max-width: 420px){
+      .tab { padding:.45rem .8rem; }
+    }
+  </style>
+
+  <!-- Canonical / Social (update domain when live) -->
+  <link rel="canonical" href="https://example.com/sections" />
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sections — Camila Tiburcio Rubio">
+  <meta property="og:description" content="Browse essays, interviews, reviews, visuals, community posts, and memoirs.">
+  <meta property="og:url" content="https://example.com/sections">
+  <meta property="og:image" content="https://picsum.photos/1200/630?sections">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="bg-cream text-ink-900 antialiased">
+
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="Home.html#newsletter" class="u-underline">Subscribe</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand -->
+        <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="features.html">Features</a>
+          <a class="u-underline" href="latest.html">Latest</a>
+          <a class="u-underline font-semibold text-accent" href="sections.html" aria-current="page">Sections</a>
+          <a class="u-underline" href="about2.html">About</a>
+        </nav>
+
+        <!-- Desktop search -->
+        <div class="hidden md:flex items-center gap-4">
+          <label class="relative" aria-label="Search sections">
+            <input id="q-desktop" type="search" placeholder="Search sections…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+          </label>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <div class="md:hidden">
+          <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
+      <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
+        <a class="block u-underline" href="features.html">Features</a>
+        <a class="block u-underline" href="latest.html">Latest</a>
+        <a class="block u-underline font-semibold text-accent" href="sections.html" aria-current="page">Sections</a>
+        <a class="block u-underline" href="about2.html">About</a>
+        <label class="relative block mt-3" aria-label="Search sections">
+          <input id="q-mobile" type="search" placeholder="Search sections…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+        </label>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page header -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <div class="flex items-end justify-between">
+      <div>
+        <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">Browse</div>
+        <h1 class="font-serif text-4xl sm:text-5xl leading-tight mt-1">Sections</h1>
+        <p class="text-ink-500 mt-2">Explore by format and focus.</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2">
+        <label class="text-sm text-ink-500" for="sort">Sort</label>
+        <select id="sort" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="title">Title (A–Z)</option>
+          <option value="read">Read time</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs + search -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
+      <div id="tabs" class="flex flex-wrap gap-2" role="tablist" aria-label="Sections">
+        <button class="tab" data-section="Essay" data-active="true" role="tab" aria-selected="true">Essays</button>
+        <button class="tab" data-section="Interview" role="tab" aria-selected="false">Interviews</button>
+        <button class="tab" data-section="Visual" role="tab" aria-selected="false">Visual</button>
+        <button class="tab" data-section="Review" role="tab" aria-selected="false">Reviews</button>
+        <button class="tab" data-section="Community" role="tab" aria-selected="false">Community</button>
+        <button class="tab" data-section="Memoirs" role="tab" aria-selected="false">Memoirs</button>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="sr-only" for="q-inline">Search titles in section</label>
+        <input id="q-inline" type="search" placeholder="Search titles in section…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full" />
+        <label class="text-sm text-ink-500" for="pageSize">Per page</label>
+        <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
+          <option>6</option><option selected>9</option><option>12</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
+    <!-- Main column -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Featured -->
+      <article id="featured" class="card overflow-hidden hidden">
+        <img id="featImg" class="feat-img" src="" alt="">
+        <div class="p-6 sm:p-8">
+          <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
+            <span id="featSection" class="bg-accent/10 text-accent px-2.5 py-1 rounded-full">Essay</span>
+            <time id="featDate" class="text-ink-300"></time>
+          </div>
+          <h2 id="featTitle" class="font-serif text-3xl sm:text-4xl mt-3 leading-tight"></h2>
+          <p id="featExcerpt" class="text-ink-500 mt-3 max-w-2xl"></p>
+          <div class="mt-4">
+            <a id="featLink" href="#" class="u-underline">Read the story →</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Grid -->
+      <div id="grid" class="grid sm:grid-cols-2 gap-6">
+        <!-- cards injected here -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-2 flex items-center justify-between">
+        <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
+        <div class="text-sm text-ink-300">
+          Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
+        </div>
+        <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="card p-6">
+        <h3 class="font-serif text-xl">About</h3>
+        <p class="text-ink-500 mt-2">A blog documenting and expanding upon Camila’s research, interests, and experiences.</p>
+        <a href="about2.html" class="mt-3 inline-block u-underline">Read More About the Author</a>
+      </div>
+
+      <div class="card p-6">
+        <h3 class="font-serif text-xl">Newsletter</h3>
+        <p class="text-ink-500 mt-2">Monthly roundup of essays, interviews, and events.</p>
+        <form class="mt-4 flex gap-2" method="post" action="/subscribe">
+          <input type="email" name="email" placeholder="you@example.com" required class="flex-1 px-4 py-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-accent/40 outline-none" />
+          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Subscribe</button>
+        </form>
+        <p class="text-xs text-ink-300 mt-2">By subscribing you agree to our terms.</p>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+
+      <!-- Explore -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline" aria-current="page">Sections</a></li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Follow -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline" target="_blank" rel="me noopener">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline" target="_blank" rel="me noopener">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline" target="_blank" rel="me noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Year + mobile menu (unchanged)
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      menuToggle.setAttribute('aria-expanded', String(!isHidden));
+    });
+
+    // ---------------------------
+    // ONLY CHANGE: load real posts
+    // ---------------------------
+
+    const POSTS_JSON_URL = '/posts.json'; // if present on your host, this will be used first
+    const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw='; // 1x1 transparent
+
+    // Elements (unchanged)
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const sortSel = document.getElementById('sort');
+    const pageSizeSel = document.getElementById('pageSize');
+    const qDesktop = document.getElementById('q-desktop');
+    const qInline  = document.getElementById('q-inline');
+    const qMobile  = document.getElementById('q-mobile');
+
+    const featured = document.getElementById('featured');
+    const featImg = document.getElementById('featImg');
+    const featSection = document.getElementById('featSection');
+    const featDate = document.getElementById('featDate');
+    const featTitle = document.getElementById('featTitle');
+    const featExcerpt = document.getElementById('featExcerpt');
+    const featLink = document.getElementById('featLink');
+
+    const grid = document.getElementById('grid');
+    const pageNumEl = document.getElementById('pageNum');
+    const pageTotalEl = document.getElementById('pageTotal');
+    const countShownEl = document.getElementById('countShown');
+    const countTotalEl = document.getElementById('countTotal');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // State (unchanged)
+    let state = {
+      section: 'Essay',
+      sort: 'new',
+      page: 1,
+      pageSize: parseInt(pageSizeSel.value,10) || 9,
+      q: ''
+    };
+
+    // Will hold real posts instead of samples
+    let ALL_POSTS = [];
+
+    function fmtDate(iso){
+      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch { return iso; }
+    }
+
+    // Normalize a record from posts.json
+    function normalizeFromJson(p = {}){
+      const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
+      const href =
+        p.url ||
+        (slug ? `${slug}.html` : '#'); // adjust if you keep articles under /article/
+      return {
+        title: p.title || '',
+        section: p.section || 'Essay',
+        href,
+        excerpt: p.excerpt || p.description || '',
+        date: p.date || new Date().toISOString(),
+        read: p.readMinutes || p.read || 0,
+        img: (p.cover && p.cover.src) ? p.cover.src : FALLBACK_IMG
+      };
+    }
+
+    // Normalize a record from Admin localStorage (ctr:admin:published:*)
+    function normalizeFromAdmin(d = {}){
+      const slug = (d.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
+      const href = `${slug || 'index'}.html`; // matches your Admin export default
+      return {
+        title: d.title || '',
+        section: d.section || 'Essay',
+        href,
+        excerpt: d.excerpt || '',
+        date: d.date || new Date().toISOString(),
+        read: d.readMinutes || 0,
+        img: d.cover?.src || FALLBACK_IMG
+      };
+    }
+
+    // Load posts: try posts.json, else fall back to localStorage published items
+    async function loadPosts(){
+      // 1) posts.json (hosted)
+      try{
+        const res = await fetch(POSTS_JSON_URL + '?ts=' + Date.now(), { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length){
+            return data.map(normalizeFromJson);
+          }
+        }
+      }catch(e){ /* ignore and try fallback */ }
+
+      // 2) Fallback: Admin "Mark as Published" entries in this browser
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('ctr:admin:published:'));
+      const items = keys.map(k => {
+        try { return normalizeFromAdmin(JSON.parse(localStorage.getItem(k))); }
+        catch { return null; }
+      }).filter(Boolean);
+
+      return items;
+    }
+
+    function cardHTML(p){
+      return `
+      <article class="card overflow-hidden flex flex-col">
+        <img class="thumb" src="${p.img}" alt="${p.title}">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="kicker">${p.section}</div>
+          <h3 class="font-serif text-xl mt-2 leading-snug">
+            <a class="u-underline" href="${p.href}">${p.title}</a>
+          </h3>
+          <p class="text-ink-500 mt-2">${p.excerpt}</p>
+          <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)} • ${p.read || 1} min</div>
+        </div>
+      </article>`;
+    }
+
+    function applyFilters(){
+      let out = ALL_POSTS.filter(p => p.section === state.section);
+
+      if (state.q){
+        const q = state.q.toLowerCase();
+        out = out.filter(p =>
+          (p.title||'').toLowerCase().includes(q) ||
+          (p.excerpt||'').toLowerCase().includes(q)
+        );
+      }
+
+      out.sort((a,b) => {
+        if (state.sort === 'new') return new Date(b.date) - new Date(a.date);
+        if (state.sort === 'old') return new Date(a.date) - new Date(b.date);
+        if (state.sort === 'title') return a.title.localeCompare(b.title);
+        if (state.sort === 'read') return (a.read||0) - (b.read||0);
+        return 0;
+      });
+      return out;
+    }
+
+    function render(){
+      const posts = applyFilters();
+      const total = posts.length;
+
+      const featuredVisible = (state.page === 1 && total > 0);
+      const effectivePerPage = featuredVisible ? Math.max(1, state.pageSize) : state.pageSize;
+      const pages = Math.max(1, Math.ceil((total - (featuredVisible ? 1 : 0)) / effectivePerPage));
+
+      if (state.page > pages) state.page = pages;
+
+      if (featuredVisible) {
+        const f = posts[0];
+        featImg.src = f.img; featImg.alt = f.title;
+        featSection.textContent = f.section;
+        featDate.textContent = fmtDate(f.date);
+        featTitle.textContent = f.title;
+        featExcerpt.textContent = f.excerpt;
+        featLink.href = f.href;
+        featured.classList.remove('hidden');
+      } else {
+        featured.classList.add('hidden');
+      }
+
+      let startIndex = 0;
+      if (featuredVisible) {
+        startIndex = 1 + (state.page - 1) * state.pageSize;
+      } else {
+        startIndex = (state.page - 1) * state.pageSize;
+      }
+      const endIndex = startIndex + state.pageSize;
+
+      const pageItems = posts.slice(startIndex, endIndex);
+
+      grid.innerHTML = pageItems.map(cardHTML).join('');
+      pageNumEl.textContent = String(state.page);
+      pageTotalEl.textContent = String(pages);
+      countShownEl.textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
+      countTotalEl.textContent = String(total);
+
+      prevBtn.disabled = state.page <= 1;
+      nextBtn.disabled = state.page >= pages;
+    }
+
+    // Events (unchanged)
+    const tabsEls = Array.from(document.querySelectorAll('.tab'));
+    tabsEls.forEach(t => t.addEventListener('click', () => {
+      tabsEls.forEach(x => { x.dataset.active = 'false'; x.setAttribute('aria-selected','false'); });
+      t.dataset.active = 'true';
+      t.setAttribute('aria-selected','true');
+      state.section = t.dataset.section;
+      state.page = 1;
+      render();
+    }));
+
+    [qDesktop, qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+      state.q = e.target.value;
+      state.page = 1;
+      render();
+    }));
+
+    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
+
+    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
+    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
+
+    // Init: load real posts then render
+    (async function init(){
+      ALL_POSTS = await loadPosts();
+      render();
+    })();
+  </script>
+</body>
+</html>

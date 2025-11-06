@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archive — Camila Tiburcio Rubio</title>
+
+  <meta name="description" content="Browse the complete archive of essays, interviews, reviews, visuals, community posts, and notes by Camila Tiburcio Rubio." />
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Source Serif 4', 'Georgia', 'serif']
+          },
+          colors: {
+            ink: {900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',400:'#6B7280',300:'#9CA3AF'},
+            cream:'#FAF7F2',
+            accent:{DEFAULT:'#C53D2F',dark:'#9E2F24',light:'#E95A49'}
+          },
+          boxShadow:{soft:'0 10px 30px rgba(0,0,0,0.06)'}
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline{position:relative}
+    .u-underline::after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+    .u-underline:hover::after{transform:scaleX(1)}
+    .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    ::selection{background:rgba(197,61,47,.15)}
+
+    .chip {
+      display:inline-block;
+      padding:0.45rem 0.9rem;
+      border:1px solid rgba(0,0,0,0.1);
+      border-radius:9999px;
+      background:#fff;
+      font-size:0.875rem;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+    .chip:hover {
+      border-color:#C53D2F;
+      color:#C53D2F;
+    }
+    .chip-active {
+      background:#C53D2F;
+      color:#fff;
+      border-color:#C53D2F;
+      box-shadow:0 0 0 2px rgba(197,61,47,0.25);
+      position:relative;
+    }
+    .chip-active::after {
+      content:'';
+      display:block;
+      width:6px;height:6px;border-radius:9999px;background:white;
+      margin:2px auto 0;
+    }
+
+    .group-sep{border-top:1px solid rgba(0,0,0,0.1);padding-top:1.5rem;margin-top:2rem;}
+  </style>
+</head>
+
+<body class="bg-cream text-ink-900 antialiased">
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="/newsletter" class="u-underline">Newsletter</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <div class="flex items-center gap-1">
+          <img src="/Users/mahmoud/Desktop/CamisBlog/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-14 w-14 object-contain" />
+          <a href="/" class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</a>
+        </div>
+        <nav class="hidden md:flex items-center gap-8">
+          <a class="u-underline" href="/features.html">Features</a>
+          <a class="u-underline" href="/latest.html">Latest</a>
+          <a class="u-underline" href="/sections.html">Sections</a>
+          <a class="u-underline" href="/about">About</a>
+          <a class="u-underline text-accent font-semibold" href="/archive.html" aria-current="page">Archive</a>
+        </nav>
+        <a href="/" class="md:hidden u-underline text-sm">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <header class="mb-8">
+      <h1 class="font-serif text-4xl sm:text-5xl leading-tight">Archive</h1>
+      <p class="text-ink-500 mt-2">Browse all posts by year, section, or keyword.</p>
+    </header>
+
+    <!-- Controls -->
+    <section class="card p-5 md:p-6">
+      <div class="flex flex-col md:flex-row md:items-end gap-4">
+        <label class="w-full md:flex-1">
+          <span class="block text-sm text-ink-400 mb-1">Search</span>
+          <div class="relative">
+            <input id="searchInput" type="search" placeholder="Search titles & descriptions…" class="w-full pl-10 pr-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+          </div>
+        </label>
+
+        <label>
+          <span class="block text-sm text-ink-400 mb-1">Section</span>
+          <select id="sectionSelect" class="w-full md:w-56 px-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40">
+            <option value="">All sections</option>
+            <option>Essay</option>
+            <option>Interview</option>
+            <option>Visual</option>
+            <option>Review</option>
+            <option>Community</option>
+            <option>Memoirs</option>
+          </select>
+        </label>
+
+        <label>
+          <span class="block text-sm text-ink-400 mb-1">Sort</span>
+          <select id="sortSelect" class="w-full md:w-40 px-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Year chips -->
+      <div id="yearChips" class="flex flex-wrap gap-2 mt-5" role="tablist" aria-label="Filter by year"></div>
+    </section>
+
+    <!-- Result stats -->
+    <div class="mt-4 text-sm text-ink-400" id="resultStats" aria-live="polite"></div>
+
+    <!-- Results -->
+    <section id="results" class="mt-4"></section>
+
+    <!-- Templates -->
+    <template id="emptyTemplate">
+      <div class="text-center text-ink-400 py-16">
+        <p>No posts match your filters.</p>
+      </div>
+    </template>
+
+    <template id="groupTemplate">
+      <div class="group-sep">
+        <div class="flex items-baseline justify-between">
+          <h2 class="font-serif text-2xl"><span class="year-label">2025</span></h2>
+          <span class="text-sm text-ink-400"><span class="count">0</span> posts</span>
+        </div>
+        <ul class="mt-4 space-y-3 list-none"></ul>
+      </div>
+    </template>
+
+    <template id="itemTemplate">
+      <li class="card p-4 hover:shadow-soft transition">
+        <a class="block" href="#">
+          <div class="flex flex-wrap items-center gap-2 text-xs text-ink-400 mb-1">
+            <span class="date"></span>
+            <span>•</span>
+            <span class="section"></span>
+          </div>
+          <h3 class="font-serif text-xl leading-snug title"></h3>
+          <p class="text-ink-500 mt-1 line-clamp-2 desc"></p>
+        </a>
+      </li>
+    </template>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-8 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="/Users/mahmoud/Desktop/CamisBlog/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+          <li><a href="archive.html" class="u-underline font-semibold text-accent">Archive</a></li>
+          <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="mission.html" class="u-underline">Mission</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="yearFooter"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // ---- Data loading ----
+    function loadPublished() {
+      const out = [];
+      for (let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if (k && k.startsWith('ctr:admin:published:')) {
+          try {
+            const obj = JSON.parse(localStorage.getItem(k));
+            if (obj && obj.title) out.push(obj);
+          } catch {}
+        }
+      }
+      return out;
+    }
+
+    // Fallback demo posts if nothing in storage
+    const DEMO = [
+      { title:'The Heat of Memory', url:'/features/heat-of-memory.html', date:'2025-10-12', section:'Features', description:'An essay on diaspora, memory, and Miami’s shifting shoreline.' },
+      { title:'Interview: Artist at the Archive', url:'/interviews/artist-archive.html', date:'2025-09-28', section:'Interviews', description:'Process, practice, and the small risks that add up.' },
+      { title:'Review: Night Festival', url:'/reviews/night-festival.html', date:'2025-08-14', section:'Reviews', description:'On rhythm, repetition, and the slow build of a chorus.' },
+      { title:'Note: Field Log 07', url:'/notes/field-log-07.html', date:'2025-07-03', section:'Notes', description:'Fragments from the summer notebook.' },
+      { title:'City as Collage', url:'/essays/city-as-collage.html', date:'2024-12-19', section:'Essays', description:'Layered histories and the infrastructures of belonging.' },
+      { title:'Interview: On Sound & Care', url:'/interviews/sound-and-care.html', date:'2024-05-09', section:'Interviews', description:'Listening as method and hospitality.' },
+      { title:'Review: Small Museum', url:'/reviews/small-museum.html', date:'2023-11-02', section:'Reviews', description:'A study in modest scale and attention.' }
+    ];
+
+    function normalize(item){
+      // Accepts admin objects or demo objects
+      const href = item.slug ? `/${item.slug}.html` : (item.url || '#');
+      return {
+        title: item.title || '',
+        href,
+        section: item.section || '',
+        description: item.excerpt || item.description || '',
+        date: item.date || item.publishedAt || '',
+      };
+    }
+
+    const raw = loadPublished();
+    const POSTS = (raw.length ? raw : DEMO).map(normalize);
+
+    // ---- Utilities ----
+    const $ = (s, r=document)=>r.querySelector(s);
+    function fmtDate(iso){try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch{return ''}}
+    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
+    const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
+    const uniqueYears=p=>[...new Set(p.map(p=>new Date(p.date).getFullYear()))].filter(Boolean).sort((a,b)=>b-a);
+
+    function parseParams(){
+      const u = new URL(location.href);
+      return {
+        q: u.searchParams.get('q') || '',
+        section: u.searchParams.get('section') || '',
+        year: u.searchParams.get('year') || '',
+        sort: u.searchParams.get('sort') || 'newest',
+      };
+    }
+    function writeParams(state){
+      const u = new URL(location.href);
+      const set = (k,v) => { if (v) u.searchParams.set(k,v); else u.searchParams.delete(k); };
+      set('q', state.q.trim());
+      set('section', state.section);
+      set('year', state.year);
+      set('sort', state.sort);
+      history.replaceState({}, '', u.toString());
+    }
+
+    // ---- State ----
+    let state = parseParams();
+
+    // ---- UI Elements ----
+    const searchInput = $('#searchInput');
+    const sectionSelect = $('#sectionSelect');
+    const sortSelect = $('#sortSelect');
+    const yearChips = $('#yearChips');
+    const results = $('#results');
+    const stats = $('#resultStats');
+
+    // Prefill controls from URL
+    searchInput.value = state.q;
+    if ([...sectionSelect.options].some(o=>o.value===state.section)) sectionSelect.value = state.section;
+    if (['newest','oldest'].includes(state.sort)) sortSelect.value = state.sort;
+
+    // ---- Rendering ----
+    function renderYearChips(){
+      const years = uniqueYears(POSTS);
+      yearChips.innerHTML = '';
+      const make = (label, value) => {
+        const btn = document.createElement('button');
+        btn.type='button';
+        btn.className = 'chip ' + ((state.year==='' && value==='') || String(state.year)===String(value) ? 'chip-active' : '');
+        btn.setAttribute('role','tab');
+        btn.setAttribute('aria-selected', ((state.year==='' && value==='') || String(state.year)===String(value)) ? 'true' : 'false');
+        btn.textContent = label;
+        btn.onclick = () => { state.year = value; update(); };
+        yearChips.appendChild(btn);
+      };
+      make('All years','');
+      years.forEach(y => make(String(y), String(y)));
+    }
+
+    function applyFilters(){
+      const q = state.q.trim().toLowerCase();
+      let arr = POSTS
+        .filter(p => !state.section || p.section === state.section)
+        .filter(p => !state.year || new Date(p.date).getFullYear() === Number(state.year))
+        .filter(p => {
+          if (!q) return true;
+          const hay = (p.title + ' ' + (p.description||'') + ' ' + (p.section||'')).toLowerCase();
+          return hay.includes(q);
+        });
+      arr.sort(state.sort==='oldest' ? byOldest : byNewest);
+      return arr;
+    }
+
+    function groupByYear(list){
+      const map = new Map();
+      list.forEach(p => {
+        const y = new Date(p.date).getFullYear();
+        if (!map.has(y)) map.set(y, []);
+        map.get(y).push(p);
+      });
+      return [...map.entries()].sort((a,b)=>b[0]-a[0]);
+    }
+
+    function renderResults(list){
+      results.innerHTML = '';
+      const tplGroup = $('#groupTemplate');
+      const tplItem  = $('#itemTemplate');
+
+      if (!list.length){
+        results.append($('#emptyTemplate').content.cloneNode(true));
+        stats.textContent = '0 results';
+        return;
+      }
+
+      const total = list.length;
+      stats.textContent = `${total} ${total===1?'result':'results'}`;
+
+      const groups = groupByYear(list);
+      groups.forEach(([year, items]) => {
+        const groupNode = tplGroup.content.cloneNode(true);
+        groupNode.querySelector('.year-label').textContent = year;
+        groupNode.querySelector('.count').textContent = items.length;
+        const ul = groupNode.querySelector('ul');
+
+        items.forEach(p => {
+          const node = tplItem.content.cloneNode(true);
+          node.querySelector('a').href = p.href || '#';
+          node.querySelector('.date').textContent = fmtDate(p.date);
+          node.querySelector('.section').textContent = p.section || 'Article';
+          node.querySelector('.title').textContent = p.title || '';
+          node.querySelector('.desc').textContent = p.description || '';
+          ul.appendChild(node);
+        });
+
+        results.appendChild(groupNode);
+      });
+    }
+
+    function update(){
+      writeParams(state);
+      renderYearChips();
+      const filtered = applyFilters();
+      renderResults(filtered);
+    }
+
+    // ---- Events ----
+    searchInput.addEventListener('input', e => { state.q = e.target.value; update(); });
+    sectionSelect.addEventListener('change', e => { state.section = e.target.value; update(); });
+    sortSelect.addEventListener('change', e => { state.sort = e.target.value; update(); });
+
+    // ---- Init ----
+    document.getElementById('yearFooter').textContent = new Date().getFullYear();
+    update();
+  </script>
+</body>
+</html>

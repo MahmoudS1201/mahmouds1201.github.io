@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page not found — Camila Tiburcio Rubio</title>
+
+  <meta name="robots" content="noindex,follow" />
+  <meta name="description" content="The page you’re looking for doesn’t exist or has moved." />
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink:{900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',400:'#6B7280',300:'#9CA3AF'},
+            cream:'#FAF7F2',
+            accent:{DEFAULT:'#C53D2F',dark:'#9E2F24',light:'#E95A49'}
+          },
+          keyframes:{
+            wag:{'0%,100%':{transform:'rotate(0deg)'},'20%':{transform:'rotate(3deg)'},'40%':{transform:'rotate(-3deg)'},'60%':{transform:'rotate(2deg)'},'80%':{transform:'rotate(-2deg)'}},
+            breathe:{'0%,100%':{transform:'scale(1)'},'50%':{transform:'scale(1.015)'}}
+          },
+          animation:{wag:'wag .5s ease-in-out',breathe:'breathe 6s ease-in-out infinite'}
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline{position:relative}
+    .u-underline::after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+    .u-underline:hover::after{transform:scaleX(1)}
+    ::selection{background:rgba(197,61,47,.15)}
+    .counter-badge{
+      position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+      background:#C53D2F;color:#fff;border-radius:9999px;
+      padding:.25rem .65rem;font-size:.8rem;font-weight:600;
+      box-shadow:0 6px 16px rgba(0,0,0,.12);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .animate-breathe{animation: none !important;}
+      .animate-wag{animation: none !important;}
+    }
+  </style>
+</head>
+<body class="bg-cream text-ink-900 antialiased">
+
+  <main class="min-h-screen flex flex-col items-center justify-center px-4">
+    
+    <!-- Logo and name -->
+    <div class="flex items-center gap-2 mb-10">
+      <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+      <a href="/" class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</a>
+    </div>
+
+    <div class="w-full max-w-2xl text-center -mt-2">
+      <!-- Candela container with red counter above -->
+      <div class="relative w-full flex justify-center">
+        <div id="petCount" class="counter-badge" aria-live="polite">Pets: 0</div>
+        <img
+          id="candelaImg"
+          src="assets/candela.png"
+          alt="Candela, the American bully"
+          class="select-none pointer-events-auto h-72 w-auto object-contain animate-breathe"
+          style="filter: grayscale(25%);"
+          role="button"
+          tabindex="0"
+          aria-label="Pet Candela"
+          title="Pet Candela"
+        />
+      </div>
+
+      <!-- Mood text close to Candela -->
+      <p id="candelaMood" class="text-ink-400 mt-1 text-base italic" aria-live="polite">
+        Candela really likes you!
+      </p>
+
+      <!-- 404 text -->
+      <p class="mt-5 text-xs tracking-[0.14em] font-semibold text-accent uppercase">404</p>
+      <h1 class="font-serif text-4xl sm:text-5xl mt-1 leading-tight">This page can’t be found</h1>
+      <p class="text-ink-500 mt-3">The link may be broken, or the page may have moved. You can pet Candela while you’re here.</p>
+
+      <!-- Search -->
+      <form action="/search.html" method="GET" class="mt-7 flex gap-2 justify-center">
+        <label class="relative w-full max-w-md">
+          <input name="q" type="search" placeholder="Search essays, interviews, reviews…" class="w-full pl-10 pr-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+        </label>
+        <button class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:shadow-soft">Search</button>
+      </form>
+
+      <!-- Quick links -->
+      <div class="mt-6 flex flex-wrap gap-3 justify-center">
+        <a href="javascript:history.back()" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">← Back</a>
+        <a href="index.html" class="px-4 py-2 rounded-xl bg-accent text-white hover:bg-accent-dark">Home</a>
+        <a href="features.html" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">Features</a>
+        <a href="latest.html" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">Latest</a>
+        <a href="sections.html" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">Sections</a>
+        <a href="about2.html" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">About</a>
+      </div>
+
+      <p class="text-xs text-ink-300 mt-4">
+        Found a broken link? <a class="u-underline" href="mailto:ct2798@nyu.edu?subject=Broken%20link&body=URL:%20%5Bpaste%20it%20here%5D">Email Camila</a>.
+      </p>
+    </div>
+  </main>
+
+  <!-- Bark sound -->
+  <audio id="barkAudio" src="bark.mp3" preload="auto"></audio>
+
+  <script>
+    const img = document.getElementById('candelaImg');
+    const countEl = document.getElementById('petCount');
+    const moodEl = document.getElementById('candelaMood');
+    const barkEl = document.getElementById('barkAudio');
+
+    let count = 0;
+
+    // Clean, strictly ascending “likes you” ladder
+    function messageFor(n){
+      if (n < 1)  return "Candela is a little shy.";
+      if (n < 3)  return "Candela thinks she likes you!";
+      if (n < 6)  return "Candela really likes you!";
+      if (n < 10) return "Candela really, really likes you!";
+      if (n < 15) return "Look at that tail wag!";
+      if (n < 20) return "If she could, she'd lean into your hand.";
+      if (n < 30) return "Soft eyes, happy heart.";
+      if (n < 40) return "You’re her person now.";
+      if (n < 50) return "Best friends status achieved!";
+      if (n < 75) return "Unconditional adoration mode!";
+      if (n < 100) return "She'll remember your scent forever!";
+      return "She really hopes you find the page you were looking for…";
+    }
+
+    function updateUI(){
+      countEl.textContent = "Pets: " + count;
+      moodEl.textContent = messageFor(count);
+    }
+
+    function maybeBark(){
+      const milestone = [3, 6, 10, 20, 40, 75].includes(count);
+      const random = Math.random() < 0.15;
+      if (milestone || random) {
+        try {
+          barkEl.currentTime = 0;
+          barkEl.play();
+        } catch {}
+      }
+    }
+
+    function pet(){
+      count++;
+      // retrigger wag
+      img.classList.remove('animate-wag');
+      void img.offsetWidth; // force reflow
+      img.classList.add('animate-wag');
+
+      // Warm the image over time
+      if (count === 8)  img.style.filter = "grayscale(15%)";
+      if (count === 20) img.style.filter = "none";
+
+      updateUI();
+      maybeBark();
+    }
+
+    // Click / keyboard to “pet”
+    img.addEventListener('click', pet);
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        pet();
+      }
+    });
+
+    // First paint
+    updateUI();
+  </script>
+
+  <noscript>
+    <style>.counter-badge{display:none}</style>
+    <div class="text-center text-sm text-ink-400">
+      JavaScript is disabled, so Candela can’t be petted right now.
+    </div>
+  </noscript>
+</body>
+</html>

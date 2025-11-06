@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search — Camila Tiburcio Rubio</title>
+
+  <!-- SEO -->
+  <meta name="robots" content="noindex,follow" />
+  <meta name="description" content="Search essays, interviews, reviews, and visual work by Camila Tiburcio Rubio." />
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',400:'#6B7280',300:'#9CA3AF' },
+            cream:'#FAF7F2',
+            accent:{ DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow:{ soft:'0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline{position:relative}
+    .u-underline::after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+    .u-underline:hover::after{transform:scaleX(1)}
+    .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    ::selection{background:rgba(197,61,47,.15)}
+    .result-title mark,.result-excerpt mark{background:rgba(197,61,47,.15);padding:0 .125rem;border-radius:.2rem}
+  </style>
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SearchResultsPage",
+    "about": { "@type":"WebSite", "name":"Camila Tiburcio Rubio" }
+  }
+  </script>
+</head>
+<body class="bg-cream text-ink-900 antialiased">
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="Home.html#newsletter" class="u-underline">Newsletter</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="features.html">Features</a>
+          <a class="u-underline" href="latest.html">Latest</a>
+          <a class="u-underline" href="sections.html">Sections</a>
+          <a class="u-underline" href="about2.html">About</a>
+        </nav>
+        <a href="Home.html" class="md:hidden u-underline text-sm">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="font-serif text-3xl sm:text-4xl">Search</h1>
+
+    <form id="searchForm" class="mt-5 grid gap-3 sm:grid-cols-[1fr,200px,140px]">
+      <label class="relative">
+        <input id="q" name="q" type="search" autocomplete="off" placeholder="Search essays, interviews, reviews…" class="w-full pl-10 pr-10 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" aria-label="Search query" />
+        <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+        <button type="button" id="clearQ" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Clear search">✕</button>
+      </label>
+      <select id="sectionFilter" class="px-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" aria-label="Filter by section">
+        <option value="">All sections</option>
+      </select>
+      <button class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark" aria-label="Run search">Search</button>
+    </form>
+
+    <!-- Stats / sorting -->
+    <div class="mt-6 flex items-center justify-between text-sm text-ink-400">
+      <div id="resultCount" aria-live="polite">0 results</div>
+      <div>
+        <label class="mr-2" for="sortBy">Sort:</label>
+        <select id="sortBy" class="px-3 py-2 rounded-lg border border-black/10 bg-white">
+          <option value="dateDesc">Newest</option>
+          <option value="dateAsc">Oldest</option>
+          <option value="titleAsc">Title A–Z</option>
+          <option value="titleDesc">Title Z–A</option>
+          <option value="best">Best match</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <section id="results" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></section>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden mt-10 card p-8 text-center">
+      <p class="text-lg">No matches yet.</p>
+      <p class="text-ink-500 mt-1">Try different keywords or browse these:</p>
+      <div class="mt-4 flex flex-wrap gap-3 justify-center">
+        <a href="features.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Features</a>
+        <a href="latest.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Latest</a>
+        <a href="sections.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Sections</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-8 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+          <li><a href="Home.html#newsletter" class="u-underline">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="mission.html" class="u-underline">Mission</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline" target="_blank" rel="me noopener">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline" target="_blank" rel="me noopener">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline" target="_blank" rel="me noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Utilities
+    const $ = s => document.querySelector(s);
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Parse URL param
+    function getParam(name){
+      const u = new URL(location.href);
+      return u.searchParams.get(name) || '';
+    }
+
+    // Tokenize
+    function words(str=''){ return (str.toLowerCase().match(/[a-z0-9\u00C0-\u017F]+/g) || []); }
+
+    // Highlight terms
+    function highlight(text='', terms=[]){
+      if (!terms.length || !text) return text;
+      const uniq = Array.from(new Set(terms)).filter(Boolean);
+      const pattern = new RegExp('(' + uniq.map(t => t.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')).join('|') + ')','ig');
+      return text.replace(pattern, '<mark>$1</mark>');
+    }
+
+    // Load posts saved by Admin screen (localStorage)
+    function loadPublished(){
+      const out = [];
+      for (let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if (k && k.startsWith('ctr:admin:published:')){
+          try{ const obj = JSON.parse(localStorage.getItem(k)); if (obj && obj.title) out.push(obj); } catch {}
+        }
+      }
+      return out;
+    }
+
+    // Normalize a post object
+    function normalizeItem(item){
+      return {
+        title: item.title || '',
+        slug: item.slug || '',
+        section: item.section || '',
+        excerpt: item.excerpt || '',
+        date: item.date || '',
+        readMinutes: item.readMinutes || 0,
+        tags: Array.isArray(item.tags) ? item.tags : [],
+        cover: item.cover && item.cover.src ? item.cover.src : '',
+        bodyText: (item.bodyMarkdown || item.bodyHtml || '').replace(/<[^>]+>/g,' ')
+      };
+    }
+
+    // Score relevance
+    function scoreItem(it, qTerms){
+      if (!qTerms.length) return 0;
+      const hay = (it.title+' '+it.excerpt+' '+it.section+' '+(it.tags||[]).join(' ')+' '+it.bodyText).toLowerCase();
+      let score = 0;
+      for (const t of qTerms){
+        if (it.title.toLowerCase().includes(t)) score += 6;
+        if ((it.tags||[]).join(' ').toLowerCase().includes(t)) score += 3;
+        if (it.excerpt.toLowerCase().includes(t)) score += 3;
+        if (it.section.toLowerCase().includes(t)) score += 2;
+        if (hay.includes(t)) score += 1;
+      }
+      // Freshness nudge: newer gets a tiny bonus (~ up to +3 for recent)
+      const d = new Date(it.date).getTime();
+      if (!Number.isNaN(d)){
+        const months = (Date.now() - d) / (1000*60*60*24*30);
+        score += Math.max(0, 3 - Math.min(3, months/6));
+      }
+      return score;
+    }
+
+    function formatDate(iso){
+      try{ return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch{ return ''; }
+    }
+
+    function populateSections(items){
+      const sel = document.getElementById('sectionFilter');
+      const set = new Set(items.map(i => (i.section || '').trim()).filter(Boolean));
+      const keep = sel.value;
+      sel.innerHTML = '<option value="">All sections</option>' + Array.from(set).sort().map(s => `<option value="${s}">${s}</option>`).join('');
+      if (keep && set.has(keep)) sel.value = keep;
+    }
+
+    function render(results, qTerms){
+      const wrap = document.getElementById('results');
+      wrap.innerHTML = '';
+      const count = results.length;
+      const resultCount = document.getElementById('resultCount');
+      resultCount.textContent = count + (count === 1 ? ' result' : ' results');
+
+      const empty = document.getElementById('emptyState');
+      if (!count){ empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+
+      for (const it of results){
+        const href = `${it.slug ? it.slug : 'article'}.html`;
+        const titleHtml = highlight(it.title, qTerms);
+        const excerptRaw = it.excerpt || (it.bodyText.slice(0, 160) + '…');
+        const excerptHtml = highlight(excerptRaw, qTerms);
+
+        const card = document.createElement('article');
+        card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
+
+        if (it.cover){
+          const img = document.createElement('img');
+          img.className = 'aspect-[16/10] object-cover';
+          img.src = it.cover;
+          img.alt = it.title || 'Cover image';
+          card.appendChild(img);
+        }
+
+        const body = document.createElement('div');
+        body.className = 'p-6 flex-1 flex flex-col';
+
+        const meta = document.createElement('div');
+        meta.className = 'text-xs uppercase tracking-wide text-accent';
+        meta.textContent = it.section || 'Article';
+        body.appendChild(meta);
+
+        const h3 = document.createElement('h3');
+        h3.className = 'font-serif text-xl mt-2 leading-snug result-title';
+        h3.innerHTML = `<a class="u-underline" href="${href}">${titleHtml}</a>`;
+        body.appendChild(h3);
+
+        const p = document.createElement('p');
+        p.className = 'text-ink-500 mt-2 result-excerpt';
+        p.innerHTML = excerptHtml;
+        body.appendChild(p);
+
+        const f = document.createElement('div');
+        f.className = 'mt-auto pt-4 text-sm text-ink-300';
+        f.textContent = `${formatDate(it.date)} • ${it.readMinutes || 0} min`;
+        body.appendChild(f);
+
+        card.appendChild(body);
+        wrap.appendChild(card);
+      }
+    }
+
+    function applyFilters(items, query, section, sort){
+      const qTerms = words(query);
+      let arr = items.map(normalizeItem).filter(it => !section || it.section === section);
+
+      // Compute scores (even if not sorting by best, scores help tie-breaks)
+      for (const it of arr) it._score = scoreItem(it, qTerms);
+
+      // Filter out non-matching if there's a query
+      if (qTerms.length) arr = arr.filter(it => it._score > 0);
+
+      // Sorting
+      arr.sort((a,b) => {
+        if (sort === 'dateAsc')  return new Date(a.date) - new Date(b.date);
+        if (sort === 'dateDesc') return new Date(b.date) - new Date(a.date);
+        if (sort === 'titleAsc') return (a.title||'').localeCompare(b.title||'');
+        if (sort === 'titleDesc')return (b.title||'').localeCompare(a.title||'');
+        // 'best' (or default): score desc, then date desc, then title asc
+        const s = (b._score - a._score);
+        if (s) return s;
+        const d = (new Date(b.date) - new Date(a.date));
+        if (d) return d;
+        return (a.title||'').localeCompare(b.title||'');
+      });
+
+      return { results: arr, qTerms };
+    }
+
+    // Debounce helper
+    function debounce(fn, ms=200){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; }
+
+    // Init
+    (function init(){
+      const allRaw = loadPublished();
+      populateSections(allRaw);
+
+      const qInput = document.getElementById('q');
+      const clearQ = document.getElementById('clearQ');
+      const sectionSel = document.getElementById('sectionFilter');
+      const sortSel = document.getElementById('sortBy');
+
+      // Prefill from URL
+      const initQ = getParam('q');
+      if (initQ){ qInput.value = initQ; clearQ.classList.remove('hidden'); }
+
+      function run(){
+        const q = qInput.value.trim();
+        const section = sectionSel.value;
+        const sort = sortSel.value || 'best';
+        const { results, qTerms } = applyFilters(allRaw, q, section, sort);
+        render(results, qTerms);
+
+        // Toggle clear button
+        if (q.length) clearQ.classList.remove('hidden'); else clearQ.classList.add('hidden');
+      }
+
+      // Update URL (no reload)
+      function syncURL(){
+        const u = new URL(location.href);
+        const q = qInput.value.trim();
+        if (q) u.searchParams.set('q', q); else u.searchParams.delete('q');
+        history.replaceState({}, '', u.toString());
+      }
+
+      document.getElementById('searchForm').addEventListener('submit', (e)=>{ e.preventDefault(); run(); syncURL(); });
+      qInput.addEventListener('input', debounce(()=>{ run(); syncURL(); }, 150));
+      clearQ.addEventListener('click', ()=>{ qInput.value=''; run(); syncURL(); qInput.focus(); });
+      sectionSel.addEventListener('change', run);
+      sortSel.addEventListener('change', run);
+
+      // First paint
+      run();
+    })();
+  </script>
+</body>
+</html>

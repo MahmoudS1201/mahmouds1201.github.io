@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Write & Upload Articles — Camila Tiburcio Rubio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Source Serif 4', 'Georgia', 'serif']
+          },
+          colors: {
+            ink: { 900: '#0E0E0E', 700: '#1F1F1F', 500: '#3A3A3A', 300: '#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT: '#C53D2F', dark: '#9E2F24', light: '#E95A49' }
+          },
+          boxShadow: { soft: '0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .u-underline { position: relative; }
+    .u-underline::after { content: ''; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
+    .u-underline:hover::after { transform: scaleX(1); }
+    .prose h1,.prose h2,.prose h3,.prose h4 { font-family: 'Source Serif 4', Georgia, serif; }
+    .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0;}
+    .hero-img { width:100%; height:480px; object-fit:cover; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+    .btn { padding:.5rem 1rem; border-radius:.75rem; font-weight:600; border:1px solid rgba(0,0,0,.1); }
+    .btn:hover { box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+    .prose p { margin:0.8em 0; line-height:1.7; }
+    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:rgba(197,61,47,.05); box-shadow:0 18px 60px rgba(0,0,0,.06); margin:0 auto; }
+    .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#A3ACB9; user-select:none; margin-right:2px; }
+    .socialContainer{ width:46px; height:46px; border-radius:14px; background:#2E2E2E; display:flex; align-items:center; justify-content:center; transition:transform .2s ease, background-color .2s ease, box-shadow .2s ease; color:#fff; text-decoration:none; border:none; cursor:pointer; }
+    .socialContainer:hover{ transform:translateY(-2px); }
+    .socialContainer:active{ transform:scale(.96); }
+    .containerX:hover{ background:#000; }
+    .containerFB:hover{ background:#1877F2; }
+    .containerMail:hover{ background:#6B7280; }
+    .containerCopy:hover{ background:#059669; }
+    .socialContainer svg.fill-icon path { fill: currentColor; }
+    .xSvg{ width:17px; height:17px; color:#fff; }
+    .socialSvg{ width:20px; height:20px; color:#fff; }
+    .clipboard-svg{ width:20px; height:20px; stroke:#fff; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  </style>
+</head>
+<body class="bg-cream text-ink-900 antialiased">
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-1">
+        <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-12 w-12 object-contain" />
+        <a href="#" class="font-serif text-xl">Admin · Camila Tiburcio Rubio</a>
+      </div>
+      <nav class="hidden md:flex items-center gap-3 text-sm">
+        <a class="u-underline" href="/" title="Back to site">↩ Back to site</a>
+        <button id="importJsonBtn" class="btn">Import JSON</button>
+        <button id="exportJsonBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark">Export JSON</button>
+        <button id="exportHtmlBtn" class="btn">Export HTML</button>
+        <button id="clearDraftBtn" class="btn">Clear Draft</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Grid: form (left) + preview (right) -->
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Form -->
+      <section class="bg-white shadow-soft rounded-2xl p-6 lg:p-8">
+        <h2 class="font-serif text-2xl mb-4">Write Article</h2>
+        <form id="articleForm" class="space-y-6" onsubmit="return false;">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="block">
+              <span class="text-sm font-medium">Title</span>
+              <input id="title" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="The Inefficiency of Efficie..." />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium">Slug</span>
+              <input id="slug" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="auto-generated" />
+            </label>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="block">
+              <span class="text-sm font-medium">Section</span>
+              <select id="section" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40">
+                <option>Essay</option>
+                <option>Interview</option>
+                <option>Review</option>
+                <option>Visual</option>
+                <option>Community</option>
+                <option>Memoirs</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium">Tags (comma-separated)</span>
+              <input id="tags" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Diaspora, Cuba, Art" />
+            </label>
+          </div>
+
+          <div class="grid sm:grid-cols-3 gap-4">
+            <label class="block">
+              <span class="text-sm font-medium">Author</span>
+              <input id="author" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Camila Tiburcio Rubio" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium">Publish date</span>
+              <input id="date" type="datetime-local" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium">Read time (auto)</span>
+              <input id="readTime" readonly class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 bg-cream/60" />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-sm font-medium">Excerpt</span>
+            <textarea id="excerpt" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Stories of the growing popularity of efficiency homes in Miami..."></textarea>
+          </label>
+
+          <!-- Cover image uploader -->
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium">Cover image</span>
+              <label class="inline-flex items-center gap-2 text-sm">
+                <input type="checkbox" id="featured" class="rounded"/> Featured
+              </label>
+            </div>
+            <div id="dropzone" class="mt-2 border-2 border-dashed border-black/10 rounded-2xl p-6 text-center bg-cream/50">
+              <p class="text-sm text-ink-500">Drag & drop an image here, or <label for="coverInput" class="u-underline cursor-pointer">browse</label></p>
+              <input id="coverInput" type="file" accept="image/*" class="hidden" />
+              <div id="coverPreview" class="hidden mt-4 relative">
+                <img id="coverImg" class="w-full max-h-64 object-cover rounded-xl"/>
+                <button type="button" id="removeCover" class="absolute top-2 right-2 bg-white/90 rounded-full px-3 py-1 text-sm border border-black/10">Remove</button>
+                <input id="coverAlt" class="mt-2 w-full px-3 py-2 rounded-xl border border-black/10" placeholder="Alt text (accessibility)" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Body editor -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium">Body Editor</span>
+              <div class="flex gap-2 text-sm">
+                <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
+                <button type="button" data-md="**bold**" class="btn">B</button>
+                <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
+                <button type="button" data-md="> " class="btn">Quote</button>
+                <button type="button" data-md="- list item" class="btn">List</button>
+                <button type="button" data-md="1. " class="btn">OL</button>
+                <button type="button" id="insertImageBtn" class="btn">Insert img</button>
+              </div>
+            </div>
+            <textarea id="body" rows="14" class="w-full px-3 py-3 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Write or paste your text here, love..."></textarea>
+            <input id="inlineImageInput" type="file" accept="image/*" class="hidden" />
+          </div>
+
+          <!-- SEO -->
+          <details class="rounded-xl border border-black/10 p-4 bg-cream/60">
+            <summary class="cursor-pointer font-medium">SEO (optional)</summary>
+            <div class="grid sm:grid-cols-2 gap-4 mt-4">
+              <label class="block">
+                <span class="text-sm font-medium">Meta title</span>
+                <input id="metaTitle" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10" />
+              </label>
+              <label class="block sm:col-span-2">
+                <span class="text-sm font-medium">Meta description</span>
+                <textarea id="metaDesc" rows="2" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10"></textarea>
+              </label>
+            </div>
+          </details>
+
+          <div class="flex flex-wrap gap-3 pt-2">
+            <button id="saveDraftBtn" class="btn" type="button">Save Draft (local)</button>
+            <button id="previewBtn" class="btn" type="button">Refresh Preview</button>
+            <button id="publishBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark" type="button">Mark as Published</button>
+          </div>
+          <p id="statusMsg" class="text-sm text-ink-300"></p>
+        </form>
+      </section>
+
+      <!-- Preview -->
+      <section class="bg-white shadow-soft rounded-2xl p-0 overflow-hidden">
+        <div id="previewCover" class="aspect-[16/9] bg-ink-900/5 flex items-center justify-center text-ink-300">Cover preview</div>
+        <div class="p-6 lg:p-8">
+          <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
+            <span id="previewSection" class="bg-accent/10 text-accent px-2.5 py-1 rounded-full">Essay</span>
+            <time id="previewDate" class="text-ink-300"></time>
+          </div>
+          <h1 id="previewTitle" class="font-serif text-3xl lg:text-4xl mt-3 leading-tight">Title…</h1>
+          <p id="previewExcerpt" class="text-ink-500 mt-3 max-w-2xl">Excerpt…</p>
+          <div class="mt-6 flex items-center gap-4">
+            <div class="h-10 w-10 rounded-full bg-ink-300"></div>
+            <div>
+              <p class="text-sm font-medium">By <span id="previewAuthor">Author</span></p>
+              <p class="text-xs text-ink-300"><span id="previewRead">0</span> min read</p>
+            </div>
+          </div>
+          <article id="previewBody" class="prose prose-neutral mt-6 max-w-none"></article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <input id="jsonFileInput" type="file" accept="application/json" class="hidden" />
+
+  <script>
+    // Utilities
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    function insertAtCursor(el, before, after = null, opts = { selectInside: false }) {
+      const start = el.selectionStart ?? 0;
+      const end   = el.selectionEnd ?? start;
+      const hadSel = start !== end;
+      const prevScroll = el.scrollTop;
+
+      let insert;
+      if (after !== null && hadSel) {
+        const selected = el.value.slice(start, end);
+        insert = before + selected + after;
+        el.setRangeText(insert, start, end, 'select');
+        const newStart = start + before.length;
+        const newEnd   = newStart + selected.length;
+        requestAnimationFrame(() => {
+          el.focus({ preventScroll: true });
+          if (opts.selectInside) el.setSelectionRange(newStart, newEnd);
+          else                   el.setSelectionRange(newEnd, newEnd);
+          el.scrollTop = prevScroll;
+        });
+      } else {
+        insert = before;
+        el.setRangeText(insert, start, end, 'end');
+        const pos = start + insert.length;
+        requestAnimationFrame(() => {
+          el.focus({ preventScroll: true });
+          el.setSelectionRange(pos, pos);
+          el.scrollTop = prevScroll;
+        });
+      }
+    }
+
+    function slugify(str) {
+      return (str || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/\p{Diacritic}/gu,'')
+        .replace(/[^a-z0-9\s-]/g,'')
+        .trim().replace(/\s+/g,'-')
+        .replace(/-+/g,'-');
+    }
+
+    function wordsCount(text) {
+      return (text || '').trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    function estimateReadMinutes(text) {
+      const wpm = 225;
+      const words = wordsCount(text);
+      return Math.max(1, Math.round(words / wpm));
+    }
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Tiny Markdown -> HTML with working blockquotes
+    function md(str = '') {
+      let s = (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;');
+
+      s = s.replace(/```([\s\S]*?)```/g, (m, code) =>
+        `<pre class="bg-cream p-4 rounded-xl overflow-auto"><code>${code.replace(/\n/g,'<br/>')}</code></pre>`
+      );
+
+      s = s.replace(/`([^`]+)`/g, '<code class="bg-cream px-1 rounded">$1</code>');
+
+      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)\n\*([^*]+)\*/g, '<figure><img src="$2" alt="$1"><figcaption>$3</figcaption></figure>');
+      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<figure><img src="$2" alt="$1"></figure>');
+
+      s = s.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a class="u-underline" href="$2">$1</a>');
+
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+      s = s.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
+      s = s.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
+      s = s.replace(/^#\s+(.+)$/gm,  '<h1>$1</h1>');
+
+      s = s.replace(/(^|\n)(>(?:[^\n]*)(?:\n>.*)*)/g, (_, lead, block) => {
+        const lines = block.trim().split(/\n/).map(l => l.replace(/^>\s?/, '').trim());
+        const quote = lines.slice(0, -1).join('<br/>');
+        const last = lines[lines.length - 1];
+        const isAttribution = /^[-–—]\s?/.test(last);
+        const attribution = isAttribution ? `<cite class="quote-cite">${last.replace(/^[-–—]\s?/, '')}</cite>` : '';
+        const content = isAttribution ? quote : lines.join('<br/>');
+        return `${lead}<blockquote>${content}${attribution}</blockquote>`;
+      });
+
+      s = s.replace(/(?:^|\n)(-\s+.+(?:\n-\s+.+)*)/g, (m) => {
+        const items = m.trim().split(/\n/).map(l => l.replace(/^-+\s+/, '').trim());
+        return '<ul class="list-disc pl-6">' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+      });
+
+      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)(?:\n\*([^\n]+)\*)?/g, (m, alt, src, caption) => {
+        if (caption) {
+          return `<figure><img alt="${alt}" src="${src}" /><figcaption class="text-center text-sm text-ink-300 mt-2">${caption.trim()}</figcaption></figure>`;
+        }
+        return `<img alt="${alt}" src="${src}" />`;
+      });
+
+      const BLOCK_RE = /^<(?:h[1-6]|ul|ol|li|pre|code|blockquote|img|figure|p)(\s|>)/i;
+      s = s
+        .split(/\n{2,}/)
+        .map(chunk => chunk.trim())
+        .filter(Boolean)
+        .map(chunk => BLOCK_RE.test(chunk) ? chunk : `<p>${chunk.replace(/\n/g,'<br/>')}</p>`)
+        .join('\n');
+
+      return s;
+    }
+
+    // Elements
+    const titleEl = $('#title');
+    const slugEl = $('#slug');
+    const sectionEl = $('#section');
+    const tagsEl = $('#tags');
+    const authorEl = $('#author');
+    const dateEl = $('#date');
+    const readEl = $('#readTime');
+    const excerptEl = $('#excerpt');
+    const bodyEl = $('#body');
+    const featuredEl = $('#featured');
+    const metaTitleEl = $('#metaTitle');
+    const metaDescEl = $('#metaDesc');
+
+    // Cover controls
+    const dropzone = $('#dropzone');
+    const coverInput = $('#coverInput');
+    const coverPreview = $('#coverPreview');
+    const coverImg = $('#coverImg');
+    const coverAlt = $('#coverAlt');
+    const removeCoverBtn = $('#removeCover');
+
+    // Preview nodes
+    const previewCover = $('#previewCover');
+    const previewSection = $('#previewSection');
+    const previewDate = $('#previewDate');
+    const previewTitle = $('#previewTitle');
+    const previewExcerpt = $('#previewExcerpt');
+    const previewAuthor = $('#previewAuthor');
+    const previewRead = $('#previewRead');
+    const previewBody = $('#previewBody');
+
+    const statusMsg = $('#statusMsg');
+
+    // Toolbar buttons insert markdown
+    $$('#articleForm [data-md]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const token = btn.getAttribute('data-md');
+
+        if (token === '**bold**') {
+          insertAtCursor(bodyEl, '**', '**', { selectInside: true });
+        } 
+        else if (token === '*italic*') {
+          insertAtCursor(bodyEl, '*', '*', { selectInside: true });
+        } 
+        else if (token === 'HEADER_SECTION') {
+          const start = bodyEl.selectionStart ?? 0;
+          const end   = bodyEl.selectionEnd ?? start;
+          const hadSel = start !== end;
+          const prevScroll = bodyEl.scrollTop;
+
+          if (hadSel) {
+            const selected = bodyEl.value.slice(start, end).replace(/\n+/g, ' ').trim();
+            const v     = bodyEl.value;
+            const atBOL = start === 0 || v[start - 1] === '\n';
+            const prefix = (atBOL ? '' : '\n') + '## ';
+            const insert = `${prefix}${selected}\n\n`;
+            bodyEl.setRangeText(insert, start, end, 'end');
+
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const caretPos = start + insert.length;
+              bodyEl.setSelectionRange(caretPos, caretPos);
+            });
+          } else {
+            const v     = bodyEl.value;
+            const pos   = bodyEl.selectionStart ?? 0;
+            const atBOL = pos === 0 || v[pos - 1] === '\n';
+            const line  = '## Section title';
+            const tmpl  = (atBOL ? '' : '\n') + line + '\n\n';
+
+            insertAtCursor(bodyEl, tmpl);
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const base = pos + (atBOL ? 0 : 1);
+              const selStart = base + 3;
+              const selEnd   = selStart + 'Section title'.length;
+              bodyEl.setSelectionRange(selStart, selEnd);
+            });
+          }
+        }
+        else if (token === '> ') {
+          const start = bodyEl.selectionStart ?? 0;
+          const end   = bodyEl.selectionEnd ?? start;
+          const hadSel = start !== end;
+          const prevScroll = bodyEl.scrollTop;
+
+          if (hadSel) {
+            const selected = bodyEl.value.slice(start, end);
+            const quoted   = selected.split('\n').map(l => '> ' + l).join('\n');
+            const insert   = quoted + '\n>\n> - Attribution';
+            bodyEl.setRangeText(insert, start, end, 'end');
+
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const caretPos = start + insert.length - ' Attribution'.length - 2;
+              bodyEl.setSelectionRange(caretPos, caretPos);
+            });
+          } else {
+            const tmpl = '> Quote\n>\n> - Attribution\n';
+            const v     = bodyEl.value;
+            const pos   = bodyEl.selectionStart ?? 0;
+            const atBOL = pos === 0 || v[pos - 1] === '\n';
+            const text  = (atBOL ? '' : '\n') + tmpl;
+
+            insertAtCursor(bodyEl, text);
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const base = pos + (atBOL ? 0 : 1);
+              const quoteStartOffset = 2;
+              const quoteEndOffset   = quoteStartOffset + 'Quote'.length;
+              bodyEl.setSelectionRange(base + quoteStartOffset, base + quoteEndOffset);
+            });
+          }
+        }
+        else if (token === '1. ') {
+          const start = bodyEl.selectionStart ?? 0;
+          const end   = bodyEl.selectionEnd ?? start;
+          const hadSel = start !== end;
+          const prevScroll = bodyEl.scrollTop;
+
+          if (hadSel) {
+            const selected = bodyEl.value.slice(start, end).replace(/\s+$/,'');
+            const lines = selected.split('\n');
+
+            let idx = 1;
+            const numbered = lines.map(l => {
+              if (l.trim().length === 0) return '';
+              return `${idx++}. ${l.replace(/^\d+\.\s+/, '')}`;
+            }).join('\n');
+
+            bodyEl.setRangeText(numbered, start, end, 'end');
+
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const caretPos = start + numbered.length;
+              bodyEl.setSelectionRange(caretPos, caretPos);
+            });
+          } else {
+            const pos   = bodyEl.selectionStart ?? 0;
+            const v     = bodyEl.value;
+            const atBOL = pos === 0 || v[pos - 1] === '\n';
+            const text  = (atBOL ? '' : '\n') + '1. ';
+            insertAtCursor(bodyEl, text);
+          }
+        }
+        else if (token === '# ' || token === '## ' || token === '- list item') {
+          const pos   = bodyEl.selectionStart ?? 0;
+          const v     = bodyEl.value;
+          const atBOL = pos === 0 || v[pos - 1] === '\n';
+          const text  = (atBOL ? '' : '\n') + token;
+          insertAtCursor(bodyEl, text);
+        } 
+        else {
+          insertAtCursor(bodyEl, token + (token.endsWith(' ') ? '' : '\n'));
+        }
+
+        updateDerived();
+      });
+    });
+
+    $('#insertImageBtn').addEventListener('click', () => $('#inlineImageInput').click());
+    $('#inlineImageInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const b64 = await toBase64(file);
+      const alt = prompt('Alt text for image?') || '';
+
+      const id = (crypto?.randomUUID && crypto.randomUUID()) || ('img-' + Date.now());
+      inlineImageStore[id] = b64;
+
+      const mdImg = `![${alt}](ctr-img:${id})\n*Insert caption here*`;
+      insertAtCursor(bodyEl, '\n' + mdImg + '\n');
+
+      updateDerived();
+      e.target.value = '';
+    });
+
+    // Cover upload/drag
+    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('bg-white'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('bg-white'));
+    dropzone.addEventListener('drop', async (e) => {
+      e.preventDefault(); dropzone.classList.remove('bg-white');
+      const file = e.dataTransfer.files[0]; if (file) await setCover(file);
+    });
+    coverInput.addEventListener('change', async (e) => { const f = e.target.files[0]; if (f) await setCover(f); });
+    removeCoverBtn.addEventListener('click', () => { coverImg.src=''; coverPreview.classList.add('hidden'); previewCover.innerHTML='Cover preview'; });
+
+    async function setCover(file){
+      const b64 = await toBase64(file);
+      coverImg.src = b64; coverPreview.classList.remove('hidden');
+      previewCover.innerHTML = `<img class="w-full h-full object-cover" src="${b64}" alt="">`;
+    }
+
+    // Auto-slug + read time
+    titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
+    slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
+    bodyEl.addEventListener('input', updateDerived);
+    excerptEl.addEventListener('input', updateDerived);
+    sectionEl.addEventListener('change', updateDerived);
+    authorEl.addEventListener('input', updateDerived);
+    dateEl.addEventListener('input', updateDerived);
+
+    function updateDerived(){
+      readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
+      previewSection.textContent = sectionEl.value;
+      previewTitle.textContent = titleEl.value || 'Title…';
+      previewExcerpt.textContent = excerptEl.value || 'Excerpt…';
+      previewAuthor.textContent = authorEl.value || 'Author';
+      previewRead.textContent = estimateReadMinutes(bodyEl.value);
+      previewDate.textContent = dateEl.value ? new Date(dateEl.value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+      previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
+      addDropcap();
+    }
+
+    function addDropcap() {
+      const container = document.getElementById('previewBody');
+      if (!container) return;
+      const firstP = container.querySelector('p');
+      if (firstP && !firstP.classList.contains('dropcap')) {
+        firstP.classList.add('dropcap');
+      }
+    }
+
+    // Draft persistence (localStorage)
+    function collect(){
+      const coverSrc = coverImg.src || '';
+      const mdRaw = bodyEl.value;
+      const mdExpanded = expandInlineImages(mdRaw);
+      return {
+        title: titleEl.value.trim(),
+        slug: slugEl.value.trim() || slugify(titleEl.value),
+        section: sectionEl.value,
+        tags: tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean),
+        author: authorEl.value.trim() || 'Camila Tiburcio Rubio',
+        excerpt: excerptEl.value.trim(),
+        date: dateEl.value || new Date().toISOString(),
+        readMinutes: estimateReadMinutes(mdRaw),
+        featured: featuredEl.checked,
+        cover: coverSrc ? { src: coverSrc, alt: coverAlt.value.trim() } : null,
+        bodyMarkdown: mdRaw,
+        bodyHtml: md(mdExpanded),
+        images: inlineImageStore,
+        seo: { title: metaTitleEl.value.trim(), description: metaDescEl.value.trim() },
+        version: 1
+      };
+    }
+
+    function validate(data){
+      const errors = [];
+      if(!data.title) errors.push('Title is required.');
+      if(!data.slug) errors.push('Slug is required.');
+      if(!data.excerpt) errors.push('Excerpt is required.');
+      if(!data.bodyMarkdown) errors.push('Body is required.');
+      return errors;
+    }
+
+    function saveDraft(){
+      const data = collect();
+      localStorage.setItem(draftKey(), JSON.stringify(data));
+      statusMsg.textContent = 'Draft saved locally ✓';
+      setTimeout(()=> statusMsg.textContent = '', 2000);
+    }
+
+    function loadDraft(){
+      const raw = localStorage.getItem(draftKey());
+      if(!raw) return;
+      try{
+        const d = JSON.parse(raw);
+        inlineImageStore = d.images || {};
+        titleEl.value = d.title || '';
+        slugEl.value = d.slug || '';
+        sectionEl.value = d.section || 'Essay';
+        tagsEl.value = (d.tags || []).join(', ');
+        authorEl.value = d.author || '';
+        excerptEl.value = d.excerpt || '';
+        dateEl.value = d.date ? d.date.slice(0,16) : '';
+        readEl.value = (d.readMinutes||0) + ' min';
+        featuredEl.checked = !!d.featured;
+        if(d.cover && d.cover.src){ coverImg.src = d.cover.src; coverPreview.classList.remove('hidden'); previewCover.innerHTML = `<img class='w-full h-full object-cover' src='${d.cover.src}' alt=''>`; coverAlt.value = d.cover.alt || ''; }
+        bodyEl.value = d.bodyMarkdown || '';
+        metaTitleEl.value = d.seo?.title || '';
+        metaDescEl.value = d.seo?.description || '';
+        updateDerived();
+      }catch(e){ console.warn('Failed to load draft', e); }
+    }
+
+    // Buttons
+    $('#saveDraftBtn').addEventListener('click', saveDraft);
+    $('#previewBtn').addEventListener('click', updateDerived);
+
+    // Store full data URLs for inline images
+    let inlineImageStore = {};
+
+    function expandInlineImages(markdown='') {
+      return markdown.replace(/\((ctr-img:([a-z0-9-]+))\)/gi, (m, full, id) => {
+        return `(${inlineImageStore[id] || full})`;
+      });
+    }
+
+    // JSON Export/Import
+    const exportJsonBtn = $('#exportJsonBtn');
+    exportJsonBtn.addEventListener('click', () => {
+      const data = collect();
+      const errs = validate(data);
+      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `article-${data.slug}.json`;
+      a.click();
+    });
+
+    $('#importJsonBtn').addEventListener('click', () => $('#jsonFileInput').click());
+    $('#jsonFileInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0]; if(!file) return;
+      const text = await file.text();
+      try { const d = JSON.parse(text); populateFromJSON(d); saveDraft(); } catch(err){ alert('Invalid JSON'); }
+      e.target.value='';
+    });
+
+    function populateFromJSON(d){
+      inlineImageStore = d.images || {};
+      titleEl.value = d.title || '';
+      slugEl.value = d.slug || slugify(d.title||'');
+      sectionEl.value = d.section || 'Essay';
+      tagsEl.value = (d.tags||[]).join(', ');
+      authorEl.value = d.author || '';
+      excerptEl.value = d.excerpt || '';
+      dateEl.value = d.date ? d.date.slice(0,16) : '';
+      readEl.value = (d.readMinutes||estimateReadMinutes(d.bodyMarkdown||'')) + ' min';
+      featuredEl.checked = !!d.featured;
+      if(d.cover && d.cover.src){ coverImg.src = d.cover.src; coverPreview.classList.remove('hidden'); previewCover.innerHTML = `<img class='w-full h-full object-cover' src='${d.cover.src}' alt=''>`; coverAlt.value = d.cover.alt || ''; }
+      bodyEl.value = d.bodyMarkdown || '';
+      metaTitleEl.value = d.seo?.title || '';
+      metaDescEl.value = d.seo?.description || '';
+      updateDerived();
+    }
+
+    // Export HTML (standalone article page with theme)
+    $('#exportHtmlBtn').addEventListener('click', () => {
+      const data = collect();
+      const errs = validate(data);
+      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+      const html = buildArticleHtml(data);
+      const blob = new Blob([html], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${data.slug}.html`;
+      a.click();
+    });
+
+    function escapeHtml(s=''){
+      return s.replace(/[&<>\"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    function draftKey(){
+      return 'ctr:admin:draft';
+    }
+
+    // Clear draft
+    $('#clearDraftBtn').addEventListener('click', () => {
+      if (confirm('Clear current draft from this browser?')) {
+        localStorage.removeItem(draftKey());
+        location.reload();
+      }
+    });
+
+    // Init
+    (function init(){
+      authorEl.value = 'Camila Tiburcio Rubio';
+      dateEl.value = new Date().toISOString().slice(0,16);
+      updateDerived();
+      loadDraft();
+    })();
+
+    function buildArticleHtml(data){
+      const hasTags   = Array.isArray(data.tags) && data.tags.length;
+      const coverCredit = data.cover?.credit || "";
+    
+      return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>${escapeHtml(data.seo?.title || data.title)} — Camila Tiburcio Rubio</title>
+          <meta name="description" content="${escapeHtml(data.seo?.description || data.excerpt)}" />
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+          <script src="https://cdn.tailwindcss.com"><\/script>
+          <script>
+            tailwind.config = {
+              theme: {
+                extend: {
+                  fontFamily: {
+                    sans: ['Inter','system-ui','sans-serif'],
+                    serif: ['Source Serif 4','Georgia','serif']
+                  },
+                  colors: {
+                    ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+                    cream: '#FAF7F2',
+                    accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+                  },
+                  boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+                }
+              }
+            }
+          <\/script>
+          <style>
+            .u-underline{position:relative}
+            .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
+            .u-underline:hover:after{transform:scaleX(1)}
+            .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
+            .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
+            .prose p{margin:.8em 0;line-height:1.7}
+            .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
+            .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+            blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+            #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
+            blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
+            blockquote { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.75; color: #1A1A1A; }
+            figure { margin: 1.75rem 0; text-align: center; }
+            figure img { border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+            figcaption { font-size: 0.9rem; color: #9CA3AF; margin-top: 0.5rem; font-style: italic; }
+    
+            .shareCard{ background: rgba(197,61,47,.04); border: 1px solid rgba(0,0,0,.06); box-shadow: 0 10px 30px rgba(0,0,0,.04); padding: 12px 14px; gap: 12px; display:flex; align-items:center; width:fit-content; border-radius:9999px; }
+            .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color: Black; user-select:none; margin-right:2px; }
+    
+            .socialContainer{ width: 40px; height: 40px; border-radius: 12px; background: transparent; border: 1px solid rgba(0,0,0,.10); color: #3A3A3A; display:flex; align-items:center; justify-content:center; transition: transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease; text-decoration:none; cursor:pointer; }
+            .socialContainer:hover,.socialContainer:focus-visible{ background: rgba(197,61,47,.08); border-color: rgba(197,61,47,.35); color: #C53D2F; transform: translateY(-1px); }
+            .socialContainer:active{ transform: scale(.97); }
+            .containerX:hover{ background: rgba(0,0,0,.06); color:#000; border-color: rgba(0,0,0,.25); }
+            .containerFB:hover{ background: rgba(24,119,242,.10); color:#1877F2; border-color: rgba(24,119,242,.35); }
+            .containerMail:hover{ background: rgba(107,114,128,.10); color:#6B7280; border-color: rgba(107,114,128,.35); }
+            .containerCopy:hover{ background: rgba(5,150,105,.10); color:#059669; border-color: rgba(5,150,105,.35); }
+            .socialContainer svg.fill-icon path { fill: currentColor; }
+            .xSvg{ width:16px; height:16px; color:inherit; }
+            .socialSvg{ width:18px; height:18px; color:inherit; }
+            .clipboard-svg{ width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    
+            .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
+            .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
+            .prose { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: 0.01em; color: #1F1F1F; }
+            .prose h1, .prose h2, .prose h3 { font-family: 'Source Serif 4', Georgia, serif; letter-spacing: -0.01em; font-weight: 700; color: #0E0E0E; }
+            .prose h2 { font-size: 1.8rem; line-height: 1.3; margin-top: 2.2rem; margin-bottom: 1.1rem; font-weight: 700; letter-spacing: -0.01em; color: #0E0E0E; }
+            .prose p { margin: 1.1em 0; }
+            .prose blockquote { font-size: 1.1rem; font-style: italic; border-left: 3px solid #C53D2F; padding-left: 1.25rem; color: #3A3A3A; background: rgba(197,61,47,.03); border-radius: 0.25rem; }
+            .prose blockquote .quote-cite { display: block; text-align: right; font-size: 0.875rem; font-style: normal; color: #9CA3AF; margin-top: 0.5rem; }
+    
+            article.prose { animation: fadeIn 0.4s ease-out; }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+            ::selection { background: rgba(197,61,47,0.15); }
+          </style>
+        </head>
+    
+        <body class="bg-cream text-ink-900 antialiased">
+          <div id="progress-bar"></div>
+    
+          <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+              <div class="flex items-center gap-1">
+                <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-12 w-12 object-contain" />
+                <a href="/" class="font-serif text-xl">Camila Tiburcio Rubio</a>
+              </div>
+              <a class="u-underline text-sm" href="/">← Back to Home</a>
+            </div>
+          </header>
+    
+          <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
+            <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">
+              ${escapeHtml(data.section || '')}
+            </div>
+    
+            <h1 class="font-serif text-4xl sm:text-5xl mt-3 leading-tight">
+              ${escapeHtml(data.title)}
+            </h1>
+    
+            ${data.excerpt ? `<p class="text-ink-500 mt-3 max-w-2xl mx-auto">${escapeHtml(data.excerpt)}</p>` : ''}
+    
+            <div class="mt-4 flex items-center justify-center gap-3 text-sm">
+              <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+                ${data.author === 'Camila Tiburcio Rubio'
+                  ? `<img src="./camila.jpg" alt="Camila Tiburcio Rubio" class="w-full h-full object-cover"/>`
+                  : ''}
+              </div>
+              <div class="text-left">
+                <div class="font-medium">By ${escapeHtml(data.author || 'Camila Tiburcio Rubio')}</div>
+                <div class="text-ink-300">
+                  ${new Date(data.date).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}
+                  • ${data.readMinutes} min read
+                </div>
+              </div>
+            </div>
+    
+            ${hasTags ? `
+              <div class="mt-3 flex justify-center flex-wrap gap-2">
+                ${data.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+              </div>` : ``}
+          </section>
+    
+          ${data.cover ? `
+          <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <img class="hero-img" src="${data.cover.src}" alt="${escapeHtml(data.cover.alt||'')}"/>
+            ${coverCredit ? `<figcaption class="text-center text-xs text-ink-300 mt-2">Image credit: ${escapeHtml(coverCredit)}</figcaption>` : ``}
+          </figure>` : ``}
+    
+          <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <article class="prose prose-neutral max-w-none">${data.bodyHtml}</article>
+    
+            <div class="mt-10 not-prose flex justify-center">
+              <div class="shareCard" role="group" aria-label="Share">
+                <span class="shareLabel">Share</span>
+    
+                <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener">
+                  <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
+                    <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
+                  </svg>
+                </a>
+    
+                <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener">
+                  <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
+                  </svg>
+                </a>
+    
+                <a id="share-mail" class="socialContainer containerMail" aria-label="Share via Email">
+                  <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+                  </svg>
+                </a>
+    
+                <button id="share-copy" class="socialContainer containerCopy" aria-label="Copy link" type="button">
+                  <svg class="clipboard-svg" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+    
+            <section class="mt-12 border-t border-black/10 pt-6">
+              <div class="flex items-start gap-4">
+                ${data.author === 'Camila Tiburcio Rubio'
+                  ? `<img src="./camila.jpg"
+                          alt="Photo of Camila Tiburcio Rubio"
+                          class="w-14 h-14 rounded-full object-cover" />`
+                  : `<div class="w-14 h-14 rounded-full bg-ink-300"></div>`}
+                <div>
+                  <p class="font-semibold">${escapeHtml(data.author || 'Camila Tiburcio Rubio')}</p>
+                  <p class="text-sm text-ink-300 mt-1">
+                    Writer and cultural researcher focusing on Cuba and the Caribbean,
+                    Masters Candidate in Latin America and Caribbean Studies at NYU.
+                  </p>
+                </div>
+              </div>
+            </section>
+    
+            <nav class="mt-10 flex justify-between text-sm text-ink-500">
+              <span class="opacity-60">← Previous Article</span>
+              <span class="opacity-60">Next Article →</span>
+            </nav>
+          </main>
+    
+          <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+              <div>
+                <div class="-ml-1.5">
+                  <div class="flex items-center gap-1">
+                    <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                    <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+                  </div>
+                </div>
+                <p class="mt-2 text-ink-400 text-sm max-w-xs">
+                  Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+                </p>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+                <ul class="space-y-2">
+                  <li><a href="/features" class="u-underline">Features</a></li>
+                  <li><a href="/latest" class="u-underline">Latest</a></li>
+                  <li><a href="/sections" class="u-underline">Sections</a></li>
+                </ul>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+                <ul class="space-y-2">
+                  <li><a href="/mission" class="u-underline">Mission</a></li>
+                  <li><a href="/contributors" class="u-underline">Contributors</a></li>
+                  <li><a href="/contact" class="u-underline">Contact</a></li>
+                </ul>
+              </div>
+    
+              <div>
+                <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+                <ul class="space-y-2">
+                  <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+                  <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+                  <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+                </ul>
+              </div>
+            </div>
+    
+            <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+              © ${new Date().getFullYear()} Camila Tiburcio Rubio. All rights reserved.
+            </div>
+          </footer>
+    
+          <script>
+            (function(){
+              const bar = document.getElementById('progress-bar');
+              function onScroll(){
+                const max = document.body.scrollHeight - innerHeight;
+                const pct = Math.max(0, Math.min(100, (scrollY / max) * 100));
+                bar.style.width = pct + '%';
+              }
+              window.addEventListener('scroll', onScroll, {passive:true});
+              onScroll();
+            })();
+    
+            (function addDropcap(){
+              const firstP = document.querySelector('article.prose p');
+              if(firstP) firstP.classList.add('dropcap');
+            })();
+    
+            (function(){
+              const url  = encodeURIComponent(location.href);
+              const text = encodeURIComponent(document.title || 'Check this out');
+    
+              const x    = document.getElementById('share-x');
+              const fb   = document.getElementById('share-fb');
+              const mail = document.getElementById('share-mail');
+              const copy = document.getElementById('share-copy');
+    
+              if (x)   x.href   = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
+              if (fb)  fb.href  = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+              if (mail){
+                mail.href = 'mailto:?subject=' + text + '&body=' + url;
+                mail.addEventListener('click', async (e) => {
+                  if (navigator.share) {
+                    e.preventDefault();
+                    try { await navigator.share({ title: document.title, url: location.href }); } catch {}
+                  }
+                });
+              }
+    
+              if (copy){
+                copy.addEventListener('click', async () => {
+                  try {
+                    await navigator.clipboard.writeText(location.href);
+                    copy.style.transform = 'scale(0.96)';
+                    setTimeout(()=>{ copy.style.transform = ''; }, 120);
+                  } catch {
+                    alert("Couldn't copy the link.");
+                  }
+                });
+              }
+            })();
+          <\/script>
+        </body>
+        </html>`;
+    }
+    
+
+    // ===============================
+    // GITHUB PUBLISH ADD-ONS (ONLY)
+    // ===============================
+
+    const GH_OWNER  = 'MahmoudS1201';
+    const GH_REPO   = 'CamilaTiburcioRubio';
+    const GH_BRANCH = 'main';
+    const GH_IMAGES_ROOT = 'images';
+    let   GH_TOKEN = localStorage.getItem('ctr:gh:token') || '';
+
+    function ensureToken(){
+      if (!GH_TOKEN) {
+        GH_TOKEN = prompt('Paste a GitHub Personal Access Token (repo contents permission):') || '';
+        if (!GH_TOKEN) throw new Error('GitHub token required.');
+        localStorage.setItem('ctr:gh:token', GH_TOKEN);
+      }
+    }
+
+    async function gh(path, init={}){
+      ensureToken();
+      const res = await fetch('https://api.github.com' + path, {
+        ...init,
+        headers: {
+          'Accept': 'application/vnd.github+json',
+          'Authorization': 'token ' + GH_TOKEN,
+          ...(init.headers || {})
+        }
+      });
+      if (!res.ok){
+        const t = await res.text();
+        try { throw new Error(JSON.parse(t).message || t); }
+        catch { throw new Error(t || (res.status + ' ' + res.statusText)); }
+      }
+      return res.json();
+    }
+
+    async function getRepoFile(path){
+      try {
+        return await gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${encodeURIComponent(path)}?ref=${GH_BRANCH}`);
+      } catch (e) {
+        if (String(e.message).includes('Not Found')) return null;
+        throw e;
+      }
+    }
+
+    async function putRepoFile(path, base64Content, message){
+      let sha;
+      const existing = await getRepoFile(path);
+      if (existing && existing.sha) sha = existing.sha;
+
+      return gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${encodeURIComponent(path)}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          message,
+          content: base64Content,
+          branch: GH_BRANCH,
+          ...(sha ? { sha } : {})
+        })
+      });
+    }
+
+    function dataUrlInfo(dataUrl){
+      const m = /^data:([^;]+);base64,(.*)$/i.exec(dataUrl || "");
+      if (!m) return null;
+      return { mime: m[1].toLowerCase(), b64: m[2] };
+    }
+    function mimeToExt(mime){
+      if (!mime) return 'bin';
+      if (mime.includes('jpeg')) return 'jpg';
+      if (mime.includes('png'))  return 'png';
+      if (mime.includes('webp')) return 'webp';
+      if (mime.includes('svg'))  return 'svg';
+      if (mime.includes('gif'))  return 'gif';
+      return 'bin';
+    }
+    function safeFilename(s, max=50){
+      const base = (s || '').toLowerCase().replace(/[^a-z0-9-_]+/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      return base.slice(0,max) || 'img';
+    }
+    function yyyymm(dateIso){
+      const d = dateIso ? new Date(dateIso) : new Date();
+      const y = d.getUTCFullYear();
+      const m = String(d.getUTCMonth()+1).padStart(2,'0');
+      return `${y}/${m}`;
+    }
+    function b64utf8(s){ return btoa(unescape(encodeURIComponent(s))); }
+
+    async function uploadDataImageForPost(slug, dateIso, dataUrl, hintName='image'){
+      const info = dataUrlInfo(dataUrl);
+      if (!info) return dataUrl;
+      const ext = mimeToExt(info.mime);
+      const dir = `${GH_IMAGES_ROOT}/${yyyymm(dateIso)}/${slug}`;
+      const file = `${dir}/${safeFilename(hintName)}.${ext}`;
+      await putRepoFile(file, info.b64, `image: ${slug}/${hintName}.${ext}`);
+      return `/${file}`;
+    }
+
+    async function uploadAndRewriteInlineImages(slug, dateIso, bodyMarkdown, bodyHtml, imageStore){
+      if (!imageStore) return { bodyMarkdown, bodyHtml };
+      const tokenRe = /\(ctr-img:([a-z0-9-]+)\)/ig;
+      const seen = new Map();
+
+      async function resolve(id){
+        if (seen.has(id)) return seen.get(id);
+        const dataUrl = imageStore[id];
+        if (!dataUrl) return `ctr-img:${id}`;
+        const path = await uploadDataImageForPost(slug, dateIso, dataUrl, `inline-${id}`);
+        seen.set(id, path);
+        return path;
+      }
+
+      async function rewrite(str){
+        let out = ''; let last = 0; let m;
+        while ((m = tokenRe.exec(str)) !== null){
+          out += str.slice(last, m.index);
+          const path = await resolve(m[1]);
+          out += `(${path})`;
+          last = m.index + m[0].length;
+        }
+        return out + str.slice(last);
+      }
+
+      return {
+        bodyMarkdown: await rewrite(bodyMarkdown || ''),
+        bodyHtml:     await rewrite(bodyHtml || '')
+      };
+    }
+
+    function normalize(data){
+      return {
+        slug: data.slug,
+        title: data.title,
+        section: data.section,
+        tags: Array.isArray(data.tags) ? data.tags : [],
+        author: data.author || 'Camila Tiburcio Rubio',
+        excerpt: data.excerpt || '',
+        date: data.date,
+        readMinutes: data.readMinutes || 1,
+        featured: !!data.featured,
+        cover: data.cover?.src || null,
+        url: `${data.slug}.html`
+      };
+    }
+
+    async function pushPostsJson(entry){
+      const path = 'posts.json';
+      const existing = await getRepoFile(path);
+      let list = [];
+
+      if (existing && existing.content){
+        try {
+          const json = atob(existing.content.replace(/\n/g,''));
+          list = JSON.parse(json);
+          if (!Array.isArray(list)) list = [];
+        } catch { list = []; }
+      }
+
+      const idx = list.findIndex(p => p.slug === entry.slug);
+      if (idx >= 0) list[idx] = entry; else list.push(entry);
+
+      list.sort((a,b) => new Date(b.date) - new Date(a.date));
+      const contentB64 = b64utf8(JSON.stringify(list, null, 2));
+      await putRepoFile(path, contentB64, `posts.json: ${entry.slug}`);
+    }
+
+    // PUBLISH HANDLER
+    document.getElementById('publishBtn').addEventListener('click', async () => {
+      const data = collect();
+      const errs = validate(data);
+      if (errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+
+      try {
+        data.slug = data.slug || (data.title ? data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') : String(Date.now()));
+        data.date = data.date || new Date().toISOString();
+
+        if (data.cover?.src && /^data:/i.test(data.cover.src)) {
+          const path = await uploadDataImageForPost(data.slug, data.date, data.cover.src, 'cover');
+          data.cover.src = path;
+        }
+
+        const expanded = await uploadAndRewriteInlineImages(
+          data.slug,
+          data.date,
+          data.bodyMarkdown || '',
+          data.bodyHtml || '',
+          data.images || inlineImageStore || {}
+        );
+        data.bodyMarkdown = expanded.bodyMarkdown;
+        data.bodyHtml     = expanded.bodyHtml;
+
+        data.status = 'published';
+        localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(data));
+
+        const entry = normalize({
+          ...data,
+          cover: data.cover ? { src: data.cover.src, alt: data.cover.alt || '' } : null
+        });
+        await pushPostsJson(entry);
+
+        // Optionally also publish the HTML page:
+        // const html = buildArticleHtml(data);
+        // await putRepoFile(`${entry.url}`, b64utf8(html), `page: ${entry.slug}.html`);
+
+        statusMsg.textContent = 'Published ✓ — images uploaded and posts.json updated';
+        setTimeout(()=> statusMsg.textContent = '', 2500);
+
+      } catch (e) {
+        console.error(e);
+        alert('Publish failed: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>

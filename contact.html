@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — Camila Tiburcio Rubio</title>
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',400:'#6B7280',300:'#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow: { soft: '0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .u-underline { position:relative }
+    .u-underline::after { content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease }
+    .u-underline:hover::after { transform:scaleX(1) }
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06) }
+    .pill { display:inline-block; border:1px solid rgba(0,0,0,.08); background:rgba(197,61,47,.08); color:#C53D2F; padding:.35rem .7rem; border-radius:9999px; font-weight:600; font-size:.8rem }
+    .sr-help { font-size:.85rem; color:#9CA3AF }
+    ::selection { background:rgba(197,61,47,.15) }
+  </style>
+
+  <!-- Meta -->
+  <link rel="canonical" href="contact.html" />
+  <meta name="description" content="Contact Camila Tiburcio Rubio for interviews, collaborations, or speaking."/>
+  <meta property="og:title" content="Contact — Camila Tiburcio Rubio"/>
+  <meta property="og:description" content="Get in touch for interviews, collaborations, research, or speaking."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://picsum.photos/1200/630?contact" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Camila Tiburcio Rubio",
+      "email": "mailto:ct2798@nyu.edu",
+      "url": "https://camilatiburciorubio.com",
+      "sameAs": ["https://instagram.com", "https://twitter.com", "https://youtube.com"]
+    }
+  }
+  </script>
+</head>
+
+<body class="bg-cream text-ink-900 antialiased">
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="Home.html#newsletter" class="u-underline">Subscribe</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="features.html">Features</a>
+          <a class="u-underline" href="latest.html">Latest</a>
+          <a class="u-underline" href="sections.html">Sections</a>
+          <a class="u-underline" href="about2.html">About</a>
+          <a class="u-underline font-semibold text-accent" href="contact.html" aria-current="page">Contact</a>
+        </nav>
+        <a href="Home.html" class="md:hidden u-underline text-sm">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+    <div class="text-[10px] tracking-[0.14em] uppercase font-semibold text-accent">Contact</div>
+    <h1 class="font-serif text-4xl sm:text-5xl mt-2 leading-tight">Get in touch</h1>
+    <p class="text-ink-500 mt-3 max-w-2xl mx-auto">For interviews, collaboration, research requests, or speaking invitations.</p>
+    <div class="mt-4 flex flex-wrap justify-center gap-2">
+      <span class="pill">Interviews</span>
+      <span class="pill">Research</span>
+      <span class="pill">Talks</span>
+      <span class="pill">Permissions</span>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 grid lg:grid-cols-5 gap-8">
+    <!-- Left: quick contacts -->
+    <aside class="card p-6 lg:p-8 lg:col-span-2">
+      <h2 class="font-serif text-2xl">Direct</h2>
+      <div class="mt-4 space-y-3 text-ink-700">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm uppercase tracking-wide text-accent">Email</div>
+            <a id="mailto" href="mailto:ct2798@nyu.edu" class="u-underline">ct2798@nyu.edu</a>
+          </div>
+          <button id="copyEmail" type="button" class="px-3 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft text-sm">Copy</button>
+        </div>
+        <div>
+          <div class="text-sm uppercase tracking-wide text-accent">Phone</div>
+          <a href="tel:+17868653947" class="u-underline">(786) 865-3947</a>
+        </div>
+        <div>
+          <div class="text-sm uppercase tracking-wide text-accent">Social</div>
+          <div class="flex gap-4 mt-1">
+            <a href="https://instagram.com" target="_blank" rel="me noopener" class="u-underline">Instagram</a>
+            <a href="https://twitter.com" target="_blank" rel="me noopener" class="u-underline">X / Twitter</a>
+            <a href="https://youtube.com" target="_blank" rel="me noopener" class="u-underline">YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <h3 class="font-serif text-xl">For press & speaking</h3>
+        <p class="text-ink-500 mt-2">Please include a brief description of the event or project, dates, and any deadlines.</p>
+      </div>
+
+      <div class="mt-8">
+        <h3 class="font-serif text-xl">Response time</h3>
+        <p class="text-ink-500 mt-2">I try to respond within a week. If your note is time-sensitive, add “<em>Urgent</em>” to the subject line.</p>
+      </div>
+    </aside>
+
+    <!-- Right: form -->
+    <section class="card p-6 lg:p-8 lg:col-span-3">
+      <h2 class="font-serif text-2xl">Send a message</h2>
+      <p class="text-ink-500 mt-2">This opens your default mail app. No account required.</p>
+
+      <form id="contactForm" class="mt-6 space-y-5" novalidate>
+        <!-- Honeypot anti-spam -->
+        <input type="text" name="company" autocomplete="off" tabindex="-1" class="hidden" aria-hidden="true" />
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm font-medium">Your name</span>
+            <input name="name" required aria-required="true" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40"/>
+            <span class="sr-help">Required</span>
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium">Email</span>
+            <input name="email" type="email" inputmode="email" required aria-required="true" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40"/>
+            <span class="sr-help">We’ll use this to reply</span>
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="text-sm font-medium">Subject</span>
+          <input name="subject" required aria-required="true" class="mt-1 w-full px-3 py-2 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Interview request, collaboration, …"/>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">Message</span>
+          <textarea name="message" rows="6" required aria-required="true" class="mt-1 w-full px-3 py-3 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Hi Camila —"></textarea>
+        </label>
+
+        <div class="flex flex-wrap items-center gap-3 pt-1">
+          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Open in Mail</button>
+          <button type="button" id="clearBtn" class="px-5 py-3 rounded-xl border border-black/10 bg-white hover:shadow-soft">Clear</button>
+          <span id="formStatus" class="text-sm text-ink-300" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <!-- Small FAQ -->
+      <div class="mt-10">
+        <h3 class="font-serif text-xl">Quick answers</h3>
+        <div class="mt-3 divide-y divide-black/10">
+          <details class="py-3 group">
+            <summary class="cursor-pointer flex justify-between items-center font-medium">Do you accept outside submissions?
+              <span class="text-ink-300 group-open:rotate-180 transition">▾</span>
+            </summary>
+            <p class="text-ink-500 mt-2">No — this is a personal site for my work only. If you’d like to propose an interview or a talk, send an email.</p>
+          </details>
+          <details class="py-3 group">
+            <summary class="cursor-pointer flex justify-between items-center font-medium">Can I request an interview?
+              <span class="text-ink-300 group-open:rotate-180 transition">▾</span>
+            </summary>
+            <p class="text-ink-500 mt-2">Yes. Include your project description, timeline, and where it will be published or presented.</p>
+          </details>
+          <details class="py-3 group">
+            <summary class="cursor-pointer flex justify-between items-center font-medium">How do I share a correction?
+              <span class="text-ink-300 group-open:rotate-180 transition">▾</span>
+            </summary>
+            <p class="text-ink-500 mt-2">Email <a class="u-underline" href="mailto:ct2798@nyu.edu?subject=Correction">ct2798@nyu.edu</a> with “Correction” in the subject. Substantive updates are noted at the end of a piece.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <!-- Explore -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+          <li><a href="Home.html#newsletter" class="u-underline">Newsletter</a></li>
+        </ul>
+      </div>
+      <!-- About -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="mission.html" class="u-underline">Mission</a></li>
+          <li><a href="contact.html" class="u-underline font-semibold text-accent" aria-current="page">Contact</a></li>
+        </ul>
+      </div>
+      <!-- Follow -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline" target="_blank" rel="me noopener">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline" target="_blank" rel="me noopener">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline" target="_blank" rel="me noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copy email
+    const copyBtn = document.getElementById('copyEmail');
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('ct2798@nyu.edu');
+        copyBtn.textContent = 'Copied!';
+        setTimeout(()=> copyBtn.textContent = 'Copy', 1200);
+      } catch {
+        copyBtn.textContent = 'Press ⌘/Ctrl+C';
+        setTimeout(()=> copyBtn.textContent = 'Copy', 1500);
+      }
+    });
+
+    // Contact form -> mailto (client-only)
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      // honeypot
+      if ((data.get('company')||'').toString().trim().length) {
+        status.textContent = 'Blocked as spam.';
+        return;
+      }
+      const name = (data.get('name')||'').toString().trim();
+      const email = (data.get('email')||'').toString().trim();
+      const subject = (data.get('subject')||'').toString().trim();
+      const message = (data.get('message')||'').toString().trim();
+
+      if (!name || !email || !subject || !message) {
+        status.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
+      const subj = encodeURIComponent(subject);
+      window.location.href = `mailto:ct2798@nyu.edu?subject=${subj}&body=${body}`;
+      status.textContent = 'Opening your mail app…';
+    });
+
+    document.getElementById('clearBtn')?.addEventListener('click', () => {
+      form.reset();
+      status.textContent = '';
+    });
+  </script>
+</body>
+</html>

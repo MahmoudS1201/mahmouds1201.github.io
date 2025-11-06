@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About — Camila Tiburcio Rubio</title>
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Source Serif 4', 'Georgia', 'serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow: { soft:'0 10px 30px rgba(0,0,0,.06)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- SEO (replace example.com with your domain when ready) -->
+  <link rel="canonical" href="https://example.com/about" />
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="About — Camila Tiburcio Rubio">
+  <meta property="og:description" content="Writer and researcher focused on Cuban diaspora, performance, and archives.">
+  <meta property="og:url" content="https://example.com/about">
+  <meta property="og:image" content="https://example.com/assets/camila-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About — Camila Tiburcio Rubio">
+  <meta name="twitter:description" content="Writer and researcher focused on Cuban diaspora, performance, and archives.">
+  <meta name="twitter:image" content="https://example.com/assets/camila-hero.jpg">
+
+  <style>
+    .u-underline { position: relative; }
+    .u-underline::after { content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
+    .u-underline:hover::after { transform:scaleX(1); }
+    .lead-dropcap::first-letter{
+      font-family:'Source Serif 4', Georgia, serif;
+      float:left; font-size:5rem; line-height:.9; margin-right:.15rem; margin-top:-.15rem; color:#C53D2F;
+    }
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .pill { border:1px solid rgba(0,0,0,.08); background:rgba(197,61,47,.08); color:#C53D2F; padding:.4rem .7rem; border-radius:9999px; font-weight:600; font-size:.8rem; }
+    .section-head { display:flex; align-items:center; gap:.75rem; }
+    .section-head:after { content:''; height:1px; flex:1 1 auto; background:rgba(0,0,0,.08); }
+    .avatar { box-shadow:0 0 0 6px rgba(197,61,47,.08), 0 20px 50px rgba(0,0,0,.08); }
+    .link-row:hover { transform:translateY(-1px); }
+    ::selection { background: rgba(197,61,47,.15); }
+  </style>
+</head>
+<body class="bg-cream text-ink-900 antialiased">
+  <!-- Top strip -->
+  <div class="bg-ink-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
+      <p>New: Fall features now live — interviews, essays & visual art</p>
+      <a href="#newsletter" class="u-underline">Subscribe</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="Home.html#features">Features</a>
+          <a class="u-underline" href="Home.html#latest">Latest</a>
+          <a class="u-underline" href="Home.html#sections">Sections</a>
+          <a class="u-underline font-semibold text-accent" href="about2.html" aria-current="page">About</a>
+        </nav>
+        <a href="Home.html" class="md:hidden u-underline text-sm">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CTAs -->
+  <div class="flex justify-center mt-8">
+    <div class="flex flex-wrap justify-center gap-3">
+      <a href="resume.html" class="px-4 py-2 rounded-xl border border-black/10 bg-white hover:shadow-soft">View full résumé</a>
+      <a href="assets/Camila_Tiburcio_Rubio_Resume.pdf" class="px-4 py-2 rounded-xl bg-accent text-white hover:bg-accent-dark" download>Download PDF</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid md:grid-cols-[240px,1fr] gap-8 items-center">
+      <div class="flex md:block justify-center">
+        <img src="assets/camila.jpg" alt="Portrait of Camila Tiburcio Rubio" class="h-48 w-48 md:h-60 md:w-60 rounded-2xl object-cover avatar" />
+      </div>
+
+      <div>
+        <div class="text-[10px] tracking-[0.14em] uppercase font-semibold text-accent">About</div>
+        <h1 class="font-serif text-4xl sm:text-5xl mt-2 leading-tight">Camila Tiburcio Rubio</h1>
+
+        <p class="text-ink-500 mt-3 max-w-2xl lead-dropcap">
+          Miami native, writer, and cultural researcher based in New York City. Camila completed her B.A. in
+          Social & Cultural Analysis at NYU (<em>Summa Cum Laude</em>, 2025) and is currently in NYU’s
+          accelerated M.A. in Latin American & Caribbean Studies (’26). Her work follows Cubanidad,
+          performance, and diaspora aesthetics through interviews, archives, and public-facing essays that keep
+          scholarship accessible to wide audiences.
+        </p>
+
+        <div class="mt-5 flex flex-wrap gap-2">
+          <span class="pill">Cuba & Caribbean</span>
+          <span class="pill">Performance & Archives</span>
+          <span class="pill">Public Humanities</span>
+          <span class="pill">Interviews & Essays</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Highlights -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid sm:grid-cols-3 gap-4">
+      <div class="card p-5 text-center">
+        <div class="text-sm uppercase tracking-wide text-accent">Honors</div>
+        <p class="font-serif text-xl mt-1">Best Thesis Award</p>
+        <p class="text-ink-300 text-sm">NYU SCA • 2025</p>
+      </div>
+      <div class="card p-5 text-center">
+        <div class="text-sm uppercase tracking-wide text-accent">Grants</div>
+        <p class="font-serif text-xl mt-1">Tinker, DURF, GSAS</p>
+        <p class="text-ink-300 text-sm">Fieldwork & research support</p>
+      </div>
+      <div class="card p-5 text-center">
+        <div class="text-sm uppercase tracking-wide text-accent">Published</div>
+        <p class="font-serif text-xl mt-1">NYU GRJ & Esferas</p>
+        <p class="text-ink-300 text-sm">2025 issues</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bio + Focus -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 grid lg:grid-cols-3 gap-8">
+    <article class="card p-6 lg:p-8 lg:col-span-2">
+      <div class="section-head mb-4">
+        <h2 class="font-serif text-2xl">Short Bio</h2>
+      </div>
+      <div class="prose prose-neutral max-w-none">
+        <p>
+          Camila spent her formative years in Miami, Florida, where her personal experiences and search
+          for belonging in the city's Cuban and diasporic communities shaped her academic interests.
+          The city's layered histories and politics offered an early framework for an approach to scholarship
+          that values lived experience and the art and performance of everyday life as sites of cultural theory.
+        </p>
+        <p>
+          Camila’s undergraduate thesis, <em>Tú Cinco-Nueve, Yo Doble Dos: Understanding Cubanidad in Gen-Z Little
+          Havana</em>, received the Best Thesis Award from NYU’s Department of Social & Cultural Analysis and support
+          from the Dean’s Undergraduate Research Fund. Her current work extends that research through regular trips to
+          Miami and Cuba, a conference series with high-profile figures in the Reparto space, and conscientious archival
+          work aimed at publishing accessible findings while engaging a rapidly evolving and increasingly mainstream field.
+        </p>
+        <p>
+          While completing her M.A. in Latin American & Caribbean Studies, she also works with the Hemispheric Institute
+          of Performance & Politics at NYU, preserving and annotating performance media for the Digital Video Library and
+          supporting public engagement. Beyond the university, she freelances as a Correspondence Archivist for the Estate
+          of Jean Franco, consults as a research analyst for film projects, and plans to pursue a Ph.D. beginning fall ’26.
+        </p>
+      </div>
+    </article>
+
+    <aside class="card p-6 lg:p-8">
+      <div class="section-head mb-4">
+        <h3 class="font-serif text-2xl">Areas of Focus</h3>
+      </div>
+      <ul class="space-y-3 text-ink-700">
+        <li>• Cubanidad & diaspora networks</li>
+        <li>• Performance, sound & everyday aesthetics</li>
+        <li>• Archives & community memory</li>
+        <li>• Public-facing scholarship & pedagogy</li>
+      </ul>
+      <div class="mt-5">
+        <div class="text-xs uppercase tracking-wide text-accent mb-2">Currently</div>
+        <ul class="text-sm text-ink-500 space-y-2">
+          <li>Hemispheric Institute — Digital Video Library Archivist & Social Media Associate</li>
+          <li>Estate of Jean Franco — Freelance Correspondence Archivist</li>
+          <li>ERM Research — Freelance Research Consultant (film)</li>
+          <li>Host/Organizer — <em>Ustedes No Son Reparteros Na’</em> conference series</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Selected Writing -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="section-head mb-5">
+      <h2 class="font-serif text-2xl">Selected Writing</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-6">
+      <a class="card p-6 hover:shadow transition block" href="#" aria-label="Read NYU Graduate Research Journal article">
+        <div class="text-xs uppercase tracking-wide text-accent">Research Article • May 2025</div>
+        <h3 class="font-serif text-xl mt-1">Tú Cinco-Nueve, Yo Doble Dos</h3>
+        <p class="text-ink-500 mt-2">Understanding Cubanidad in Gen-Z Little Havana.</p>
+        <div class="text-ink-300 text-sm mt-3">NYU Graduate Research Journal</div>
+      </a>
+
+      <a class="card p-6 hover:shadow transition block" href="#" aria-label="Read Esferas piece">
+        <div class="text-xs uppercase tracking-wide text-accent">Essay • Apr 2025</div>
+        <h3 class="font-serif text-xl mt-1">Diary of an Advocate</h3>
+        <p class="text-ink-500 mt-2">Reflections on care, advocacy, and community work.</p>
+        <div class="text-ink-300 text-sm mt-3">Esferas Journal, Issue 16</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Honors & Grants -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="section-head mb-5">
+      <h2 class="font-serif text-2xl">Honors & Grants</h2>
+    </div>
+    <div class="card p-6 lg:p-8">
+      <ul class="grid sm:grid-cols-2 gap-3 text-ink-700">
+        <li>• Best Thesis Award — NYU SCA (2025)</li>
+        <li>• Tinker Foundation Grant for Fieldwork (2025)</li>
+        <li>• GSAS Academic Scholarship (2025)</li>
+        <li>• May & Samuel Rudin Memorial Scholarship (2025)</li>
+        <li>• Dean’s Undergraduate Research Fund (2024)</li>
+        <li>• Gilman Scholarship, U.S. Dept. of State (2022)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="section-head mb-5">
+      <h2 class="font-serif text-2xl">Education</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card p-6">
+        <div class="text-xs uppercase tracking-wide text-accent">M.A. — In Progress</div>
+        <h3 class="font-serif text-xl mt-1">Latin American & Caribbean Studies</h3>
+        <p class="text-ink-500 mt-1">New York University, Accelerated Master’s Program (’26 expected)</p>
+        <p class="text-ink-300 text-sm mt-2">GPA 4.0</p>
+      </div>
+      <div class="card p-6">
+        <div class="text-xs uppercase tracking-wide text-accent">B.A. — 2025</div>
+        <h3 class="font-serif text-xl mt-1">Social & Cultural Analysis</h3>
+        <p class="text-ink-500 mt-1">NYU • Minor in Latin American & Caribbean Studies • <em>Summa Cum Laude</em></p>
+        <p class="text-ink-300 text-sm mt-2">GPA 4.0</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Follow -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="grid lg:grid-cols-3 gap-8">
+      <div class="card p-6 lg:p-8">
+        <div class="section-head mb-4">
+          <h2 class="font-serif text-2xl">Get in touch</h2>
+        </div>
+        <p class="text-ink-500">For interviews, collaboration, or speaking:</p>
+        <div class="mt-4 space-y-2">
+          <a class="link-row flex items-center gap-3 p-3 rounded-lg border border-black/10 bg-white transition" href="mailto:ct2798@nyu.edu">
+            <span class="text-ink-300">✉︎</span><span class="u-underline">ct2798@nyu.edu</span>
+          </a>
+          <a class="link-row flex items-center gap-3 p-3 rounded-lg border border-black/10 bg-white transition" href="tel:+17868653947">
+            <span class="text-ink-300">☎︎</span><span class="u-underline">(786) 865-3947</span>
+          </a>
+          <a class="link-row flex items-center gap-3 p-3 rounded-lg border border-black/10 bg-white transition" href="https://CamilaTiburcioRubio.com" target="_blank" rel="noopener">
+            <span class="text-ink-300">◎</span><span class="u-underline">CamilaTiburcioRubio.com</span>
+          </a>
+        </div>
+      </div>
+
+      <div id="newsletter" class="card p-6 lg:p-8 lg:col-span-2">
+        <div class="section-head mb-4">
+          <h2 class="font-serif text-2xl">Newsletter</h2>
+        </div>
+        <p class="text-ink-500">Monthly roundup of essays, interviews, and research notes.</p>
+        <form class="mt-4 flex flex-col sm:flex-row gap-3" method="post" action="/subscribe">
+          <input type="email" name="email" placeholder="you@example.com" required class="flex-1 px-4 py-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-accent/40 outline-none bg-white" />
+          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Subscribe</button>
+        </form>
+        <p class="text-xs text-ink-300 mt-2">By subscribing you agree to our terms.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="Home.html#features" class="u-underline">Features</a></li>
+          <li><a href="Home.html#latest" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline" target="_blank" rel="me noopener">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline" target="_blank" rel="me noopener">X / Twitter</a></li>
+          <li><a href="https://youtube.com" class="u-underline" target="_blank" rel="me noopener">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
