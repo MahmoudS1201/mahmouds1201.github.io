@@ -228,8 +228,25 @@
   </footer>
 
   <script>
+    // =========================
     // ---- Data loading ----
-    function loadPublished() {
+    // =========================
+
+    // Try posts.json first (committed by your Admin "Publish" flow)
+    async function fetchPostsJson() {
+      try {
+        const res = await fetch('posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json fetch failed');
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error('posts.json not an array');
+        return data;
+      } catch {
+        return null;
+      }
+    }
+
+    // Fallback: read any locally published items (same browser only)
+    function loadPublishedLocal() {
       const out = [];
       for (let i=0;i<localStorage.length;i++){
         const k = localStorage.key(i);
@@ -243,33 +260,33 @@
       return out;
     }
 
-    // Fallback demo posts if nothing in storage
+    // Last fallback demo list
     const DEMO = [
-      { title:'The Heat of Memory', url:'/features/heat-of-memory.html', date:'2025-10-12', section:'Features', description:'An essay on diaspora, memory, and Miami’s shifting shoreline.' },
-      { title:'Interview: Artist at the Archive', url:'/interviews/artist-archive.html', date:'2025-09-28', section:'Interviews', description:'Process, practice, and the small risks that add up.' },
-      { title:'Review: Night Festival', url:'/reviews/night-festival.html', date:'2025-08-14', section:'Reviews', description:'On rhythm, repetition, and the slow build of a chorus.' },
-      { title:'Note: Field Log 07', url:'/notes/field-log-07.html', date:'2025-07-03', section:'Notes', description:'Fragments from the summer notebook.' },
-      { title:'City as Collage', url:'/essays/city-as-collage.html', date:'2024-12-19', section:'Essays', description:'Layered histories and the infrastructures of belonging.' },
-      { title:'Interview: On Sound & Care', url:'/interviews/sound-and-care.html', date:'2024-05-09', section:'Interviews', description:'Listening as method and hospitality.' },
-      { title:'Review: Small Museum', url:'/reviews/small-museum.html', date:'2023-11-02', section:'Reviews', description:'A study in modest scale and attention.' }
+      { title:'The Heat of Memory', url:'features/heat-of-memory.html', date:'2025-10-12', section:'Features', description:'An essay on diaspora, memory, and Miami’s shifting shoreline.' },
+      { title:'Interview: Artist at the Archive', url:'interviews/artist-archive.html', date:'2025-09-28', section:'Interviews', description:'Process, practice, and the small risks that add up.' },
+      { title:'Review: Night Festival', url:'reviews/night-festival.html', date:'2025-08-14', section:'Reviews', description:'On rhythm, repetition, and the slow build of a chorus.' },
+      { title:'Note: Field Log 07', url:'notes/field-log-07.html', date:'2025-07-03', section:'Notes', description:'Fragments from the summer notebook.' }
     ];
 
-    function normalize(item){
-      // Accepts admin objects or demo objects
-      const href = item.slug ? `/${item.slug}.html` : (item.url || '#');
+    // Normalize posts from posts.json or local cache
+    function normalizePost(item){
+      const href =
+        (item && typeof item.url === 'string' && item.url.trim()) ? item.url.trim()
+        : (item && item.slug ? `${item.slug}.html` : '#');
       return {
         title: item.title || '',
         href,
         section: item.section || '',
         description: item.excerpt || item.description || '',
-        date: item.date || item.publishedAt || '',
+        date: item.date || item.publishedAt || ''
       };
     }
 
-    const raw = loadPublished();
-    const POSTS = (raw.length ? raw : DEMO).map(normalize);
+    let POSTS = [];
 
-    // ---- Utilities ----
+    // =========================
+    // ---- Utilities & State
+    // =========================
     const $ = (s, r=document)=>r.querySelector(s);
     function fmtDate(iso){try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch{return ''}}
     const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
@@ -295,10 +312,11 @@
       history.replaceState({}, '', u.toString());
     }
 
-    // ---- State ----
     let state = parseParams();
 
-    // ---- UI Elements ----
+    // =========================
+    // ---- Elements
+    // =========================
     const searchInput = $('#searchInput');
     const sectionSelect = $('#sectionSelect');
     const sortSelect = $('#sortSelect');
@@ -311,7 +329,9 @@
     if ([...sectionSelect.options].some(o=>o.value===state.section)) sectionSelect.value = state.section;
     if (['newest','oldest'].includes(state.sort)) sortSelect.value = state.sort;
 
-    // ---- Rendering ----
+    // =========================
+    // ---- Rendering
+    // =========================
     function renderYearChips(){
       const years = uniqueYears(POSTS);
       yearChips.innerHTML = '';
@@ -395,14 +415,37 @@
       renderResults(filtered);
     }
 
-    // ---- Events ----
+    // =========================
+    // ---- Events
+    // =========================
     searchInput.addEventListener('input', e => { state.q = e.target.value; update(); });
     sectionSelect.addEventListener('change', e => { state.section = e.target.value; update(); });
     sortSelect.addEventListener('change', e => { state.sort = e.target.value; update(); });
 
-    // ---- Init ----
-    document.getElementById('yearFooter').textContent = new Date().getFullYear();
-    update();
+    // =========================
+    // ---- Init
+    // =========================
+    (async function init(){
+      document.getElementById('yearFooter').textContent = new Date().getFullYear();
+
+      // 1) Try posts.json from the repo
+      const jsonList = await fetchPostsJson();
+
+      if (jsonList && jsonList.length) {
+        POSTS = jsonList.map(normalizePost);
+      } else {
+        // 2) Fallback to local published cache (same browser only)
+        const local = loadPublishedLocal();
+        if (local.length) {
+          POSTS = local.map(normalizePost);
+        } else {
+          // 3) Last fallback to embedded demo list
+          POSTS = DEMO.map(normalizePost);
+        }
+      }
+
+      update();
+    })();
   </script>
 </body>
 </html>
