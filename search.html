@@ -171,141 +171,112 @@
   </footer>
 
     <script>
-    // Utilities
+    // ---------- Utilities ----------
     const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const WORDS_RE = /[a-z0-9\u00C0-\u017F]+/gi;
 
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const words = (s='') => (s.toLowerCase().match(WORDS_RE) || []);
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    // Parse URL param
-    function getParam(name){
-      const u = new URL(location.href);
-      return u.searchParams.get(name) || '';
-    }
-
-    // Tokenize
-    function words(str=''){ return (str.toLowerCase().match(/[a-z0-9\u00C0-\u017F]+/g) || []); }
-
-    // Highlight terms
     function highlight(text='', terms=[]){
       if (!terms.length || !text) return text;
-      const uniq = Array.from(new Set(terms)).filter(Boolean);
-      const pattern = new RegExp('(' + uniq.map(t => t.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')).join('|') + ')','ig');
-      return text.replace(pattern, '<mark>$1</mark>');
+      const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
+      return text.replace(pat, '<mark>$1</mark>');
     }
 
-    // Load posts saved by Admin screen (localStorage)
+    // ---------- Data ----------
     function loadPublished(){
       const out = [];
       for (let i=0;i<localStorage.length;i++){
         const k = localStorage.key(i);
         if (k && k.startsWith('ctr:admin:published:')){
-          try{ const obj = JSON.parse(localStorage.getItem(k)); if (obj && obj.title) out.push(obj); } catch {}
+          try { const v = JSON.parse(localStorage.getItem(k)); if (v && v.title) out.push(v); } catch {}
         }
       }
       return out;
     }
 
-    // Normalize a post object
-    function normalizeItem(item){
+    function normalizeItem(x){
       return {
-        title: item.title || '',
-        slug: item.slug || '',
-        section: item.section || '',
-        excerpt: item.excerpt || '',
-        date: item.date || '',
-        readMinutes: item.readMinutes || 0,
-        tags: Array.isArray(item.tags) ? item.tags : [],
-        cover: item.cover && item.cover.src ? item.cover.src : '',
-        bodyText: (item.bodyMarkdown || item.bodyHtml || '').replace(/<[^>]+>/g,' ')
+        title: x.title || '',
+        slug:  x.slug  || '',
+        section: x.section || '',
+        excerpt: x.excerpt || '',
+        date: x.date || '',
+        readMinutes: x.readMinutes || 0,
+        tags: Array.isArray(x.tags) ? x.tags : [],
+        cover: x.cover && x.cover.src ? x.cover.src : '',
+        bodyText: (x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ')
       };
     }
 
-    // Score relevance
-    function scoreItem(it, qTerms){
-      if (!qTerms.length) return 0;
-      const hay = (it.title+' '+it.excerpt+' '+it.section+' '+(it.tags||[]).join(' ')+' '+it.bodyText).toLowerCase();
-      let score = 0;
-      for (const t of qTerms){
-        if (it.title.toLowerCase().includes(t)) score += 6;
-        if ((it.tags||[]).join(' ').toLowerCase().includes(t)) score += 3;
-        if (it.excerpt.toLowerCase().includes(t)) score += 3;
-        if (it.section.toLowerCase().includes(t)) score += 2;
-        if (hay.includes(t)) score += 1;
-      }
-      // Freshness nudge
-      const d = new Date(it.date).getTime();
-      if (!Number.isNaN(d)){
-        const months = (Date.now() - d) / (1000*60*60*24*30);
-        score += Math.max(0, 3 - Math.min(3, months/6));
-      }
-      return score;
+    // Strict match: an item matches iff ANY field contains ALL query terms
+    function matchesQuery(it, qTerms){
+      if (!qTerms.length) return true;
+      const fields = [
+        it.title.toLowerCase(),
+        it.excerpt.toLowerCase(),
+        it.section.toLowerCase(),
+        (it.tags||[]).join(' ').toLowerCase(),
+        it.bodyText.toLowerCase()
+      ];
+      return fields.some(f => qTerms.every(t => f.includes(t)));
     }
 
-    // --- NEW helpers for dynamic section list ---
-    function computeSectionSet(items){
-      const set = new Set();
-      items.forEach(it => {
-        const s = (it.section || '').trim();
-        if (s) set.add(s);
-      });
-      return set;
+    function sortItems(arr, mode){
+      if (mode === 'dateAsc')  return arr.sort((a,b)=> new Date(a.date) - new Date(b.date));
+      if (mode === 'dateDesc') return arr.sort((a,b)=> new Date(b.date) - new Date(a.date));
+      if (mode === 'titleAsc') return arr.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
+      if (mode === 'titleDesc')return arr.sort((a,b)=> (b.title||'').localeCompare(a.title||''));
+      // 'best' → fall back to date desc
+      return arr.sort((a,b)=> new Date(b.date) - new Date(a.date));
     }
 
-    function computeAllowedSections(rawItems, query){
-      const qTerms = words(query);
-      const arr = rawItems.map(normalizeItem).map(it => {
-        it._score = scoreItem(it, qTerms);
-        return it;
-      });
-      const matched = qTerms.length ? arr.filter(it => it._score > 0) : arr;
-      return computeSectionSet(matched);
+    function formatDate(iso){
+      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch { return ''; }
     }
 
-    // Build full section list once
     function populateSectionsAll(items){
-      const sel = document.getElementById('sectionFilter');
-      const set = new Set(items.map(i => (i.section || '').trim()).filter(Boolean));
+      const sel = $('#sectionFilter');
+      const set = new Set(items.map(i => (i.section||'').trim()).filter(Boolean));
       sel.innerHTML = '<option value="">All sections</option>' +
-        Array.from(set).sort().map(s => `<option value="${s}">${s}</option>`).join('');
+        [...set].sort().map(s=>`<option value="${s}">${s}</option>`).join('');
     }
 
-    // Hide/disable options that have no matches for current query
-    function updateSectionOptions(allowedSet){
-      const sel = document.getElementById('sectionFilter');
-      const keepVal = sel.value;
+    function updateSectionOptionsForQuery(items, qTerms){
+      const sel = $('#sectionFilter');
+      const keep = sel.value;
 
-      Array.from(sel.options).forEach(opt => {
+      // Which sections have at least one match for this query?
+      const allowed = new Set(
+        items.filter(it => matchesQuery(it, qTerms)).map(it => it.section).filter(Boolean)
+      );
+
+      // Hide/disable non-matching sections
+      [...sel.options].forEach(opt => {
         if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; }
-        const ok = allowedSet.has(opt.value);
+        const ok = allowed.has(opt.value);
         opt.hidden = !ok;
         opt.disabled = !ok;
       });
 
-      if (keepVal && !allowedSet.has(keepVal)) sel.value = '';
+      if (keep && !allowed.has(keep)) sel.value = '';
     }
 
-    function formatDate(iso){
-      try{ return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
-      catch{ return ''; }
-    }
-
-    function render(results, qTerms){
-      const wrap = document.getElementById('results');
+    function renderResults(list, qTerms){
+      const wrap = $('#results');
       wrap.innerHTML = '';
-      const count = results.length;
-      const resultCount = document.getElementById('resultCount');
-      resultCount.textContent = count + (count === 1 ? ' result' : ' results');
 
-      const empty = document.getElementById('emptyState');
-      if (!count){ empty.classList.remove('hidden'); return; }
+      $('#resultCount').textContent = `${list.length} ${list.length===1?'result':'results'}`;
+
+      const empty = $('#emptyState');
+      if (!list.length){ empty.classList.remove('hidden'); return; }
       empty.classList.add('hidden');
 
-      for (const it of results){
+      for (const it of list){
         const href = `${it.slug ? it.slug : 'article'}.html`;
-        const titleHtml = highlight(it.title, qTerms);
-        const excerptRaw = it.excerpt || (it.bodyText.slice(0, 160) + '…');
-        const excerptHtml = highlight(excerptRaw, qTerms);
 
         const card = document.createElement('article');
         card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
@@ -328,17 +299,18 @@
 
         const h3 = document.createElement('h3');
         h3.className = 'font-serif text-xl mt-2 leading-snug result-title';
-        h3.innerHTML = `<a class="u-underline" href="${href}">${titleHtml}</a>`;
+        h3.innerHTML = `<a class="u-underline" href="${href}">${highlight(it.title, qTerms)}</a>`;
         body.appendChild(h3);
 
         const p = document.createElement('p');
         p.className = 'text-ink-500 mt-2 result-excerpt';
-        p.innerHTML = excerptHtml;
+        const raw = it.excerpt || (it.bodyText.slice(0,160)+'…');
+        p.innerHTML = highlight(raw, qTerms);
         body.appendChild(p);
 
         const f = document.createElement('div');
         f.className = 'mt-auto pt-4 text-sm text-ink-300';
-        f.textContent = `${formatDate(it.date)} • ${it.readMinutes || 0} min`;
+        f.textContent = `${formatDate(it.date)} • ${it.readMinutes||0} min`;
         body.appendChild(f);
 
         card.appendChild(body);
@@ -346,66 +318,30 @@
       }
     }
 
-    function applyFilters(items, query, section, sort){
-      const qTerms = words(query);
-      let arr = items.map(normalizeItem).filter(it => !section || it.section === section);
+    function debounce(fn, ms=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+    const getParam = (name) => new URL(location.href).searchParams.get(name) || '';
 
-      for (const it of arr) it._score = scoreItem(it, qTerms);
+    // ---------- Init ----------
+    (function(){
+      // Footer year
+      $('#year').textContent = new Date().getFullYear();
 
-      if (qTerms.length) arr = arr.filter(it => it._score > 0);
+      // Load + normalize once
+      const ALL = loadPublished().map(normalizeItem);
 
-      arr.sort((a,b) => {
-        if (sort === 'dateAsc')  return new Date(a.date) - new Date(b.date);
-        if (sort === 'dateDesc') return new Date(b.date) - new Date(a.date);
-        if (sort === 'titleAsc') return (a.title||'').localeCompare(b.title||'');
-        if (sort === 'titleDesc')return (b.title||'').localeCompare(a.title||'');
-        // 'best': score desc, then date desc, then title asc
-        const s = (b._score - a._score);
-        if (s) return s;
-        const d = (new Date(b.date) - new Date(a.date));
-        if (d) return d;
-        return (a.title||'').localeCompare(b.title||'');
-      });
+      // Build the complete Section list once
+      populateSectionsAll(ALL);
 
-      return { results: arr, qTerms };
-    }
+      // Inputs
+      const qInput = $('#q');
+      const clearQ = $('#clearQ');
+      const sectionSel = $('#sectionFilter');
+      const sortSel = $('#sortBy');
 
-    // Debounce helper
-    function debounce(fn, ms=200){ let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); }; }
-
-    // Init
-    (function init(){
-      const allRaw = loadPublished();
-      populateSectionsAll(allRaw); // build full section list once
-
-      const qInput = document.getElementById('q');
-      const clearQ = document.getElementById('clearQ');
-      const sectionSel = document.getElementById('sectionFilter');
-      const sortSel = document.getElementById('sortBy');
-
-      // Prefill from URL
+      // Prefill from URL ?q=
       const initQ = getParam('q');
       if (initQ){ qInput.value = initQ; clearQ.classList.remove('hidden'); }
 
-      function run(){
-        const q = qInput.value.trim();
-        const sort = sortSel.value || 'best';
-
-        // 1) Recompute which sections are allowed for this query
-        const allowed = computeAllowedSections(allRaw, q);
-        updateSectionOptions(allowed);
-
-        // 2) NOW read the (possibly reset) section value
-        const section = sectionSel.value;
-
-        // 3) Filter + render
-        const { results, qTerms } = applyFilters(allRaw, q, section, sort);
-        render(results, qTerms);
-
-        clearQ.classList.toggle('hidden', q.length === 0);
-      }
-
-      // Update URL (no reload)
       function syncURL(){
         const u = new URL(location.href);
         const q = qInput.value.trim();
@@ -413,8 +349,32 @@
         history.replaceState({}, '', u.toString());
       }
 
-      document.getElementById('searchForm').addEventListener('submit', (e)=>{ e.preventDefault(); run(); syncURL(); });
-      qInput.addEventListener('input', debounce(()=>{ run(); syncURL(); }, 150));
+      function run(){
+        const q = qInput.value.trim();
+        const qTerms = words(q);
+        const sort = sortSel.value || 'best';
+
+        // Shrink section options to only those that have a match for this query
+        updateSectionOptionsForQuery(ALL, qTerms);
+
+        // Re-read section AFTER pruning
+        const section = sectionSel.value;
+
+        // Filter & sort
+        const filtered = ALL
+          .filter(it => (!section || it.section === section))
+          .filter(it => matchesQuery(it, qTerms));
+
+        sortItems(filtered, (
+          sort === 'best' ? 'dateDesc' : sort // 'best' falls back to newest
+        ));
+
+        renderResults(filtered, qTerms);
+        clearQ.classList.toggle('hidden', q.length === 0);
+      }
+
+      $('#searchForm').addEventListener('submit', e => { e.preventDefault(); run(); syncURL(); });
+      qInput.addEventListener('input', debounce(()=>{ run(); syncURL(); }, 120));
       clearQ.addEventListener('click', ()=>{ qInput.value=''; run(); syncURL(); qInput.focus(); });
       sectionSel.addEventListener('change', run);
       sortSel.addEventListener('change', run);
