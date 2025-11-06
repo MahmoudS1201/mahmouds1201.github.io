@@ -389,13 +389,16 @@
 
       function run(){
         const q = qInput.value.trim();
-        const section = sectionSel.value;
         const sort = sortSel.value || 'best';
 
-        // shrink Section options to only those with matches
+        // 1) Recompute which sections are allowed for this query
         const allowed = computeAllowedSections(allRaw, q);
         updateSectionOptions(allowed);
 
+        // 2) NOW read the (possibly reset) section value
+        const section = sectionSel.value;
+
+        // 3) Filter + render
         const { results, qTerms } = applyFilters(allRaw, q, section, sort);
         render(results, qTerms);
 
