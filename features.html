@@ -139,25 +139,25 @@
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <article class="grid lg:grid-cols-3 gap-8 items-stretch card">
       <div class="lg:col-span-2">
-        <img class="w-full h-full object-cover aspect-[16/9]" src="https://picsum.photos/1200/675?hero" alt="Feature hero image">
+        <img id="heroImg" class="w-full h-full object-cover aspect-[16/9]" src="https://picsum.photos/1200/675?hero" alt="Feature hero image">
       </div>
       <div class="p-6 sm:p-8 flex flex-col">
         <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
           <span class="bg-accent/10 text-accent px-2.5 py-1 rounded-full">Feature</span>
-          <time class="text-ink-300" datetime="2025-10-28">Oct 28, 2025</time>
+          <time id="heroDate" class="text-ink-300" datetime="">—</time>
         </div>
-        <h2 class="font-serif text-3xl mt-3 leading-tight">
+        <h2 id="heroTitle" class="font-serif text-3xl mt-3 leading-tight">
           The Archive Sings: Sound, Memory, and Diaspora
         </h2>
-        <p class="text-ink-500 mt-3">A longform essay weaving field recordings, neighborhood histories, and oral tradition into a listening guide for place.</p>
+        <p id="heroExcerpt" class="text-ink-500 mt-3">A longform essay weaving field recordings, neighborhood histories, and oral tradition into a listening guide for place.</p>
         <div class="mt-auto pt-5 flex items-center gap-4">
-          <img class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/100?img=15" alt="Author avatar"/>
+          <img id="heroAvatar" class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/100?img=15" alt="Author avatar"/>
           <div>
             <p class="text-sm font-medium">By <a class="u-underline" href="about2.html">Camila Tiburcio Rubio</a></p>
-            <p class="text-xs text-ink-300">12 min read</p>
+            <p id="heroRead" class="text-xs text-ink-300">—</p>
           </div>
         </div>
-        <a href="article/the-archive-sings.html" class="mt-4 inline-block u-underline">Read the feature →</a>
+        <a id="heroLink" href="#" class="mt-4 inline-block u-underline">Read the feature →</a>
       </div>
     </article>
   </section>
@@ -183,80 +183,22 @@
 
   <!-- Grid -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-    <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Cards -->
-      <article class="card flex flex-col" data-section="Essay" data-title="Street Art as Unofficial Syllabus" data-tags="Miami, Politics, Public Space">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?4" alt="Street Art as Unofficial Syllabus cover"/>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Essay</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/street-art-syllabus.html">Street Art as Unofficial Syllabus</a>
-          </h3>
-          <p class="text-ink-500 mt-2">What murals teach us about place, politics, and public imagination.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Oct 1, 2025 • 7 min</div>
-        </div>
-      </article>
+    <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
-      <article class="card flex flex-col" data-section="Interview" data-title="Life as an Archivist" data-tags="Archives, Practice, Interview">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?5" alt="Life as an Archivist cover"/>
+    <!-- Card template (keeps your exact card structure) -->
+    <template id="cardTemplate">
+      <article class="card flex flex-col">
+        <img class="aspect-[16/10] object-cover" src="" alt="" />
         <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Interview</div>
+          <div class="text-xs uppercase tracking-wide text-accent sectionLabel"></div>
           <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/life-as-an-archivist.html">Life as an Archivist</a>
+            <a class="u-underline link" href="#"></a>
           </h3>
-          <p class="text-ink-500 mt-2">On preserving local histories beyond institutions.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Sep 28, 2025 • 12 min</div>
+          <p class="text-ink-500 mt-2 desc"></p>
+          <div class="mt-auto pt-4 text-sm text-ink-300 meta"></div>
         </div>
       </article>
-
-      <article class="card flex flex-col" data-section="Review" data-title="Films that Map the Diaspora" data-tags="Film, Diaspora, Review">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?6" alt="Films that Map the Diaspora cover"/>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Review</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/films-that-map-the-diaspora.html">Films that Map the Diaspora</a>
-          </h3>
-          <p class="text-ink-500 mt-2">Must-see films regarding the diaspora far and wide.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Sep 22, 2025 • 9 min</div>
-        </div>
-      </article>
-
-      <article class="card flex flex-col" data-section="Community" data-title="Behind the Scenes of the Conference" data-tags="Community, Event, Reparto">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?7" alt="Behind the Scenes conference cover"/>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Community</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/behind-the-scenes-conference.html">Behind the Scenes of the Ustedes No Son Reparteros Na' Conference</a>
-          </h3>
-          <p class="text-ink-500 mt-2">How it came together and what we learned along the way.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Sep 20, 2025 • 6 min</div>
-        </div>
-      </article>
-
-      <article class="card flex flex-col" data-section="Visual" data-title="Photo Essay: Cuba's Underground Economy" data-tags="Photo, Cuba, Economy">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?8" alt="Photo essay: Cuba's Underground Economy cover"/>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Visual</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/photo-essay-cuba-underground.html">Photo essay: Cuba's Underground Economy</a>
-          </h3>
-          <p class="text-ink-500 mt-2">A look at life in Cuba from a local perspective.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Sep 18, 2025 • 4 min</div>
-        </div>
-      </article>
-
-      <article class="card flex flex-col" data-section="Memoirs" data-title="The Inefficiency of Efficiency Homes" data-tags="Miami, Housing, Memoir">
-        <img class="aspect-[16/10] object-cover" src="https://picsum.photos/600/375?9" alt="The Inefficiency of Efficiency Homes cover"/>
-        <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">Memoirs</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="article/inefficiency-of-efficiency-homes.html">The Inefficiency of Efficiency Homes</a>
-          </h3>
-          <p class="text-ink-500 mt-2">Stories of the growing popularity of efficiency homes in Miami.</p>
-          <div class="mt-auto pt-4 text-sm text-ink-300">Sep 15, 2025 • 3 min</div>
-        </div>
-      </article>
-    </div>
+    </template>
 
     <!-- Pagination (presentational) -->
     <div class="mt-8 flex items-center justify-between">
@@ -318,7 +260,188 @@
   </footer>
 
   <script>
-    // Year
+    // ---------------------------
+    // Utilities
+    // ---------------------------
+    const $ = (s,r=document)=>r.querySelector(s);
+    const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+    function fmtDate(iso){ try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) } catch { return '' } }
+    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
+    const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
+
+    // ---------------------------
+    // Data sources (posts.json -> local cache -> demo)
+    // posts.json item shape you use:
+    // { slug, title, section, tags, author, excerpt, date, readMinutes, featured, cover, url }
+    // ---------------------------
+    async function fetchPostsJson(){
+      try{
+        const res = await fetch('posts.json', { cache: 'no-store' });
+        if(!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        return Array.isArray(data) ? data : null;
+      }catch{ return null; }
+    }
+
+    function loadPublishedLocal(){
+      const out=[];
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(k && k.startsWith('ctr:admin:published:')){
+          try{ const obj = JSON.parse(localStorage.getItem(k)); if(obj && obj.title) out.push(obj);}catch{}
+        }
+      }
+      return out;
+    }
+
+    const DEMO = [
+      { title:'Street Art as Unofficial Syllabus', url:'article/street-art-syllabus.html', date:'2025-10-01', section:'Essay', excerpt:'What murals teach us about place, politics, and public imagination.', readMinutes:7, cover:'https://picsum.photos/600/375?4' },
+      { title:'Life as an Archivist', url:'article/life-as-an-archivist.html', date:'2025-09-28', section:'Interview', excerpt:'On preserving local histories beyond institutions.', readMinutes:12, cover:'https://picsum.photos/600/375?5' },
+      { title:'Films that Map the Diaspora', url:'article/films-that-map-the-diaspora.html', date:'2025-09-22', section:'Review', excerpt:'Must-see films regarding the diaspora far and wide.', readMinutes:9, cover:'https://picsum.photos/600/375?6' }
+    ];
+
+    function normalize(p){
+      const href = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
+      return {
+        title: p.title || '',
+        href,
+        section: p.section || '',
+        excerpt: p.excerpt || p.description || '',
+        date: p.date || p.publishedAt || '',
+        read: p.readMinutes || '',
+        tags: Array.isArray(p.tags)? p.tags.join(', ') : (p.tags || ''),
+        featured: !!p.featured,
+        cover: p.cover || 'https://picsum.photos/600/375?random',
+        author: p.author || 'Camila Tiburcio Rubio'
+      };
+    }
+
+    let POSTS = [];
+
+    // ---------------------------
+    // Render: Hero + Grid
+    // ---------------------------
+    function pickHero(items){
+      const featured = items.filter(p => p.featured).sort(byNewest);
+      return (featured[0] || items.slice().sort(byNewest)[0]) || null;
+    }
+
+    function fillHero(post){
+      if(!post) return;
+      const heroImg = $('#heroImg');
+      heroImg.src = post.cover || heroImg.src;
+      heroImg.alt = post.title || 'Feature hero image';
+      const t = $('#heroTitle'); t.textContent = post.title || t.textContent;
+      const d = $('#heroDate'); d.textContent = fmtDate(post.date); d.dateTime = post.date || '';
+      const ex = $('#heroExcerpt'); ex.textContent = post.excerpt || ex.textContent;
+      const rd = $('#heroRead'); rd.textContent = (post.read ? `${post.read} min read` : '');
+      const link = $('#heroLink'); link.href = post.href || '#';
+      // avatar left as-is (you don’t store author avatars yet)
+    }
+
+    function buildCard(post){
+      const tpl = $('#cardTemplate').content.cloneNode(true);
+      const img = tpl.querySelector('img');
+      img.src = post.cover;
+      img.alt = `${post.title} cover`;
+
+      tpl.querySelector('.sectionLabel').textContent = post.section || 'Feature';
+      const a = tpl.querySelector('.link');
+      a.href = post.href || '#';
+      a.textContent = post.title || '';
+      tpl.querySelector('.desc').textContent = post.excerpt || '';
+      const meta = [];
+      if (post.date) meta.push(fmtDate(post.date));
+      if (post.read) meta.push(`${post.read} min`);
+      tpl.querySelector('.meta').textContent = meta.join(' • ');
+
+      // For filtering/searching:
+      const article = tpl.querySelector('article.card');
+      article.dataset.section = post.section || '';
+      article.dataset.title = post.title || '';
+      article.dataset.tags = post.tags || '';
+
+      return tpl;
+    }
+
+    function renderGrid(items){
+      const grid = $('#grid');
+      grid.innerHTML = '';
+      items.forEach(p => grid.appendChild(buildCard(p)));
+      wireFilters(); // after DOM exists
+    }
+
+    // ---------------------------
+    // Filters / Search / Sort (visual only)
+    // ---------------------------
+    function wireFilters(){
+      const chips = $$('.chip');
+      const qMain = $('#q');
+      const qInline = $('#q-inline');
+      const qMobile = $('#q-mobile');
+      const sortSel = $('#sort');
+
+      function norm(s){ return (s||'').toLowerCase(); }
+      function apply(){
+        const cards = $$('#grid article.card');
+        const active = chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all';
+        const term = norm(qMain?.value || qInline?.value || qMobile?.value);
+
+        cards.forEach(card => {
+          const section = card.dataset.section;
+          const title = norm(card.dataset.title);
+          const tags = norm(card.dataset.tags);
+          const matchesSection = (active === 'all') || (section === active);
+          const matchesQuery = term ? (title.includes(term) || tags.includes(term)) : true;
+          card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
+        });
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.dataset.active = 'false');
+          chip.dataset.active = 'true';
+          chip.setAttribute('aria-pressed', 'true');
+          apply();
+        });
+      });
+
+      [qMain, qInline, qMobile].forEach(el => el?.addEventListener('input', apply));
+
+      sortSel?.addEventListener('change', () => {
+        const grid = $('#grid');
+        const items = Array.from(grid.children).filter(el => el.matches('article.card'));
+        const mode = sortSel.value;
+
+        const readDate = el => {
+          const txt = el.querySelector('.meta')?.textContent || '';
+          // We already keep original order by POSTS; for real sort, track date in dataset:
+          return new Date(el.dataset.date || 0).getTime();
+        };
+
+        if (mode === 'title') {
+          items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
+        } else if (mode === 'old') {
+          items.sort((a,b)=> readDate(a) - readDate(b));
+        } else {
+          items.sort((a,b)=> readDate(b) - readDate(a));
+        }
+
+        items.forEach(it => grid.appendChild(it));
+      });
+
+      // seed dataset.date for sorting
+      $$('#grid article.card').forEach((el, i) => {
+        const p = POSTS[i];
+        if (p) el.dataset.date = p.date || '';
+      });
+
+      apply();
+    }
+
+    // ---------------------------
+    // Boot
+    // ---------------------------
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Mobile menu toggle
@@ -329,62 +452,30 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    // --- Filter & search ---
-    const chips = Array.from(document.querySelectorAll('.chip'));
-    const cards = Array.from(document.querySelectorAll('#grid article.card'));
-    const qMain = document.getElementById('q');
-    const qInline = document.getElementById('q-inline');
-    const qMobile = document.getElementById('q-mobile');
-    const sortSel = document.getElementById('sort');
-
-    function normalize(s){ return (s||'').toLowerCase(); }
-
-    function applyFilters(){
-      const active = chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all';
-      const term = normalize(qMain?.value || qInline?.value || qMobile?.value);
-
-      cards.forEach(card => {
-        const section = card.dataset.section;
-        const title = normalize(card.dataset.title);
-        const tags = normalize(card.dataset.tags);
-        const matchesSection = (active === 'all') || (section === active);
-        const matchesQuery = term ? (title.includes(term) || tags.includes(term)) : true;
-        card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
-      });
-    }
-
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        chips.forEach(c => c.dataset.active = 'false');
-        chip.dataset.active = 'true';
-        chip.setAttribute('aria-pressed','true');
-        applyFilters();
-      });
-    });
-
-    [qMain, qInline, qMobile].forEach(el => {
-      el?.addEventListener('input', applyFilters);
-    });
-
-    // Lightweight client-side "sort" (visual only)
-    sortSel?.addEventListener('change', () => {
-      const grid = document.getElementById('grid');
-      const items = Array.from(grid.children).filter(el => el.matches('article.card'));
-      const mode = sortSel.value;
-
-      items.sort((a,b) => {
-        if(mode === 'title'){
-          return a.dataset.title.localeCompare(b.dataset.title);
+    (async function init(){
+      // 1) posts.json
+      const j = await fetchPostsJson();
+      if (j && j.length) {
+        POSTS = j.map(normalize).sort(byNewest);
+      } else {
+        // 2) local published
+        const local = loadPublishedLocal();
+        if (local.length) {
+          POSTS = local.map(normalize).sort(byNewest);
+        } else {
+          // 3) demo
+          POSTS = DEMO.map(normalize).sort(byNewest);
         }
-        // Placeholder: plug in data-date attributes to implement real date sorting later.
-        return 0;
-      });
+      }
 
-      items.forEach(it => grid.appendChild(it));
-    });
+      // Hero
+      const hero = pickHero(POSTS);
+      if (hero) fillHero(hero);
 
-    // Initial
-    applyFilters();
+      // Grid (exclude hero if it also appears in list to avoid duplicate feel)
+      const list = POSTS.slice(); // you can keep hero duplicated if desired
+      renderGrid(list);
+    })();
   </script>
 </body>
 </html>
