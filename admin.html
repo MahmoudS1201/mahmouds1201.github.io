@@ -1102,7 +1102,7 @@
       const dir = `${GH_IMAGES_ROOT}/${yyyymm(dateIso)}/${slug}`;
       const file = `${dir}/${safeFilename(hintName)}.${ext}`;
       await putRepoFile(file, info.b64, `image: ${slug}/${hintName}.${ext}`);
-      return `/${file}`;
+      return `${file}`;
     }
 
     async function uploadAndRewriteInlineImages(slug, dateIso, bodyMarkdown, bodyHtml, imageStore){
@@ -1173,7 +1173,7 @@
       await putRepoFile(path, contentB64, `posts.json: ${entry.slug}`);
     }
 
-    // PUBLISH HANDLER
+    // PUBLISH HANDLER (drop-in replacement)
     document.getElementById('publishBtn').addEventListener('click', async () => {
       const data = collect();
       const errs = validate(data);
@@ -1183,11 +1183,13 @@
         data.slug = data.slug || (data.title ? data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') : String(Date.now()));
         data.date = data.date || new Date().toISOString();
 
+        // Upload cover if needed
         if (data.cover?.src && /^data:/i.test(data.cover.src)) {
           const path = await uploadDataImageForPost(data.slug, data.date, data.cover.src, 'cover');
           data.cover.src = path;
         }
 
+        // Upload inline images and rewrite body
         const expanded = await uploadAndRewriteInlineImages(
           data.slug,
           data.date,
@@ -1201,17 +1203,24 @@
         data.status = 'published';
         localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(data));
 
+        // Minimal post entry for lists
         const entry = normalize({
           ...data,
           cover: data.cover ? { src: data.cover.src, alt: data.cover.alt || '' } : null
         });
+
+        // 1) Update posts.json
         await pushPostsJson(entry);
 
-        // Optionally also publish the HTML page:
-        // const html = buildArticleHtml(data);
-        // await putRepoFile(`${entry.url}`, b64utf8(html), `page: ${entry.slug}.html`);
+        // 2) Build and commit the standalone HTML page (THIS IS THE NEW BIT)
+        const html = buildArticleHtml(data);
+        await putRepoFile(
+          `${entry.url}`,                 // e.g. "testtest.html"
+          b64utf8(html),
+          `page: ${entry.slug}.html`      // commit message
+        );
 
-        statusMsg.textContent = 'Published ✓ — images uploaded and posts.json updated';
+        statusMsg.textContent = 'Published ✓ — page and posts.json committed';
         setTimeout(()=> statusMsg.textContent = '', 2500);
 
       } catch (e) {
