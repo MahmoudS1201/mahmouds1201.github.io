@@ -290,55 +290,78 @@
   </footer>
 
   <script type="module">
-    // ---------- Robust loader for posts.js ----------
-    // Works on root and on GitHub Pages subpaths.
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // dir of current page, e.g. / or /CamilaTiburcioRubio/
-    const postsModule = await import(new URL('posts.js', location.origin + basePath));
+    // ------- 0) Subpath helpers (GitHub Pages safe) -------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // dir of the current page (e.g. '/CamilaTiburcioRubio/')
+    const toBase = (u) => {
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;           // absolute URL
+      if (u.startsWith('./') || u.startsWith('../')) {  // relative path stays relative to page
+        return new URL(u, location.origin + basePath).pathname;
+      }
+      if (u.startsWith('/')) return basePath + u.slice(1); // root-relative -> subpath-relative
+      return basePath + u;                                  // plain relative -> subpath-relative
+    };
 
-    // Accept a few common export shapes without changing posts.js
-    async function getPostsFromModule(mod) {
+    // ------- 1) Patch fetch so posts.js can do fetch('/posts.json') -------
+    const _fetch = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      const url = (typeof input === 'string') ? input : input?.url || '';
+      if (url === '/posts.json') {
+        return _fetch(toBase('posts.json'), init);
+      }
+      return _fetch(input, init);
+    };
+
+    // ------- 2) Load posts.js (works in subfolder) -------
+    let mod;
+    try {
+      mod = await import(new URL('posts.js', location.origin + basePath));
+    } catch (e) {
+      console.error('Failed to import posts.js from', basePath, e);
+      mod = {};
+    }
+
+    async function getPosts() {
+      if (typeof mod.loadPosts === 'function') {
+        return await mod.loadPosts();
+      }
       if (Array.isArray(mod.default)) return mod.default;
       if (Array.isArray(mod.POSTS)) return mod.POSTS;
       if (Array.isArray(mod.posts)) return mod.posts;
-      if (typeof mod.loadPosts === 'function') return await mod.loadPosts();
-      throw new Error('posts.js must export an array (default/POSTS/posts) or a loadPosts() function.');
+      // Fallback: try loading posts.json directly
+      try {
+        const res = await fetch('/posts.json');
+        if (res.ok) return await res.json();
+      } catch {}
+      return [];
     }
 
-    // Normalize fields to match index rendering expectations
+    // ------- 3) Normalize to fields your index needs -------
     function normalize(p) {
-      const href =
-        p.href ||
-        p.url ||
-        (p.slug ? `${basePath}${p.slug}.html` : '#');
-
-      const section = p.section || p.category || p.type || '';
-      const description = p.description || p.excerpt || p.summary || '';
+      const href = p.href || p.url || (p.slug ? `${p.slug}.html` : '#');
       const cover = p.cover || p.image || p.hero || '';
-      const readMinutes = p.readMinutes || p.read_time || p.read || '';
-      const date = p.date || p.publishedAt || p.published_at || p.createdAt || '';
 
       return {
         title: p.title || '',
-        href,
-        section,
-        description,
-        cover,
-        readMinutes,
-        date,
+        href: toBase(href),
+        section: p.section || p.category || p.type || 'Article',
+        description: p.description || p.excerpt || p.summary || '',
+        cover: cover ? toBase(cover) : '',
+        readMinutes: p.readMinutes || p.read_time || p.read || '',
+        date: p.date || p.publishedAt || p.published_at || p.createdAt || '',
         featured: !!(p.featured || p.isFeatured),
-        // keep the original for identity checks
-        _raw: p
       };
     }
 
-    const rawPosts = await getPostsFromModule(postsModule);
-    const posts = rawPosts.map(normalize).filter(p => p.title && p.href);
+    const raw = await getPosts();
+    const posts = raw.map(normalize).filter(p => p.title && p.href);
 
-    // ---------- Utilities & templating ----------
+    // ------- 4) DOM helpers & templates (unchanged look) -------
     const $ = s => document.querySelector(s);
     const fmtDate = iso => { try {
       return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
     } catch { return ''; } };
+    const byNewest = (a,b) => new Date(b.date) - new Date(a.date);
 
     const cardHTML = p => `
       <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
@@ -387,9 +410,7 @@
         </article>`;
     }
 
-    // ---------- Render ----------
-    function byNewest(a,b){ return new Date(b.date) - new Date(a.date); }
-
+    // ------- 5) Render -------
     async function render(){
       const list = [...posts].sort(byNewest);
 
@@ -430,7 +451,7 @@
 
     await render();
 
-    // ---------- Header search → /search?q=... ----------
+    // ------- 6) Keep your header search behavior -------
     function goSearch(q){
       const term = (q || '').trim();
       const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
@@ -446,7 +467,6 @@
     qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
     qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
   </script>
-
 
 </body>
 </html>
