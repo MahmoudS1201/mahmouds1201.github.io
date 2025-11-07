@@ -290,32 +290,56 @@
   </footer>
 
   <script type="module">
-    // --- 1) Fix the /posts.json path on GitHub Pages subpaths ---
-    const _fetch = window.fetch.bind(window);
-    window.fetch = (input, init) => {
-      const url = (typeof input === 'string') ? input : input?.url || '';
-      if (url === '/posts.json') {
-        // Use the current directory as the base (works at /CamilaTiburcioRubio/)
-        const base = location.pathname.replace(/[^/]*$/, ''); // strip file name
-        return _fetch(base + 'posts.json', init);
-      }
-      return _fetch(input, init);
-    };
+    // ---------- Robust loader for posts.js ----------
+    // Works on root and on GitHub Pages subpaths.
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // dir of current page, e.g. / or /CamilaTiburcioRubio/
+    const postsModule = await import(new URL('posts.js', location.origin + basePath));
 
-    // --- 2) Import your inline posts-store module (by id) ---
-    const moduleText = document.getElementById('posts-store').textContent;
-    const blobUrl = URL.createObjectURL(new Blob([moduleText], { type: 'text/javascript' }));
-    const store = await import(blobUrl);
-    URL.revokeObjectURL(blobUrl);
+    // Accept a few common export shapes without changing posts.js
+    async function getPostsFromModule(mod) {
+      if (Array.isArray(mod.default)) return mod.default;
+      if (Array.isArray(mod.POSTS)) return mod.POSTS;
+      if (Array.isArray(mod.posts)) return mod.posts;
+      if (typeof mod.loadPosts === 'function') return await mod.loadPosts();
+      throw new Error('posts.js must export an array (default/POSTS/posts) or a loadPosts() function.');
+    }
 
-    const { loadPosts, onLocalChanges } = store;
+    // Normalize fields to match index rendering expectations
+    function normalize(p) {
+      const href =
+        p.href ||
+        p.url ||
+        (p.slug ? `${basePath}${p.slug}.html` : '#');
 
-    // --- 3) Utilities that match your DOM ids/classes ---
+      const section = p.section || p.category || p.type || '';
+      const description = p.description || p.excerpt || p.summary || '';
+      const cover = p.cover || p.image || p.hero || '';
+      const readMinutes = p.readMinutes || p.read_time || p.read || '';
+      const date = p.date || p.publishedAt || p.published_at || p.createdAt || '';
+
+      return {
+        title: p.title || '',
+        href,
+        section,
+        description,
+        cover,
+        readMinutes,
+        date,
+        featured: !!(p.featured || p.isFeatured),
+        // keep the original for identity checks
+        _raw: p
+      };
+    }
+
+    const rawPosts = await getPostsFromModule(postsModule);
+    const posts = rawPosts.map(normalize).filter(p => p.title && p.href);
+
+    // ---------- Utilities & templating ----------
     const $ = s => document.querySelector(s);
-    const fmtDate = iso => {
-      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
-      catch { return ''; }
-    };
+    const fmtDate = iso => { try {
+      return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+    } catch { return ''; } };
+
     const cardHTML = p => `
       <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
         ${p.cover ? `<img class="aspect-[16/10] object-cover" src="${p.cover}" alt="${p.title}">` : ''}
@@ -363,24 +387,26 @@
         </article>`;
     }
 
-    async function render(){
-      const posts = await loadPosts();             // ← from your store (JSON or localStorage)
-      posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    // ---------- Render ----------
+    function byNewest(a,b){ return new Date(b.date) - new Date(a.date); }
 
-      if (!posts.length){
+    async function render(){
+      const list = [...posts].sort(byNewest);
+
+      if (!list.length){
         $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
         $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
         $('#latestMeta').textContent = 'Page 1 • 0 posts';
         return;
       }
 
-      const featured = posts.filter(p => p.featured);
-      const leadPost = featured[0] || posts[0];
+      const featured = list.filter(p => p.featured);
+      const leadPost = featured[0] || list[0];
       setLead(leadPost);
 
       // Editors’ picks (up to 3; fill from newest if fewer)
       const picks = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of posts){
+      for (const p of list){
         if (picks.length >= 3) break;
         if (p !== leadPost && !picks.includes(p)) picks.push(p);
       }
@@ -388,7 +414,7 @@
 
       // Featured grid (3)
       const grid = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of posts){
+      for (const p of list){
         if (grid.length >= 3) break;
         if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
       }
@@ -396,18 +422,15 @@
         `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
 
       // Latest (3 newest excluding lead)
-      const latest = posts.filter(p => p !== leadPost).slice(0,3);
+      const latest = list.filter(p => p !== leadPost).slice(0,3);
       $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
         `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-      $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
+      $('#latestMeta').textContent = `Page 1 • ${list.length} posts`;
     }
 
     await render();
 
-    // Live update if Admin tab publishes something (your helper)
-    onLocalChanges(async () => { await render(); });
-
-    // --- 4) Header search box → /search?q=... ---
+    // ---------- Header search → /search?q=... ----------
     function goSearch(q){
       const term = (q || '').trim();
       const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
@@ -416,13 +439,14 @@
     const qHeader = document.getElementById('qHeader');
     const qHeaderBtn = document.getElementById('qHeaderBtn');
     qHeader?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeader.value); } });
-    qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); });
+    qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); } });
 
     const qHeaderMobile = document.getElementById('qHeaderMobile');
     const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
     qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
     qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
   </script>
+
 
 </body>
 </html>
