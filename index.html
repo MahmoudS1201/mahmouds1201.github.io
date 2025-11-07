@@ -432,13 +432,29 @@
     }
     const qHeader = document.getElementById('qHeader');
     const qHeaderBtn = document.getElementById('qHeaderBtn');
-    qHeader?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeader.value); } });
-    qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); } });
+    qHeader?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        goSearch(qHeader.value);
+      }
+    });
+    qHeaderBtn?.addEventListener('click', e => {
+      e.preventDefault();
+      goSearch(qHeader.value);
+    });
 
     const qHeaderMobile = document.getElementById('qHeaderMobile');
     const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
-    qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
-    qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
+    qHeaderMobile?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        goSearch(qHeaderMobile.value);
+      }
+    });
+    qHeaderMobileBtn?.addEventListener('click', e => {
+      e.preventDefault();
+      goSearch(qHeaderMobile.value);
+    });
   </script>
 
 
