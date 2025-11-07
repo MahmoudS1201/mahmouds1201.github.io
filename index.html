@@ -290,57 +290,60 @@
   </footer>
 
   <script type="module">
-    // ------- 0) Subpath helpers (GitHub Pages safe) -------
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // dir of the current page (e.g. '/CamilaTiburcioRubio/')
+    /* ========= Subpath-safe helpers (GitHub Pages) ========= */
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
     const toBase = (u) => {
       if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;           // absolute URL
-      if (u.startsWith('./') || u.startsWith('../')) {  // relative path stays relative to page
+      if (/^https?:\/\//i.test(u)) return u;                    // absolute
+      if (u.startsWith('./') || u.startsWith('../'))            // relative
         return new URL(u, location.origin + basePath).pathname;
-      }
-      if (u.startsWith('/')) return basePath + u.slice(1); // root-relative -> subpath-relative
-      return basePath + u;                                  // plain relative -> subpath-relative
+      if (u.startsWith('/')) return basePath + u.slice(1);      // root-relative -> subpath
+      return basePath + u;                                      // plain relative
     };
 
-    // ------- 1) Patch fetch so posts.js can do fetch('/posts.json') -------
+    // Patch fetch so any code that calls "/posts.json" works on subpaths
     const _fetch = window.fetch.bind(window);
     window.fetch = (input, init) => {
       const url = (typeof input === 'string') ? input : input?.url || '';
-      if (url === '/posts.json') {
-        return _fetch(toBase('posts.json'), init);
-      }
+      if (url === '/posts.json') return _fetch(toBase('posts.json'), init);
       return _fetch(input, init);
     };
 
-    // ------- 2) Load posts.js (works in subfolder) -------
-    let mod;
-    try {
-      mod = await import(new URL('posts.js', location.origin + basePath));
-    } catch (e) {
-      console.error('Failed to import posts.js from', basePath, e);
-      mod = {};
-    }
-
-    async function getPosts() {
-      if (typeof mod.loadPosts === 'function') {
-        return await mod.loadPosts();
-      }
-      if (Array.isArray(mod.default)) return mod.default;
-      if (Array.isArray(mod.POSTS)) return mod.POSTS;
-      if (Array.isArray(mod.posts)) return mod.posts;
-      // Fallback: try loading posts.json directly
+    /* ========= Try posts.js → posts.json → localStorage ========= */
+    async function loadPostsAny() {
+      // 1) Try posts.js living next to index.html
       try {
-        const res = await fetch('/posts.json');
+        const mod = await import(new URL('posts.js', location.origin + basePath));
+        if (typeof mod.loadPosts === 'function') return await mod.loadPosts();
+        if (Array.isArray(mod.default)) return mod.default;
+        if (Array.isArray(mod.POSTS))   return mod.POSTS;
+        if (Array.isArray(mod.posts))   return mod.posts;
+      } catch {}
+
+      // 2) Try posts.json
+      try {
+        const res = await fetch('/posts.json', { cache: 'no-store' });
         if (res.ok) return await res.json();
       } catch {}
-      return [];
+
+      // 3) Fallback: localStorage (admin preview)
+      const out = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('ctr:admin:published:')) {
+          try {
+            const obj = JSON.parse(localStorage.getItem(k));
+            if (obj && obj.title) out.push(obj);
+          } catch {}
+        }
+      }
+      return out;
     }
 
-    // ------- 3) Normalize to fields your index needs -------
+    /* ========= Normalization to homepage shape ========= */
     function normalize(p) {
-      const href = p.href || p.url || (p.slug ? `${p.slug}.html` : '#');
+      const href  = p.href || p.url || (p.slug ? `${p.slug}.html` : '#');
       const cover = p.cover || p.image || p.hero || '';
-
       return {
         title: p.title || '',
         href: toBase(href),
@@ -353,15 +356,15 @@
       };
     }
 
-    const raw = await getPosts();
+    const raw = await loadPostsAny();
     const posts = raw.map(normalize).filter(p => p.title && p.href);
+    posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
-    // ------- 4) DOM helpers & templates (unchanged look) -------
+    /* ========= DOM helpers (no style changes) ========= */
     const $ = s => document.querySelector(s);
     const fmtDate = iso => { try {
       return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
     } catch { return ''; } };
-    const byNewest = (a,b) => new Date(b.date) - new Date(a.date);
 
     const cardHTML = p => `
       <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
@@ -410,32 +413,31 @@
         </article>`;
     }
 
-    // ------- 5) Render -------
-    async function render(){
-      const list = [...posts].sort(byNewest);
-
-      if (!list.length){
+    /* ========= Render (Lead, Picks, Featured, Latest) ========= */
+    (function render(){
+      if (!posts.length){
         $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
         $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
         $('#latestMeta').textContent = 'Page 1 • 0 posts';
         return;
       }
 
-      const featured = list.filter(p => p.featured);
-      const leadPost = featured[0] || list[0];
+      const featured = posts.filter(p => p.featured);
+      const leadPost = featured[0] || posts[0];
       setLead(leadPost);
 
-      // Editors’ picks (up to 3; fill from newest if fewer)
+      // Editors’ Picks (up to 3; fill from newest if fewer)
       const picks = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of list){
+      for (const p of posts){
         if (picks.length >= 3) break;
         if (p !== leadPost && !picks.includes(p)) picks.push(p);
       }
-      $('#picks').innerHTML = picks.map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
+      $('#picks').innerHTML = picks.map(pickItemHTML).join('') ||
+        `<li class="text-ink-300">No picks yet.</li>`;
 
       // Featured grid (3)
       const grid = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of list){
+      for (const p of posts){
         if (grid.length >= 3) break;
         if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
       }
@@ -443,15 +445,13 @@
         `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
 
       // Latest (3 newest excluding lead)
-      const latest = list.filter(p => p !== leadPost).slice(0,3);
+      const latest = posts.filter(p => p !== leadPost).slice(0,3);
       $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
         `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-      $('#latestMeta').textContent = `Page 1 • ${list.length} posts`;
-    }
+      $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
+    })();
 
-    await render();
-
-    // ------- 6) Keep your header search behavior -------
+    /* ========= Header search (unchanged) ========= */
     function goSearch(q){
       const term = (q || '').trim();
       const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
@@ -467,6 +467,7 @@
     qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
     qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
   </script>
+
 
 </body>
 </html>
