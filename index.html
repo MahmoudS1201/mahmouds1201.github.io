@@ -289,185 +289,140 @@
     </div>
   </footer>
 
-  <script>
-    // ---------- Utilities ----------
+  <script type="module">
+    // --- 1) Fix the /posts.json path on GitHub Pages subpaths ---
+    const _fetch = window.fetch.bind(window);
+    window.fetch = (input, init) => {
+      const url = (typeof input === 'string') ? input : input?.url || '';
+      if (url === '/posts.json') {
+        // Use the current directory as the base (works at /CamilaTiburcioRubio/)
+        const base = location.pathname.replace(/[^/]*$/, ''); // strip file name
+        return _fetch(base + 'posts.json', init);
+      }
+      return _fetch(input, init);
+    };
+
+    // --- 2) Import your inline posts-store module (by id) ---
+    const moduleText = document.getElementById('posts-store').textContent;
+    const blobUrl = URL.createObjectURL(new Blob([moduleText], { type: 'text/javascript' }));
+    const store = await import(blobUrl);
+    URL.revokeObjectURL(blobUrl);
+
+    const { loadPosts, onLocalChanges } = store;
+
+    // --- 3) Utilities that match your DOM ids/classes ---
     const $ = s => document.querySelector(s);
-    const $$ = s => Array.from(document.querySelectorAll(s));
     const fmtDate = iso => {
       try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch { return ''; }
     };
-    // Build a link to a post; your articles live at the root as <slug>.html
-    const buildHref = slug => (slug ? `${slug}.html` : '#');
-
-
-    // ---------- Data from Admin (localStorage) ----------
-    function loadPublished(){
-      const out = [];
-      for (let i = 0; i < localStorage.length; i++){
-        const k = localStorage.key(i);
-        if (!k) continue;
-        // accept both current and any legacy prefix
-        if (k.startsWith('ctr:admin:published:') || k.startsWith('ctr:published:')){
-          try {
-            const obj = JSON.parse(localStorage.getItem(k));
-            if (obj && obj.title) out.push(obj);
-          } catch {}
-        }
-      }
-      console.log('[home] loaded posts:', out.length);
-      return out;
-    }
-
-    function normalize(p){
-      return {
-        title: p.title || '',
-        slug: p.slug || '',
-        section: p.section || '',
-        excerpt: p.excerpt || '',
-        date: p.date || '',
-        read: p.readMinutes || 0,
-        tags: Array.isArray(p.tags) ? p.tags : [],
-        featured: !!p.featured,
-        author: p.author || 'Camila Tiburcio Rubio',
-        cover: p.cover && p.cover.src ? p.cover.src : '',
-        authorAvatar: p.authorAvatar || '' // optional
-      };
-    }
-
-    // ---------- Inject UI ----------
-    function setLead(post){
-      if (!post) return;
-      $('#leadImg').src = post.cover || 'https://picsum.photos/1200/675';
-      $('#leadImg').alt = post.title || 'Lead story image';
-      $('#leadBadge').textContent = post.section || 'Feature';
-      $('#leadDate').dateTime = post.date || '';
-      $('#leadDate').textContent = fmtDate(post.date);
-      $('#leadTitle').textContent = post.title || '';
-      $('#leadExcerpt').textContent = post.excerpt || '';
-      $('#leadAuthor').textContent = post.author || 'Camila Tiburcio Rubio';
-      $('#leadRead').textContent = (post.read ? `${post.read} min` : '');
-      if (post.authorAvatar){ $('#leadAvatar').src = post.authorAvatar; }
-      $('#leadLink').href = buildHref(post.slug);
-      // Make the whole lead clickable via title/excerpt links if needed (your styles stay unchanged)
-      $('#leadTitle').innerHTML = `<a class="u-underline" href="${buildHref(post.slug)}">${post.title}</a>`;
-    }
-
-    function cardHTML(p){
-      return `
+    const cardHTML = p => `
       <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
-        ${p.cover ? `<img class="aspect-[16/10] object-cover" src="${p.cover}" alt="${p.title}"/>` : ''}
+        ${p.cover ? `<img class="aspect-[16/10] object-cover" src="${p.cover}" alt="${p.title}">` : ''}
         <div class="p-6 flex-1 flex flex-col">
           <div class="text-xs uppercase tracking-wide text-accent">${p.section || 'Article'}</div>
-          <h3 class="font-serif text-xl mt-2 leading-snug"><a class="u-underline" href="${buildHref(p.slug)}">${p.title}</a></h3>
-          ${p.excerpt ? `<p class="text-ink-500 mt-2">${p.excerpt}</p>` : ''}
-          <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read?` • ${p.read} min`:''}</div>
+          <h3 class="font-serif text-xl mt-2 leading-snug"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
+          ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
+          <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
         </div>
       </article>`;
-    }
 
-    function pickItemHTML(p){
-      return `
-        <li class="flex gap-4">
-          ${p.cover ? `<img class="w-28 h-24 rounded-xl object-cover" src="${p.cover}" alt="${p.title}"/>` : `<div class="w-28 h-24 rounded-xl bg-ink-900/5"></div>`}
-          <div>
-            <a class="font-medium u-underline" href="${buildHref(p.slug)}">${p.title}</a>
-            <p class="text-sm text-ink-500 mt-1">${p.section || 'Article'}${p.read?` • ${p.read} min`:''}</p>
-          </div>
-        </li>`;
+    const pickItemHTML = p => `
+      <li class="flex gap-4">
+        ${p.cover ? `<img class="w-28 h-24 rounded-xl object-cover" src="${p.cover}" alt="${p.title}">` : `<div class="w-28 h-24 rounded-xl bg-ink-900/5"></div>`}
+        <div>
+          <a class="font-medium u-underline" href="${p.href}">${p.title}</a>
+          <p class="text-sm text-ink-500 mt-1">${p.section || 'Article'}${p.readMinutes?` • ${p.readMinutes} min`:''}</p>
+        </div>
+      </li>`;
+
+    function setLead(p){
+      if (!p) return;
+      $('#leadImg').src = p.cover || 'https://picsum.photos/1200/675';
+      $('#leadImg').alt = p.title || 'Lead story image';
+      $('#leadBadge').textContent = p.section || 'Feature';
+      $('#leadDate').dateTime = p.date || '';
+      $('#leadDate').textContent = fmtDate(p.date);
+      $('#leadTitle').innerHTML = `<a class="u-underline" href="${p.href}">${p.title}</a>`;
+      $('#leadExcerpt').textContent = p.description || '';
+      $('#leadAuthor').textContent = 'Camila Tiburcio Rubio';
+      $('#leadRead').textContent = p.readMinutes ? `${p.readMinutes} min` : '';
+      $('#leadLink').href = p.href;
     }
 
     function latestRowHTML(p){
       return `
-      <article class="p-6 sm:p-8 flex flex-col sm:flex-row gap-6">
-        ${p.cover ? `<img class="w-full sm:w-60 h-40 object-cover rounded-xl" src="${p.cover}" alt="${p.title}"/>` : ''}
-        <div class="flex-1">
-          <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section || 'Article'}</a>
-          <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${buildHref(p.slug)}">${p.title}</a></h3>
-          ${p.excerpt ? `<p class="text-ink-500 mt-2">${p.excerpt}</p>` : ''}
-          <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read?` • ${p.read} min`:''}</div>
-        </div>
-      </article>`;
+        <article class="p-6 sm:p-8 flex flex-col sm:flex-row gap-6">
+          ${p.cover ? `<img class="w-full sm:w-60 h-40 object-cover rounded-xl" src="${p.cover}" alt="${p.title}">` : ''}
+          <div class="flex-1">
+            <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section || 'Article'}</a>
+            <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
+            ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
+            <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
+          </div>
+        </article>`;
     }
 
-    // ---------- Populate page ----------
-    (function init(){
-      // Footer year
-      document.getElementById('year').textContent = new Date().getFullYear();
-
-      // Mobile menu toggle
-      const menuToggle = document.getElementById('menuToggle');
-      const mobileMenu = document.getElementById('mobileMenu');
-      menuToggle?.addEventListener('click', () => {
-        const isHidden = mobileMenu.classList.toggle('hidden');
-        menuToggle.setAttribute('aria-expanded', String(!isHidden));
-      });
-
-      const posts = loadPublished().map(normalize);
-
-      // Sort newest first
+    async function render(){
+      const posts = await loadPosts();             // ← from your store (JSON or localStorage)
       posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
       if (!posts.length){
-        // keep your hero header text, but make the sections clearly “empty”
-        document.getElementById('featuresGrid').innerHTML =
-          `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
-        document.getElementById('latestList').innerHTML =
-          `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-        document.getElementById('latestMeta').textContent = 'Page 1 • 0 posts';
-        // bail early so we don’t try to render picks, etc.
+        $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
+        $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
+        $('#latestMeta').textContent = 'Page 1 • 0 posts';
         return;
       }
 
-
-      // FEATURED (for hero + grid + picks)
       const featured = posts.filter(p => p.featured);
-
-      // Lead = newest featured; if none featured, fallback to newest overall
       const leadPost = featured[0] || posts[0];
       setLead(leadPost);
 
-      // Editors’ Picks = next 3 featured (excluding lead). If not enough, fill with newest from other sections
-      const picksPool = featured.filter(p => p !== leadPost);
-      while (picksPool.length < 3) {
-        const candidate = posts.find(p => p !== leadPost && !picksPool.includes(p));
-        if (!candidate) break;
-        picksPool.push(candidate);
+      // Editors’ picks (up to 3; fill from newest if fewer)
+      const picks = featured.filter(p => p !== leadPost).slice(0,3);
+      for (const p of posts){
+        if (picks.length >= 3) break;
+        if (p !== leadPost && !picks.includes(p)) picks.push(p);
       }
-      $('#picks').innerHTML = picksPool.slice(0,3).map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
+      $('#picks').innerHTML = picks.map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
 
-      // Featured grid: first 3 featured after lead (or fill with next newest)
-      const gridPool = featured.filter(p => p !== leadPost).slice(0,3);
-      while (gridPool.length < 3) {
-        const cand = posts.find(p => p !== leadPost && !gridPool.includes(p) && !picksPool.slice(0,3).includes(p));
-        if (!cand) break;
-        gridPool.push(cand);
+      // Featured grid (3)
+      const grid = featured.filter(p => p !== leadPost).slice(0,3);
+      for (const p of posts){
+        if (grid.length >= 3) break;
+        if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
       }
-      $('#featuresGrid').innerHTML = gridPool.map(cardHTML).join('') || `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
+      $('#featuresGrid').innerHTML = grid.map(cardHTML).join('') ||
+        `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
 
-      // Latest list: newest 3 across all sections (excluding exact lead to avoid duplication)
+      // Latest (3 newest excluding lead)
       const latest = posts.filter(p => p !== leadPost).slice(0,3);
-      $('#latestList').innerHTML = latest.map(latestRowHTML).join('') || `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
+      $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
+        `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
       $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
+    }
 
-      // Header search → go to search.html?q=...
-      // Header search → go to /search?q=...
-      function goSearch(q){
-        const term = (q || '').trim();
-        // use extensionless path because your site already serves /search
-        const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
-        window.location.href = url;
-      }
-      const qHeader = document.getElementById('qHeader');
-      const qHeaderBtn = document.getElementById('qHeaderBtn');
-      qHeader?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeader.value); } });
-      qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); });
+    await render();
 
-      const qHeaderMobile = document.getElementById('qHeaderMobile');
-      const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
-      qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
-      qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
+    // Live update if Admin tab publishes something (your helper)
+    onLocalChanges(async () => { await render(); });
 
+    // --- 4) Header search box → /search?q=... ---
+    function goSearch(q){
+      const term = (q || '').trim();
+      const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
+      window.location.href = url;
+    }
+    const qHeader = document.getElementById('qHeader');
+    const qHeaderBtn = document.getElementById('qHeaderBtn');
+    qHeader?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeader.value); } });
+    qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); });
+
+    const qHeaderMobile = document.getElementById('qHeaderMobile');
+    const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
+    qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
+    qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
   </script>
+
 </body>
 </html>
