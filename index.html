@@ -58,6 +58,25 @@
     }
     .u-underline:hover::after { transform: scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
+
+    /* Hover cue for any clickable card/list-row we marked with data-href */
+    [data-href]{
+      transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+    }
+
+    /* Soft lift + stronger shadow on hover (matches “Sections” vibe) */
+    [data-href]:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    /* Keyboard focus looks the same and is accessible */
+    [data-href]:focus-visible{
+      outline: 2px solid #C53D2F;      /* your accent */
+      outline-offset: 2px;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    }
   </style>
 </head>
 <body class="bg-cream text-ink-900 antialiased">
