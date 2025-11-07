@@ -297,22 +297,28 @@
       try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch { return ''; }
     };
-    const buildHref = slug => {
-      if (!slug) return '#';
-      return slug.includes('/') ? slug : `article/${slug}.html`;
-    };
+    // Build a link to a post; your articles live at the root as <slug>.html
+    const buildHref = slug => (slug ? `${slug}.html` : '#');
+
 
     // ---------- Data from Admin (localStorage) ----------
     function loadPublished(){
       const out = [];
-      for (let i=0;i<localStorage.length;i++){
+      for (let i = 0; i < localStorage.length; i++){
         const k = localStorage.key(i);
-        if (k && k.startsWith('ctr:admin:published:')){
-          try { const obj = JSON.parse(localStorage.getItem(k)); if (obj && obj.title) out.push(obj); } catch {}
+        if (!k) continue;
+        // accept both current and any legacy prefix
+        if (k.startsWith('ctr:admin:published:') || k.startsWith('ctr:published:')){
+          try {
+            const obj = JSON.parse(localStorage.getItem(k));
+            if (obj && obj.title) out.push(obj);
+          } catch {}
         }
       }
+      console.log('[home] loaded posts:', out.length);
       return out;
     }
+
     function normalize(p){
       return {
         title: p.title || '',
@@ -402,6 +408,18 @@
       // Sort newest first
       posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
+      if (!posts.length){
+        // keep your hero header text, but make the sections clearly “empty”
+        document.getElementById('featuresGrid').innerHTML =
+          `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
+        document.getElementById('latestList').innerHTML =
+          `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
+        document.getElementById('latestMeta').textContent = 'Page 1 • 0 posts';
+        // bail early so we don’t try to render picks, etc.
+        return;
+      }
+
+
       // FEATURED (for hero + grid + picks)
       const featured = posts.filter(p => p.featured);
 
@@ -433,21 +451,23 @@
       $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
 
       // Header search → go to search.html?q=...
+      // Header search → go to /search?q=...
       function goSearch(q){
         const term = (q || '').trim();
-        const url = term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`;
+        // use extensionless path because your site already serves /search
+        const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
         window.location.href = url;
       }
-      const qHeader = $('#qHeader');
-      const qHeaderBtn = $('#qHeaderBtn');
+      const qHeader = document.getElementById('qHeader');
+      const qHeaderBtn = document.getElementById('qHeaderBtn');
       qHeader?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeader.value); } });
       qHeaderBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeader.value); });
 
-      const qHeaderMobile = $('#qHeaderMobile');
-      const qHeaderMobileBtn = $('#qHeaderMobileBtn');
+      const qHeaderMobile = document.getElementById('qHeaderMobile');
+      const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
       qHeaderMobile?.addEventListener('keydown', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); goSearch(qHeaderMobile.value); } });
       qHeaderMobileBtn?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(qHeaderMobile.value); } });
-    })();
+
   </script>
 </body>
 </html>
