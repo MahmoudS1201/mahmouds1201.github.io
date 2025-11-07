@@ -474,7 +474,6 @@
         const latest = posts.filter(p => p !== leadPost).slice(0,3);
         $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
           `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-        $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
       }
 
       // Enable stretched-click behavior after DOM injection
