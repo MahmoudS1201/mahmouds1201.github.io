@@ -88,7 +88,7 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search (now functional) -->
+        <!-- Desktop search -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="qHeader" type="search" placeholder="Search…" class="pl-10 pr-10 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -150,7 +150,7 @@
         <a id="leadLink" href="#" class="sr-only">Read</a>
       </article>
 
-      <!-- Sidebar: Editors' Picks (3 more featured) -->
+      <!-- Sidebar: Editors' Picks -->
       <aside class="space-y-5">
         <h2 class="font-serif text-xl">Editors’ Picks</h2>
         <ul id="picks" class="space-y-5">
@@ -183,7 +183,6 @@
         <div id="latestList" class="divide-y divide-black/10 bg-white rounded-2xl shadow-soft">
           <!-- rows injected -->
         </div>
-        <!-- Pagination (presentational only for now) -->
         <div class="mt-6 flex items-center justify-between">
           <button class="px-4 py-2 rounded-full border border-black/10 hover:bg-white" aria-label="Newer posts" disabled>← Newer</button>
           <button class="px-4 py-2 rounded-full border border-black/10 hover:bg-white" aria-label="Older posts" disabled>Older →</button>
@@ -289,32 +288,31 @@
     </div>
   </footer>
 
+  <!-- ====== Posts loader + full-card click behavior ====== -->
   <script type="module">
-    /* ---------- Subpath-safe helper (for /CamilaTiburcioRubio/) ---------- */
+    /* ---------- Subpath helper (GitHub Pages safe) ---------- */
     const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
     const toBase = (u) => {
       if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;                       // absolute URL
-      if (u.startsWith('./') || u.startsWith('../'))
-        return new URL(u, location.origin + basePath).pathname;     // keep relative
-      if (u.startsWith('/')) return basePath + u.slice(1);          // root -> subpath
-      return basePath + u;                                          // plain relative
+      if (/^https?:\/\//i.test(u)) return u;
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);
+      return basePath + u;
     };
 
-    /* ---------- Load posts.json (no other dependencies) ---------- */
+    /* ---------- Load posts.json (no other deps) ---------- */
     async function loadPosts() {
-      const url = toBase('posts.json'); // resolves to /CamilaTiburcioRubio/posts.json
+      const url = toBase('posts.json');
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error(`Failed to load ${url} (${res.status})`);
       const arr = await res.json();
       return arr.map(normalize).sort(byNewest);
     }
 
-    /* ---------- Normalize to the homepage fields ---------- */
+    /* ---------- Normalize to homepage fields ---------- */
     function normalize(item){
-      // Your JSON already uses these keys; we also make URLs subpath-safe
       const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
-      const cover = item.cover || ''; // string path in your JSON
+      const cover = item.cover || '';
       return {
         title: item.title || '',
         href: toBase(href),
@@ -326,15 +324,13 @@
         cover: cover ? toBase(cover) : '',
       };
     }
-    const byNewest = (a,b) => new Date(b.date) - new Date(a.date);
-    const fmtDate  = iso => { try {
-      return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
-    } catch { return ''; } };
+    const byNewest = (a,b)=> new Date(b.date) - new Date(a.date);
+    const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
     const $ = s => document.querySelector(s);
 
-    /* ---------- Small HTML helpers (no style changes) ---------- */
+    /* ---------- Templates (unchanged look) ---------- */
     const cardHTML = p => `
-      <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
+      <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col cursor-pointer" data-href="${p.href}">
         ${p.cover ? `<img class="aspect-[16/10] object-cover" src="${p.cover}" alt="${p.title}">` : ''}
         <div class="p-6 flex-1 flex flex-col">
           <div class="text-xs uppercase tracking-wide text-accent">${p.section}</div>
@@ -345,7 +341,7 @@
       </article>`;
 
     const pickItemHTML = p => `
-      <li class="flex gap-4">
+      <li class="flex gap-4 cursor-pointer" data-href="${p.href}">
         ${p.cover ? `<img class="w-28 h-24 rounded-xl object-cover" src="${p.cover}" alt="${p.title}">` : `<div class="w-28 h-24 rounded-xl bg-ink-900/5"></div>`}
         <div>
           <a class="font-medium u-underline" href="${p.href}">${p.title}</a>
@@ -353,6 +349,43 @@
         </div>
       </li>`;
 
+    function latestRowHTML(p){
+      return `
+        <article class="p-6 sm:p-8 flex flex-col sm:flex-row gap-6 cursor-pointer" data-href="${p.href}">
+          ${p.cover ? `<img class="w-full sm:w-60 h-40 object-cover rounded-xl" src="${p.cover}" alt="${p.title}">` : ''}
+          <div class="flex-1">
+            <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section}</a>
+            <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
+            ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
+            <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
+          </div>
+        </article>`;
+    }
+
+    /* ---------- Make any [data-href] clickable ---------- */
+    function enableCardClicks(root=document){
+      root.querySelectorAll('[data-href]').forEach(el => {
+        if (el.__clickBound) return;
+        el.__clickBound = true;
+        el.classList.add('cursor-pointer');
+        el.setAttribute('role','link');
+        el.setAttribute('tabindex','0');
+        el.addEventListener('click', e => {
+          if (e.target.closest && e.target.closest('a')) return;
+          const url = el.getAttribute('data-href');
+          if (url) window.location.href = url;
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const url = el.getAttribute('data-href');
+            if (url) window.location.href = url;
+          }
+        });
+      });
+    }
+
+    /* ---------- Lead setter ---------- */
     function setLead(p){
       if (!p) return;
       $('#leadImg').src = p.cover || 'https://picsum.photos/1200/675';
@@ -365,19 +398,10 @@
       $('#leadAuthor').textContent = 'Camila Tiburcio Rubio';
       $('#leadRead').textContent = p.readMinutes ? `${p.readMinutes} min` : '';
       $('#leadLink').href = p.href;
-    }
 
-    function latestRowHTML(p){
-      return `
-        <article class="p-6 sm:p-8 flex flex-col sm:flex-row gap-6">
-          ${p.cover ? `<img class="w-full sm:w-60 h-40 object-cover rounded-xl" src="${p.cover}" alt="${p.title}">` : ''}
-          <div class="flex-1">
-            <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section}</a>
-            <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
-            ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
-            <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
-          </div>
-        </article>`;
+      const leadCard = document.getElementById('lead');
+      leadCard?.setAttribute('data-href', p.href);
+      leadCard?.classList.add('cursor-pointer');
     }
 
     /* ---------- Render ---------- */
@@ -393,7 +417,7 @@
         const leadPost = featured[0] || posts[0];
         setLead(leadPost);
 
-        // Editors’ picks (up to 3; fill with newest if fewer)
+        // Editors’ picks (up to 3; fill newest)
         const picks = featured.filter(p => p !== leadPost).slice(0,3);
         for (const p of posts){
           if (picks.length >= 3) break;
@@ -416,15 +440,17 @@
           `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
         $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
       }
+
+      // Enable stretched-click behavior after DOM injection
+      enableCardClicks(document);
     } catch (err) {
       console.error('Homepage failed to render posts:', err);
-      // Show friendly empty state so layout doesn’t collapse
       $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">Couldn’t load posts.</div>`;
       $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">Couldn’t load posts.</div>`;
       $('#latestMeta').textContent = 'Page 1';
     }
 
-    /* ---------- Keep your header search behavior ---------- */
+    /* ---------- Header search behavior ---------- */
     function goSearch(q){
       const term = (q || '').trim();
       const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
@@ -433,30 +459,24 @@
     const qHeader = document.getElementById('qHeader');
     const qHeaderBtn = document.getElementById('qHeaderBtn');
     qHeader?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        goSearch(qHeader.value);
-      }
+      if (e.key === 'Enter') { e.preventDefault(); goSearch(qHeader.value); }
     });
     qHeaderBtn?.addEventListener('click', e => {
-      e.preventDefault();
-      goSearch(qHeader.value);
+      e.preventDefault(); goSearch(qHeader.value);
     });
 
     const qHeaderMobile = document.getElementById('qHeaderMobile');
     const qHeaderMobileBtn = document.getElementById('qHeaderMobileBtn');
     qHeaderMobile?.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        goSearch(qHeaderMobile.value);
-      }
+      if (e.key === 'Enter') { e.preventDefault(); goSearch(qHeaderMobile.value); }
     });
     qHeaderMobileBtn?.addEventListener('click', e => {
-      e.preventDefault();
-      goSearch(qHeaderMobile.value);
+      e.preventDefault(); goSearch(qHeaderMobile.value);
     });
+
+    // Footer year
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
   </script>
-
-
 </body>
 </html>
