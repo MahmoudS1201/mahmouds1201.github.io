@@ -219,10 +219,14 @@
       <div class="lg:col-span-2">
         <div class="flex items-end justify-between mb-6">
           <h2 class="font-serif text-2xl">Latest</h2>
-          <a href="latest.html" class="u-underline text-sm">View all</a>
+          <div id="latestMeta" class="text-sm text-ink-300">Page 1</div>
         </div>
         <div id="latestList" class="divide-y divide-black/10 bg-white rounded-2xl shadow-soft">
           <!-- rows injected -->
+        </div>
+        <div class="mt-6 flex items-center justify-between">
+          <button class="px-4 py-2 rounded-full border border-black/10 hover:bg-white" aria-label="Newer posts" disabled>← Newer</button>
+          <button class="px-4 py-2 rounded-full border border-black/10 hover:bg-white" aria-label="Older posts" disabled>Older →</button>
         </div>
       </div>
 
@@ -448,7 +452,7 @@
       if (!posts.length){
         $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
         $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-        $('#latestMeta')?.textContent = 'Page 1 • 0 posts';
+        $('#latestMeta').textContent = 'Page 1 • 0 posts';
       } else {
         const featured = posts.filter(p => p.featured);
         const leadPost = featured[0] || posts[0];
@@ -475,7 +479,7 @@
         const latest = posts.filter(p => p !== leadPost).slice(0,3);
         $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
           `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-        $('#latestMeta')?.textContent = `Page 1 • ${posts.length} posts`;
+        $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
       }
 
       // Enable stretched-click behavior after DOM injection
@@ -484,7 +488,7 @@
       console.error('Homepage failed to render posts:', err);
       $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">Couldn’t load posts.</div>`;
       $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">Couldn’t load posts.</div>`;
-      $('#latestMeta')?.textContent = 'Page 1';
+      $('#latestMeta').textContent = 'Page 1';
     }
 
     /* ---------- Header search behavior ---------- */
