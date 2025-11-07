@@ -290,87 +290,54 @@
   </footer>
 
   <script type="module">
-    /* ========= Subpath-safe helpers (GitHub Pages) ========= */
+    /* ---------- Subpath-safe helper (for /CamilaTiburcioRubio/) ---------- */
     const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
     const toBase = (u) => {
       if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;                    // absolute
-      if (u.startsWith('./') || u.startsWith('../'))            // relative
-        return new URL(u, location.origin + basePath).pathname;
-      if (u.startsWith('/')) return basePath + u.slice(1);      // root-relative -> subpath
-      return basePath + u;                                      // plain relative
+      if (/^https?:\/\//i.test(u)) return u;                       // absolute URL
+      if (u.startsWith('./') || u.startsWith('../'))
+        return new URL(u, location.origin + basePath).pathname;     // keep relative
+      if (u.startsWith('/')) return basePath + u.slice(1);          // root -> subpath
+      return basePath + u;                                          // plain relative
     };
 
-    // Patch fetch so any code that calls "/posts.json" works on subpaths
-    const _fetch = window.fetch.bind(window);
-    window.fetch = (input, init) => {
-      const url = (typeof input === 'string') ? input : input?.url || '';
-      if (url === '/posts.json') return _fetch(toBase('posts.json'), init);
-      return _fetch(input, init);
-    };
-
-    /* ========= Try posts.js → posts.json → localStorage ========= */
-    async function loadPostsAny() {
-      // 1) Try posts.js living next to index.html
-      try {
-        const mod = await import(new URL('posts.js', location.origin + basePath));
-        if (typeof mod.loadPosts === 'function') return await mod.loadPosts();
-        if (Array.isArray(mod.default)) return mod.default;
-        if (Array.isArray(mod.POSTS))   return mod.POSTS;
-        if (Array.isArray(mod.posts))   return mod.posts;
-      } catch {}
-
-      // 2) Try posts.json
-      try {
-        const res = await fetch('/posts.json', { cache: 'no-store' });
-        if (res.ok) return await res.json();
-      } catch {}
-
-      // 3) Fallback: localStorage (admin preview)
-      const out = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && k.startsWith('ctr:admin:published:')) {
-          try {
-            const obj = JSON.parse(localStorage.getItem(k));
-            if (obj && obj.title) out.push(obj);
-          } catch {}
-        }
-      }
-      return out;
+    /* ---------- Load posts.json (no other dependencies) ---------- */
+    async function loadPosts() {
+      const url = toBase('posts.json'); // resolves to /CamilaTiburcioRubio/posts.json
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Failed to load ${url} (${res.status})`);
+      const arr = await res.json();
+      return arr.map(normalize).sort(byNewest);
     }
 
-    /* ========= Normalization to homepage shape ========= */
-    function normalize(p) {
-      const href  = p.href || p.url || (p.slug ? `${p.slug}.html` : '#');
-      const cover = p.cover || p.image || p.hero || '';
+    /* ---------- Normalize to the homepage fields ---------- */
+    function normalize(item){
+      // Your JSON already uses these keys; we also make URLs subpath-safe
+      const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
+      const cover = item.cover || ''; // string path in your JSON
       return {
-        title: p.title || '',
+        title: item.title || '',
         href: toBase(href),
-        section: p.section || p.category || p.type || 'Article',
-        description: p.description || p.excerpt || p.summary || '',
+        section: item.section || 'Article',
+        description: item.excerpt || item.description || '',
+        date: item.date || '',
+        readMinutes: item.readMinutes || '',
+        featured: !!item.featured,
         cover: cover ? toBase(cover) : '',
-        readMinutes: p.readMinutes || p.read_time || p.read || '',
-        date: p.date || p.publishedAt || p.published_at || p.createdAt || '',
-        featured: !!(p.featured || p.isFeatured),
       };
     }
-
-    const raw = await loadPostsAny();
-    const posts = raw.map(normalize).filter(p => p.title && p.href);
-    posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
-
-    /* ========= DOM helpers (no style changes) ========= */
-    const $ = s => document.querySelector(s);
-    const fmtDate = iso => { try {
+    const byNewest = (a,b) => new Date(b.date) - new Date(a.date);
+    const fmtDate  = iso => { try {
       return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
     } catch { return ''; } };
+    const $ = s => document.querySelector(s);
 
+    /* ---------- Small HTML helpers (no style changes) ---------- */
     const cardHTML = p => `
       <article class="bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col">
         ${p.cover ? `<img class="aspect-[16/10] object-cover" src="${p.cover}" alt="${p.title}">` : ''}
         <div class="p-6 flex-1 flex flex-col">
-          <div class="text-xs uppercase tracking-wide text-accent">${p.section || 'Article'}</div>
+          <div class="text-xs uppercase tracking-wide text-accent">${p.section}</div>
           <h3 class="font-serif text-xl mt-2 leading-snug"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
           ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
           <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
@@ -382,7 +349,7 @@
         ${p.cover ? `<img class="w-28 h-24 rounded-xl object-cover" src="${p.cover}" alt="${p.title}">` : `<div class="w-28 h-24 rounded-xl bg-ink-900/5"></div>`}
         <div>
           <a class="font-medium u-underline" href="${p.href}">${p.title}</a>
-          <p class="text-sm text-ink-500 mt-1">${p.section || 'Article'}${p.readMinutes?` • ${p.readMinutes} min`:''}</p>
+          <p class="text-sm text-ink-500 mt-1">${p.section}${p.readMinutes?` • ${p.readMinutes} min`:''}</p>
         </div>
       </li>`;
 
@@ -405,7 +372,7 @@
         <article class="p-6 sm:p-8 flex flex-col sm:flex-row gap-6">
           ${p.cover ? `<img class="w-full sm:w-60 h-40 object-cover rounded-xl" src="${p.cover}" alt="${p.title}">` : ''}
           <div class="flex-1">
-            <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section || 'Article'}</a>
+            <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section}</a>
             <h3 class="font-serif text-2xl leading-tight mt-1"><a class="u-underline" href="${p.href}">${p.title}</a></h3>
             ${p.description ? `<p class="text-ink-500 mt-2">${p.description}</p>` : ''}
             <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.readMinutes?` • ${p.readMinutes} min`:''}</div>
@@ -413,45 +380,51 @@
         </article>`;
     }
 
-    /* ========= Render (Lead, Picks, Featured, Latest) ========= */
-    (function render(){
+    /* ---------- Render ---------- */
+    try {
+      const posts = await loadPosts();
+
       if (!posts.length){
         $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
         $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
         $('#latestMeta').textContent = 'Page 1 • 0 posts';
-        return;
+      } else {
+        const featured = posts.filter(p => p.featured);
+        const leadPost = featured[0] || posts[0];
+        setLead(leadPost);
+
+        // Editors’ picks (up to 3; fill with newest if fewer)
+        const picks = featured.filter(p => p !== leadPost).slice(0,3);
+        for (const p of posts){
+          if (picks.length >= 3) break;
+          if (p !== leadPost && !picks.includes(p)) picks.push(p);
+        }
+        $('#picks').innerHTML = picks.map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
+
+        // Featured grid (3)
+        const grid = featured.filter(p => p !== leadPost).slice(0,3);
+        for (const p of posts){
+          if (grid.length >= 3) break;
+          if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
+        }
+        $('#featuresGrid').innerHTML = grid.map(cardHTML).join('') ||
+          `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
+
+        // Latest (3 newest excluding lead)
+        const latest = posts.filter(p => p !== leadPost).slice(0,3);
+        $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
+          `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
+        $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
       }
+    } catch (err) {
+      console.error('Homepage failed to render posts:', err);
+      // Show friendly empty state so layout doesn’t collapse
+      $('#featuresGrid').innerHTML = `<div class="text-ink-300 p-6 bg-white rounded-2xl">Couldn’t load posts.</div>`;
+      $('#latestList').innerHTML   = `<div class="p-8 text-ink-300">Couldn’t load posts.</div>`;
+      $('#latestMeta').textContent = 'Page 1';
+    }
 
-      const featured = posts.filter(p => p.featured);
-      const leadPost = featured[0] || posts[0];
-      setLead(leadPost);
-
-      // Editors’ Picks (up to 3; fill from newest if fewer)
-      const picks = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of posts){
-        if (picks.length >= 3) break;
-        if (p !== leadPost && !picks.includes(p)) picks.push(p);
-      }
-      $('#picks').innerHTML = picks.map(pickItemHTML).join('') ||
-        `<li class="text-ink-300">No picks yet.</li>`;
-
-      // Featured grid (3)
-      const grid = featured.filter(p => p !== leadPost).slice(0,3);
-      for (const p of posts){
-        if (grid.length >= 3) break;
-        if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
-      }
-      $('#featuresGrid').innerHTML = grid.map(cardHTML).join('') ||
-        `<div class="text-ink-300 p-6 bg-white rounded-2xl">No featured posts yet.</div>`;
-
-      // Latest (3 newest excluding lead)
-      const latest = posts.filter(p => p !== leadPost).slice(0,3);
-      $('#latestList').innerHTML = latest.map(latestRowHTML).join('') ||
-        `<div class="p-8 text-ink-300">No recent posts yet.</div>`;
-      $('#latestMeta').textContent = `Page 1 • ${posts.length} posts`;
-    })();
-
-    /* ========= Header search (unchanged) ========= */
+    /* ---------- Keep your header search behavior ---------- */
     function goSearch(q){
       const term = (q || '').trim();
       const url = term ? `search?q=${encodeURIComponent(term)}` : `search`;
