@@ -210,7 +210,7 @@
       </div>
     </aside>
   </section>
-  
+
   <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
@@ -276,6 +276,15 @@
       const isHidden = mobileMenu.classList.toggle('hidden');
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
+
+     // Back to top visibility + behavior
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
     // ---------- Path helper for routing to /search (GitHub Pages–safe) ----------
     const basePath = location.pathname.replace(/[^/]*$/, ''); // "/repo/" if hosted under subpath
