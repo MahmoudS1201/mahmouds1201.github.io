@@ -359,35 +359,34 @@
       wireFilters();
     }
 
-    /* ---------- Filters / Search / Sort + highlight ---------- */
+    /* ---------- Filters / Search / Sort + highlight (INLINE ONLY) ---------- */
     function wireFilters(){
-      const chips = $$('.chip');
-      const qMain = $('#q');
-      const qInline = $('#q-inline');
-      const qMobile = $('#q-mobile');
-      const sortSel = $('#sort');
+      const chips = Array.from(document.querySelectorAll('.chip'));
+      const qInline = document.getElementById('q-inline');   // inline search ONLY (not header)
+      const sortSel = document.getElementById('sort');
 
       function norm(s){ return (s||'').toLowerCase(); }
+
       function apply(){
-        const termRaw = qMain?.value || qInline?.value || qMobile?.value || '';
+        const termRaw = qInline?.value || '';                // <-- no #q or #q-mobile here
         const term = norm(termRaw);
         const terms = term ? term.split(/\s+/).filter(Boolean) : [];
 
-        const cards = $$('#grid article.card');
+        const cards = Array.from(document.querySelectorAll('#grid article.card'));
         cards.forEach(card => {
           const section = card.dataset.section;
           const title = card.dataset.title || '';
           const tags  = card.dataset.tags || '';
-          const matchesSection = true; // page is already features-only; chips still filter by section if desired
+          const matchesSection = true; // page is features-only; chips still change section if you want to wire them later
           const matchesQuery = term ? (title.toLowerCase().includes(term) || tags.toLowerCase().includes(term)) : true;
           card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
 
           // highlight title + desc
           const link = card.querySelector('.link');
           const desc = card.querySelector('.desc');
-          // restore originals first
+
+          // restore originals before re-highlighting
           link.textContent = title;
-          // desc text is what’s in DOM; we stored full post text in data attributes
           const fullDesc = desc.dataset.original || desc.textContent;
           if (!desc.dataset.original) desc.dataset.original = fullDesc;
 
@@ -401,6 +400,7 @@
         });
       }
 
+      // Chips (optional: currently only toggles visual state then reapplies)
       chips.forEach(chip => {
         chip.addEventListener('click', () => {
           chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
@@ -409,10 +409,12 @@
         });
       });
 
-      [qMain, qInline, qMobile].forEach(el => el?.addEventListener('input', apply));
+      // Inline search only
+      qInline?.addEventListener('input', apply);
 
+      // Sort control
       sortSel?.addEventListener('change', () => {
-        const grid = $('#grid');
+        const grid = document.getElementById('grid');
         const items = Array.from(grid.children).filter(el => el.matches('article.card'));
         const mode = sortSel.value;
 
@@ -428,6 +430,7 @@
 
       apply();
     }
+
 
     /* ---------- Boot ---------- */
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -479,10 +482,11 @@
       }
     }
 
-    // Only bind HEADER fields — not inline or page search inputs
-    bindHeaderSearch(document.getElementById('qHeader'), document.getElementById('qHeaderBtn'));
-    bindHeaderSearch(document.getElementById('qHeaderMobile'), document.getElementById('qHeaderMobileBtn'));
+    // Desktop header search input (Enter to route to /search)
+    bindHeaderSearch(document.getElementById('q'), null);
 
+    // Mobile header search input inside the dropdown (Enter to route to /search)
+    bindHeaderSearch(document.getElementById('q-mobile'), null);
   </script>
 </body>
 </html>
