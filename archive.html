@@ -37,6 +37,8 @@
     .u-underline:hover::after{transform:scaleX(1)}
     .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     ::selection{background:rgba(197,61,47,.15)}
+    /* inline-search highlight */
+    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
 
     .chip {
       display:inline-block;
@@ -293,6 +295,16 @@
     const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
     const uniqueYears=p=>[...new Set(p.map(p=>new Date(p.date).getFullYear()))].filter(Boolean).sort((a,b)=>b-a);
 
+    // --- highlighting helpers ---
+    const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function highlight(text, rawTerm){
+      if (!rawTerm) return String(text || '');
+      const parts = String(rawTerm).trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return String(text || '');
+      const pat = new RegExp('(' + parts.map(esc).join('|') + ')', 'ig');
+      return String(text || '').replace(pat, '<mark class="hl">$1</mark>');
+    }
+
     function parseParams(){
       const u = new URL(location.href);
       return {
@@ -387,7 +399,9 @@
       const total = list.length;
       stats.textContent = `${total} ${total===1?'result':'results'}`;
 
+      const term = (state.q || '').trim(); // <-- highlight source
       const groups = groupByYear(list);
+
       groups.forEach(([year, items]) => {
         const groupNode = tplGroup.content.cloneNode(true);
         groupNode.querySelector('.year-label').textContent = year;
@@ -399,14 +413,18 @@
           node.querySelector('a').href = p.href || '#';
           node.querySelector('.date').textContent = fmtDate(p.date);
           node.querySelector('.section').textContent = p.section || 'Article';
-          node.querySelector('.title').textContent = p.title || '';
-          node.querySelector('.desc').textContent = p.description || '';
+
+          // Use innerHTML so we can inject <mark> safely
+          node.querySelector('.title').innerHTML = highlight(p.title || '', term);
+          node.querySelector('.desc').innerHTML  = highlight(p.description || '', term);
+
           ul.appendChild(node);
         });
 
         results.appendChild(groupNode);
       });
     }
+
 
     function update(){
       writeParams(state);
