@@ -456,25 +456,33 @@
       renderGrid(FEATURED);
     })();
 
-    /* ---------- Header search → /search ---------- */
+    /* ---------- Header search → /search (does NOT filter this page) ---------- */
     function goSearch(q){
       const term = (q || '').trim();
       const url = basePath + (term ? `search?q=${encodeURIComponent(term)}` : `search`);
       window.location.href = url;
     }
-    function bindSearch(input, triggerBtn){
+
+    function bindHeaderSearch(input, triggerBtn){
       if (!input) return;
       input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); goSearch(input.value); }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          goSearch(input.value);
+        }
       });
-      triggerBtn?.addEventListener('click', (e) => { e.preventDefault(); goSearch(input.value); });
+      if (triggerBtn){
+        triggerBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          goSearch(input.value);
+        });
+      }
     }
-    bindSearch(document.getElementById('q'));          // desktop field on this page
-    bindSearch(document.getElementById('q-inline'));   // inline field
-    bindSearch(document.getElementById('q-mobile'));   // mobile field
-    // If you also have qHeader/qHeaderMobile on shared layouts, add them here:
-    bindSearch(document.getElementById('qHeader'), document.getElementById('qHeaderBtn'));
-    bindSearch(document.getElementById('qHeaderMobile'), document.getElementById('qHeaderMobileBtn'));
+
+    // Only bind HEADER fields — not inline or page search inputs
+    bindHeaderSearch(document.getElementById('qHeader'), document.getElementById('qHeaderBtn'));
+    bindHeaderSearch(document.getElementById('qHeaderMobile'), document.getElementById('qHeaderMobileBtn'));
+
   </script>
 </body>
 </html>
