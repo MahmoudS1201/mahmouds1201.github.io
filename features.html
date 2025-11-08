@@ -105,8 +105,8 @@
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
         <a class="block u-underline font-semibold text-accent" href="features.html">Features</a>
-        <a class="block u-underline" href="Home.html#latest">Latest</a>
-        <a class="block u-underline" href="Home.html#sections">Sections</a>
+        <a class="block u-underline" href="latest.html">Latest</a>
+        <a class="block u-underline" href="sections.html">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
         <label class="relative block mt-3" aria-label="Search features">
           <input id="q-mobile" type="search" placeholder="Search features…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -199,6 +199,7 @@
         </div>
       </article>
     </template>
+  </main>
 
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
@@ -251,24 +252,28 @@
     </div>
   </footer>
 
-    <script>
-    // ---------------------------
-    // Utilities
-    // ---------------------------
+  <script>
+    // ============ Helpers (GitHub Pages-safe paths) ============
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    const toBase = (u) => {
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);
+      return basePath + u;
+    };
+
+    // ============ Utilities ============
     const $ = (s,r=document)=>r.querySelector(s);
     const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
     function fmtDate(iso){ try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) } catch { return '' } }
     const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
     const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
 
-    // ---------------------------
-    // Data sources (posts.json -> local cache -> demo)
-    // Expected shape:
-    // { slug, title, section, tags, author, excerpt, date, readMinutes, featured, cover, url }
-    // ---------------------------
+    // ============ Data sources ============
     async function fetchPostsJson(){
       try{
-        const res = await fetch('posts.json', { cache: 'no-store' });
+        const res = await fetch(toBase('posts.json'), { cache: 'no-store' });
         if(!res.ok) throw new Error('fetch failed');
         const data = await res.json();
         return Array.isArray(data) ? data : null;
@@ -293,34 +298,33 @@
     ];
 
     function normalize(p){
-      const href = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
+      const hrefRaw = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
+      const coverRaw = p.cover || '';
       return {
         title: p.title || '',
-        href,
+        href: toBase(hrefRaw),
         section: p.section || '',
         excerpt: p.excerpt || p.description || '',
         date: p.date || p.publishedAt || '',
         read: p.readMinutes || '',
         tags: Array.isArray(p.tags)? p.tags.join(', ') : (p.tags || ''),
-        featured: !!p.featured, // <-- critical
-        cover: p.cover || 'https://picsum.photos/600/375?random',
+        featured: !!p.featured,
+        cover: coverRaw ? toBase(coverRaw) : 'https://picsum.photos/600/375?random',
         author: p.author || 'Camila Tiburcio Rubio'
       };
     }
 
-    let POSTS = [];      // all posts (raw normalized)
-    let CURRENT = [];    // the list currently rendered (only featured here)
+    let POSTS = [];
+    let CURRENT = [];
 
-    // ---------------------------
-    // Render: Hero + Grid
-    // ---------------------------
+    // ============ Render: Hero + Grid ============
     function pickHero(items){
       const featured = items.filter(p => p.featured).sort(byNewest);
       return (featured[0] || null);
     }
 
     function fillHero(post){
-      if(!post) return; // leaves your default hero copy as-is if no featured posts exist
+      if(!post) return;
       const heroImg = $('#heroImg');
       heroImg.src = post.cover || heroImg.src;
       heroImg.alt = post.title || 'Feature hero image';
@@ -352,22 +356,21 @@
       article.dataset.section = post.section || '';
       article.dataset.title = post.title || '';
       article.dataset.tags = post.tags || '';
+      article.dataset.excerpt = (post.excerpt || '').toLowerCase();
       article.dataset.date = post.date || '';
 
       return tpl;
     }
 
     function renderGrid(items){
-      CURRENT = items.slice(); // keep what we're showing
+      CURRENT = items.slice();
       const grid = $('#grid');
       grid.innerHTML = '';
       items.forEach(p => grid.appendChild(buildCard(p)));
-      wireFilters(); // after DOM exists
+      wireFilters(); // bind after DOM exists
     }
 
-    // ---------------------------
-    // Filters / Search / Sort (visual only)
-    // ---------------------------
+    // ============ Filters / Search / Sort ============
     function wireFilters(){
       const chips = $$('.chip');
       const qMain = $('#q');
@@ -375,8 +378,10 @@
       const qMobile = $('#q-mobile');
       const sortSel = $('#sort');
 
-      function norm(s){ return (s||'').toLowerCase(); }
+      const norm = s => (s||'').toLowerCase();
+
       function apply(){
+        // Only touching already-rendered FEATURED cards
         const cards = $$('#grid article.card');
         const active = chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all';
         const term = norm(qMain?.value || qInline?.value || qMobile?.value);
@@ -385,17 +390,18 @@
           const section = card.dataset.section;
           const title = norm(card.dataset.title);
           const tags = norm(card.dataset.tags);
+          const excerpt = card.dataset.excerpt || '';
           const matchesSection = (active === 'all') || (section === active);
-          const matchesQuery = term ? (title.includes(term) || tags.includes(term)) : true;
+          const matchesQuery = term ? (title.includes(term) || tags.includes(term) || excerpt.includes(term)) : true;
           card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
         });
       }
 
       chips.forEach(chip => {
         chip.addEventListener('click', () => {
-          chips.forEach(c => c.dataset.active = 'false');
+          chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
           chip.dataset.active = 'true';
-          chip.setAttribute('aria-pressed', 'true');
+          chip.setAttribute('aria-pressed','true');
           apply();
         });
       });
@@ -421,9 +427,7 @@
       apply();
     }
 
-    // ---------------------------
-    // Boot
-    // ---------------------------
+    // ============ Boot ============
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Mobile menu toggle
@@ -450,13 +454,14 @@
         }
       }
 
-      // ***** ONLY SHOW FEATURED *****
+      // **** ONLY show featured posts on this page ****
       const FEATURED = POSTS.filter(p => p.featured);
-      // Hero shows most recent featured (if any). If none, default hero stays.
-      const hero = FEATURED.length ? FEATURED.slice().sort(byNewest)[0] : null;
+
+      // Hero = newest featured (if any)
+      const hero = FEATURED.length ? FEATURED[0] : null;
       if (hero) fillHero(hero);
 
-      // Grid: ONLY featured posts
+      // Grid = all featured (sorted newest first)
       renderGrid(FEATURED);
     })();
   </script>
