@@ -44,16 +44,10 @@
 
     ::selection { background: rgba(197,61,47,0.15); }
 
-    /* Highlight style (matches search page feel) */
-    mark.hl {
-      background: rgba(197,61,47,.22);
-      color: inherit;
-      padding: 0 .15em;
-      border-radius: .25em;
-    }
+    /* highlight used for search terms */
+    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
   </style>
 
-  <!-- Canonical / Social (update domain when live) -->
   <link rel="canonical" href="https://example.com/features" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Features — Camila Tiburcio Rubio">
@@ -193,7 +187,7 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
-    <!-- Card template -->
+    <!-- Card template (keeps your exact card structure) -->
     <template id="cardTemplate">
       <article class="card flex flex-col">
         <img class="aspect-[16/10] object-cover" src="" alt="" />
@@ -212,6 +206,7 @@
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -224,6 +219,7 @@
         </p>
       </div>
 
+      <!-- Explore -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
@@ -233,6 +229,7 @@
         </ul>
       </div>
 
+      <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
@@ -241,6 +238,7 @@
         </ul>
       </div>
 
+      <!-- Follow -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
@@ -256,9 +254,12 @@
     </div>
   </footer>
 
+  <!-- ====================================================== -->
+  <!--  SCRIPT: Features-only render + search + highlights    -->
+  <!-- ====================================================== -->
   <script>
-    /* ---------- Subpath helper (GitHub Pages safe) ---------- */
-    const basePath = location.pathname.replace(/[^/]*$/, '');
+    /* ---------- Path helpers (GitHub Pages–safe) ---------- */
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // "/repo/" if hosted under subpath
     const toBase = (u) => {
       if (!u) return '';
       if (/^https?:\/\//i.test(u)) return u;
@@ -270,11 +271,9 @@
     /* ---------- Utilities ---------- */
     const $ = (s,r=document)=>r.querySelector(s);
     const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
-    const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
     const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
+    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
 
-    // Highlight: wrap any of the query terms with <mark class="hl">
     const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     function highlight(text, terms){
       if (!text || !terms.length) return text;
@@ -282,7 +281,7 @@
       return text.replace(pat, '<mark class="hl">$1</mark>');
     }
 
-    /* ---------- Data sources ---------- */
+    /* ---------- Data ---------- */
     async function fetchPostsJson(){
       try{
         const res = await fetch(toBase('posts.json'), { cache: 'no-store' });
@@ -291,37 +290,28 @@
         return Array.isArray(data) ? data : null;
       }catch{ return null; }
     }
-
     function loadPublishedLocal(){
-      const out=[];
-      for(let i=0;i<localStorage.length;i++){
+      const out = [];
+      for (let i=0;i<localStorage.length;i++){
         const k = localStorage.key(i);
-        if(k && k.startsWith('ctr:admin:published:')){
-          try{ const obj = JSON.parse(localStorage.getItem(k)); if(obj && obj.title) out.push(obj);}catch{}
+        if (k && k.startsWith('ctr:admin:published:')) {
+          try { const obj = JSON.parse(localStorage.getItem(k)); if (obj && obj.title) out.push(obj); } catch {}
         }
       }
       return out;
     }
-
-    const DEMO = [
-      { title:'Street Art as Unofficial Syllabus', url:'article/street-art-syllabus.html', date:'2025-10-01', section:'Essay', excerpt:'What murals teach us about place, politics, and public imagination.', readMinutes:7, cover:'https://picsum.photos/600/375?4', featured:true },
-      { title:'Life as an Archivist', url:'article/life-as-an-archivist.html', date:'2025-09-28', section:'Interview', excerpt:'On preserving local histories beyond institutions.', readMinutes:12, cover:'https://picsum.photos/600/375?5', featured:false },
-      { title:'Films that Map the Diaspora', url:'article/films-that-map-the-diaspora.html', date:'2025-09-22', section:'Review', excerpt:'Must-see films regarding the diaspora far and wide.', readMinutes:9, cover:'https://picsum.photos/600/375?6', featured:true }
-    ];
-
     function normalize(p){
-      const hrefRaw = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
-      const coverRaw = p.cover || '';
+      const href = p.url || (p.slug ? `${p.slug}.html` : '#');
       return {
         title: p.title || '',
-        href: toBase(hrefRaw),
+        href: toBase(href),
         section: p.section || '',
         excerpt: p.excerpt || p.description || '',
         date: p.date || p.publishedAt || '',
         read: p.readMinutes || '',
-        tags: Array.isArray(p.tags)? p.tags.join(', ') : (p.tags || ''),
+        tags: Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || ''),
         featured: !!p.featured,
-        cover: coverRaw ? toBase(coverRaw) : 'https://picsum.photos/600/375?random',
+        cover: p.cover || 'https://picsum.photos/600/375?features',
         author: p.author || 'Camila Tiburcio Rubio'
       };
     }
@@ -329,105 +319,92 @@
     let POSTS = [];
     let FEATURED = [];
 
-    /* ---------- Renderers ---------- */
-    function fillHero(post, terms=[]){
-      if(!post) return;
-      $('#heroImg').src = post.cover || $('#heroImg').src;
-      $('#heroImg').alt = post.title || 'Feature hero image';
-      $('#heroDate').textContent = fmtDate(post.date);
-      $('#heroDate').dateTime = post.date || '';
-      // highlight hero title & excerpt
-      $('#heroTitle').innerHTML = highlight(post.title || '', terms);
-      $('#heroExcerpt').innerHTML = highlight(post.excerpt || '', terms);
+    /* ---------- Rendering ---------- */
+    function pickHero(items){
+      const featured = items.filter(p => p.featured).sort(byNewest);
+      return featured[0] || null;
+    }
+    function fillHero(post){
+      if (!post) return;
+      const heroImg = $('#heroImg'); heroImg.src = post.cover || heroImg.src; heroImg.alt = post.title || 'Feature hero image';
+      $('#heroTitle').textContent = post.title || $('#heroTitle').textContent;
+      const d = $('#heroDate'); d.textContent = fmtDate(post.date); d.dateTime = post.date || '';
+      $('#heroExcerpt').textContent = post.excerpt || $('#heroExcerpt').textContent;
       $('#heroRead').textContent = post.read ? `${post.read} min read` : '';
       $('#heroLink').href = post.href || '#';
     }
-
     function buildCard(post){
       const tpl = $('#cardTemplate').content.cloneNode(true);
       const img = tpl.querySelector('img');
-      img.src = post.cover;
-      img.alt = `${post.title} cover`;
-
+      img.src = post.cover; img.alt = `${post.title} cover`;
       tpl.querySelector('.sectionLabel').textContent = post.section || 'Feature';
       const a = tpl.querySelector('.link');
       a.href = post.href || '#';
       a.textContent = post.title || '';
-      const descEl = tpl.querySelector('.desc');
-      descEl.textContent = post.excerpt || '';
+      tpl.querySelector('.desc').textContent = post.excerpt || '';
       const meta = [];
       if (post.date) meta.push(fmtDate(post.date));
       if (post.read) meta.push(`${post.read} min`);
       tpl.querySelector('.meta').textContent = meta.join(' • ');
-
-      // store raw strings for re-highlighting
       const article = tpl.querySelector('article.card');
       article.dataset.section = post.section || '';
-      article.dataset.titleRaw = post.title || '';
-      article.dataset.descRaw = post.excerpt || '';
+      article.dataset.title = post.title || '';
       article.dataset.tags = post.tags || '';
       article.dataset.date = post.date || '';
-
       return tpl;
     }
-
     function renderGrid(items){
-      const grid = $('#grid');
-      grid.innerHTML = '';
+      const grid = $('#grid'); grid.innerHTML = '';
       items.forEach(p => grid.appendChild(buildCard(p)));
+      wireFilters();
     }
 
-    /* ---------- Filters / Search / Sort + Highlight ---------- */
-    function wireFiltersAndSearch(heroPost){
+    /* ---------- Filters / Search / Sort + highlight ---------- */
+    function wireFilters(){
       const chips = $$('.chip');
       const qMain = $('#q');
       const qInline = $('#q-inline');
       const qMobile = $('#q-mobile');
       const sortSel = $('#sort');
 
-      const norm = s => (s||'').toLowerCase();
-      const getTerms = () => {
-        const q = (qMain?.value || qInline?.value || qMobile?.value || '').trim();
-        // split on whitespace, drop empties
-        return q ? q.split(/\s+/).filter(Boolean) : [];
-      };
-
+      function norm(s){ return (s||'').toLowerCase(); }
       function apply(){
-        const terms = getTerms();
-        const termStr = norm(terms.join(' '));
-        const active = chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all';
+        const termRaw = qMain?.value || qInline?.value || qMobile?.value || '';
+        const term = norm(termRaw);
+        const terms = term ? term.split(/\s+/).filter(Boolean) : [];
 
-        // Cards: filter + highlight
         const cards = $$('#grid article.card');
         cards.forEach(card => {
           const section = card.dataset.section;
-          const titleRaw = card.dataset.titleRaw || '';
-          const descRaw  = card.dataset.descRaw || '';
-          const tags = norm(card.dataset.tags);
-
-          const matchesSection = (active === 'all') || (section === active);
-          const matchesQuery = termStr
-            ? (norm(titleRaw).includes(termStr) || norm(descRaw).includes(termStr) || tags.includes(termStr))
-            : true;
-
+          const title = card.dataset.title || '';
+          const tags  = card.dataset.tags || '';
+          const matchesSection = true; // page is already features-only; chips still filter by section if desired
+          const matchesQuery = term ? (title.toLowerCase().includes(term) || tags.toLowerCase().includes(term)) : true;
           card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
 
-          // re-highlight visible cards
-          const linkEl = $('.link', card);
-          const descEl = $('.desc', card);
-          linkEl.innerHTML = highlight(titleRaw, terms);
-          descEl.innerHTML = highlight(descRaw, terms);
-        });
+          // highlight title + desc
+          const link = card.querySelector('.link');
+          const desc = card.querySelector('.desc');
+          // restore originals first
+          link.textContent = title;
+          // desc text is what’s in DOM; we stored full post text in data attributes
+          const fullDesc = desc.dataset.original || desc.textContent;
+          if (!desc.dataset.original) desc.dataset.original = fullDesc;
 
-        // Hero: re-highlight (doesn't filter hero away)
-        if (heroPost) fillHero(heroPost, terms);
+          if (terms.length){
+            link.innerHTML = highlight(title, terms);
+            desc.innerHTML = highlight(fullDesc, terms);
+          } else {
+            link.textContent = title;
+            desc.textContent = fullDesc;
+          }
+        });
       }
 
       chips.forEach(chip => {
         chip.addEventListener('click', () => {
           chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
-          chip.dataset.active = 'true';
-          chip.setAttribute('aria-pressed','true');
+          chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true');
           apply();
         });
       });
@@ -440,22 +417,22 @@
         const mode = sortSel.value;
 
         if (mode === 'title') {
-          items.sort((a,b)=> (a.dataset.titleRaw||'').localeCompare(b.dataset.titleRaw||''));
+          items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
         } else if (mode === 'old') {
           items.sort((a,b)=> new Date(a.dataset.date||0) - new Date(b.dataset.date||0));
         } else {
           items.sort((a,b)=> new Date(b.dataset.date||0) - new Date(a.dataset.date||0));
         }
-
         items.forEach(it => grid.appendChild(it));
-        apply(); // keep highlights after resort
       });
 
-      apply(); // initial
+      apply();
     }
 
     /* ---------- Boot ---------- */
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile menu toggle
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     menuToggle?.addEventListener('click', () => {
@@ -464,22 +441,40 @@
     });
 
     (async function init(){
-      const j = await fetchPostsJson();
-      if (j && j.length) {
-        POSTS = j.map(normalize).sort(byNewest);
-      } else {
+      let data = await fetchPostsJson();
+      if (!data || !data.length) {
         const local = loadPublishedLocal();
-        POSTS = (local.length ? local : DEMO).map(normalize).sort(byNewest);
+        if (local.length) data = local;
       }
+      if (!data || !data.length) { data = []; }
 
-      // Only FEATURED on this page
-      FEATURED = POSTS.filter(p => p.featured).sort(byNewest);
+      POSTS = data.map(normalize).sort(byNewest);
+      FEATURED = POSTS.filter(p => p.featured);
 
-      const hero = FEATURED[0] || null;
+      const hero = FEATURED.length ? FEATURED[0] : null;
       if (hero) fillHero(hero);
       renderGrid(FEATURED);
-      wireFiltersAndSearch(hero);
     })();
+
+    /* ---------- Header search → /search ---------- */
+    function goSearch(q){
+      const term = (q || '').trim();
+      const url = basePath + (term ? `search?q=${encodeURIComponent(term)}` : `search`);
+      window.location.href = url;
+    }
+    function bindSearch(input, triggerBtn){
+      if (!input) return;
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); goSearch(input.value); }
+      });
+      triggerBtn?.addEventListener('click', (e) => { e.preventDefault(); goSearch(input.value); });
+    }
+    bindSearch(document.getElementById('q'));          // desktop field on this page
+    bindSearch(document.getElementById('q-inline'));   // inline field
+    bindSearch(document.getElementById('q-mobile'));   // mobile field
+    // If you also have qHeader/qHeaderMobile on shared layouts, add them here:
+    bindSearch(document.getElementById('qHeader'), document.getElementById('qHeaderBtn'));
+    bindSearch(document.getElementById('qHeaderMobile'), document.getElementById('qHeaderMobileBtn'));
   </script>
 </body>
 </html>
