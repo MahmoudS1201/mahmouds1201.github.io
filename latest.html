@@ -38,7 +38,7 @@
     .u-underline:hover::after { transform: scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
-    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
     .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
 
@@ -86,10 +86,10 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search -->
+        <!-- Desktop search (HEADER search — routes to /search) -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search latest">
-            <input id="q-desktop" type="search" placeholder="Search latest…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
             <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
           </label>
         </div>
@@ -112,6 +112,7 @@
         <a class="block u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
         <a class="block u-underline" href="Home.html#sections">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
+        <!-- Mobile HEADER search — routes to /search -->
         <label class="relative block mt-3" aria-label="Search latest">
           <input id="q-mobile" type="search" placeholder="Search latest…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
@@ -154,7 +155,7 @@
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
 
-      <!-- Search + page size -->
+      <!-- INLINE page search (filters THIS page only) + page size -->
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Search title or tags</label>
         <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full" />
@@ -259,7 +260,7 @@
   </footer>
 
   <script>
-    // Year + mobile menu
+    // ---------- Year + mobile menu ----------
     document.getElementById('year').textContent = new Date().getFullYear();
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
@@ -267,6 +268,27 @@
       const isHidden = mobileMenu.classList.toggle('hidden');
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
+
+    // ---------- Path helper for routing to /search (GitHub Pages–safe) ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // "/repo/" if hosted under subpath
+    function goSearch(q){
+      const term = (q || '').trim();
+      const url = basePath + (term ? `search?q=${encodeURIComponent(term)}` : `search`);
+      window.location.href = url;
+    }
+    function bindHeaderSearch(input){
+      if (!input) return;
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          goSearch(input.value);
+        }
+      });
+    }
+
+    // Bind HEADER search (desktop + mobile) — does NOT affect page filtering
+    bindHeaderSearch(document.getElementById('q-desktop'));
+    bindHeaderSearch(document.getElementById('q-mobile'));
 
     // ---------- Data loading (posts.json -> localStorage -> demo) ----------
     async function fetchPostsJson(){
@@ -332,9 +354,7 @@
     const chips = Array.from(document.querySelectorAll('.chip'));
     const sortSel = document.getElementById('sort');
     const pageSizeSel = document.getElementById('pageSize');
-    const qDesktop = document.getElementById('q-desktop');
-    const qInline  = document.getElementById('q-inline');
-    const qMobile  = document.getElementById('q-mobile');
+    const qInline  = document.getElementById('q-inline'); // INLINE ONLY
 
     // ---------- State ----------
     let POSTS = []; // normalized full list
@@ -364,7 +384,7 @@
     function applyFilters(posts){
       // section
       let out = state.filter === 'all' ? posts.slice() : posts.filter(p => p.section === state.filter);
-      // search
+      // search (INLINE ONLY)
       if (state.q){
         const q = normalizeText(state.q);
         out = out.filter(p =>
@@ -413,11 +433,12 @@
       render();
     }));
 
-    [qDesktop, qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+    // INLINE search ONLY affects this page
+    qInline?.addEventListener('input', (e) => {
       state.q = e.target.value;
       state.page = 1;
       render();
-    }));
+    });
 
     sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
     pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
