@@ -43,6 +43,14 @@
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
 
     ::selection { background: rgba(197,61,47,0.15); }
+
+    /* Highlight style (matches search page feel) */
+    mark.hl {
+      background: rgba(197,61,47,.22);
+      color: inherit;
+      padding: 0 .15em;
+      border-radius: .25em;
+    }
   </style>
 
   <!-- Canonical / Social (update domain when live) -->
@@ -185,7 +193,7 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
-    <!-- Card template (keeps your exact card structure) -->
+    <!-- Card template -->
     <template id="cardTemplate">
       <article class="card flex flex-col">
         <img class="aspect-[16/10] object-cover" src="" alt="" />
@@ -204,7 +212,6 @@
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -217,7 +224,6 @@
         </p>
       </div>
 
-      <!-- Explore -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
@@ -227,7 +233,6 @@
         </ul>
       </div>
 
-      <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
@@ -236,7 +241,6 @@
         </ul>
       </div>
 
-      <!-- Follow -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
@@ -253,8 +257,8 @@
   </footer>
 
   <script>
-    // ============ Helpers (GitHub Pages-safe paths) ============
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    /* ---------- Subpath helper (GitHub Pages safe) ---------- */
+    const basePath = location.pathname.replace(/[^/]*$/, '');
     const toBase = (u) => {
       if (!u) return '';
       if (/^https?:\/\//i.test(u)) return u;
@@ -263,14 +267,22 @@
       return basePath + u;
     };
 
-    // ============ Utilities ============
+    /* ---------- Utilities ---------- */
     const $ = (s,r=document)=>r.querySelector(s);
     const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-    function fmtDate(iso){ try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) } catch { return '' } }
     const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
     const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
+    const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
 
-    // ============ Data sources ============
+    // Highlight: wrap any of the query terms with <mark class="hl">
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function highlight(text, terms){
+      if (!text || !terms.length) return text;
+      const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
+      return text.replace(pat, '<mark class="hl">$1</mark>');
+    }
+
+    /* ---------- Data sources ---------- */
     async function fetchPostsJson(){
       try{
         const res = await fetch(toBase('posts.json'), { cache: 'no-store' });
@@ -315,24 +327,20 @@
     }
 
     let POSTS = [];
-    let CURRENT = [];
+    let FEATURED = [];
 
-    // ============ Render: Hero + Grid ============
-    function pickHero(items){
-      const featured = items.filter(p => p.featured).sort(byNewest);
-      return (featured[0] || null);
-    }
-
-    function fillHero(post){
+    /* ---------- Renderers ---------- */
+    function fillHero(post, terms=[]){
       if(!post) return;
-      const heroImg = $('#heroImg');
-      heroImg.src = post.cover || heroImg.src;
-      heroImg.alt = post.title || 'Feature hero image';
-      const t = $('#heroTitle'); t.textContent = post.title || t.textContent;
-      const d = $('#heroDate'); d.textContent = fmtDate(post.date); d.dateTime = post.date || '';
-      const ex = $('#heroExcerpt'); ex.textContent = post.excerpt || ex.textContent;
-      const rd = $('#heroRead'); rd.textContent = (post.read ? `${post.read} min read` : '');
-      const link = $('#heroLink'); link.href = post.href || '#';
+      $('#heroImg').src = post.cover || $('#heroImg').src;
+      $('#heroImg').alt = post.title || 'Feature hero image';
+      $('#heroDate').textContent = fmtDate(post.date);
+      $('#heroDate').dateTime = post.date || '';
+      // highlight hero title & excerpt
+      $('#heroTitle').innerHTML = highlight(post.title || '', terms);
+      $('#heroExcerpt').innerHTML = highlight(post.excerpt || '', terms);
+      $('#heroRead').textContent = post.read ? `${post.read} min read` : '';
+      $('#heroLink').href = post.href || '#';
     }
 
     function buildCard(post){
@@ -345,33 +353,32 @@
       const a = tpl.querySelector('.link');
       a.href = post.href || '#';
       a.textContent = post.title || '';
-      tpl.querySelector('.desc').textContent = post.excerpt || '';
+      const descEl = tpl.querySelector('.desc');
+      descEl.textContent = post.excerpt || '';
       const meta = [];
       if (post.date) meta.push(fmtDate(post.date));
       if (post.read) meta.push(`${post.read} min`);
       tpl.querySelector('.meta').textContent = meta.join(' • ');
 
-      // For filtering/searching:
+      // store raw strings for re-highlighting
       const article = tpl.querySelector('article.card');
       article.dataset.section = post.section || '';
-      article.dataset.title = post.title || '';
+      article.dataset.titleRaw = post.title || '';
+      article.dataset.descRaw = post.excerpt || '';
       article.dataset.tags = post.tags || '';
-      article.dataset.excerpt = (post.excerpt || '').toLowerCase();
       article.dataset.date = post.date || '';
 
       return tpl;
     }
 
     function renderGrid(items){
-      CURRENT = items.slice();
       const grid = $('#grid');
       grid.innerHTML = '';
       items.forEach(p => grid.appendChild(buildCard(p)));
-      wireFilters(); // bind after DOM exists
     }
 
-    // ============ Filters / Search / Sort ============
-    function wireFilters(){
+    /* ---------- Filters / Search / Sort + Highlight ---------- */
+    function wireFiltersAndSearch(heroPost){
       const chips = $$('.chip');
       const qMain = $('#q');
       const qInline = $('#q-inline');
@@ -379,22 +386,41 @@
       const sortSel = $('#sort');
 
       const norm = s => (s||'').toLowerCase();
+      const getTerms = () => {
+        const q = (qMain?.value || qInline?.value || qMobile?.value || '').trim();
+        // split on whitespace, drop empties
+        return q ? q.split(/\s+/).filter(Boolean) : [];
+      };
 
       function apply(){
-        // Only touching already-rendered FEATURED cards
-        const cards = $$('#grid article.card');
+        const terms = getTerms();
+        const termStr = norm(terms.join(' '));
         const active = chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all';
-        const term = norm(qMain?.value || qInline?.value || qMobile?.value);
 
+        // Cards: filter + highlight
+        const cards = $$('#grid article.card');
         cards.forEach(card => {
           const section = card.dataset.section;
-          const title = norm(card.dataset.title);
+          const titleRaw = card.dataset.titleRaw || '';
+          const descRaw  = card.dataset.descRaw || '';
           const tags = norm(card.dataset.tags);
-          const excerpt = card.dataset.excerpt || '';
+
           const matchesSection = (active === 'all') || (section === active);
-          const matchesQuery = term ? (title.includes(term) || tags.includes(term) || excerpt.includes(term)) : true;
+          const matchesQuery = termStr
+            ? (norm(titleRaw).includes(termStr) || norm(descRaw).includes(termStr) || tags.includes(termStr))
+            : true;
+
           card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
+
+          // re-highlight visible cards
+          const linkEl = $('.link', card);
+          const descEl = $('.desc', card);
+          linkEl.innerHTML = highlight(titleRaw, terms);
+          descEl.innerHTML = highlight(descRaw, terms);
         });
+
+        // Hero: re-highlight (doesn't filter hero away)
+        if (heroPost) fillHero(heroPost, terms);
       }
 
       chips.forEach(chip => {
@@ -414,7 +440,7 @@
         const mode = sortSel.value;
 
         if (mode === 'title') {
-          items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
+          items.sort((a,b)=> (a.dataset.titleRaw||'').localeCompare(b.dataset.titleRaw||''));
         } else if (mode === 'old') {
           items.sort((a,b)=> new Date(a.dataset.date||0) - new Date(b.dataset.date||0));
         } else {
@@ -422,15 +448,14 @@
         }
 
         items.forEach(it => grid.appendChild(it));
+        apply(); // keep highlights after resort
       });
 
-      apply();
+      apply(); // initial
     }
 
-    // ============ Boot ============
+    /* ---------- Boot ---------- */
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Mobile menu toggle
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     menuToggle?.addEventListener('click', () => {
@@ -439,30 +464,21 @@
     });
 
     (async function init(){
-      // 1) Try posts.json
       const j = await fetchPostsJson();
       if (j && j.length) {
         POSTS = j.map(normalize).sort(byNewest);
       } else {
-        // 2) Fallback to locally published (from admin)
         const local = loadPublishedLocal();
-        if (local.length) {
-          POSTS = local.map(normalize).sort(byNewest);
-        } else {
-          // 3) Demo
-          POSTS = DEMO.map(normalize).sort(byNewest);
-        }
+        POSTS = (local.length ? local : DEMO).map(normalize).sort(byNewest);
       }
 
-      // **** ONLY show featured posts on this page ****
-      const FEATURED = POSTS.filter(p => p.featured);
+      // Only FEATURED on this page
+      FEATURED = POSTS.filter(p => p.featured).sort(byNewest);
 
-      // Hero = newest featured (if any)
-      const hero = FEATURED.length ? FEATURED[0] : null;
+      const hero = FEATURED[0] || null;
       if (hero) fillHero(hero);
-
-      // Grid = all featured (sorted newest first)
       renderGrid(FEATURED);
+      wireFiltersAndSearch(hero);
     })();
   </script>
 </body>
