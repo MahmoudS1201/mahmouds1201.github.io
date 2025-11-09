@@ -56,8 +56,10 @@
   <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-1">
-        <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-12 w-12 object-contain" />
-        <a href="#" class="font-serif text-xl">Admin · Camila Tiburcio Rubio</a>
+        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
       </div>
       <nav class="hidden md:flex items-center gap-3 text-sm">
         <a class="u-underline" href="/" title="Back to site">↩ Back to site</a>
@@ -803,8 +805,10 @@
           <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-12 w-12 object-contain" />
-                <a href="/" class="font-serif text-xl">Camila Tiburcio Rubio</a>
+                <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+                  <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+                  <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+                </a>
               </div>
               <a class="u-underline text-sm" href="/">← Back to Home</a>
             </div>
@@ -904,13 +908,18 @@
               <span class="opacity-60">Next Article →</span>
             </nav>
           </main>
-    
+
+                    <!-- Back to top -->
+          <button id="backTop"
+                  class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+                  aria-label="Back to top">↑ Top</button>
+
           <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
               <div>
                 <div class="-ml-1.5">
                   <div class="flex items-center gap-1">
-                    <img src="./logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                    <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
                     <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
                   </div>
                 </div>
@@ -963,6 +972,15 @@
               window.addEventListener('scroll', onScroll, {passive:true});
               onScroll();
             })();
+
+            // Back to top visibility + behavior
+            const backTop = document.getElementById('backTop');
+            const toggleTop = () => {
+              if (window.scrollY > 600) backTop.classList.remove('hidden');
+              else backTop.classList.add('hidden');
+            };
+            window.addEventListener('scroll', toggleTop, { passive:true });
+            backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
     
             (function addDropcap(){
               const firstP = document.querySelector('article.prose p');
