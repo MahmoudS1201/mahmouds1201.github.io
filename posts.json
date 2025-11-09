@@ -1,5 +1,18 @@
 [
   {
+    "slug": "i-think-this-works-now",
+    "title": "I Think This Works Now",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Wowowowowowowow",
+    "date": "2025-11-09T00:51",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/i-think-this-works-now/cover.png",
+    "url": "i-think-this-works-now.html"
+  },
+  {
     "slug": "woot-woot",
     "title": "Woot Woot",
     "section": "Essay",
