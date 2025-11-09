@@ -37,17 +37,21 @@
     .u-underline:hover::after{transform:scaleX(1)}
     .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     ::selection{background:rgba(197,61,47,.15)}
+
     /* inline-search highlight */
     mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
 
-    input[type="search"]::-webkit-search-cancel-button {
+    /* Hide native blue clear (Safari/Chrome/Edge) */
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
       -webkit-appearance: none;
       appearance: none;
       display: none;
     }
-    input[type="search"]::-ms-clear {
-      display: none;
-    }
+    /* Hide native clear (IE/Edge legacy) */
+    input[type="search"]::-ms-clear { display: none; }
 
     .chip {
       display:inline-block;
@@ -59,22 +63,14 @@
       cursor:pointer;
       transition:all .2s ease;
     }
-    .chip:hover {
-      border-color:#C53D2F;
-      color:#C53D2F;
-    }
+    .chip:hover { border-color:#C53D2F; color:#C53D2F; }
     .chip-active {
-      background:#C53D2F;
-      color:#fff;
-      border-color:#C53D2F;
-      box-shadow:0 0 0 2px rgba(197,61,47,0.25);
-      position:relative;
+      background:#C53D2F; color:#fff; border-color:#C53D2F;
+      box-shadow:0 0 0 2px rgba(197,61,47,0.25); position:relative;
     }
     .chip-active::after {
-      content:'';
-      display:block;
-      width:6px;height:6px;border-radius:9999px;background:white;
-      margin:2px auto 0;
+      content:''; display:block; width:6px;height:6px;border-radius:9999px;
+      background:white; margin:2px auto 0;
     }
 
     .group-sep{border-top:1px solid rgba(0,0,0,0.1);padding-top:1.5rem;margin-top:2rem;}
@@ -128,14 +124,14 @@
                    placeholder="Search titles & descriptions…"
                    class="w-full pl-10 pr-10 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" />
 
-            <!-- Magnifying glass icon -->
+            <!-- Magnifying glass -->
             <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300"
                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <circle cx="11" cy="11" r="7" stroke-width="2" />
               <path stroke-width="2" d="M21 21l-3.5-3.5" />
             </svg>
 
-            <!-- Custom clear (✕) button -->
+            <!-- Custom clear ✕ -->
             <button type="button" id="clearSearch"
                     class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500"
                     aria-label="Clear search">✕</button>
@@ -157,7 +153,7 @@
           </select>
         </label>
 
-        <!-- Sort order -->
+        <!-- Sort -->
         <label>
           <span class="block text-sm text-ink-400 mb-1">Sort</span>
           <select id="sortSelect"
@@ -210,12 +206,12 @@
     </template>
   </main>
 
-      <!-- Back to top -->
+  <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
 
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
       <!-- Brand -->
@@ -270,11 +266,23 @@
   </footer>
 
   <script>
-    // =========================
-    // ---- Data loading ----
-    // =========================
+    // ---------- Utilities ----------
+    const $ = (s, r=document)=>r.querySelector(s);
+    const WORDS_RE = /[a-z0-9\u00C0-\u017F]+/gi;
+    const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function highlight(text, rawTerm){
+      if (!rawTerm) return String(text || '');
+      const parts = String(rawTerm).trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return String(text || '');
+      const pat = new RegExp('(' + parts.map(esc).join('|') + ')', 'ig');
+      return String(text || '').replace(pat, '<mark class="hl">$1</mark>');
+    }
+    function fmtDate(iso){ try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); } catch { return ''; } }
+    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
+    const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
+    const uniqueYears=p=>[...new Set(p.map(p=>new Date(p.date).getFullYear()))].filter(Boolean).sort((a,b)=>b-a);
 
-    // Try posts.json first (committed by your Admin "Publish" flow)
+    // ---------- Data loading ----------
     async function fetchPostsJson() {
       try {
         const res = await fetch('posts.json', { cache: 'no-store' });
@@ -282,34 +290,8 @@
         const data = await res.json();
         if (!Array.isArray(data)) throw new Error('posts.json not an array');
         return data;
-      } catch {
-        return null;
-      }
+      } catch { return null; }
     }
-
-    // Custom clear (✕) button behavior
-    const clearSearch = document.getElementById('clearSearch');
-    searchInput.addEventListener('input', () => {
-      clearSearch.classList.toggle('hidden', searchInput.value.trim() === '');
-    });
-    clearSearch.addEventListener('click', () => {
-      searchInput.value = '';
-      state.q = '';
-      update();
-      clearSearch.classList.add('hidden');
-      searchInput.focus();
-    });
-
-        // Back to top visibility + behavior
-    const backTop = document.getElementById('backTop');
-    const toggleTop = () => {
-      if (window.scrollY > 600) backTop.classList.remove('hidden');
-      else backTop.classList.add('hidden');
-    };
-    window.addEventListener('scroll', toggleTop, { passive:true });
-    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
-
-    // Fallback: read any locally published items (same browser only)
     function loadPublishedLocal() {
       const out = [];
       for (let i=0;i<localStorage.length;i++){
@@ -323,16 +305,6 @@
       }
       return out;
     }
-
-    // Last fallback demo list
-    const DEMO = [
-      { title:'The Heat of Memory', url:'features/heat-of-memory.html', date:'2025-10-12', section:'Features', description:'An essay on diaspora, memory, and Miami’s shifting shoreline.' },
-      { title:'Interview: Artist at the Archive', url:'interviews/artist-archive.html', date:'2025-09-28', section:'Interviews', description:'Process, practice, and the small risks that add up.' },
-      { title:'Review: Night Festival', url:'reviews/night-festival.html', date:'2025-08-14', section:'Reviews', description:'On rhythm, repetition, and the slow build of a chorus.' },
-      { title:'Note: Field Log 07', url:'notes/field-log-07.html', date:'2025-07-03', section:'Notes', description:'Fragments from the summer notebook.' }
-    ];
-
-    // Normalize posts from posts.json or local cache
     function normalizePost(item){
       const href =
         (item && typeof item.url === 'string' && item.url.trim()) ? item.url.trim()
@@ -346,27 +318,7 @@
       };
     }
 
-    let POSTS = [];
-
-    // =========================
-    // ---- Utilities & State
-    // =========================
-    const $ = (s, r=document)=>r.querySelector(s);
-    function fmtDate(iso){try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}catch{return ''}}
-    const byNewest=(a,b)=>new Date(b.date)-new Date(a.date);
-    const byOldest=(a,b)=>new Date(a.date)-new Date(b.date);
-    const uniqueYears=p=>[...new Set(p.map(p=>new Date(p.date).getFullYear()))].filter(Boolean).sort((a,b)=>b-a);
-
-    // --- highlighting helpers ---
-    const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    function highlight(text, rawTerm){
-      if (!rawTerm) return String(text || '');
-      const parts = String(rawTerm).trim().split(/\s+/).filter(Boolean);
-      if (!parts.length) return String(text || '');
-      const pat = new RegExp('(' + parts.map(esc).join('|') + ')', 'ig');
-      return String(text || '').replace(pat, '<mark class="hl">$1</mark>');
-    }
-
+    // ---------- State ----------
     function parseParams(){
       const u = new URL(location.href);
       return {
@@ -387,25 +339,23 @@
     }
 
     let state = parseParams();
+    let POSTS = [];
 
-    // =========================
-    // ---- Elements
-    // =========================
-    const searchInput = $('#searchInput');
+    // ---------- Elements ----------
+    const searchInput   = $('#searchInput');
     const sectionSelect = $('#sectionSelect');
-    const sortSelect = $('#sortSelect');
-    const yearChips = $('#yearChips');
-    const results = $('#results');
-    const stats = $('#resultStats');
+    const sortSelect    = $('#sortSelect');
+    const yearChips     = $('#yearChips');
+    const results       = $('#results');
+    const stats         = $('#resultStats');
+    const clearSearch   = document.getElementById('clearSearch');
 
     // Prefill controls from URL
     searchInput.value = state.q;
     if ([...sectionSelect.options].some(o=>o.value===state.section)) sectionSelect.value = state.section;
     if (['newest','oldest'].includes(state.sort)) sortSelect.value = state.sort;
 
-    // =========================
-    // ---- Rendering
-    // =========================
+    // ---------- Rendering ----------
     function renderYearChips(){
       const years = uniqueYears(POSTS);
       yearChips.innerHTML = '';
@@ -449,11 +399,11 @@
 
     function renderResults(list){
       results.innerHTML = '';
-      const tplGroup = $('#groupTemplate');
-      const tplItem  = $('#itemTemplate');
+      const tplGroup = document.getElementById('groupTemplate');
+      const tplItem  = document.getElementById('itemTemplate');
 
       if (!list.length){
-        results.append($('#emptyTemplate').content.cloneNode(true));
+        results.append(document.getElementById('emptyTemplate').content.cloneNode(true));
         stats.textContent = '0 results';
         return;
       }
@@ -461,7 +411,7 @@
       const total = list.length;
       stats.textContent = `${total} ${total===1?'result':'results'}`;
 
-      const term = (state.q || '').trim(); // <-- highlight source
+      const term = (state.q || '').trim(); // highlight source
       const groups = groupByYear(list);
 
       groups.forEach(([year, items]) => {
@@ -475,11 +425,8 @@
           node.querySelector('a').href = p.href || '#';
           node.querySelector('.date').textContent = fmtDate(p.date);
           node.querySelector('.section').textContent = p.section || 'Article';
-
-          // Use innerHTML so we can inject <mark> safely
           node.querySelector('.title').innerHTML = highlight(p.title || '', term);
           node.querySelector('.desc').innerHTML  = highlight(p.description || '', term);
-
           ul.appendChild(node);
         });
 
@@ -487,27 +434,42 @@
       });
     }
 
-
     function update(){
       writeParams(state);
       renderYearChips();
       const filtered = applyFilters();
       renderResults(filtered);
+      // toggle custom clear button
+      clearSearch.classList.toggle('hidden', (state.q || '').trim() === '');
     }
 
-    // =========================
-    // ---- Events
-    // =========================
+    // ---------- Events ----------
+    // Custom clear (✕) behavior
     searchInput.addEventListener('input', e => { state.q = e.target.value; update(); });
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      state.q = '';
+      update();
+      searchInput.focus();
+    });
+
     sectionSelect.addEventListener('change', e => { state.section = e.target.value; update(); });
     sortSelect.addEventListener('change', e => { state.sort = e.target.value; update(); });
 
-    // =========================
-    // ---- Init
-    // =========================
-    (async function init(){
-      document.getElementById('yearFooter').textContent = new Date().getFullYear();
+    // Back to top visibility + behavior
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---------- Init ----------
+    (async function init(){
       // 1) Try posts.json from the repo
       const jsonList = await fetchPostsJson();
 
@@ -520,11 +482,16 @@
           POSTS = local.map(normalizePost);
         } else {
           // 3) Last fallback to embedded demo list
-          POSTS = DEMO.map(normalizePost);
+          POSTS = [
+            { title:'The Heat of Memory', url:'features/heat-of-memory.html', date:'2025-10-12', section:'Features', description:'An essay on diaspora, memory, and Miami’s shifting shoreline.' },
+            { title:'Interview: Artist at the Archive', url:'interviews/artist-archive.html', date:'2025-09-28', section:'Interviews', description:'Process, practice, and the small risks that add up.' },
+            { title:'Review: Night Festival', url:'reviews/night-festival.html', date:'2025-08-14', section:'Reviews', description:'On rhythm, repetition, and the slow build of a chorus.' },
+            { title:'Note: Field Log 07', url:'notes/field-log-07.html', date:'2025-07-03', section:'Notes', description:'Fragments from the summer notebook.' }
+          ].map(normalizePost);
         }
       }
 
-      update();
+      update(); // first paint (also toggles ✕ correctly)
     })();
   </script>
 </body>
