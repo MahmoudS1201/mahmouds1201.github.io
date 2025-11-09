@@ -342,14 +342,14 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Year + mobile menu (unchanged)
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuToggle?.addEventListener('click', () => {
-      const isHidden = mobileMenu.classList.toggle('hidden');
-      menuToggle.setAttribute('aria-expanded', String(!isHidden));
-    });
+    // Back to top visibility + behavior
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
   </script>
 </body>
 </html>
