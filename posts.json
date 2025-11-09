@@ -1,5 +1,18 @@
 [
   {
+    "slug": "yes",
+    "title": "Yes",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yes",
+    "date": "2025-11-09T00:21",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/yes/cover.webp",
+    "url": "yes.html"
+  },
+  {
     "slug": "t",
     "title": "T",
     "section": "Essay",
