@@ -46,6 +46,19 @@
 
     /* highlight used for search terms */
     mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
+
+        /* Hide native blue clear (Safari/Chrome/Edge) */
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    /* Hide native clear (IE/Edge legacy) */
+    input[type="search"]::-ms-clear { display: none; }
+
   </style>
 
   <link rel="canonical" href="https://example.com/features" />
