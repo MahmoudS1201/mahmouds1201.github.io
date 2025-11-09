@@ -72,11 +72,13 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
+        <!-- Brand -->
         <a href="index.html" class="flex items-center gap-2" aria-label="Home">
           <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
 
+        <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline font-semibold text-accent" href="features.html" aria-current="page">Features</a>
           <a class="u-underline" href="latest.html">Latest</a>
@@ -84,6 +86,7 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
+        <!-- Desktop search (HEADER search — routes to /search) -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search features">
             <input id="q" type="search" placeholder="Search…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -92,6 +95,7 @@
           </label>
         </div>
 
+        <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
             <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -102,12 +106,14 @@
       </div>
     </div>
 
+    <!-- Mobile dropdown menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
         <a class="block u-underline font-semibold text-accent" href="features.html">Features</a>
         <a class="block u-underline" href="latest.html">Latest</a>
         <a class="block u-underline" href="sections.html">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
+        <!-- Mobile HEADER search — routes to /search -->
         <label class="relative block mt-3" aria-label="Search features">
           <input id="q-mobile" type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
@@ -162,7 +168,7 @@
     </article>
   </section>
 
-  <!-- Filters -->
+  <!-- Controls (chips + inline search + per-page) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <div class="flex flex-wrap gap-2">
@@ -174,9 +180,16 @@
         <button class="chip" data-filter="Community">Community</button>
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
-      <div class="flex items-center gap-2">
-        <label class="text-sm text-ink-500 hidden sm:inline" for="q-inline">Search</label>
-        <input id="q-inline" type="search" placeholder="Keywords…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+      <div class="flex items-center gap-3">
+        <label class="sr-only" for="q-inline">Search title or tags</label>
+        <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+        <label class="text-sm text-ink-500" for="pageSize">Per page</label>
+        <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
+          <option>6</option>
+          <option selected>9</option>
+          <option>12</option>
+          <option>18</option>
+        </select>
       </div>
     </div>
   </section>
@@ -185,6 +198,16 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
+    <!-- Pagination -->
+    <div class="mt-6 flex items-center justify-between">
+      <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
+      <div class="text-sm text-ink-300">
+        Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
+      </div>
+      <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
+    </div>
+
+    <!-- Card template -->
     <template id="cardTemplate">
       <article class="card flex flex-col">
         <img class="aspect-[16/10] object-cover" src="" alt="" />
@@ -200,10 +223,15 @@
     </template>
   </main>
 
-  <button id="backTop" class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm" aria-label="Back to top">↑ Top</button>
+  <!-- Back to top -->
+  <button id="backTop"
+          class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+          aria-label="Back to top">↑ Top</button>
 
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -215,16 +243,18 @@
           Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
         </p>
       </div>
+      <!-- Explore -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
-          <li><a href="features.html" class="u-underline font-semibold text-accent">Features</a></li>
+          <li><a href="features.html" class="u-underline font-semibold text-accent" aria-current="page">Features</a></li>
           <li><a href="latest.html" class="u-underline">Latest</a></li>
           <li><a href="sections.html" class="u-underline">Sections</a></li>
           <li><a href="archive.html" class="u-underline">Archive</a></li>
           <li><a href="search.html" class="u-underline">Search</a></li>
         </ul>
       </div>
+      <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
@@ -235,6 +265,7 @@
           <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
+      <!-- Follow -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
@@ -252,7 +283,7 @@
   </footer>
 
   <!-- ====================================================== -->
-  <!--  SCRIPT: Features-only render + search + highlights    -->
+  <!--  SCRIPT: Features-only + pagination (like latest)      -->
   <!-- ====================================================== -->
   <script>
     /* ---------- Path helpers (GitHub Pages–safe) ---------- */
@@ -322,7 +353,7 @@
     let POSTS = [];
     let FEATURED = [];
 
-    /* ---------- Rendering ---------- */
+    /* ---------- Rendering helpers ---------- */
     function fillHero(post){
       if (!post) return;
       const heroImg = $('#heroImg');
@@ -352,85 +383,119 @@
       article.dataset.date    = post.date || '';
       return tpl;
     }
-    function renderGrid(items){
-      const grid = $('#grid'); grid.innerHTML = '';
-      items.forEach(p => grid.appendChild(buildCard(p)));
-      wireFilters();
-    }
 
-    /* ---------- Filters / Search / Sort (inline only) ---------- */
-    function wireFilters(){
-      const chips   = Array.from(document.querySelectorAll('.chip'));
-      const qInline = document.getElementById('q-inline');
-      const sortSel = document.getElementById('sort');
+    /* ---------- Pagination UI refs ---------- */
+    const gridEl = document.getElementById('grid');
+    const pageNumEl = document.getElementById('pageNum');
+    const pageTotalEl = document.getElementById('pageTotal');
+    const countShownEl = document.getElementById('countShown');
+    const countTotalEl = document.getElementById('countTotal');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
+    /* ---------- Controls refs ---------- */
+    const chips   = Array.from(document.querySelectorAll('.chip'));
+    const qInline = document.getElementById('q-inline');   // inline search ONLY
+    const sortSel = document.getElementById('sort');
+    const pageSizeSel = document.getElementById('pageSize');
+
+    /* ---------- State ---------- */
+    let state = {
+      filter: 'all',
+      sort: 'new',
+      page: 1,
+      pageSize: parseInt(pageSizeSel.value,10) || 9,
+      q: ''
+    };
+
+    function applyFilters(baseList){
       const norm = s => (s||'').toLowerCase();
-      const currentFilter = () => (chips.find(c => c.dataset.active === 'true')?.dataset.filter || 'all');
+      let out = baseList.slice();
 
-      function apply(){
-        const filter = norm(currentFilter());
-        const termRaw = qInline?.value || '';
-        const term = norm(termRaw);
-        const terms = term ? term.split(/\s+/).filter(Boolean) : [];
-
-        const cards = Array.from(document.querySelectorAll('#grid article.card'));
-        cards.forEach(card => {
-          const section = norm(card.dataset.section);
-          const title   = card.dataset.title || '';
-          const tags    = card.dataset.tags  || '';
-
-          const matchesSection =
-            (filter === 'all') || section === filter || norm(tags).includes(filter);
-
-          const matchesQuery =
-            term ? (norm(title).includes(term) || norm(tags).includes(term)) : true;
-
-          card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
-
-          // highlight title + desc
-          const link = card.querySelector('.link');
-          const desc = card.querySelector('.desc');
-          const fullDesc = desc.dataset.original || desc.textContent;
-          if (!desc.dataset.original) desc.dataset.original = fullDesc;
-
-          if (terms.length){
-            const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
-            link.innerHTML = (title || '').replace(pat, '<mark class="hl">$1</mark>');
-            desc.innerHTML = (fullDesc || '').replace(pat, '<mark class="hl">$1</mark>');
-          } else {
-            link.textContent = title || '';
-            desc.textContent = fullDesc || '';
-          }
-        });
+      // filter by chip section (exact match on section OR include in tags string)
+      if (state.filter !== 'all') {
+        const f = norm(state.filter);
+        out = out.filter(p => norm(p.section) === f || norm(p.tags).includes(f));
       }
 
-      chips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
-          chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true');
-          apply();
-        });
+      // inline search
+      if (state.q) {
+        const q = norm(state.q);
+        out = out.filter(p =>
+          norm(p.title).includes(q) ||
+          norm(p.excerpt).includes(q) ||
+          norm(p.tags).includes(q)
+        );
+      }
+
+      // sort
+      out.sort((a,b) => {
+        if (state.sort === 'title') return (a.title||'').localeCompare(b.title||'');
+        if (state.sort === 'old')   return new Date(a.date||0) - new Date(b.date||0);
+        return new Date(b.date||0) - new Date(a.date||0); // 'new'
       });
 
-      qInline?.addEventListener('input', apply);
-
-      sortSel?.addEventListener('change', () => {
-        const grid  = document.getElementById('grid');
-        const items = Array.from(grid.children).filter(el => el.matches('article.card'));
-        const mode  = sortSel.value;
-
-        if (mode === 'title') {
-          items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
-        } else if (mode === 'old') {
-          items.sort((a,b)=> new Date(a.dataset.date||0) - new Date(b.dataset.date||0));
-        } else {
-          items.sort((a,b)=> new Date(b.dataset.date||0) - new Date(a.dataset.date||0));
-        }
-        items.forEach(it => grid.appendChild(it));
-      });
-
-      apply();
+      return out;
     }
+
+    function render(){
+      const base = FEATURED;                         // ONLY featured posts on this page
+      const filtered = applyFilters(base);
+      const total = filtered.length;
+      const pages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.page > pages) state.page = pages;
+
+      const start = (state.page - 1) * state.pageSize;
+      const pageItems = filtered.slice(start, start + state.pageSize);
+
+      // grid render
+      gridEl.innerHTML = '';
+      pageItems.forEach(p => gridEl.appendChild(buildCard(p)));
+
+      // stats + buttons
+      pageNumEl.textContent = String(state.page);
+      pageTotalEl.textContent = String(pages);
+      countShownEl.textContent = String(pageItems.length);
+      countTotalEl.textContent = String(total);
+      prevBtn.disabled = state.page <= 1;
+      nextBtn.disabled = state.page >= pages;
+
+      // re-apply inline highlight to visible cards
+      const term = state.q.trim();
+      const terms = term ? term.split(/\s+/).filter(Boolean) : [];
+      if (terms.length){
+        gridEl.querySelectorAll('article.card').forEach(card => {
+          const link = card.querySelector('.link');
+          const desc = card.querySelector('.desc');
+          const title = link.textContent || '';
+          const fullDesc = desc.dataset.original || desc.textContent;
+          if (!desc.dataset.original) desc.dataset.original = fullDesc;
+          link.innerHTML = highlight(title, terms);
+          desc.innerHTML = highlight(fullDesc, terms);
+        });
+      }
+    }
+
+    /* ---------- Events ---------- */
+    chips.forEach(chip => chip.addEventListener('click', () => {
+      chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
+      chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true');
+      state.filter = chip.dataset.filter || 'all';
+      state.page = 1;
+      render();
+    }));
+
+    qInline?.addEventListener('input', (e) => {
+      state.q = e.target.value || '';
+      state.page = 1;
+      render();
+    });
+
+    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10) || 9; state.page = 1; render(); });
+
+    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
+    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
 
     /* ---------- Boot ---------- */
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -454,9 +519,11 @@
       POSTS = data.map(normalize).sort(byNewest);
       FEATURED = POSTS.filter(p => p.featured);
 
-      const hero = FEATURED.length ? FEATURED[0] : null;
-      if (hero) fillHero(hero);
-      renderGrid(FEATURED);   // <-- only featured on this page
+      // Hero: first featured
+      if (FEATURED.length) fillHero(FEATURED[0]);
+
+      // Initial render (with pagination)
+      render();
     })();
 
     /* ---------- Header search → /search (route only) ---------- */
