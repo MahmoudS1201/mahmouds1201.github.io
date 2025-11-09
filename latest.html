@@ -39,18 +39,21 @@
     ::selection { background: rgba(197,61,47,0.15); }
 
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
-
     .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
-
     mark.hl { background: rgba(197,61,47,.22); color:inherit; padding:0 .15em; border-radius:.25rem; }
 
-    /* Hide native clear buttons (Safari/Chrome/Edge/IE legacy) */
+    /* Hide native search clear buttons */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
     input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
     input[type="search"]::-ms-clear { display:none; }
+
+    /* Stretched-click cues */
+    [data-href]{ transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease; }
+    [data-href]:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
+    [data-href]:focus-visible{ outline:2px solid #C53D2F; outline-offset:2px; transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
   </style>
 
   <!-- Canonical / Social -->
@@ -64,7 +67,6 @@
 </head>
 
 <body class="bg-cream text-ink-900 antialiased">
-
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
@@ -77,13 +79,11 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <!-- Brand -->
         <a href="index.html" class="flex items-center gap-2" aria-label="Home">
           <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
 
-        <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline" href="features.html">Features</a>
           <a class="u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
@@ -91,7 +91,7 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop HEADER search → search.html -->
+        <!-- Header search -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -100,7 +100,6 @@
           </label>
         </div>
 
-        <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
             <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -118,7 +117,6 @@
         <a class="block u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
         <a class="block u-underline" href="sections.html">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
-        <!-- Mobile HEADER search → search.html -->
         <label class="relative block mt-3" aria-label="Search site">
           <input id="q-mobile" type="search" placeholder="Search..." class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
@@ -149,7 +147,7 @@
 
   <!-- Hero (newest overall) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-    <article id="hero" class="grid lg:grid-cols-3 gap-8 items-stretch card hidden">
+    <article id="hero" class="grid lg:grid-cols-3 gap-8 items-stretch card hidden" data-href="#">
       <div class="lg:col-span-2">
         <img id="heroImg" class="w-full h-full object-cover aspect-[16/9]" src="" alt="Latest hero image">
       </div>
@@ -175,7 +173,6 @@
   <!-- Controls -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
-      <!-- Section chips -->
       <div class="flex flex-wrap gap-2">
         <button class="chip" data-filter="all" data-active="true" aria-pressed="true">All</button>
         <button class="chip" data-filter="Essay">Essay</button>
@@ -185,8 +182,6 @@
         <button class="chip" data-filter="Community">Community</button>
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
-
-      <!-- Inline search (filters this page only) + per-page -->
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Search title or tags</label>
         <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -213,7 +208,7 @@
 
     <!-- Card template -->
     <template id="cardTemplate">
-      <article class="card flex flex-col">
+      <article class="card flex flex-col" data-href="#">
         <img class="aspect-[16/10] object-cover" src="" alt="" />
         <div class="p-6 flex-1 flex flex-col">
           <div class="text-xs uppercase tracking-wide text-accent sectionLabel"></div>
@@ -235,7 +230,6 @@
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -247,7 +241,6 @@
           Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
         </p>
       </div>
-      <!-- Explore -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
@@ -258,7 +251,6 @@
           <li><a href="search.html" class="u-underline">Search</a></li>
         </ul>
       </div>
-      <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
@@ -269,7 +261,6 @@
           <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
-      <!-- Follow -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
@@ -302,11 +293,20 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-    // ---------- Header search routing (no on-page filtering) ----------
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // supports GitHub Pages subpaths
+    // ---------- GitHub Pages subpath helper ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    function toBase(u){
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;                    // absolute URL
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);      // strip leading slash to repo subdir
+      return basePath + u;                                      // plain relative
+    }
+
+    // ---------- Header search routing ----------
     function goSearch(q){
       const term = (q || '').trim();
-      const url = basePath + (term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`);
+      const url = toBase(term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`);
       window.location.href = url;
     }
     document.getElementById('qHeaderBtn')?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(document.getElementById('q-desktop').value); });
@@ -318,7 +318,7 @@
 
     async function fetchPostsJson(){
       try{
-        const res = await fetch(basePath + 'posts.json', { cache:'no-store' });
+        const res = await fetch(toBase('posts.json'), { cache:'no-store' });
         if(!res.ok) throw new Error('bad status');
         const data = await res.json();
         return Array.isArray(data) ? data : null;
@@ -347,18 +347,19 @@
     }
 
     function normalize(p){
-      const href = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
+      const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
+      const href0 = (p.url && p.url.trim()) ? p.url.trim() : (slug ? `${slug}.html` : '#');
       const coverStr = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src);
       const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()) : []);
       return {
         title:   p.title || '',
         section: canonicalSection(p.section || ''),
-        href,
+        href:    toBase(href0),
         excerpt: p.excerpt || p.description || '',
         date:    p.date || p.publishedAt || '',
         read:    p.readMinutes || p.read || '',
         tags:    tagsArr,
-        cover:   coverStr || FALLBACK
+        cover:   coverStr ? toBase(coverStr) : FALLBACK
       };
     }
 
@@ -418,7 +419,33 @@
       if (p.date) meta.push(fmtDate(p.date));
       if (p.read) meta.push(`${p.read} min`);
       node.querySelector('.meta').textContent = meta.join(' • ');
+
+      // Stretched click
+      const article = node.querySelector('article');
+      article.setAttribute('data-href', p.href);
       return node;
+    }
+
+    function enableCardClicks(root=document){
+      root.querySelectorAll('[data-href]').forEach(el => {
+        if (el.__clickBound) return;
+        el.__clickBound = true;
+        el.classList.add('cursor-pointer');
+        el.setAttribute('role','link');
+        el.setAttribute('tabindex','0');
+        el.addEventListener('click', e => {
+          if (e.target.closest && e.target.closest('a')) return;
+          const url = el.getAttribute('data-href');
+          if (url) window.location.href = url;
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const url = el.getAttribute('data-href');
+            if (url) window.location.href = url;
+          }
+        });
+      });
     }
 
     function applyFilters(list){
@@ -462,7 +489,9 @@
         heroExcerpt.innerHTML = highlight(h.excerpt || '', state.q);
         heroRead.textContent = h.read ? `${h.read} min read` : '';
         heroLink.href = h.href || '#';
+        hero.setAttribute('data-href', h.href || '#');
         hero.classList.remove('hidden');
+        enableCardClicks(hero.parentElement);
       } else {
         hero.classList.add('hidden');
       }
@@ -480,6 +509,7 @@
       gridEl.innerHTML = '';
       const term = (state.q || '').trim();
       pageItems.forEach(p => gridEl.appendChild(buildCard(p, term)));
+      enableCardClicks(gridEl);
 
       // footer stats + buttons
       pageNumEl.textContent = String(state.page);
@@ -491,8 +521,8 @@
     }
 
     // ---------- Events ----------
-    chips.forEach(chip => chip.addEventListener('click', () => {
-      chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
+    document.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
       chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true');
       state.filter = chip.dataset.filter || 'all';
       state.page = 1;
