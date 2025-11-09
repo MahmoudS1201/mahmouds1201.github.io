@@ -40,7 +40,6 @@
     .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     ::selection{background:rgba(197,61,47,.15)}
     .result-title mark,.result-excerpt mark{background:rgba(197,61,47,.15);padding:0 .125rem;border-radius:.2rem}
-    .chip{border:1px solid rgba(0,0,0,.10);border-radius:9999px;padding:.35rem .65rem;font-weight:600;font-size:.75rem;line-height:1}
 
     /* full-card click affordance (same as other pages) */
     [data-href]{
@@ -62,7 +61,7 @@
     /* Number badge */
     .num-badge{
       position:absolute; top:.5rem; left:.5rem;
-      background:rgba(229, 90, 73, .95); /* accent light */
+      background:rgba(229, 90, 73, .95);
       color:white; font-weight:700; font-size:.85rem;
       border-radius:.65rem; padding:.25rem .5rem;
       line-height:1;
@@ -141,7 +140,7 @@
           <option value="titleDesc">Title Z–A</option>
         </select>
 
-        <!-- View toggle + Numbered (like other pages) -->
+        <!-- View toggle + Numbered -->
         <div class="ml-4 inline-flex rounded-lg overflow-hidden border border-black/10">
           <button id="modeGrid" type="button" class="px-3 py-2 bg-white text-ink-500 hover:text-ink-900">Grid</button>
           <button id="modeList" type="button" class="px-3 py-2 bg-white text-ink-500 hover:text-ink-900">List</button>
@@ -254,7 +253,7 @@
     }
     function normalize(item){
       const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
-      const cover = item.cover || (item.cover && item.cover.src) || '';
+      const cover = (typeof item.cover === 'string' ? item.cover : (item.cover && item.cover.src)) || '';
       const tags  = Array.isArray(item.tags) ? item.tags :
                     (typeof item.tags === 'string' ? item.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
       return {
@@ -333,9 +332,9 @@
     function applyContainerLayout(){
       const wrap = document.getElementById('results');
       if (state.mode === 'list'){
-        wrap.className = 'mt-6 space-y-4'; // stacked list
+        wrap.className = 'mt-6 space-y-4';
       } else {
-        wrap.className = 'mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'; // grid
+        wrap.className = 'mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8';
       }
     }
 
@@ -372,7 +371,7 @@
           } else {
             img.className = 'aspect-[16/10] object-cover';
           }
-          img.src = it.cover; // already toBase()
+          img.src = it.cover;
           card.appendChild(img);
         }
 
@@ -406,13 +405,13 @@
         p.innerHTML = highlight(raw, qTerms);
         body.appendChild(p);
 
-        // tags
+        // TAGS — accent scheme
         if (it.tags && it.tags.length){
           const tagsWrap = document.createElement('div');
           tagsWrap.className = 'mt-3 flex flex-wrap gap-2';
           it.tags.forEach(tag => {
             const chip = document.createElement('span');
-            chip.className = 'chip';
+            chip.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 text-xs font-semibold';
             chip.innerHTML = highlight(tag, qTerms);
             tagsWrap.appendChild(chip);
           });
@@ -427,13 +426,7 @@
         f.textContent = bits.join(' • ');
         body.appendChild(f);
 
-        if (state.mode === 'list'){
-          // in list mode, body already has padding from parent; keep clean
-          card.appendChild(body);
-        } else {
-          card.appendChild(body);
-        }
-
+        card.appendChild(body);
         wrap.appendChild(card);
       });
 
