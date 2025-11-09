@@ -40,28 +40,28 @@
 
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
     .tab { padding:.55rem .9rem; border-radius:9999px; border:1px solid rgba(0,0,0,.1); font-weight:600; }
-    .tab[data-active="true"] { background:rgba(197,61,47,.1); color:#C53D2F; border-color:rgba(197,61,47,.35); }
-
     .feat-img { aspect-ratio:16/9; width:100%; object-fit:cover; }
     .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
     .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
-
-    /* Highlight style for inline search matches */
     mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
 
-    @media (max-width: 420px){
-      .tab { padding:.45rem .8rem; }
-    }
+    /* Section tiles */
+    .tile { transition: transform .2s ease, box-shadow .2s ease; }
+    .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
 
     /* Hide native clear buttons on search inputs */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
-    input[type="search"]::-ms-clear { display:none; }
+    input[type="search"]::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    input[type="search"]::-ms-clear { display: none; }
   </style>
 
-  <!-- Canonical / Social -->
+  <!-- Canonical / Social (update domain when live) -->
   <link rel="canonical" href="https://example.com/sections" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sections — Camila Tiburcio Rubio">
@@ -99,7 +99,7 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search -->
+        <!-- Desktop search (routes to search page) -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -140,12 +140,12 @@
       <div>
         <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">Browse</div>
         <h1 class="font-serif text-4xl sm:text-5xl leading-tight mt-1">Sections</h1>
-        <p class="text-ink-500 mt-2">Explore by format and focus.</p>
+        <p class="text-ink-500 mt-2">Quickly jump into a section, or expand a category below to see its latest.</p>
       </div>
       <div class="hidden sm:flex items-center gap-2">
-        <label class="text-sm text-ink-500" for="sort">Sort by</label>
+        <label class="text-sm text-ink-500" for="sort">Sort within groups</label>
         <select id="sort" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
-          <option value="new">Newest</option>
+          <option value="new" selected>Newest</option>
           <option value="old">Oldest</option>
           <option value="title">Title (A–Z)</option>
           <option value="read">Read time</option>
@@ -154,98 +154,23 @@
     </div>
   </section>
 
-  <!-- Tabs + search + view toggle -->
+  <!-- Quick filter + tiles -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
-      <div id="tabs" class="flex flex-wrap gap-2" role="tablist" aria-label="Sections">
-        <button class="tab" data-section="Essay" data-active="true" role="tab" aria-selected="true">Essays</button>
-        <button class="tab" data-section="Interview" role="tab" aria-selected="false">Interviews</button>
-        <button class="tab" data-section="Visual" role="tab" aria-selected="false">Visual</button>
-        <button class="tab" data-section="Review" role="tab" aria-selected="false">Reviews</button>
-        <button class="tab" data-section="Community" role="tab" aria-selected="false">Community</button>
-        <button class="tab" data-section="Memoirs" role="tab" aria-selected="false">Memoirs</button>
-      </div>
-
       <div class="flex items-center gap-3">
-        <label class="sr-only" for="q-inline">Search titles in section</label>
-        <input id="q-inline" type="search" placeholder="Search titles in section…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
-
-        <div class="hidden sm:flex items-center gap-2" role="group" aria-label="View options">
-          <button id="viewCards" class="px-3 py-2 rounded-xl border border-black/10 bg-white data-[active=true]:bg-accent/10 data-[active=true]:border-accent/30 data-[active=true]:text-accent" data-active="true" aria-pressed="true">Cards</button>
-          <button id="viewList"  class="px-3 py-2 rounded-xl border border-black/10 bg-white data-[active=true]:bg-accent/10 data-[active=true]:border-accent/30 data-[active=true]:text-accent" data-active="false" aria-pressed="false">List</button>
-        </div>
-
-        <label class="text-sm text-ink-500" for="pageSize">Per page</label>
-        <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
-          <option>6</option><option selected>9</option><option>12</option>
-        </select>
+        <label class="sr-only" for="q-inline">Filter titles</label>
+        <input id="q-inline" type="search" placeholder="Filter titles… (highlights + counts update)" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-72 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
       </div>
+      <p class="text-xs text-ink-300">Tip: Click a tile to jump to its section.</p>
     </div>
+
+    <!-- Section tiles (counts update with filter) -->
+    <div id="tiles" class="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
   </section>
 
-  <!-- Content -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
-    <!-- Main column -->
-    <div class="lg:col-span-2 space-y-8">
-      <!-- Featured (Cards view only) -->
-      <article id="featured" class="card overflow-hidden hidden" aria-hidden="true">
-        <img id="featImg" class="feat-img" src="" alt="">
-        <div class="p-6 sm:p-8">
-          <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
-            <span id="featSection" class="bg-accent/10 text-accent px-2.5 py-1 rounded-full">Essay</span>
-            <time id="featDate" class="text-ink-300"></time>
-          </div>
-          <h2 id="featTitle" class="font-serif text-3xl sm:text-4xl mt-3 leading-tight"></h2>
-          <p id="featExcerpt" class="text-ink-500 mt-3 max-w-2xl"></p>
-          <div class="mt-4">
-            <a id="featLink" href="#" class="u-underline">Read the story →</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Cards grid -->
-      <div id="gridWrap" class="block">
-        <div id="grid" class="grid sm:grid-cols-2 gap-6"></div>
-      </div>
-
-      <!-- List view container (grouped by year) -->
-      <div id="listWrap" class="hidden">
-        <div id="listContainer" class="space-y-8"></div>
-      </div>
-
-      <!-- Empty state -->
-      <div id="empty" class="hidden rounded-xl border border-dashed border-black/10 bg-white p-8 text-center text-ink-500">
-        <p>No posts match your filters yet. Try changing the section, search, or sort.</p>
-      </div>
-
-      <!-- Pagination -->
-      <div class="mt-2 flex items-center justify-between">
-        <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
-        <div class="text-sm text-ink-300">
-          Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
-        </div>
-        <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="space-y-6">
-      <div class="card p-6">
-        <h3 class="font-serif text-xl">About</h3>
-        <p class="text-ink-500 mt-2">A blog documenting and expanding upon Camila’s research, interests, and experiences.</p>
-        <a href="about2.html" class="mt-3 inline-block u-underline">Read More About the Author</a>
-      </div>
-
-      <div class="card p-6">
-        <h3 class="font-serif text-xl">Newsletter</h3>
-        <p class="text-ink-500 mt-2">Monthly roundup of essays, interviews, and events.</p>
-        <form class="mt-4 flex gap-2" method="post" action="/subscribe">
-          <input type="email" name="email" placeholder="you@example.com" required class="flex-1 px-4 py-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-accent/40 outline-none" />
-          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Subscribe</button>
-        </form>
-        <p class="text-xs text-ink-300 mt-2">By subscribing you agree to our terms.</p>
-      </div>
-    </aside>
+  <!-- Accordion groups -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-6" id="groups">
+    <!-- JS injects groups -->
   </section>
 
   <!-- Back to top -->
@@ -333,69 +258,20 @@
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
     // Elements
-    const sortSel = document.getElementById('sort');
-    const pageSizeSel = document.getElementById('pageSize');
-    const qDesktop = document.getElementById('q-desktop');
-    const qHeaderBtn = document.getElementById('qHeaderBtn');
-    const qInline  = document.getElementById('q-inline');
-    const qMobile  = document.getElementById('q-mobile');
-
-    const featured = document.getElementById('featured');
-    const featImg = document.getElementById('featImg');
-    const featSection = document.getElementById('featSection');
-    const featDate = document.getElementById('featDate');
-    const featTitle = document.getElementById('featTitle');
-    const featExcerpt = document.getElementById('featExcerpt');
-    const featLink = document.getElementById('featLink');
-
-    const gridWrap = document.getElementById('gridWrap');
-    const grid = document.getElementById('grid');
-    const listWrap = document.getElementById('listWrap');
-    const listContainer = document.getElementById('listContainer');
-    const emptyEl = document.getElementById('empty');
-
-    const pageNumEl = document.getElementById('pageNum');
-    const pageTotalEl = document.getElementById('pageTotal');
-    const countShownEl = document.getElementById('countShown');
-    const countTotalEl = document.getElementById('countTotal');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    const viewCardsBtn = document.getElementById('viewCards');
-    const viewListBtn = document.getElementById('viewList');
+    const sortSel   = document.getElementById('sort');
+    const qDesktop  = document.getElementById('q-desktop');
+    const qHeaderBtn= document.getElementById('qHeaderBtn');
+    const qInline   = document.getElementById('q-inline');
+    const qMobile   = document.getElementById('q-mobile');
+    const tilesEl   = document.getElementById('tiles');
+    const groupsEl  = document.getElementById('groups');
 
     // ---------- Utilities ----------
     function fmtDate(iso){
       try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch { return iso; }
     }
-    function getYear(iso){
-      try { return new Date(iso).getFullYear(); }
-      catch { return 'Unknown'; }
-    }
 
-    function updateURLState(){
-      const params = new URLSearchParams();
-      params.set('section', state.section);
-      if (state.q) params.set('q', state.q);
-      params.set('view', state.view);
-      params.set('sort', state.sort);
-      params.set('page', String(state.page));
-      history.replaceState(null, '', `?${params.toString()}`);
-    }
-
-    function readURLState(){
-      const p = new URLSearchParams(location.search);
-      return {
-        section: p.get('section') || 'Essay',
-        q: p.get('q') || '',
-        view: (p.get('view') === 'list') ? 'list' : 'cards',
-        sort: p.get('sort') || 'new',
-        page: parseInt(p.get('page') || '1', 10) || 1
-      };
-    }
-
-    // Canonicalize plural/variant section labels to match tabs
     function canonSection(s=''){
       const x = String(s).trim().toLowerCase();
       if (x === 'essays') return 'Essay';
@@ -407,7 +283,6 @@
       return x ? x.charAt(0).toUpperCase() + x.slice(1) : 'Essay';
     }
 
-    // highlight that ignores empty/one-letter terms
     function highlight(text, termsOrString){
       const raw = Array.isArray(termsOrString) ? termsOrString.join(' ') : (termsOrString || '');
       const terms = raw.split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);
@@ -419,7 +294,6 @@
 
     const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-    // Normalizers handle cover as string OR {src}
     function normalizeFromJson(p = {}){
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = p.url || (slug ? `${slug}.html` : '#');
@@ -485,216 +359,175 @@
       </article>`;
     }
 
-    function listItemHTML(p, query){
-      const t = highlight(escapeHtml(p.title), query);
-      const e = highlight(escapeHtml(p.excerpt || ''), query);
-      return `
-        <li class="flex gap-4 items-start">
-          <a href="${p.href}" class="shrink-0 hidden sm:block">
-            <img class="w-28 h-20 object-cover rounded-lg border border-black/5" src="${p.img}" alt="${escapeHtml(p.title)}">
-          </a>
-          <div class="min-w-0">
-            <div class="flex items-center gap-2 text-xs uppercase tracking-wide">
-              <span class="bg-accent/10 text-accent px-2 py-0.5 rounded-full">${escapeHtml(p.section)}</span>
-              <time class="text-ink-300">${fmtDate(p.date)}</time>
-              ${p.read ? `<span class="text-ink-300">• ${p.read} min</span>` : ``}
-            </div>
-            <h3 class="font-serif text-lg sm:text-xl leading-snug mt-1">
-              <a href="${p.href}" class="u-underline">${t}</a>
-            </h3>
-            ${e ? `<p class="text-ink-500 mt-1 line-clamp-2">${e}</p>` : ``}
-          </div>
-        </li>
-      `;
-    }
-
     // State
+    let ALL_POSTS = [];
     let state = {
-      section: 'Essay',
-      sort: 'new',
-      page: 1,
-      pageSize: 9,
       q: '',
-      view: 'cards' // 'cards' | 'list'
+      sort: 'new'
     };
 
-    let ALL_POSTS = [];
+    const ORDER = ['Essay','Interview','Visual','Review','Community','Memoirs'];
+    const DESCRIPTIONS = {
+      'Essay': 'Longer reflections and analyses.',
+      'Interview': 'Conversations and dialogues.',
+      'Visual': 'Photography, illustration & design.',
+      'Review': 'Criticism and recommendations.',
+      'Community': 'Events, notes, and participation.',
+      'Memoirs': 'Personal stories and memories.'
+    };
 
-    function applyFilters(){
-      let out = ALL_POSTS.filter(p => canonSection(p.section) === canonSection(state.section));
-
-      if (state.q){
-        const q = state.q.toLowerCase();
-        out = out.filter(p =>
-          (p.title||'').toLowerCase().includes(q) ||
-          (p.excerpt||'').toLowerCase().includes(q)
-        );
-      }
-
-      out.sort((a,b) => {
-        if (state.sort === 'new') return new Date(b.date) - new Date(a.date);
-        if (state.sort === 'old') return new Date(a.date) - new Date(b.date);
-        if (state.sort === 'title') return (a.title||'').localeCompare(b.title||'');
-        if (state.sort === 'read') return (a.read||0) - (b.read||0);
+    function sortPosts(arr){
+      const s = state.sort;
+      return arr.slice().sort((a,b) => {
+        if (s === 'new') return new Date(b.date) - new Date(a.date);
+        if (s === 'old') return new Date(a.date) - new Date(b.date);
+        if (s === 'title') return (a.title||'').localeCompare(b.title||'');
+        if (s === 'read') return (a.read||0) - (b.read||0);
         return 0;
       });
-      return out;
     }
 
-    function groupByYear(posts){
-      const map = new Map();
-      posts.forEach(p => {
-        const y = getYear(p.date);
-        if (!map.has(y)) map.set(y, []);
-        map.get(y).push(p);
+    function filterByQuery(arr){
+      if (!state.q) return arr;
+      const q = state.q.toLowerCase();
+      return arr.filter(p =>
+        (p.title||'').toLowerCase().includes(q) ||
+        (p.excerpt||'').toLowerCase().includes(q)
+      );
+    }
+
+    function groupPosts(){
+      const groups = {};
+      ORDER.forEach(s => groups[s] = []);
+      ALL_POSTS.forEach(p => {
+        const s = canonSection(p.section);
+        if (!groups[s]) groups[s] = [];
+        groups[s].push(p);
       });
-      // years descending for intuitive scanning
-      return Array.from(map.entries()).sort((a,b) => b[0] - a[0]);
-    }
-
-    function renderCards(posts){
-      const total = posts.length;
-      const showFeatured = (state.page === 1 && total > 0);
-
-      // Compute pagination as before
-      const pages = Math.max(1, Math.ceil((total - (showFeatured ? 1 : 0)) / state.pageSize));
-      if (state.page > pages) state.page = pages;
-
-      if (showFeatured){
-        const f = posts[0];
-        featImg.src = f.img; featImg.alt = f.title;
-        featSection.textContent = f.section;
-        featDate.textContent = fmtDate(f.date);
-        featTitle.innerHTML = highlight(escapeHtml(f.title), state.q);
-        featExcerpt.innerHTML = highlight(escapeHtml(f.excerpt), state.q);
-        featLink.href = f.href;
-        featured.classList.remove('hidden');
-        featured.setAttribute('aria-hidden','false');
-      } else {
-        featured.classList.add('hidden');
-        featured.setAttribute('aria-hidden','true');
+      // apply filter + sort within each group
+      for (const key in groups){
+        groups[key] = sortPosts(filterByQuery(groups[key]));
       }
-
-      const startIndex = showFeatured
-        ? 1 + (state.page - 1) * state.pageSize
-        : (state.page - 1) * state.pageSize;
-      const endIndex   = startIndex + state.pageSize;
-      const pageItems  = posts.slice(startIndex, endIndex);
-
-      grid.innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
-
-      // Counters
-      const pagesCount = Math.max(1, Math.ceil((total - (showFeatured ? 1 : 0)) / state.pageSize));
-      pageNumEl.textContent = String(state.page);
-      pageTotalEl.textContent = String(pagesCount);
-      countShownEl.textContent = String(pageItems.length + (showFeatured ? 1 : 0));
-      countTotalEl.textContent = String(total);
-
-      prevBtn.disabled = state.page <= 1;
-      nextBtn.disabled = state.page >= pagesCount;
-
-      // Toggle visibility
-      gridWrap.classList.remove('hidden');
-      listWrap.classList.add('hidden');
+      return groups;
     }
 
-    function renderList(posts){
-      // No featured in list view—focus on scanability
-      featured.classList.add('hidden');
-      featured.setAttribute('aria-hidden','true');
-
-      const total = posts.length;
-      const pages = Math.max(1, Math.ceil(total / state.pageSize));
-      if (state.page > pages) state.page = pages;
-
-      const startIndex = (state.page - 1) * state.pageSize;
-      const endIndex   = startIndex + state.pageSize;
-      const pageItems  = posts.slice(startIndex, endIndex);
-
-      // Group current page by year
-      const groups = groupByYear(pageItems);
-      listContainer.innerHTML = groups.map(([year, arr]) => {
+    function renderTiles(groups){
+      tilesEl.innerHTML = ORDER.map(s => {
+        const count = groups[s]?.length || 0;
         return `
-          <section>
-            <h2 class="font-serif text-2xl text-ink-700 mb-3">${year}</h2>
-            <ul class="space-y-4">
-              ${arr.map(p => listItemHTML(p, state.q)).join('')}
-            </ul>
-          </section>
+          <button class="tile card p-4 text-left" data-goto="${s}" aria-label="Jump to ${s}">
+            <div class="flex items-center justify-between">
+              <span class="kicker">${s}</span>
+              <span class="text-xs px-2 py-1 rounded-full bg-accent/10 text-accent font-semibold">${count}</span>
+            </div>
+            <div class="mt-2 font-serif text-lg leading-snug">${s}</div>
+            <p class="text-ink-500 text-sm mt-1">${DESCRIPTIONS[s] || ''}</p>
+          </button>
         `;
       }).join('');
 
-      // Counters
-      pageNumEl.textContent = String(state.page);
-      pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length);
-      countTotalEl.textContent = String(total);
-
-      prevBtn.disabled = state.page <= 1;
-      nextBtn.disabled = state.page >= pages;
-
-      // Toggle visibility
-      gridWrap.classList.add('hidden');
-      listWrap.classList.remove('hidden');
-    }
-
-    function render(){
-      const posts = applyFilters();
-      const total = posts.length;
-
-      // Empty state
-      if (total === 0){
-        grid.innerHTML = '';
-        listContainer.innerHTML = '';
-        featured.classList.add('hidden');
-        emptyEl.classList.remove('hidden');
-        pageNumEl.textContent = '1';
-        pageTotalEl.textContent = '1';
-        countShownEl.textContent = '0';
-        countTotalEl.textContent = '0';
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
-        updateURLState();
-        return;
-      } else {
-        emptyEl.classList.add('hidden');
-      }
-
-      if (state.view === 'cards') {
-        renderCards(posts);
-      } else {
-        renderList(posts);
-      }
-
-      updateURLState();
-    }
-
-    // Tabs
-    const tabsEls = Array.from(document.querySelectorAll('.tab'));
-    function setActiveTabBySection(sec){
-      tabsEls.forEach(x => {
-        const on = x.dataset.section === canonSection(sec);
-        x.dataset.active = on ? 'true' : 'false';
-        x.setAttribute('aria-selected', on ? 'true' : 'false');
+      // click to scroll
+      tilesEl.querySelectorAll('[data-goto]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-goto');
+          const el = document.getElementById('group-' + id);
+          if (el) {
+            el.scrollIntoView({ behavior:'smooth', block:'start' });
+            // auto-open if collapsed
+            const toggle = el.querySelector('[data-accordion-toggle]');
+            if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
+              toggle.click();
+            }
+          }
+        });
       });
     }
-    tabsEls.forEach(t => t.addEventListener('click', () => {
-      state.section = t.dataset.section;
-      state.page = 1;
-      setActiveTabBySection(state.section);
-      render();
-    }));
 
-    // Inline & mobile search -> on-page filter + highlights
-    [qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
-      state.q = (e.target.value || '').trim();
-      state.page = 1;
-      render();
-    }));
+    function groupSectionHTML(sectionName, posts){
+      const count = posts.length;
+      // show up to 4 initially to keep it compact; the rest hidden until expanded
+      const preview = posts.slice(0, 4);
+      const rest    = posts.slice(4);
 
-    // Desktop header search -> send to search page
+      const previewGrid = preview.length
+        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">${preview.map(p => cardHTML(p, state.q)).join('')}</div>`
+        : `<p class="text-ink-300 mt-4">No posts yet.</p>`;
+
+      const restGrid = rest.length
+        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 hidden" data-rest>${rest.map(p => cardHTML(p, state.q)).join('')}</div>`
+        : '';
+
+      const moreBtn = rest.length
+        ? `<button class="mt-4 px-4 py-2 rounded-full border border-black/10 hover:bg-white text-sm" data-showmore>
+             Show ${rest.length} more
+           </button>`
+        : '';
+
+      return `
+        <section id="group-${sectionName}" class="card p-5 sm:p-6" aria-labelledby="h-${sectionName}">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">${sectionName}</div>
+              <h2 id="h-${sectionName}" class="font-serif text-2xl sm:text-3xl mt-1">${sectionName}</h2>
+              <p class="text-ink-500 mt-1">${DESCRIPTIONS[sectionName] || ''}</p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="inline-block text-xs px-2 py-1 rounded-full bg-accent/10 text-accent font-semibold">${count} item${count===1?'':'s'}</span>
+              <div class="mt-2">
+                <button class="u-underline text-sm" data-accordion-toggle aria-expanded="false" aria-controls="body-${sectionName}">
+                  Expand
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="body-${sectionName}" class="mt-2 hidden">
+            ${previewGrid}
+            ${restGrid}
+            ${moreBtn}
+            <div class="mt-6 text-sm text-ink-300">
+              <a class="u-underline" href="archive.html?section=${encodeURIComponent(sectionName)}">Open full archive →</a>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderGroups(groups){
+      groupsEl.innerHTML = ORDER.map(s => groupSectionHTML(s, groups[s] || [])).join('');
+
+      // Accordion toggles
+      groupsEl.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!expanded));
+          btn.textContent = expanded ? 'Expand' : 'Collapse';
+          const body = btn.closest('section').querySelector('[id^="body-"]');
+          if (body) body.classList.toggle('hidden');
+        });
+      });
+
+      // Show more buttons
+      groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rest = btn.closest('section').querySelector('[data-rest]');
+          if (rest) {
+            rest.classList.remove('hidden');
+            btn.remove();
+          }
+        });
+      });
+    }
+
+    function renderAll(){
+      const groups = groupPosts();
+      renderTiles(groups);
+      renderGroups(groups);
+    }
+
+    // Desktop header search -> search page
     function goToSearch(){
-      const q = (qDesktop.value || '').trim();
+      const q = (qDesktop?.value || '').trim();
       const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
       location.href = url;
     }
@@ -703,39 +536,27 @@
       if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }
     });
 
-    // Sort & pagination controls
-    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
-    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10)||9; state.page = 1; render(); });
-    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
-    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
-
-    // View toggle
-    function setView(view){
-      state.view = view;
-      const isCards = view === 'cards';
-      viewCardsBtn.dataset.active = String(isCards);
-      viewListBtn.dataset.active  = String(!isCards);
-      viewCardsBtn.setAttribute('aria-pressed', String(isCards));
-      viewListBtn.setAttribute('aria-pressed', String(!isCards));
-      state.page = 1; // reset for clarity
-      render();
-    }
-    viewCardsBtn.addEventListener('click', () => setView('cards'));
-    viewListBtn.addEventListener('click', () => setView('list'));
+    // Controls
+    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; renderAll(); });
+    [qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+      state.q = (e.target.value || '').trim();
+      renderAll();
+    }));
 
     // Init
     (async function init(){
-      const urlState = readURLState();
-      state = { ...state, ...urlState, pageSize: parseInt(pageSizeSel.value,10)||9 };
-      const posts = await loadPosts();
-      ALL_POSTS = posts;
-
-      // hydrate UI controls
-      sortSel.value = state.sort;
-      setActiveTabBySection(state.section);
-      qInline.value = state.q;
-      if (state.view === 'list') setView('list'); else setView('cards');
-      render();
+      ALL_POSTS = await loadPosts();
+      // Default-open the first non-empty section for a stronger sense of importance
+      renderAll();
+      // Open the first with content
+      for (const name of ORDER){
+        const has = groupPosts()[name]?.length;
+        if (has > 0) {
+          const first = document.querySelector(`#group-${name} [data-accordion-toggle]`);
+          if (first) first.click();
+          break;
+        }
+      }
     })();
   </script>
 </body>
