@@ -36,7 +36,7 @@
     .btn { padding:.5rem 1rem; border-radius:.75rem; font-weight:600; border:1px solid rgba(0,0,0,.1); }
     .btn:hover { box-shadow:0 10px 30px rgba(0,0,0,0.06); }
     .prose p { margin:0.8em 0; line-height:1.7; }
-    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:rgba(197,61,47,.05); box-shadow:0 18px 60px rgba(0,0,0,.06); margin:0 auto; }
+    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:rgba(197,61,47,.05); box-shadow:0 18px 60px rgba(0,0,0,0.06); margin:0 auto; }
     .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#A3ACB9; user-select:none; margin-right:2px; }
     .socialContainer{ width:46px; height:46px; border-radius:14px; background:#2E2E2E; display:flex; align-items:center; justify-content:center; transition:transform .2s ease, background-color .2s ease, box-shadow .2s ease; color:#fff; text-decoration:none; border:none; cursor:pointer; }
     .socialContainer:hover{ transform:translateY(-2px); }
@@ -206,6 +206,12 @@
             </div>
           </div>
           <article id="previewBody" class="prose prose-neutral mt-6 max-w-none"></article>
+
+          <!-- NEW: Live Next/Prev preview -->
+          <nav class="mt-6 flex justify-between text-sm text-ink-500">
+            <a id="previewPrev" class="u-underline opacity-80 hidden" rel="prev" href="#"></a>
+            <a id="previewNext" class="u-underline opacity-80 hidden" rel="next" href="#"></a>
+          </nav>
         </div>
       </section>
     </div>
@@ -214,6 +220,16 @@
   <input id="jsonFileInput" type="file" accept="application/json" class="hidden" />
 
   <script>
+    // ---------- Helpers for GH Pages-safe paths ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    function toBase(u){
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);
+      return basePath + u;
+    }
+
     // Utilities
     const $ = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -365,6 +381,8 @@
     const previewAuthor = $('#previewAuthor');
     const previewRead = $('#previewRead');
     const previewBody = $('#previewBody');
+    const previewPrev = $('#previewPrev');
+    const previewNext = $('#previewNext');
 
     const statusMsg = $('#statusMsg');
 
@@ -537,12 +555,21 @@
 
     // Auto-slug + read time
     titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
-    slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
+    slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; updateDerived(); });
     bodyEl.addEventListener('input', updateDerived);
     excerptEl.addEventListener('input', updateDerived);
     sectionEl.addEventListener('change', updateDerived);
     authorEl.addEventListener('input', updateDerived);
     dateEl.addEventListener('input', updateDerived);
+    tagsEl.addEventListener('input', updateDerived);
+
+    // Expand any inline images to data URLs for preview rendering
+    let inlineImageStore = {};
+    function expandInlineImages(markdown='') {
+      return markdown.replace(/\((ctr-img:([a-z0-9-]+))\)/gi, (m, full, id) => {
+        return `(${inlineImageStore[id] || full})`;
+      });
+    }
 
     function updateDerived(){
       readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
@@ -551,9 +578,12 @@
       previewExcerpt.textContent = excerptEl.value || 'Excerpt…';
       previewAuthor.textContent = authorEl.value || 'Author';
       previewRead.textContent = estimateReadMinutes(bodyEl.value);
-      previewDate.textContent = dateEl.value ? new Date(dateEl.value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+      const iso = dateEl.value ? new Date(dateEl.value) : new Date();
+      previewDate.textContent = iso.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
       previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
       addDropcap();
+      // NEW: update Next/Prev preview
+      updatePrevNextPreview().catch(()=>{ /* ignore */ });
     }
 
     function addDropcap() {
@@ -632,15 +662,6 @@
     $('#saveDraftBtn').addEventListener('click', saveDraft);
     $('#previewBtn').addEventListener('click', updateDerived);
 
-    // Store full data URLs for inline images
-    let inlineImageStore = {};
-
-    function expandInlineImages(markdown='') {
-      return markdown.replace(/\((ctr-img:([a-z0-9-]+))\)/gi, (m, full, id) => {
-        return `(${inlineImageStore[id] || full})`;
-      });
-    }
-
     // JSON Export/Import
     const exportJsonBtn = $('#exportJsonBtn');
     exportJsonBtn.addEventListener('click', () => {
@@ -680,19 +701,6 @@
       updateDerived();
     }
 
-    // Export HTML (standalone article page with theme)
-    $('#exportHtmlBtn').addEventListener('click', () => {
-      const data = collect();
-      const errs = validate(data);
-      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
-      const html = buildArticleHtml(data);
-      const blob = new Blob([html], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${data.slug}.html`;
-      a.click();
-    });
-
     function escapeHtml(s=''){
       return s.replace(/[&<>\"']/g, c => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -718,6 +726,90 @@
       updateDerived();
       loadDraft();
     })();
+
+    // ======= PREVIEW: Next/Previous resolver (uses posts.json) =======
+    let PREVIEW_POSTS_CACHE = null;
+    async function loadPostsList(){
+      if (PREVIEW_POSTS_CACHE) return PREVIEW_POSTS_CACHE;
+      try{
+        const res = await fetch(toBase('posts.json') + '?ts=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        const arr = await res.json();
+        PREVIEW_POSTS_CACHE = Array.isArray(arr) ? arr : [];
+        return PREVIEW_POSTS_CACHE;
+      }catch(e){
+        PREVIEW_POSTS_CACHE = [];
+        return PREVIEW_POSTS_CACHE;
+      }
+    }
+
+    function normalizePreviewItem(p){
+      return {
+        slug: (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,''),
+        title: p.title || '',
+        date: p.date || new Date().toISOString()
+      };
+    }
+
+    function sortByDateDesc(a,b){ return new Date(b.date) - new Date(a.date); }
+
+    async function updatePrevNextPreview(){
+      if (!previewPrev || !previewNext) return;
+
+      const posts = (await loadPostsList()).map(normalizePreviewItem);
+
+      // Compose current draft as if it were already published
+      const current = collect();
+      const slug = current.slug || slugify(current.title || '');
+      const title = current.title || 'Untitled';
+      const date = current.date || new Date().toISOString();
+
+      // De-duplicate by slug then insert/replace current draft
+      const map = new Map(posts.map(p => [p.slug, p]));
+      map.set(slug, { slug, title, date });
+      const arr = Array.from(map.values()).sort(sortByDateDesc);
+
+      const idx = arr.findIndex(p => p.slug === slug);
+      if (idx === -1){
+        previewPrev.classList.add('hidden');
+        previewNext.classList.add('hidden');
+        return;
+      }
+
+      const prev = arr[idx + 1]; // older
+      const next = arr[idx - 1]; // newer
+
+      if (prev){
+        previewPrev.textContent = '← ' + prev.title;
+        previewPrev.href = `${prev.slug}.html`;
+        previewPrev.classList.remove('hidden');
+      } else {
+        previewPrev.classList.add('hidden');
+      }
+
+      if (next){
+        previewNext.textContent = next.title + ' →';
+        previewNext.href = `${next.slug}.html`;
+        previewNext.classList.remove('hidden');
+      } else {
+        previewNext.classList.add('hidden');
+      }
+    }
+
+    // ===========================
+    // Export HTML (article page)
+    // ===========================
+    $('#exportHtmlBtn').addEventListener('click', () => {
+      const data = collect();
+      const errs = validate(data);
+      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+      const html = buildArticleHtml(data);
+      const blob = new Blob([html], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${data.slug}.html`;
+      a.click();
+    });
 
     function buildArticleHtml(data){
       const hasTags   = Array.isArray(data.tags) && data.tags.length;
@@ -768,42 +860,14 @@
             figure { margin: 1.75rem 0; text-align: center; }
             figure img { border-radius: 0.75rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
             figcaption { font-size: 0.9rem; color: #9CA3AF; margin-top: 0.5rem; font-style: italic; }
-    
-            .shareCard {
-              display: flex;
-              align-items: center;
-              gap: 14px;
-              width: fit-content;
-              padding: 16px 18px;
-              border-radius: 9999px;
-              background: #ffffff;              /* same color as footer */
-              border: 1px solid rgba(0,0,0,.10); /* same border tone */
-              box-shadow: 0 10px 30px rgba(0,0,0,.04);
-              margin: 0 auto;
-            }
-            .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color: Black; user-select:none; margin-right:2px; }
-    
-            .socialContainer{ width: 40px; height: 40px; border-radius: 12px; background: transparent; border: 1px solid rgba(0,0,0,.10); color: #3A3A3A; display:flex; align-items:center; justify-content:center; transition: transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease; text-decoration:none; cursor:pointer; }
-            .socialContainer:hover,.socialContainer:focus-visible{ background: rgba(197,61,47,.08); border-color: rgba(197,61,47,.35); color: #C53D2F; transform: translateY(-1px); }
-            .socialContainer:active{ transform: scale(.97); }
-            .containerX:hover{ background: rgba(0,0,0,.06); color:#000; border-color: rgba(0,0,0,.25); }
-            .containerFB:hover{ background: rgba(24,119,242,.10); color:#1877F2; border-color: rgba(24,119,242,.35); }
-            .containerMail:hover{ background: rgba(107,114,128,.10); color:#6B7280; border-color: rgba(107,114,128,.35); }
-            .containerCopy:hover{ background: rgba(5,150,105,.10); color:#059669; border-color: rgba(5,150,105,.35); }
-            .socialContainer svg.fill-icon path { fill: currentColor; }
-            .xSvg{ width:16px; height:16px; color:inherit; }
-            .socialSvg{ width:18px; height:18px; color:inherit; }
-            .clipboard-svg{ width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-    
             .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
             .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
-            .prose { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.05rem; line-height: 1.75; letter-spacing: 0.01em; color: #1F1F1F; }
+            .prose { font-family: 'Source Serif 4', Georgia, serf; font-size: 1.05rem; line-height: 1.75; letter-spacing: 0.01em; color: #1F1F1F; }
             .prose h1, .prose h2, .prose h3 { font-family: 'Source Serif 4', Georgia, serif; letter-spacing: -0.01em; font-weight: 700; color: #0E0E0E; }
             .prose h2 { font-size: 1.8rem; line-height: 1.3; margin-top: 2.2rem; margin-bottom: 1.1rem; font-weight: 700; letter-spacing: -0.01em; color: #0E0E0E; }
             .prose p { margin: 1.1em 0; }
             .prose blockquote { font-size: 1.1rem; font-style: italic; border-left: 3px solid #C53D2F; padding-left: 1.25rem; color: #3A3A3A; background: rgba(197,61,47,.03); border-radius: 0.25rem; }
             .prose blockquote .quote-cite { display: block; text-align: right; font-size: 0.875rem; font-style: normal; color: #9CA3AF; margin-top: 0.5rem; }
-    
             article.prose { animation: fadeIn 0.4s ease-out; }
             @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
             ::selection { background: rgba(197,61,47,0.15); }
@@ -897,38 +961,21 @@
               </div>
             </div>
     
-            <section class="mt-12 border-t border-black/10 pt-6">
-              <div class="flex items-start gap-4">
-                ${data.author === 'Camila Tiburcio Rubio'
-                  ? `<img src="assets/camila.jpg"
-                          alt="Photo of Camila Tiburcio Rubio"
-                          class="w-14 h-14 rounded-full object-cover" />`
-                  : `<div class="w-14 h-14 rounded-full bg-ink-300"></div>`}
-                <div>
-                  <p class="font-semibold">${escapeHtml(data.author || 'Camila Tiburcio Rubio')}</p>
-                  <p class="text-sm text-ink-300 mt-1">
-                    Writer and cultural researcher focusing on Cuba and the Caribbean,
-                    Masters Candidate in Latin America and Caribbean Studies at NYU.
-                  </p>
-                </div>
-              </div>
-            </section>
-    
-            <nav class="mt-10 flex justify-between text-sm text-ink-500">
-              <span class="opacity-60">← Previous Article</span>
-              <span class="opacity-60">Next Article →</span>
+            <!-- UPDATED: Real Next/Prev placeholders -->
+            <nav id="article-nav" class="mt-10 flex justify-between text-sm text-ink-500">
+              <a id="prev-article" class="u-underline opacity-80" rel="prev" style="visibility:hidden"></a>
+              <a id="next-article" class="u-underline opacity-80" rel="next" style="visibility:hidden"></a>
             </nav>
           </main>
 
-                    <!-- Back to top -->
+          <!-- Back to top -->
           <button id="backTop"
                   class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
                   aria-label="Back to top">↑ Top</button>
 
-            <!-- Footer -->
+          <!-- Footer -->
           <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-              <!-- Brand -->
               <div>
                 <div class="-ml-1.5">
                   <div class="flex items-center gap-1">
@@ -940,7 +987,6 @@
                   Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
                 </p>
               </div>
-              <!-- Explore -->
               <div>
                 <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
                 <ul class="space-y-2">
@@ -951,7 +997,6 @@
                   <li><a href="search.html" class="u-underline">Search</a></li>
                 </ul>
               </div>
-              <!-- About -->
               <div>
                 <h3 class="font-semibold text-ink-900 mb-3">About</h3>
                 <ul class="space-y-2">
@@ -962,7 +1007,6 @@
                   <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
                 </ul>
               </div>
-              <!-- Follow -->
               <div>
                 <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
                 <ul class="space-y-2">
@@ -980,6 +1024,16 @@
           </footer>
             
           <script>
+            // GH Pages-safe helper
+            const basePath = location.pathname.replace(/[^/]*$/, '');
+            function toBase(u){
+              if (!u) return '';
+              if (/^https?:\\/\\//i.test(u)) return u;
+              if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+              if (u.startsWith('/')) return basePath + u.slice(1);
+              return basePath + u;
+            }
+
             (function(){
               const bar = document.getElementById('progress-bar');
               function onScroll(){
@@ -994,55 +1048,20 @@
             (function () {
               const link = document.getElementById('backBtn');
               if (!link) return;
-
-              // keep whatever you set in href as the fallback destination
               const fallbackHref = link.getAttribute('href') || '/';
-
               link.addEventListener('click', (e) => {
                 const ref = document.referrer;
-                // Only “go back” if there is a previous page and it’s the same origin
                 const sameOrigin = ref && new URL(ref, location.href).origin === location.origin;
-
                 if (sameOrigin) {
                   e.preventDefault();
                   history.back();
                 } else if (!ref) {
-                  // no referrer (e.g., opened in new tab) -> let it fall back to href
                   link.setAttribute('href', fallbackHref);
                 } else {
-                  // cross-site referrer — optional: comment this out if you DO want to go back off-site
                   link.setAttribute('href', fallbackHref);
                 }
               });
             })();
-
-            (async function() {
-              const slug = location.pathname.split('/').pop().replace(/\.html$/, '');
-              try {
-                const res = await fetch('posts.json', { cache: 'no-store' });
-                const posts = await res.json();
-                const idx = posts.findIndex(p => p.slug === slug);
-                if (idx === -1) return;
-
-                const prev = posts[idx + 1]; // older
-                const next = posts[idx - 1]; // newer
-                const prevEl = document.getElementById('prev-article');
-                const nextEl = document.getElementById('next-article');
-
-                if (prev && prevEl) {
-                  prevEl.href = `${prev.slug}.html`;
-                  prevEl.textContent = `← ${prev.title}`;
-                } else if (prevEl) prevEl.style.visibility = 'hidden';
-
-                if (next && nextEl) {
-                  nextEl.href = `${next.slug}.html`;
-                  nextEl.textContent = `${next.title} →`;
-                } else if (nextEl) nextEl.style.visibility = 'hidden';
-              } catch (e) {
-                console.warn('Nav fetch failed:', e);
-              }
-            })();
-
 
             // Back to top visibility + behavior
             const backTop = document.getElementById('backTop');
@@ -1061,12 +1080,10 @@
             (function(){
               const url  = encodeURIComponent(location.href);
               const text = encodeURIComponent(document.title || 'Check this out');
-    
               const x    = document.getElementById('share-x');
               const fb   = document.getElementById('share-fb');
               const mail = document.getElementById('share-mail');
               const copy = document.getElementById('share-copy');
-    
               if (x)   x.href   = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
               if (fb)  fb.href  = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
               if (mail){
@@ -1078,7 +1095,6 @@
                   }
                 });
               }
-    
               if (copy){
                 copy.addEventListener('click', async () => {
                   try {
@@ -1089,6 +1105,37 @@
                     alert("Couldn't copy the link.");
                   }
                 });
+              }
+            })();
+
+            // ==== NEW: Next/Previous resolver (runtime on article page) ====
+            (async function() {
+              function sortByDateDesc(a,b){ return new Date(b.date) - new Date(a.date); }
+              const slug = location.pathname.split('/').pop().replace(/\\.html$/, '');
+              const prevEl = document.getElementById('prev-article');
+              const nextEl = document.getElementById('next-article');
+              try {
+                const res = await fetch(toBase('posts.json') + '?ts=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('posts.json missing');
+                const list = (await res.json()) || [];
+                const posts = list.map(p => ({ slug: (p.slug||'').replace(/^\\/+/, '').replace(/\\.html$/,''), title: p.title||'', date: p.date||'' })).sort(sortByDateDesc);
+                const idx = posts.findIndex(p => p.slug === slug);
+                if (idx >= 0){
+                  const prev = posts[idx + 1]; // older
+                  const next = posts[idx - 1]; // newer
+                  if (prev && prevEl){
+                    prevEl.href = toBase(prev.slug + '.html');
+                    prevEl.textContent = '← ' + prev.title;
+                    prevEl.style.visibility = 'visible';
+                  }
+                  if (next && nextEl){
+                    nextEl.href = toBase(next.slug + '.html');
+                    nextEl.textContent = next.title + ' →';
+                    nextEl.style.visibility = 'visible';
+                  }
+                }
+              } catch (e) {
+                console.warn('Nav fetch failed:', e);
               }
             })();
           <\/script>
@@ -1273,7 +1320,7 @@
       await putRepoFile(path, contentB64, `posts.json: ${entry.slug}`);
     }
 
-    // PUBLISH HANDLER (drop-in replacement)
+    // PUBLISH HANDLER
     document.getElementById('publishBtn').addEventListener('click', async () => {
       const data = collect();
       const errs = validate(data);
@@ -1304,7 +1351,7 @@
 
         data.status = 'published';
 
-        // store only a tiny record so we don't exceed localStorage quota
+        // Tiny cache record in localStorage
         const tiny = (({ slug, title, date, readMinutes, section, author, excerpt, status }) =>
           ({ slug, title, date, readMinutes, section, author, excerpt, status }))(data);
 
@@ -1317,7 +1364,7 @@
         // free up space after successful publish
         try { localStorage.removeItem('ctr:admin:draft'); } catch {}
 
-        // Minimal post entry for lists (no leading slash in cover)
+        // Minimal post entry for lists
         const entry = normalize({
           ...data,
           cover: data.cover ? { src: stripLeadingSlash(data.cover.src), alt: data.cover.alt || '' } : null
@@ -1329,12 +1376,11 @@
         // 2) Build and commit the standalone HTML page
         const html = buildArticleHtml(data);
         const htmlRes = await putRepoFile(
-          `${entry.url}`,           // e.g., "testtesttest.html"
+          `${entry.url}`,
           b64utf8(html),
           `page: ${entry.slug}.html`
         );
 
-        // Diagnostics so you can confirm where it landed
         console.log('HTML commit response:', {
           path: htmlRes.content?.path,
           sha: htmlRes.content?.sha,
