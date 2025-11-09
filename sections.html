@@ -38,6 +38,25 @@
     .u-underline:hover::after { transform:scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
+    .feat-img { aspect-ratio:16/9; width:100%; object-fit:cover; }
+    .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
+    .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
+    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
+
+    /* Tiles at top */
+    .tile { transition: transform .2s ease, box-shadow .2s ease; }
+    .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
+
+    /* Hide native clear buttons on search inputs */
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+      -webkit-appearance: none; appearance: none; display: none;
+    }
+    input[type="search"]::-ms-clear { display: none; }
+
     /* Icon toggle: shows + when collapsed and − when expanded */
     .icon-toggle {
       width: 36px; height: 36px;
@@ -54,33 +73,11 @@
       font-size: 18px; line-height: 1; color: #C53D2F; /* accent */
       transform: translateY(-1px);
     }
-    .icon-toggle[aria-expanded="true"]::before {
-      content: "−";
+    .icon-toggle[aria-expanded="true"]::before { content: "−"; }
+    .icon-toggle .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
-    .icon-toggle .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-
-    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
-    .tab { padding:.55rem .9rem; border-radius:9999px; border:1px solid rgba(0,0,0,.1); font-weight:600; }
-    .feat-img { aspect-ratio:16/9; width:100%; object-fit:cover; }
-    .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
-    .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
-    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
-
-    /* Section tiles */
-    .tile { transition: transform .2s ease, box-shadow .2s ease; }
-    .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
-
-    /* Hide native clear buttons on search inputs */
-    input[type="search"]::-webkit-search-cancel-button,
-    input[type="search"]::-webkit-search-decoration,
-    input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-      -webkit-appearance: none;
-      appearance: none;
-      display: none;
-    }
-    input[type="search"]::-ms-clear { display: none; }
   </style>
 
   <!-- Canonical / Social (update domain when live) -->
@@ -181,7 +178,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Filter titles</label>
-        <input id="q-inline" type="search" placeholder="Filter titles, descriptions…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-72 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+        <input id="q-inline" type="search" placeholder="Filter titles… (highlights + counts update)" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-72 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
       </div>
       <p class="text-xs text-ink-300">Tip: Click a tile to jump to its section.</p>
     </div>
@@ -294,6 +291,7 @@
       catch { return iso; }
     }
 
+    // Canonicalize plural/variant section labels to match tabs
     function canonSection(s=''){
       const x = String(s).trim().toLowerCase();
       if (x === 'essays') return 'Essay';
@@ -305,6 +303,7 @@
       return x ? x.charAt(0).toUpperCase() + x.slice(1) : 'Essay';
     }
 
+    // highlight that ignores empty/one-letter terms
     function highlight(text, termsOrString){
       const raw = Array.isArray(termsOrString) ? termsOrString.join(' ') : (termsOrString || '');
       const terms = raw.split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);
@@ -316,6 +315,7 @@
 
     const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+    // Normalizers handle cover as string OR {src}
     function normalizeFromJson(p = {}){
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = p.url || (slug ? `${slug}.html` : '#');
@@ -381,12 +381,9 @@
       </article>`;
     }
 
-    // State
+    // -------- State / constants --------
     let ALL_POSTS = [];
-    let state = {
-      q: '',
-      sort: 'new'
-    };
+    let state = { q: '', sort: 'new' };
 
     const ORDER = ['Essay','Interview','Visual','Review','Community','Memoirs'];
     const DESCRIPTIONS = {
@@ -426,7 +423,6 @@
         if (!groups[s]) groups[s] = [];
         groups[s].push(p);
       });
-      // apply filter + sort within each group
       for (const key in groups){
         groups[key] = sortPosts(filterByQuery(groups[key]));
       }
@@ -448,14 +444,13 @@
         `;
       }).join('');
 
-      // click to scroll
+      // tile jump + auto-expand
       tilesEl.querySelectorAll('[data-goto]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-goto');
           const el = document.getElementById('group-' + id);
           if (el) {
             el.scrollIntoView({ behavior:'smooth', block:'start' });
-            // auto-open if collapsed
             const toggle = el.querySelector('[data-accordion-toggle]');
             if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
               toggle.click();
@@ -467,7 +462,6 @@
 
     function groupSectionHTML(sectionName, posts){
       const count = posts.length;
-      // show up to 4 initially to keep it compact; the rest hidden until expanded
       const preview = posts.slice(0, 4);
       const rest    = posts.slice(4);
 
@@ -521,7 +515,7 @@
     function renderGroups(groups){
       groupsEl.innerHTML = ORDER.map(s => groupSectionHTML(s, groups[s] || [])).join('');
 
-      // Accordion toggles
+      // Accordion toggles (icon-based)
       groupsEl.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
         btn.addEventListener('click', () => {
           const expanded = btn.getAttribute('aria-expanded') === 'true';
@@ -529,6 +523,7 @@
           const body = btn.closest('section').querySelector('[id^="body-"]');
           if (body) body.classList.toggle('hidden');
         });
+      });
 
       // Show more buttons
       groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
@@ -569,14 +564,13 @@
     // Init
     (async function init(){
       ALL_POSTS = await loadPosts();
-      // Default-open the first non-empty section for a stronger sense of importance
       renderAll();
-      // Open the first with content
+      // Open the first non-empty section to emphasize content
       for (const name of ORDER){
-        const has = groupPosts()[name]?.length;
-        if (has > 0) {
+        const groups = groupPosts();
+        if ((groups[name] || []).length > 0) {
           const first = document.querySelector(`#group-${name} [data-accordion-toggle]`);
-          if (first) first.click();
+          if (first && first.getAttribute('aria-expanded') === 'false') first.click();
           break;
         }
       }
