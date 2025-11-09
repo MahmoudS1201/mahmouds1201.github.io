@@ -1,5 +1,18 @@
 [
   {
+    "slug": "that-last-thing-broke-everything",
+    "title": "That Last Thing Broke Everything",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Hope this works now",
+    "date": "2025-11-09T16:41",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/that-last-thing-broke-everything/cover.png",
+    "url": "that-last-thing-broke-everything.html"
+  },
+  {
     "slug": "test-next-prev",
     "title": "Test Next Prev",
     "section": "Essay",
