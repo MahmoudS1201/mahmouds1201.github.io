@@ -46,10 +46,14 @@
     .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
     .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
 
+    /* Highlight style for inline search matches */
+    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
+
     @media (max-width: 420px){
       .tab { padding:.45rem .8rem; }
+    }
 
-            /* Hide native blue clear (Safari/Chrome/Edge) */
+    /* Hide native clear buttons on search inputs (kept outside the media query) */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
@@ -58,10 +62,7 @@
       appearance: none;
       display: none;
     }
-    /* Hide native clear (IE/Edge legacy) */
     input[type="search"]::-ms-clear { display: none; }
-    }
-
   </style>
 
   <!-- Canonical / Social (update domain when live) -->
@@ -102,12 +103,12 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search -->
+        <!-- Desktop search (routes to search page) -->
         <div class="hidden md:flex items-center gap-4">
-          <label class="relative" aria-label="Search sections">
-            <input id="q-desktop" type="search" placeholder="Search sections…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <label class="relative" aria-label="Search site">
+            <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
             <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
-            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Search">↵</button>
+            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Go to search">↵</button>
           </label>
         </div>
 
@@ -129,8 +130,8 @@
         <a class="block u-underline" href="latest.html">Latest</a>
         <a class="block u-underline font-semibold text-accent" href="sections.html" aria-current="page">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
-        <label class="relative block mt-3" aria-label="Search sections">
-          <input id="q-mobile" type="search" placeholder="Search sections…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+        <label class="relative block mt-3" aria-label="Search titles in section">
+          <input id="q-mobile" type="search" placeholder="Search titles in section…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
         </label>
       </nav>
@@ -240,7 +241,7 @@
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
 
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
       <!-- Brand -->
@@ -293,8 +294,9 @@
       © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
     </div>
   </footer>
+
   <script>
-    // Year + mobile menu (unchanged)
+    // Year + mobile menu
     document.getElementById('year').textContent = new Date().getFullYear();
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
@@ -312,19 +314,17 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
+    // -------------------------------------
+    // Load posts (real posts or local cache)
+    // -------------------------------------
+    const POSTS_JSON_URL = '/posts.json';
+    const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
-    // ---------------------------
-    // ONLY CHANGE: load real posts
-    // ---------------------------
-
-    const POSTS_JSON_URL = '/posts.json'; // if present on your host, this will be used first
-    const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw='; // 1x1 transparent
-
-    // Elements (unchanged)
-    const tabs = Array.from(document.querySelectorAll('.tab'));
+    // Elements
     const sortSel = document.getElementById('sort');
     const pageSizeSel = document.getElementById('pageSize');
     const qDesktop = document.getElementById('q-desktop');
+    const qHeaderBtn = document.getElementById('qHeaderBtn');   // NEW: explicit header search submit
     const qInline  = document.getElementById('q-inline');
     const qMobile  = document.getElementById('q-mobile');
 
@@ -344,16 +344,15 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    // State (unchanged)
+    // State
     let state = {
       section: 'Essay',
       sort: 'new',
       page: 1,
       pageSize: parseInt(pageSizeSel.value,10) || 9,
-      q: ''
+      q: ''   // inline/mobile filter only
     };
 
-    // Will hold real posts instead of samples
     let ALL_POSTS = [];
 
     function fmtDate(iso){
@@ -361,12 +360,19 @@
       catch { return iso; }
     }
 
-    // Normalize a record from posts.json
+    // Helpers for safe highlighting
+    const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const escapeRegExp = s => (s||'').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function hlText(str, q){
+      if (!q) return escapeHtml(str||'');
+      const re = new RegExp('(' + escapeRegExp(q) + ')', 'ig');
+      return escapeHtml(str||'').replace(re, '<mark class="hl">$1</mark>');
+    }
+
+    // Normalizers
     function normalizeFromJson(p = {}){
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
-      const href =
-        p.url ||
-        (slug ? `${slug}.html` : '#'); // adjust if you keep articles under /article/
+      const href = p.url || (slug ? `${slug}.html` : '#');
       return {
         title: p.title || '',
         section: p.section || 'Essay',
@@ -377,11 +383,9 @@
         img: (p.cover && p.cover.src) ? p.cover.src : FALLBACK_IMG
       };
     }
-
-    // Normalize a record from Admin localStorage (ctr:admin:published:*)
     function normalizeFromAdmin(d = {}){
       const slug = (d.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
-      const href = `${slug || 'index'}.html`; // matches your Admin export default
+      const href = `${slug || 'index'}.html`;
       return {
         title: d.title || '',
         section: d.section || 'Essay',
@@ -393,9 +397,7 @@
       };
     }
 
-    // Load posts: try posts.json, else fall back to localStorage published items
     async function loadPosts(){
-      // 1) posts.json (hosted)
       try{
         const res = await fetch(POSTS_JSON_URL + '?ts=' + Date.now(), { cache: 'no-store' });
         if (res.ok) {
@@ -404,28 +406,25 @@
             return data.map(normalizeFromJson);
           }
         }
-      }catch(e){ /* ignore and try fallback */ }
-
-      // 2) Fallback: Admin "Mark as Published" entries in this browser
+      }catch(e){}
       const keys = Object.keys(localStorage).filter(k => k.startsWith('ctr:admin:published:'));
       const items = keys.map(k => {
         try { return normalizeFromAdmin(JSON.parse(localStorage.getItem(k))); }
         catch { return null; }
       }).filter(Boolean);
-
       return items;
     }
 
-    function cardHTML(p){
+    function cardHTML(p, query){
       return `
       <article class="card overflow-hidden flex flex-col">
-        <img class="thumb" src="${p.img}" alt="${p.title}">
+        <img class="thumb" src="${p.img}" alt="${escapeHtml(p.title)}">
         <div class="p-5 flex-1 flex flex-col">
-          <div class="kicker">${p.section}</div>
+          <div class="kicker">${escapeHtml(p.section)}</div>
           <h3 class="font-serif text-xl mt-2 leading-snug">
-            <a class="u-underline" href="${p.href}">${p.title}</a>
+            <a class="u-underline" href="${p.href}">${hlText(p.title, query)}</a>
           </h3>
-          <p class="text-ink-500 mt-2">${p.excerpt}</p>
+          <p class="text-ink-500 mt-2">${hlText(p.excerpt, query)}</p>
           <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)} • ${p.read || 1} min</div>
         </div>
       </article>`;
@@ -467,8 +466,8 @@
         featImg.src = f.img; featImg.alt = f.title;
         featSection.textContent = f.section;
         featDate.textContent = fmtDate(f.date);
-        featTitle.textContent = f.title;
-        featExcerpt.textContent = f.excerpt;
+        featTitle.innerHTML = hlText(f.title, state.q);          // highlight
+        featExcerpt.innerHTML = hlText(f.excerpt, state.q);      // highlight
         featLink.href = f.href;
         featured.classList.remove('hidden');
       } else {
@@ -485,7 +484,7 @@
 
       const pageItems = posts.slice(startIndex, endIndex);
 
-      grid.innerHTML = pageItems.map(cardHTML).join('');
+      grid.innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
       countShownEl.textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
@@ -495,7 +494,7 @@
       nextBtn.disabled = state.page >= pages;
     }
 
-    // Events (unchanged)
+    // Tabs
     const tabsEls = Array.from(document.querySelectorAll('.tab'));
     tabsEls.forEach(t => t.addEventListener('click', () => {
       tabsEls.forEach(x => { x.dataset.active = 'false'; x.setAttribute('aria-selected','false'); });
@@ -506,19 +505,31 @@
       render();
     }));
 
-    [qDesktop, qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
-      state.q = e.target.value;
+    // Inline & mobile search -> on-page filter + highlights
+    [qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+      state.q = e.target.value.trim();
       state.page = 1;
       render();
     }));
 
+    // Desktop header search -> send to search page (no on-page filtering)
+    function goToSearch(){
+      const q = (qDesktop.value || '').trim();
+      const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
+      location.href = url;
+    }
+    qHeaderBtn?.addEventListener('click', (e) => { e.preventDefault(); goToSearch(); });
+    qDesktop?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }
+    });
+
+    // Sort & pagination controls
     sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
     pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
-
     prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
     nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
 
-    // Init: load real posts then render
+    // Init
     (async function init(){
       ALL_POSTS = await loadPosts();
       render();
