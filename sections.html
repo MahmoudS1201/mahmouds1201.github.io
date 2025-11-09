@@ -31,7 +31,10 @@
 
   <style>
     .u-underline { position: relative; }
-    .u-underline::after { content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%; background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
+    .u-underline::after {
+      content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%;
+      background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+    }
     .u-underline:hover::after { transform:scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
@@ -43,15 +46,26 @@
     .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
     .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
 
-    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius:.25em; }
+    /* Highlight style for inline search matches */
+    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
 
+    @media (max-width: 420px){
+      .tab { padding:.45rem .8rem; }
+    }
+
+    /* Hide native clear buttons on search inputs (kept outside the media query) */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
-    input[type="search"]::-ms-clear { display:none; }
+    input[type="search"]::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+      appearance: none;
+      display: none;
+    }
+    input[type="search"]::-ms-clear { display: none; }
   </style>
 
+  <!-- Canonical / Social (update domain when live) -->
   <link rel="canonical" href="https://example.com/sections" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sections — Camila Tiburcio Rubio">
@@ -75,16 +89,21 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
+        <!-- Brand -->
         <a href="Home.html" class="flex items-center gap-2" aria-label="Home">
           <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
+
+        <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline" href="features.html">Features</a>
           <a class="u-underline" href="latest.html">Latest</a>
           <a class="u-underline font-semibold text-accent" href="sections.html" aria-current="page">Sections</a>
           <a class="u-underline" href="about2.html">About</a>
         </nav>
+
+        <!-- Desktop search (routes to search page) -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -92,6 +111,8 @@
             <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Go to search">↵</button>
           </label>
         </div>
+
+        <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
             <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -102,6 +123,7 @@
       </div>
     </div>
 
+    <!-- Mobile dropdown -->
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
         <a class="block u-underline" href="features.html">Features</a>
@@ -136,7 +158,7 @@
     </div>
   </section>
 
-  <!-- Tabs + search + per-page -->
+  <!-- Tabs + search -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <div id="tabs" class="flex flex-wrap gap-2" role="tablist" aria-label="Sections">
@@ -153,9 +175,7 @@
         <input id="q-inline" type="search" placeholder="Search titles in section…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
         <label class="text-sm text-ink-500" for="pageSize">Per page</label>
         <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
-          <option>6</option>
-          <option selected>9</option>
-          <option>12</option>
+          <option>6</option><option selected>9</option><option>12</option>
         </select>
       </div>
     </div>
@@ -163,7 +183,9 @@
 
   <!-- Content -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
+    <!-- Main column -->
     <div class="lg:col-span-2 space-y-8">
+      <!-- Featured -->
       <article id="featured" class="card overflow-hidden hidden">
         <img id="featImg" class="feat-img" src="" alt="">
         <div class="p-6 sm:p-8">
@@ -179,10 +201,12 @@
         </div>
       </article>
 
+      <!-- Grid -->
       <div id="grid" class="grid sm:grid-cols-2 gap-6">
         <!-- cards injected here -->
       </div>
 
+      <!-- Pagination -->
       <div class="mt-2 flex items-center justify-between">
         <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
         <div class="text-sm text-ink-300">
@@ -192,12 +216,14 @@
       </div>
     </div>
 
+    <!-- Sidebar -->
     <aside class="space-y-6">
       <div class="card p-6">
         <h3 class="font-serif text-xl">About</h3>
         <p class="text-ink-500 mt-2">A blog documenting and expanding upon Camila’s research, interests, and experiences.</p>
         <a href="about2.html" class="mt-3 inline-block u-underline">Read More About the Author</a>
       </div>
+
       <div class="card p-6">
         <h3 class="font-serif text-xl">Newsletter</h3>
         <p class="text-ink-500 mt-2">Monthly roundup of essays, interviews, and events.</p>
@@ -210,10 +236,15 @@
     </aside>
   </section>
 
-  <button id="backTop" class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm" aria-label="Back to top">↑ Top</button>
+  <!-- Back to top -->
+  <button id="backTop"
+          class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+          aria-label="Back to top">↑ Top</button>
 
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -221,9 +252,13 @@
             <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
           </div>
         </div>
-        <p class="mt-2 text-ink-400 text-sm max-w-xs">Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.</p>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
       </div>
-      <div><h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+      <!-- Explore -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
           <li><a href="features.html" class="u-underline">Features</a></li>
           <li><a href="latest.html" class="u-underline">Latest</a></li>
@@ -232,7 +267,9 @@
           <li><a href="search.html" class="u-underline">Search</a></li>
         </ul>
       </div>
-      <div><h3 class="font-semibold text-ink-900 mb-3">About</h3>
+      <!-- About -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
           <li><a href="about2.html" class="u-underline">About</a></li>
           <li><a href="contact.html" class="u-underline">Contact</a></li>
@@ -241,7 +278,9 @@
           <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
-      <div><h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+      <!-- Follow -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
           <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
           <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
@@ -257,22 +296,8 @@
   </footer>
 
   <script>
-    /* ---------- Path + helper ---------- */
-    const basePath = location.pathname.replace(/[^/]*$/, '');
-    const toBase = (u) => {
-      if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;
-      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
-      if (u.startsWith('/')) return basePath + u.slice(1);
-      return basePath + u;
-    };
-
-    /* ---------- Back to top + mobile menu ---------- */
-    const backTop = document.getElementById('backTop');
-    const toggleTop = () => { if (window.scrollY > 600) backTop.classList.remove('hidden'); else backTop.classList.add('hidden'); };
-    window.addEventListener('scroll', toggleTop, { passive:true });
-    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
-
+    // Year + mobile menu
+    document.getElementById('year').textContent = new Date().getFullYear();
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     menuToggle?.addEventListener('click', () => {
@@ -280,90 +305,160 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    /* ---------- Utilities ---------- */
-    const $ = (s,r=document)=>r.querySelector(s);
-    const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
-    const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
-    const byNewest = (a,b) => new Date(b.date) - new Date(a.date);
-    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    function highlight(text, terms){
-      if (!text || !terms.length) return text;
-      const pat = new RegExp('(' + terms.map(esc).join('|') + ')','ig');
-      return text.replace(pat, '<mark class="hl">$1</mark>');
-    }
+    // Back to top visibility + behavior
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-    /* ---------- Data ---------- */
-    async function loadPosts(){
-      const POSTS_JSON_URL = toBase('posts.json');
-      try {
-        const res = await fetch(POSTS_JSON_URL + '?ts=' + Date.now(), { cache:'no-store' });
-        if (res.ok){
-          const data = await res.json();
-          if (Array.isArray(data) && data.length){
-            return data.map(p => normalizeFromJson(p));
-          }
-        }
-      } catch(e){}
-      const out = [];
-      for (let i=0;i<localStorage.length;i++){
-        const k = localStorage.key(i);
-        if (k && k.startsWith('ctr:admin:published:')){
-          try { out.push(normalizeFromAdmin(JSON.parse(localStorage.getItem(k)))); } catch {}
-        }
-      }
-      return out;
-    }
-
+    // -------------------------------------
+    // Load posts (real posts or local cache)
+    // -------------------------------------
+    const POSTS_JSON_URL = '/posts.json';
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
+    // Elements
+    const sortSel = document.getElementById('sort');
+    const pageSizeSel = document.getElementById('pageSize');
+    const qDesktop = document.getElementById('q-desktop');
+    const qHeaderBtn = document.getElementById('qHeaderBtn');
+    const qInline  = document.getElementById('q-inline');
+    const qMobile  = document.getElementById('q-mobile');
+
+    const featured = document.getElementById('featured');
+    const featImg = document.getElementById('featImg');
+    const featSection = document.getElementById('featSection');
+    const featDate = document.getElementById('featDate');
+    const featTitle = document.getElementById('featTitle');
+    const featExcerpt = document.getElementById('featExcerpt');
+    const featLink = document.getElementById('featLink');
+
+    const grid = document.getElementById('grid');
+    const pageNumEl = document.getElementById('pageNum');
+    const pageTotalEl = document.getElementById('pageTotal');
+    const countShownEl = document.getElementById('countShown');
+    const countTotalEl = document.getElementById('countTotal');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // ---------- Utilities ----------
+    function fmtDate(iso){
+      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
+      catch { return iso; }
+    }
+
+    // Canonicalize plural/variant section labels to match tabs
+    function canonSection(s=''){
+      const x = String(s).trim().toLowerCase();
+      if (x === 'essays') return 'Essay';
+      if (x === 'interviews') return 'Interview';
+      if (x === 'reviews') return 'Review';
+      if (x === 'visuals') return 'Visual';
+      if (x === 'communities') return 'Community';
+      if (x === 'memoir' || x === 'memoirs') return 'Memoirs';
+      return x ? x.charAt(0).toUpperCase() + x.slice(1) : 'Essay';
+    }
+
+    // highlight that ignores empty/one-letter terms
+    function highlight(text, termsOrString){
+      const raw = Array.isArray(termsOrString) ? termsOrString.join(' ') : (termsOrString || '');
+      const terms = raw.split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);
+      if (!text || terms.length === 0) return String(text || '');
+      const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
+      return String(text).replace(pat, '<mark class="hl">$1</mark>');
+    }
+
+    const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    // Normalizers handle cover as string OR {src}
     function normalizeFromJson(p = {}){
-      const slug = (p.slug || '').replace(/^\/+/, '').replace(/\.html$/,'');
+      const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = p.url || (slug ? `${slug}.html` : '#');
       const coverStr = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src);
       return {
         title:   p.title || '',
-        section: p.section || 'Essay',
-        href:    toBase(href),
+        section: canonSection(p.section || 'Essay'),
+        href,
         excerpt: p.excerpt || p.description || '',
         date:    p.date || new Date().toISOString(),
         read:    p.readMinutes || p.read || 0,
-        img:     coverStr ? toBase(coverStr) : FALLBACK_IMG
+        img:     coverStr || FALLBACK_IMG
       };
     }
 
     function normalizeFromAdmin(d = {}){
-      const slug = (d.slug || '').replace(/^\/+/, '').replace(/\.html$/,'');
+      const slug = (d.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = `${slug || 'index'}.html`;
       const coverStr = typeof d.cover === 'string' ? d.cover : (d.cover && d.cover.src);
       return {
         title:   d.title || '',
-        section: d.section || 'Essay',
-        href:    toBase(href),
+        section: canonSection(d.section || 'Essay'),
+        href,
         excerpt: d.excerpt || '',
         date:    d.date || new Date().toISOString(),
         read:    d.readMinutes || 0,
-        img:     coverStr ? toBase(coverStr) : FALLBACK_IMG
+        img:     coverStr || FALLBACK_IMG
       };
     }
 
-    let ALL_POSTS = [];
+    async function loadPosts(){
+      try{
+        const res = await fetch(POSTS_JSON_URL + '?ts=' + Date.now(), { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length){
+            return data.map(normalizeFromJson);
+          }
+        }
+      }catch(e){}
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('ctr:admin:published:'));
+      const items = keys.map(k => {
+        try { return normalizeFromAdmin(JSON.parse(localStorage.getItem(k))); }
+        catch { return null; }
+      }).filter(Boolean);
+      return items;
+    }
+
+    function cardHTML(p, query){
+      const t = highlight(escapeHtml(p.title), query);
+      const e = highlight(escapeHtml(p.excerpt || ''), query);
+      return `
+      <article class="card overflow-hidden flex flex-col">
+        <img class="thumb" src="${p.img}" alt="${escapeHtml(p.title)}">
+        <div class="p-5 flex-1 flex flex-col">
+          <div class="kicker">${escapeHtml(p.section)}</div>
+          <h3 class="font-serif text-xl mt-2 leading-snug">
+            <a class="u-underline" href="${p.href}">${t}</a>
+          </h3>
+          <p class="text-ink-500 mt-2">${e}</p>
+          <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read ? ` • ${p.read} min` : ''}</div>
+        </div>
+      </article>`;
+    }
+
+    // State
     let state = {
       section: 'Essay',
-      sort:    'new',
-      page:    1,
-      pageSize: parseInt(document.getElementById('pageSize').value,10) || 9,
-      q:       ''
+      sort: 'new',
+      page: 1,
+      pageSize: parseInt(pageSizeSel.value,10) || 9,
+      q: ''   // inline/mobile filter only
     };
 
+    let ALL_POSTS = [];
+
     function applyFilters(){
-      const normf = s => (s || '').toLowerCase();
-      let out = ALL_POSTS.filter(p => normf(p.section) === normf(state.section));
+      let out = ALL_POSTS.filter(p => canonSection(p.section) === canonSection(state.section));
 
       if (state.q){
-        const q = normf(state.q);
+        const q = state.q.toLowerCase();
         out = out.filter(p =>
-          normf(p.title).includes(q) ||
-          normf(p.excerpt).includes(q)
+          (p.title||'').toLowerCase().includes(q) ||
+          (p.excerpt||'').toLowerCase().includes(q)
         );
       }
 
@@ -381,102 +476,83 @@
       const posts = applyFilters();
       const total = posts.length;
 
+      // Featured shows only on page 1, counts toward "shown"
       const featuredVisible = (state.page === 1 && total > 0);
-      const effectivePageSize = state.pageSize;
-      const pages = Math.max(1, Math.ceil((total - (featuredVisible ? 1 : 0)) / effectivePageSize));
+      const effectivePerPage = featuredVisible ? Math.max(1, state.pageSize) : state.pageSize;
+
+      // pages excludes the featured slot on page 1
+      const pages = Math.max(1, Math.ceil((total - (featuredVisible ? 1 : 0)) / effectivePerPage));
       if (state.page > pages) state.page = pages;
 
-      if (featuredVisible){
+      // Featured fill
+      if (featuredVisible) {
         const f = posts[0];
-        document.getElementById('featImg').src = f.img;
-        document.getElementById('featImg').alt = f.title;
-        document.getElementById('featSection').textContent = f.section;
-        document.getElementById('featDate').textContent    = fmtDate(f.date);
-        document.getElementById('featTitle').innerHTML    = highlight(f.title, [state.q]);
-        document.getElementById('featExcerpt').innerHTML  = highlight(f.excerpt, [state.q]);
-        document.getElementById('featLink').href          = f.href;
-        document.getElementById('featured').classList.remove('hidden');
+        featImg.src = f.img; featImg.alt = f.title;
+        featSection.textContent = f.section;
+        featDate.textContent = fmtDate(f.date);
+        featTitle.innerHTML = highlight(escapeHtml(f.title), state.q);
+        featExcerpt.innerHTML = highlight(escapeHtml(f.excerpt), state.q);
+        featLink.href = f.href;
+        featured.classList.remove('hidden');
       } else {
-        document.getElementById('featured').classList.add('hidden');
+        featured.classList.add('hidden');
       }
 
-      const startIndex = (featuredVisible ? 1 : 0) + (state.page - 1) * effectivePageSize;
-      const endIndex   = startIndex + effectivePageSize;
-      const pageItems  = posts.slice(startIndex, endIndex);
+      // Page items (skip featured if visible)
+      let startIndex = featuredVisible ? 1 + (state.page - 1) * state.pageSize
+                                      : (state.page - 1) * state.pageSize;
+      const endIndex = startIndex + state.pageSize;
+      const pageItems = posts.slice(startIndex, endIndex);
 
-      document.getElementById('grid').innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
-      document.getElementById('pageNum').textContent = String(state.page);
-      document.getElementById('pageTotal').textContent = String(pages);
-      document.getElementById('countShown').textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
-      document.getElementById('countTotal').textContent = String(total);
+      grid.innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
+      pageNumEl.textContent = String(state.page);
+      pageTotalEl.textContent = String(pages);
+      countShownEl.textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
+      countTotalEl.textContent = String(total);
 
-      document.getElementById('prevBtn').disabled = state.page <= 1;
-      document.getElementById('nextBtn').disabled = state.page >= pages;
+      prevBtn.disabled = state.page <= 1;
+      nextBtn.disabled = state.page >= pages;
     }
 
-    function cardHTML(p, query){
-      const t = highlight(p.title, [query]);
-      const e = highlight(p.excerpt, [query]);
-      return `
-        <article class="card overflow-hidden flex flex-col">
-          <img class="thumb" src="${p.img}" alt="${escapeHtml(p.title)}">
-          <div class="p-5 flex-1 flex flex-col">
-            <div class="kicker">${escapeHtml(p.section)}</div>
-            <h3 class="font-serif text-xl mt-2 leading-snug">
-              <a class="u-underline" href="${p.href}">${t}</a>
-            </h3>
-            <p class="text-ink-500 mt-2">${e}</p>
-            <div class="mt-auto pt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read ? ` • ${p.read} min` : ''}</div>
-          </div>
-        </article>`;
-    }
-
+    // Tabs
     const tabsEls = Array.from(document.querySelectorAll('.tab'));
     tabsEls.forEach(t => t.addEventListener('click', () => {
       tabsEls.forEach(x => { x.dataset.active = 'false'; x.setAttribute('aria-selected','false'); });
-      t.dataset.active = 'true'; t.setAttribute('aria-selected','true');
-      state.section = t.dataset.section || 'Essay';
+      t.dataset.active = 'true';
+      t.setAttribute('aria-selected','true');
+      state.section = t.dataset.section;
       state.page = 1;
       render();
     }));
 
-    document.getElementById('q-inline')?.addEventListener('input', e => {
-      state.q = e.target.value.trim();
+    // Inline & mobile search -> on-page filter + highlights
+    [qInline, qMobile].forEach(inp => inp?.addEventListener('input', (e) => {
+      state.q = (e.target.value || '').trim();
       state.page = 1;
       render();
-    });
+    }));
 
-    document.getElementById('q-mobile')?.addEventListener('input', e => {
-      state.q = e.target.value.trim();
-      state.page = 1;
-      render();
-    });
-
-    document.getElementById('qHeaderBtn')?.addEventListener('click', e => {
-      e.preventDefault();
-      const q = (document.getElementById('q-desktop').value || '').trim();
+    // Desktop header search -> send to search page (no on-page filtering)
+    function goToSearch(){
+      const q = (qDesktop.value || '').trim();
       const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
-      window.location.href = url;
-    });
-    document.getElementById('q-desktop')?.addEventListener('keydown', e => {
-      if (e.key === 'Enter'){ e.preventDefault(); const q = (e.target.value || '').trim(); window.location.href = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html'; }
+      location.href = url;
+    }
+    qHeaderBtn?.addEventListener('click', (e) => { e.preventDefault(); goToSearch(); });
+    qDesktop?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }
     });
 
-    document.getElementById('sort').addEventListener('change', e => {
-      state.sort = e.target.value;
-      state.page = 1;
-      render();
-    });
-    document.getElementById('pageSize').addEventListener('change', e => {
-      state.pageSize = parseInt(e.target.value,10) || 9;
-      state.page = 1;
-      render();
-    });
-    document.getElementById('prevBtn').addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
-    document.getElementById('nextBtn').addEventListener('click', () => { state.page = state.page + 1; render(); });
+    // Sort & pagination controls
+    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
+    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
+    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
 
+    // Init
     (async function init(){
-      ALL_POSTS = await loadPosts();
+      const posts = await loadPosts();
+      ALL_POSTS = posts;
       render();
     })();
   </script>
