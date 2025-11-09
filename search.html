@@ -213,6 +213,16 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
+    // ---------- GitHub Pages subpath helper (fixes image URLs) ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/YourRepo/"
+    function toBase(u){
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;                // absolute URL
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);  // strip leading slash to repo subdir
+      return basePath + u;                                  // plain relative
+    }
+
     // ---------- Data ----------
     function loadPublished(){
       const out = [];
@@ -225,30 +235,32 @@
       return out;
     }
 
+    const FALLBACK = 'https://picsum.photos/seed/ctr-search/800/500';
+
     function normalizeItem(x){
       const tagsArr =
         Array.isArray(x.tags) ? x.tags :
         (typeof x.tags === 'string' ? x.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
 
-      const coverStr =
+      const coverRaw =
         typeof x.cover === 'string' ? x.cover :
         (x.cover && x.cover.src ? x.cover.src : '');
 
-      const href =
+      const hrefRaw =
         (x.url && String(x.url).trim()) ? String(x.url).trim() :
         (x.slug ? `${x.slug}.html` : '#');
 
       return {
         title: x.title || '',
         slug:  x.slug  || '',
-        url:   href,
+        url:   toBase(hrefRaw),
         section: x.section || '',
         excerpt: x.excerpt || '',
         date: x.date || x.publishedAt || '',
         readMinutes: x.readMinutes || x.read || 0,
         tags: tagsArr,
-        cover: coverStr,
-        bodyText: String(x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ').slice(0, 2000) // cap for perf
+        cover: toBase(coverRaw || FALLBACK),   // <-- critical: resolve through toBase
+        bodyText: String(x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ').slice(0, 2000)
       };
     }
 
@@ -270,8 +282,7 @@
       if (mode === 'dateDesc') return arr.sort((a,b)=> new Date(b.date) - new Date(a.date));
       if (mode === 'titleAsc') return arr.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
       if (mode === 'titleDesc')return arr.sort((a,b)=> (b.title||'').localeCompare(a.title||''));
-      // 'best' → fall back to date desc
-      return arr.sort((a,b)=> new Date(b.date) - new Date(a.date));
+      return arr.sort((a,b)=> new Date(b.date) - new Date(a.date)); // 'best' → newest
     }
 
     function formatDate(iso){
@@ -290,12 +301,10 @@
       const sel = $('#sectionFilter');
       const keep = sel.value;
 
-      // Which sections have at least one match for this query?
       const allowed = new Set(
         items.filter(it => matchesQuery(it, qTerms)).map(it => it.section).filter(Boolean)
       );
 
-      // Hide/disable non-matching sections
       [...sel.options].forEach(opt => {
         if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; }
         const ok = allowed.has(opt.value);
@@ -317,7 +326,7 @@
       empty.classList.add('hidden');
 
       for (const it of list){
-        const href = it.url && it.url !== '#' ? it.url : `${it.slug ? it.slug : 'article'}.html`;
+        const href = it.url && it.url !== '#' ? it.url : (it.slug ? toBase(`${it.slug}.html`) : '#');
 
         const card = document.createElement('article');
         card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
@@ -325,11 +334,12 @@
         if (it.cover){
           const img = document.createElement('img');
           img.className = 'aspect-[16/10] object-cover';
-          img.src = it.cover;
+          img.src = it.cover;                          // already normalized with toBase
           img.alt = it.title || 'Cover image';
           img.loading = 'lazy';
           img.decoding = 'async';
           img.sizes = '(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw';
+          img.onerror = () => { img.onerror = null; img.src = FALLBACK; }; // graceful fallback
           card.appendChild(img);
         }
 
@@ -352,7 +362,7 @@
         p.innerHTML = highlight(raw, qTerms);
         body.appendChild(p);
 
-        /* TAGS ROW */
+        // Tags row
         if (it.tags && it.tags.length){
           const tagsWrap = document.createElement('div');
           tagsWrap.className = 'mt-3 flex flex-wrap gap-2';
