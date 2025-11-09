@@ -46,46 +46,31 @@
     .tile { transition: transform .2s ease, box-shadow .2s ease; }
     .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
 
-    /* Hide native clear buttons on search inputs */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-      -webkit-appearance: none; appearance: none; display: none;
-    }
-    input[type="search"]::-ms-clear { display: none; }
+    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
+    input[type="search"]::-ms-clear { display:none; }
 
     /* Animated + / − toggle button (BLACK) */
     .icon-toggle {
-      position: relative;
-      width: 36px; height: 36px;
-      display: inline-flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(0,0,0,.12);
-      border-radius: 9999px;
-      background: #fff;
-      color: #0E0E0E; /* black */
+      position: relative; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid rgba(0,0,0,.12); border-radius:9999px; background:#fff; color:#0E0E0E;
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
       will-change: transform;
     }
-    .icon-toggle:hover { box-shadow: 0 8px 20px rgba(0,0,0,.06); border-color: rgba(0,0,0,.2); }
-    .icon-toggle:active { transform: scale(0.98); }
-    .icon-toggle::before,
-    .icon-toggle::after {
-      content: ""; position: absolute; background: currentColor;
-      border-radius: 1px;
-      transition: transform .18s ease, opacity .18s ease;
+    .icon-toggle:hover { box-shadow:0 8px 20px rgba(0,0,0,.06); border-color:rgba(0,0,0,.2); }
+    .icon-toggle:active { transform:scale(0.98); }
+    .icon-toggle::before, .icon-toggle::after {
+      content:""; position:absolute; background:currentColor; border-radius:1px; transition:transform .18s ease, opacity .18s ease;
     }
-    .icon-toggle::before { width: 18px; height: 2px; } /* horizontal */
-    .icon-toggle::after  { width: 2px; height: 18px; } /* vertical */
-    .icon-toggle[aria-expanded="true"]::after { transform: scaleY(0.1); opacity: 0; } /* morph to minus */
+    .icon-toggle::before { width:18px; height:2px; }  /* horizontal */
+    .icon-toggle::after  { width:2px;  height:18px; } /* vertical   */
+    .icon-toggle[aria-expanded="true"]::after { transform:scaleY(0.1); opacity:0; } /* morph to minus */
 
-    /* Full-card click hover/focus cues */
     [data-href]{ transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease; }
     [data-href]:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
-    [data-href]:focus-visible{
-      outline: 2px solid #C53D2F; outline-offset: 2px;
-      transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
-    }
+    [data-href]:focus-visible{ outline:2px solid #C53D2F; outline-offset:2px; transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
   </style>
 
   <!-- Canonical / Social -->
@@ -267,8 +252,18 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
+    // ---------- Subpath helper (GitHub Pages safe) ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    function toBase(u){
+      if (!u) return '';
+      if (/^https?:\/\//i.test(u)) return u;               // absolute URL -> leave as is
+      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
+      if (u.startsWith('/')) return basePath + u.slice(1);  // fix leading slash
+      return basePath + u;                                  // plain relative
+    }
+
     // Data
-    const POSTS_JSON_URL = '/posts.json';
+    const POSTS_JSON_URL = toBase('posts.json');
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
     // Elements
@@ -307,30 +302,30 @@
 
     function normalizeFromJson(p = {}){
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
-      const href = p.url || (slug ? `${slug}.html` : '#');
+      const href0 = p.url || (slug ? `${slug}.html` : '#');
       const coverStr = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src);
       return {
         title:   p.title || '',
         section: canonSection(p.section || 'Essay'),
-        href,
+        href:    toBase(href0),
         excerpt: p.excerpt || p.description || '',
         date:    p.date || new Date().toISOString(),
         read:    p.readMinutes || p.read || 0,
-        img:     coverStr || FALLBACK_IMG
+        img:     coverStr ? toBase(coverStr) : FALLBACK_IMG
       };
     }
     function normalizeFromAdmin(d = {}){
       const slug = (d.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
-      const href = `${slug || 'index'}.html`;
+      const href0 = `${slug || 'index'}.html`;
       const coverStr = typeof d.cover === 'string' ? d.cover : (d.cover && d.cover.src);
       return {
         title:   d.title || '',
         section: canonSection(d.section || 'Essay'),
-        href,
+        href:    toBase(href0),
         excerpt: d.excerpt || '',
         date:    d.date || new Date().toISOString(),
         read:    d.readMinutes || 0,
-        img:     coverStr || FALLBACK_IMG
+        img:     coverStr ? toBase(coverStr) : FALLBACK_IMG
       };
     }
     async function loadPosts(){
@@ -474,7 +469,7 @@
       });
     }
 
-    // SINGLE grid per section. No separate "rest" grid => no awkward gap.
+    // SINGLE grid per section.
     function groupSectionHTML(sectionName, posts){
       const count = posts.length;
       const isOpen = state.openSections.has(sectionName);
@@ -542,18 +537,15 @@
         });
       });
 
-      // Show more (persist)
       groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
           const name = (sectionEl?.id || '').replace(/^group-/, '');
           state.showMoreOpen.add(name);
-          // re-render that one section to keep scroll position tight
           rerenderOneSection(name);
         });
       });
 
-      // Show less (persist)
       groupsEl.querySelectorAll('[data-showless]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
@@ -563,7 +555,6 @@
         });
       });
 
-      // Make all injected cards clickable
       enableCardClicks(groupsEl);
     }
 
@@ -572,12 +563,10 @@
       const html = groupSectionHTML(name, groups[name] || []);
       const old = document.getElementById('group-' + name);
       if (old) {
-        // Keep current vertical position stable
         const top = old.getBoundingClientRect().top + window.scrollY;
         old.outerHTML = html;
-        // rebind just this section
         const fresh = document.getElementById('group-' + name);
-        // bind toggles/buttons inside
+
         fresh.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
           btn.addEventListener('click', () => {
             const sectionEl = btn.closest('section');
@@ -590,22 +579,13 @@
           });
         });
         fresh.querySelectorAll('[data-showmore]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            state.showMoreOpen.add(name);
-            rerenderOneSection(name);
-          });
+          btn.addEventListener('click', () => { state.showMoreOpen.add(name); rerenderOneSection(name); });
         });
         fresh.querySelectorAll('[data-showless]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            state.showMoreOpen.delete(name);
-            rerenderOneSection(name, { scrollIntoView: true });
-          });
+          btn.addEventListener('click', () => { state.showMoreOpen.delete(name); rerenderOneSection(name, { scrollIntoView: true }); });
         });
         enableCardClicks(fresh);
-        if (opts.scrollIntoView) {
-          // keep user near the section header when collapsing
-          window.scrollTo({ top: top - 16, behavior: 'smooth' });
-        }
+        if (opts.scrollIntoView) window.scrollTo({ top: top - 16, behavior: 'smooth' });
       }
     }
 
@@ -619,7 +599,7 @@
     function goToSearch(){
       const q = (qDesktop?.value || '').trim();
       const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
-      location.href = url;
+      location.href = toBase(url);
     }
     qHeaderBtn?.addEventListener('click', (e) => { e.preventDefault(); goToSearch(); });
     qDesktop?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }});
@@ -635,7 +615,6 @@
     (async function init(){
       ALL_POSTS = await loadPosts();
       renderAll();
-      // Open the first non-empty section by default
       for (const name of ORDER){
         const groupsNow = groupPosts();
         if ((groupsNow[name] || []).length > 0) {
