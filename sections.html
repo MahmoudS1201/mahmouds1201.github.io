@@ -57,7 +57,7 @@
     }
     input[type="search"]::-ms-clear { display: none; }
 
-    /* Animated + / − toggle button */
+    /* Animated + / − toggle button (BLACK) */
     .icon-toggle {
       position: relative;
       width: 36px; height: 36px;
@@ -65,40 +65,41 @@
       border: 1px solid rgba(0,0,0,.12);
       border-radius: 9999px;
       background: #fff;
+      color: #0E0E0E; /* make icon black */
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
       will-change: transform;
     }
     .icon-toggle:hover { box-shadow: 0 8px 20px rgba(0,0,0,.06); border-color: rgba(0,0,0,.2); }
     .icon-toggle:active { transform: scale(0.98); }
-
-    /* draw plus: one horizontal bar (::before) and one vertical bar (::after) */
     .icon-toggle::before,
     .icon-toggle::after {
-      content: ""; position: absolute; background: #C53D2F; /* accent */
+      content: ""; position: absolute; background: currentColor; /* use currentColor (black) */
       border-radius: 1px;
       transition: transform .18s ease, opacity .18s ease;
     }
-    /* horizontal bar */
-    .icon-toggle::before { width: 18px; height: 2px; }
-    /* vertical bar */
-    .icon-toggle::after  { width: 2px; height: 18px; }
-
-    /* when expanded: hide/scale the vertical bar for a smooth morph to minus */
-    .icon-toggle[aria-expanded="true"]::after {
-      transform: scaleY(0.1);
-      opacity: 0;
-      transform: scale(0.98) rotate(90deg);
-    }
+    .icon-toggle::before { width: 18px; height: 2px; } /* horizontal */
+    .icon-toggle::after  { width: 2px; height: 18px; } /* vertical */
+    .icon-toggle[aria-expanded="true"]::after { transform: scaleY(0.1); opacity: 0; } /* morph to minus */
 
     .icon-toggle .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
 
-    /* Make + / − icon black */
-    .icon-toggle { color: #0E0E0E; }               /* or #000 */
-    .icon-toggle::before,
-    .icon-toggle::after { background: currentColor; }
+    /* Full-card click hover/focus cues (matches index.html behavior) */
+    [data-href]{
+      transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+    }
+    [data-href]:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    }
+    [data-href]:focus-visible{
+      outline: 2px solid #C53D2F;
+      outline-offset: 2px;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    }
   </style>
 
   <!-- Canonical / Social (update domain when live) -->
@@ -312,7 +313,6 @@
       catch { return iso; }
     }
 
-    // Canonicalize plural/variant section labels to match tabs
     function canonSection(s=''){
       const x = String(s).trim().toLowerCase();
       if (x === 'essays') return 'Essay';
@@ -324,7 +324,6 @@
       return x ? x.charAt(0).toUpperCase() + x.slice(1) : 'Essay';
     }
 
-    // highlight that ignores empty/one-letter terms
     function highlight(text, termsOrString){
       const raw = Array.isArray(termsOrString) ? termsOrString.join(' ') : (termsOrString || '');
       const terms = raw.split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);
@@ -336,7 +335,6 @@
 
     const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-    // Normalizers handle cover as string OR {src}
     function normalizeFromJson(p = {}){
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = p.url || (slug ? `${slug}.html` : '#');
@@ -385,11 +383,35 @@
       return items;
     }
 
+    // ---------- Full-card clickable helper (like index.html) ----------
+    function enableCardClicks(root=document){
+      root.querySelectorAll('[data-href]').forEach(el => {
+        if (el.__clickBound) return;
+        el.__clickBound = true;
+        el.classList.add('cursor-pointer');
+        el.setAttribute('role','link');
+        el.setAttribute('tabindex','0');
+        el.addEventListener('click', e => {
+          if (e.target.closest && e.target.closest('a')) return; // let real links work
+          const url = el.getAttribute('data-href');
+          if (url) window.location.href = url;
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const url = el.getAttribute('data-href');
+            if (url) window.location.href = url;
+          }
+        });
+      });
+    }
+
+    // ---------- Card template now uses data-href ----------
     function cardHTML(p, query){
       const t = highlight(escapeHtml(p.title), query);
       const e = highlight(escapeHtml(p.excerpt || ''), query);
       return `
-      <article class="card overflow-hidden flex flex-col">
+      <article class="card overflow-hidden flex flex-col" data-href="${p.href}">
         <img class="thumb" src="${p.img}" alt="${escapeHtml(p.title)}">
         <div class="p-5 flex-1 flex flex-col">
           <div class="kicker">${escapeHtml(p.section)}</div>
@@ -407,8 +429,8 @@
     let state = {
       q: '',
       sort: 'new',
-      openSections: new Set(),   // keeps which groups are expanded
-      showMoreOpen: new Set()    // keeps which groups had "Show more" revealed
+      openSections: new Set(),   // which groups expanded
+      showMoreOpen: new Set()    // which groups revealed extras
     };
 
     const ORDER = ['Essay','Interview','Visual','Review','Community','Memoirs'];
@@ -470,13 +492,10 @@
         `;
       }).join('');
 
-      // tile jump + ensure state marks it open
       tilesEl.querySelectorAll('[data-goto]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-goto');
-          // mark open in state so future renders keep it open
-          state.openSections.add(id);
-          // scroll to existing DOM and open if currently closed
+          state.openSections.add(id); // persist open
           const el = document.getElementById('group-' + id);
           if (el) {
             el.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -547,11 +566,11 @@
     function renderGroups(groups){
       groupsEl.innerHTML = ORDER.map(s => groupSectionHTML(s, groups[s] || [])).join('');
 
-      // Accordion toggles: maintain state.openSections
+      // Bind +/− toggles (persist open state)
       groupsEl.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
-          const idAttr = sectionEl?.id || '';       // e.g., "group-Essay"
+          const idAttr = sectionEl?.id || '';       // "group-Essay"
           const name = idAttr.replace(/^group-/, ''); // "Essay"
 
           const expanded = btn.getAttribute('aria-expanded') === 'true';
@@ -564,7 +583,7 @@
         });
       });
 
-      // Show more: maintain state.showMoreOpen
+      // Bind "Show more" (persist)
       groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
@@ -578,6 +597,9 @@
           }
         });
       });
+
+      // Make all injected cards clickable
+      enableCardClicks(groupsEl);
     }
 
     function renderAll(){
@@ -608,12 +630,12 @@
     (async function init(){
       ALL_POSTS = await loadPosts();
       renderAll();
-      // Open the first non-empty section by default (and persist across sorts)
+      // Open the first non-empty section by default (persist across sorts)
       for (const name of ORDER){
         const groupsNow = groupPosts();
         if ((groupsNow[name] || []).length > 0) {
           state.openSections.add(name);
-          renderAll(); // re-render with the section open from state
+          renderAll();
           break;
         }
       }
