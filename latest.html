@@ -1,3 +1,5 @@
+Here’s the full file with just the logic change so the newest article added (by date, already sorted in init()) is always used for the hero — regardless of filters and without featured override. I only touched the hero selection in render() (now uses ALL[0]) and removed the unused pickHero() helper.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,7 +151,7 @@
     </div>
   </section>
 
-  <!-- Hero (featured/newest overall) -->
+  <!-- Hero (newest overall) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <article id="hero" class="grid lg:grid-cols-3 gap-8 items-stretch card hidden" data-href="#">
       <div class="lg:col-span-2">
@@ -463,11 +465,6 @@
       catch { return false; }
     };
 
-    function pickHero(list){
-      const featured = list.find(p => p.featured === true);
-      return featured || list[0];
-    }
-
     function bucketLabel(d){
       const now = new Date();
       const dt = new Date(d || 0);
@@ -647,9 +644,11 @@
       const pageItems = filtered.slice(start, end);
 
       // Hero visible only on page 1 and when there are posts
-      const heroVisible = (state.page === 1 && total > 0);
+      const heroVisible = (state.page === 1 && ALL.length > 0);
       if (heroVisible){
-        const h = pickHero(filtered);
+        // NEWEST OVERALL: always use ALL[0], which is sorted by date desc in init()
+        const h = ALL[0];
+
         heroImg.src = h.cover; heroImg.alt = h.title || 'Latest hero image';
         heroImg.fetchpriority = 'high';
         heroSection.textContent = h.section || 'Latest';
@@ -759,6 +758,7 @@
       }
       if (!data) data = [];
 
+      // Sort newest first by publish date
       ALL = data.map(normalize).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
       render();
     }
