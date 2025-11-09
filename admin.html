@@ -1016,34 +1016,6 @@
               });
             })();
 
-            (async function() {
-              const slug = location.pathname.split('/').pop().replace(/\.html$/, '');
-              try {
-                const res = await fetch('posts.json', { cache: 'no-store' });
-                const posts = await res.json();
-                const idx = posts.findIndex(p => p.slug === slug);
-                if (idx === -1) return;
-
-                const prev = posts[idx + 1]; // older
-                const next = posts[idx - 1]; // newer
-                const prevEl = document.getElementById('prev-article');
-                const nextEl = document.getElementById('next-article');
-
-                if (prev && prevEl) {
-                  prevEl.href = `${prev.slug}.html`;
-                  prevEl.textContent = `← ${prev.title}`;
-                } else if (prevEl) prevEl.style.visibility = 'hidden';
-
-                if (next && nextEl) {
-                  nextEl.href = `${next.slug}.html`;
-                  nextEl.textContent = `${next.title} →`;
-                } else if (nextEl) nextEl.style.visibility = 'hidden';
-              } catch (e) {
-                console.warn('Nav fetch failed:', e);
-              }
-            })();
-
-
             // Back to top visibility + behavior
             const backTop = document.getElementById('backTop');
             const toggleTop = () => {
