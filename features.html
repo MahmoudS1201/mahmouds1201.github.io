@@ -150,7 +150,7 @@
     </div>
   </section>
 
-  <!-- Hero featured story -->
+  <!-- Hero featured story (now fully clickable) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <article class="grid lg:grid-cols-3 gap-8 items-stretch card" id="heroWrap">
       <div class="lg:col-span-2">
@@ -365,6 +365,36 @@
       return text.replace(pat, '<mark class="hl">$1</mark>');
     }
 
+    // Make any element behave like a full-card link (used for hero too)
+    function setStretchedClick(el, url){
+      if (!el || !url) return;
+      el.setAttribute('data-href', url);
+      el.setAttribute('role','link');
+      el.setAttribute('tabindex','0');
+      if (el.__clickBound) return;
+      el.__clickBound = true;
+      el.addEventListener('click', (e) => {
+        if (e.target.closest && e.target.closest('a')) return;
+        const to = el.getAttribute('data-href');
+        if (to) window.location.href = to;
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const to = el.getAttribute('data-href');
+          if (to) window.location.href = to;
+        }
+      });
+      el.addEventListener('mouseenter', () => {
+        const to = el.getAttribute('data-href');
+        if (!to) return;
+        const link = document.createElement('link');
+        link.rel = 'prefetch'; link.href = to;
+        document.head.appendChild(link);
+        setTimeout(()=>link.remove(), 4000);
+      });
+    }
+
     /* ---------- Data ---------- */
     let LOAD_ERROR = false;
     async function fetchPostsJson(){
@@ -385,6 +415,7 @@
         return null;
       }
     }
+
     function loadPublishedLocal(){
       const out = [];
       for (let i=0;i<localStorage.length;i++){
@@ -395,6 +426,7 @@
       }
       return out;
     }
+
     function normalize(p){
       const href = p.url || (p.slug ? `${p.slug}.html` : '#');
       const coverSrc = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src ? p.cover.src : '');
@@ -426,8 +458,13 @@
       const d = document.getElementById('heroDate'); d.textContent = fmtDate(post.date); d.dateTime = post.date || '';
       document.getElementById('heroExcerpt').textContent = post.excerpt || '';
       document.getElementById('heroRead').textContent = post.read ? `${post.read} min read` : '';
-      document.getElementById('heroLink').href = post.href || '#';
+      const href = post.href || '#';
+      document.getElementById('heroLink').href = href;
+
+      // Make the ENTIRE hero card clickable
+      setStretchedClick(document.getElementById('heroWrap'), href);
     }
+
     function buildCard(post, terms){
       const tpl = document.getElementById('cardTemplate').content.cloneNode(true);
       const img = tpl.querySelector('img');
@@ -450,33 +487,9 @@
       if (post.read) meta.push(`${post.read} min`);
       tpl.querySelector('.meta').textContent = meta.join(' • ');
 
-      // make the WHOLE card clickable
+      // WHOLE card clickable
       const article = tpl.querySelector('article.card');
-      article.setAttribute('data-href', post.href || '#');
-      article.setAttribute('role','link');
-      article.setAttribute('tabindex','0');
-
-      // stretched-click behavior + keyboard + prefetch
-      article.addEventListener('click', (e) => {
-        if (e.target.closest && e.target.closest('a')) return;
-        const url = article.getAttribute('data-href');
-        if (url) window.location.href = url;
-      });
-      article.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const url = article.getAttribute('data-href');
-          if (url) window.location.href = url;
-        }
-      });
-      article.addEventListener('mouseenter', () => {
-        const url = article.getAttribute('data-href');
-        if (!url) return;
-        const link = document.createElement('link');
-        link.rel = 'prefetch'; link.href = url;
-        document.head.appendChild(link);
-        setTimeout(()=>link.remove(), 4000);
-      });
+      setStretchedClick(article, post.href || '#');
 
       // inline highlight if needed
       if (terms && terms.length){
@@ -606,41 +619,6 @@
       init();
     });
 
-    function setStretchedClick(el, url){
-      if (!el || !url) return;
-      el.setAttribute('data-href', url);
-      el.setAttribute('role','link');
-      el.setAttribute('tabindex','0');
-
-      if (el.__clickBound) return; // avoid double-binding
-      el.__clickBound = true;
-
-      el.addEventListener('click', (e) => {
-        // let inner <a> clicks behave normally
-        if (e.target.closest && e.target.closest('a')) return;
-        const to = el.getAttribute('data-href');
-        if (to) window.location.href = to;
-      });
-
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const to = el.getAttribute('data-href');
-          if (to) window.location.href = to;
-        }
-      });
-
-      el.addEventListener('mouseenter', () => {
-        const to = el.getAttribute('data-href');
-        if (!to) return;
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = to;
-        document.head.appendChild(link);
-        setTimeout(()=>link.remove(), 4000);
-      });
-    }
-
     /* ---------- Init ---------- */
     async function init(){
       let data = await fetchPostsJson();
@@ -658,8 +636,7 @@
 
       if (FEATURED.length) {
         document.getElementById('heroWrap').classList.remove('hidden');
-        fillHero(FEATURED[0]);
-        setStretchedClick(document.getElementById('heroWrap'), post.href || '#');
+        fillHero(FEATURED[0]); // also makes hero clickable
       } else {
         document.getElementById('heroWrap').classList.add('hidden');
       }
