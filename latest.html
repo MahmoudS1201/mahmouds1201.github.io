@@ -54,13 +54,17 @@
     [data-href]{ transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease; }
     [data-href]:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
     [data-href]:focus-visible{ outline:2px solid #C53D2F; outline-offset:2px; transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
+
+    @media (prefers-reduced-motion: reduce){
+      [data-href]{ transition: none !important; }
+    }
   </style>
 
   <!-- Canonical / Social -->
   <link rel="canonical" href="https://example.com/latest" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Latest — Camila Tiburcio Rubio">
-  <meta property="og:description" content="Fresh essays, interviews, reviews, and visual stories">
+  <meta property="og:description" content="Fresh essays, interviews, reviews, and visual stories.">
   <meta property="og:url" content="https://example.com/latest">
   <meta property="og:image" content="https://picsum.photos/1200/630?latest">
   <meta name="twitter:card" content="summary_large_image">
@@ -198,12 +202,28 @@
     <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
     <!-- Pagination -->
-    <div class="mt-6 flex items-center justify-between">
+    <div id="pager" class="mt-6 flex items-center justify-between">
       <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
       <div class="text-sm text-ink-300">
         Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
       </div>
       <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
+    </div>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden text-ink-500 text-center py-16">
+      <p class="text-lg">No posts match your filters.</p>
+      <button id="resetFilters" class="mt-4 px-3 py-2 rounded-xl border border-black/10 bg-white hover:bg-cream">
+        Clear filters
+      </button>
+    </div>
+
+    <!-- Error state -->
+    <div id="errorState" class="hidden text-center py-16 text-red-600">
+      <p class="text-lg font-semibold">Couldn’t load posts. Please try again later.</p>
+      <button id="retryBtn" class="mt-4 px-3 py-2 rounded-xl border border-red-200 bg-white hover:bg-red-50">
+        Retry
+      </button>
     </div>
 
     <!-- Card template -->
@@ -315,15 +335,28 @@
 
     // ---------- Data loading ----------
     const FALLBACK = 'https://picsum.photos/seed/ctr-latest/1200/675';
+    let LOAD_ERROR = false;
 
     async function fetchPostsJson(){
       try{
         const res = await fetch(toBase('posts.json'), { cache:'no-store' });
         if(!res.ok) throw new Error('bad status');
         const data = await res.json();
+        LOAD_ERROR = false;
+        document.getElementById('errorState').classList.add('hidden');
         return Array.isArray(data) ? data : null;
-      }catch{ return null; }
+      }catch{
+        LOAD_ERROR = true;
+        // show error, hide main lists
+        document.getElementById('errorState').classList.remove('hidden');
+        document.getElementById('grid').classList.add('hidden');
+        document.getElementById('pager').classList.add('hidden');
+        document.getElementById('emptyState').classList.add('hidden');
+        document.getElementById('hero').classList.add('hidden');
+        return null;
+      }
     }
+
     function loadPublishedLocal(){
       const out=[];
       for(let i=0;i<localStorage.length;i++){
@@ -360,6 +393,7 @@
         read:    p.readMinutes || p.read || '',
         tags:    tagsArr,
         featured: Boolean(p.featured),
+        updatedAt: p.updatedAt || '',
         cover:   coverStr ? toBase(coverStr) : FALLBACK
       };
     }
@@ -388,6 +422,10 @@
     const countTotalEl = document.getElementById('countTotal');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+
+    const pager = document.getElementById('pager');
+    const emptyState = document.getElementById('emptyState');
+    const errorState = document.getElementById('errorState');
 
     // ---------- State ----------
     let ALL = [];
@@ -432,6 +470,9 @@
     function buildCard(p, term){
       const node = tpl.content.cloneNode(true);
       const img = node.querySelector('img'); img.src = p.cover; img.alt = `${p.title} cover`;
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.sizes = '(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw';
+
       const sectionEl = node.querySelector('.sectionLabel');
       sectionEl.textContent = p.section || 'Article';
 
@@ -474,6 +515,14 @@
             const url = el.getAttribute('data-href');
             if (url) window.location.href = url;
           }
+        });
+        el.addEventListener('mouseenter', () => {
+          const url = el.getAttribute('data-href');
+          if (!url || !('requestIdleCallback' in window)) return;
+          const link = document.createElement('link');
+          link.rel = 'prefetch'; link.href = url;
+          document.head.appendChild(link);
+          setTimeout(()=>link.remove(), 5000);
         });
       });
     }
@@ -551,11 +600,21 @@
 
     // ---------- Render ----------
     function render(){
+      // If we’re in an error state, keep error visible and skip rendering lists
+      if (LOAD_ERROR) {
+        errorState.classList.remove('hidden');
+        gridEl.classList.add('hidden');
+        pager.classList.add('hidden');
+        hero.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        return;
+      }
+
       const filtered = applyFilters(ALL);
       const total = filtered.length;
       const perPage = state.pageSize;
 
-      // normal pages (hero is ALSO included in grid on page 1)
+      // pagination calc
       const pages = Math.max(1, Math.ceil(total / perPage));
       if (state.page > pages) state.page = pages;
 
@@ -568,6 +627,7 @@
       if (heroVisible){
         const h = pickHero(filtered);
         heroImg.src = h.cover; heroImg.alt = h.title || 'Latest hero image';
+        heroImg.fetchpriority = 'high';
         heroSection.textContent = h.section || 'Latest';
         heroDate.textContent = fmtDate(h.date); heroDate.dateTime = h.date || '';
         heroTitle.innerHTML = highlight(h.title, state.q);
@@ -576,12 +636,9 @@
         heroLink.href = h.href || '#';
         hero.setAttribute('data-href', h.href || '#');
 
-        // add NEW badge to hero if applicable
-        // place it after the date
+        // NEW badge near the date
+        const old = hero.querySelector('[data-hero-new]'); old?.remove();
         if (isNew(h.date)) {
-          // remove previous badge if multiple renders
-          const old = hero.querySelector('[data-hero-new]');
-          old?.remove();
           const badge = document.createElement('span');
           badge.setAttribute('data-hero-new','');
           badge.className = 'ml-2 px-2 py-0.5 text-[10px] rounded-full bg-accent/10 text-accent border border-accent/30';
@@ -599,13 +656,25 @@
       renderGridWithGroups(pageItems, term);
       enableCardClicks(gridEl);
 
-      // footer stats + buttons
+      // Show/hide empty state
+      const empty = pageItems.length === 0;
+      emptyState.classList.toggle('hidden', !empty);
+      gridEl.classList.toggle('hidden', empty);
+
+      // footer stats + buttons (hide if error/empty with zero total)
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length); // accurate; hero is included in pageItems
+      countShownEl.textContent = String(pageItems.length); // accurate; hero is included
       countTotalEl.textContent = String(total);
+
+      // if there are no posts at all, hide pager; otherwise show
+      pager.classList.toggle('hidden', total === 0);
+
       prevBtn.disabled = state.page <= 1;
       nextBtn.disabled = state.page >= pages;
+
+      // ensure error state is hidden when rendering succeeds
+      errorState.classList.add('hidden');
 
       stateToURL();
     }
@@ -624,10 +693,36 @@
     prevBtn.addEventListener('click', ()=>{ state.page = Math.max(1, state.page - 1); render(); });
     nextBtn.addEventListener('click', ()=>{ state.page = state.page + 1; render(); });
 
-    // ---------- Init ----------
-    (async function init(){
+    // Reset filters (empty state)
+    document.getElementById('resetFilters')?.addEventListener('click', () => {
+      state = { filter: 'all', sort: 'new', page: 1, pageSize: 9, q: '' };
+      chips.forEach(c => {
+        const on = c.dataset.filter === 'all';
+        c.dataset.active = on;
+        c.setAttribute('aria-pressed', String(on));
+      });
+      sortSel.value = 'new';
+      qInline.value = '';
+      pageSizeSel.value = '9';
+      render();
+    });
+
+    // Retry (error state)
+    document.getElementById('retryBtn')?.addEventListener('click', () => {
+      errorState.classList.add('hidden');
+      LOAD_ERROR = false;
+      init();
+    });
+
+    // ---------- Init (named so Retry can call it) ----------
+    async function init(){
       stateFromURL();
+
       let data = await fetchPostsJson();
+
+      // If fetch failed, keep error visible and bail out early
+      if (LOAD_ERROR) return;
+
       if (!data || !data.length){
         const local = loadPublishedLocal();
         if (local.length) data = local;
@@ -636,7 +731,9 @@
 
       ALL = data.map(normalize).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
       render();
-    })();
+    }
+
+    init();
   </script>
 </body>
 </html>
