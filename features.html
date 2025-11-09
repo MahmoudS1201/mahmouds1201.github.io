@@ -62,7 +62,7 @@
   <link rel="canonical" href="https://example.com/features" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Features — Camila Tiburcio Rubio">
-  <meta property="og:description" content="Featured essays, interviews, reviews, and visual stories.">
+  <meta property="og:description" content="Featured essays, interviews, reviews, and visual stories">
   <meta property="og:url" content="https://example.com/features">
   <meta property="og:image" content="https://picsum.photos/1200/630?features">
   <meta name="twitter:card" content="summary_large_image">
@@ -95,17 +95,18 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search (HEADER search — routes to /search) -->
-        <div class="hidden md:flex items-center gap-4 shrink-0">
-          <label class="relative" aria-label="Search features">
-            <input id="q"
-                   type="search"
-                   placeholder="Search…"
-                   class="w-64 md:w-72 lg:w-80 pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
-            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" ...></svg>
-            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Search">↵</button>
+        <!-- Desktop search (IDENTICAL to Latest) -->
+        <div class="hidden md:flex items-center gap-4">
+          <label class="relative" aria-label="Search site">
+            <input id="q-desktop" type="search" placeholder="Search…"
+                   class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/>
+            </svg>
+            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Go to search">↵</button>
           </label>
         </div>
+
         <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
@@ -125,7 +126,7 @@
         <a class="block u-underline" href="sections.html">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
         <!-- Mobile HEADER search — routes to /search -->
-        <label class="relative block mt-3" aria-label="Search features">
+        <label class="relative block mt-3" aria-label="Search site">
           <input id="q-mobile" type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
         </label>
@@ -152,7 +153,7 @@
     </div>
   </section>
 
-  <!-- Hero featured story (now fully clickable) -->
+  <!-- Hero featured story (fully clickable) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <article class="grid lg:grid-cols-3 gap-8 items-stretch card" id="heroWrap">
       <div class="lg:col-span-2">
@@ -648,21 +649,30 @@
 
     init();
 
-    /* ---------- Header search → /search (route only) ---------- */
+    /* ---------- Header search → /search (IDENTICAL binding to Latest) ---------- */
     function goSearch(q){
       const term = (q || '').trim();
       const url = basePath + (term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`);
       window.location.href = url;
     }
-    function bindHeaderSearch(input, btn){
-      if (!input) return;
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); goSearch(input.value); }
-      });
-      btn?.addEventListener('click', (e) => { e.preventDefault(); goSearch(input.value); });
-    }
-    bindHeaderSearch(document.getElementById('q'), document.getElementById('qHeaderBtn'));
-    bindHeaderSearch(document.getElementById('q-mobile'), null);
+
+    // Same listeners as latest.html
+    document.getElementById('qHeaderBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      goSearch(document.getElementById('q-desktop').value);
+    });
+    document.getElementById('q-desktop')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        goSearch(e.target.value);
+      }
+    });
+    document.getElementById('q-mobile')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        goSearch(e.target.value);
+      }
+    });
   </script>
 </body>
 </html>
