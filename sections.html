@@ -57,23 +57,38 @@
     }
     input[type="search"]::-ms-clear { display: none; }
 
-    /* Icon toggle: shows + when collapsed and − when expanded */
+    /* Animated + / − toggle button */
     .icon-toggle {
+      position: relative;
       width: 36px; height: 36px;
       display: inline-flex; align-items: center; justify-content: center;
       border: 1px solid rgba(0,0,0,.12);
       border-radius: 9999px;
       background: #fff;
-      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
+      will-change: transform;
     }
     .icon-toggle:hover { box-shadow: 0 8px 20px rgba(0,0,0,.06); border-color: rgba(0,0,0,.2); }
-    .icon-toggle:active { transform: scale(0.97); }
-    .icon-toggle::before {
-      content: "+";
-      font-size: 18px; line-height: 1; color: #C53D2F; /* accent */
-      transform: translateY(-1px);
+    .icon-toggle:active { transform: scale(0.98); }
+
+    /* draw plus: one horizontal bar (::before) and one vertical bar (::after) */
+    .icon-toggle::before,
+    .icon-toggle::after {
+      content: ""; position: absolute; background: #C53D2F; /* accent */
+      border-radius: 1px;
+      transition: transform .18s ease, opacity .18s ease;
     }
-    .icon-toggle[aria-expanded="true"]::before { content: "−"; }
+    /* horizontal bar */
+    .icon-toggle::before { width: 18px; height: 2px; }
+    /* vertical bar */
+    .icon-toggle::after  { width: 2px; height: 18px; }
+
+    /* when expanded: hide/scale the vertical bar for a smooth morph to minus */
+    .icon-toggle[aria-expanded="true"]::after {
+      transform: scaleY(0.1);
+      opacity: 0;
+    }
+
     .icon-toggle .sr-only {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
@@ -178,7 +193,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Filter titles</label>
-        <input id="q-inline" type="search" placeholder="Filter titles, descriptions..." class="px-3 py-2 rounded-xl border border-black/10 bg-white w-72 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+        <input id="q-inline" type="search" placeholder="Filter titles… (highlights + counts update)" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-72 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
       </div>
       <p class="text-xs text-ink-300">Tip: Click a tile to jump to its section.</p>
     </div>
@@ -383,7 +398,12 @@
 
     // -------- State / constants --------
     let ALL_POSTS = [];
-    let state = { q: '', sort: 'new' };
+    let state = {
+      q: '',
+      sort: 'new',
+      openSections: new Set(),   // keeps which groups are expanded
+      showMoreOpen: new Set()    // keeps which groups had "Show more" revealed
+    };
 
     const ORDER = ['Essay','Interview','Visual','Review','Community','Memoirs'];
     const DESCRIPTIONS = {
@@ -444,10 +464,13 @@
         `;
       }).join('');
 
-      // tile jump + auto-expand
+      // tile jump + ensure state marks it open
       tilesEl.querySelectorAll('[data-goto]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-goto');
+          // mark open in state so future renders keep it open
+          state.openSections.add(id);
+          // scroll to existing DOM and open if currently closed
           const el = document.getElementById('group-' + id);
           if (el) {
             el.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -462,6 +485,9 @@
 
     function groupSectionHTML(sectionName, posts){
       const count = posts.length;
+      const isOpen = state.openSections.has(sectionName);
+      const hasShowMore = state.showMoreOpen.has(sectionName);
+
       const preview = posts.slice(0, 4);
       const rest    = posts.slice(4);
 
@@ -470,10 +496,10 @@
         : `<p class="text-ink-300 mt-4">No posts yet.</p>`;
 
       const restGrid = rest.length
-        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 hidden" data-rest>${rest.map(p => cardHTML(p, state.q)).join('')}</div>`
+        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 ${hasShowMore ? '' : 'hidden'}" data-rest>${rest.map(p => cardHTML(p, state.q)).join('')}</div>`
         : '';
 
-      const moreBtn = rest.length
+      const moreBtn = (rest.length && !hasShowMore)
         ? `<button class="mt-4 px-4 py-2 rounded-full border border-black/10 hover:bg-white text-sm" data-showmore>
              Show ${rest.length} more
            </button>`
@@ -492,7 +518,7 @@
               <div class="mt-2">
                 <button class="icon-toggle"
                         data-accordion-toggle
-                        aria-expanded="false"
+                        aria-expanded="${isOpen ? 'true' : 'false'}"
                         aria-controls="body-${sectionName}">
                   <span class="sr-only">Toggle ${sectionName} section</span>
                 </button>
@@ -500,7 +526,7 @@
             </div>
           </div>
 
-          <div id="body-${sectionName}" class="mt-2 hidden">
+          <div id="body-${sectionName}" class="mt-2 ${isOpen ? '' : 'hidden'}">
             ${previewGrid}
             ${restGrid}
             ${moreBtn}
@@ -515,22 +541,33 @@
     function renderGroups(groups){
       groupsEl.innerHTML = ORDER.map(s => groupSectionHTML(s, groups[s] || [])).join('');
 
-      // Accordion toggles (icon-based)
+      // Accordion toggles: maintain state.openSections
       groupsEl.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
         btn.addEventListener('click', () => {
+          const sectionEl = btn.closest('section');
+          const idAttr = sectionEl?.id || '';       // e.g., "group-Essay"
+          const name = idAttr.replace(/^group-/, ''); // "Essay"
+
           const expanded = btn.getAttribute('aria-expanded') === 'true';
           btn.setAttribute('aria-expanded', String(!expanded));
-          const body = btn.closest('section').querySelector('[id^="body-"]');
+          const body = sectionEl.querySelector('[id^="body-"]');
           if (body) body.classList.toggle('hidden');
+
+          if (!expanded) state.openSections.add(name);
+          else state.openSections.delete(name);
         });
       });
 
-      // Show more buttons
+      // Show more: maintain state.showMoreOpen
       groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
         btn.addEventListener('click', () => {
-          const rest = btn.closest('section').querySelector('[data-rest]');
+          const sectionEl = btn.closest('section');
+          const idAttr = sectionEl?.id || '';
+          const name = idAttr.replace(/^group-/, '');
+          const rest = sectionEl.querySelector('[data-rest]');
           if (rest) {
             rest.classList.remove('hidden');
+            state.showMoreOpen.add(name);
             btn.remove();
           }
         });
@@ -565,12 +602,12 @@
     (async function init(){
       ALL_POSTS = await loadPosts();
       renderAll();
-      // Open the first non-empty section to emphasize content
+      // Open the first non-empty section by default (and persist across sorts)
       for (const name of ORDER){
-        const groups = groupPosts();
-        if ((groups[name] || []).length > 0) {
-          const first = document.querySelector(`#group-${name} [data-accordion-toggle]`);
-          if (first && first.getAttribute('aria-expanded') === 'false') first.click();
+        const groupsNow = groupPosts();
+        if ((groupsNow[name] || []).length > 0) {
+          state.openSections.add(name);
+          renderAll(); // re-render with the section open from state
           break;
         }
       }
