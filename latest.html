@@ -32,38 +32,28 @@
   <style>
     .u-underline { position: relative; }
     .u-underline::after {
-      content: ''; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%;
-      background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+      content:''; position:absolute; left:0; bottom:-2px; height:2px; width:100%;
+      background:currentColor; transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
     }
-    .u-underline:hover::after { transform: scaleX(1); }
+    .u-underline:hover::after { transform:scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
-    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
+    .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
+
     .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
 
-    .list-row { display:flex; flex-direction:column; gap:1rem; padding:1.25rem; }
-    @media (min-width: 640px){ .list-row{ flex-direction:row; padding:1.75rem; } }
-    .thumb { width:100%; height:160px; object-fit:cover; border-radius:0.75rem; }
-    @media (min-width: 640px){ .thumb{ width:15rem; height:10rem; } }
+    mark.hl { background: rgba(197,61,47,.22); color:inherit; padding:0 .15em; border-radius:.25rem; }
 
-    /* inline-search highlight */
-    mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
-
-        /* Hide native blue clear (Safari/Chrome/Edge) */
+    /* Hide native clear buttons (Safari/Chrome/Edge/IE legacy) */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-      -webkit-appearance: none;
-      appearance: none;
-      display: none;
-    }
-    /* Hide native clear (IE/Edge legacy) */
-    input[type="search"]::-ms-clear { display: none; }
+    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
+    input[type="search"]::-ms-clear { display:none; }
   </style>
 
-  <!-- Canonical / Social (update domain when live) -->
+  <!-- Canonical / Social -->
   <link rel="canonical" href="https://example.com/latest" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Latest — Camila Tiburcio Rubio">
@@ -101,12 +91,12 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search (HEADER search — routes to /search) -->
+        <!-- Desktop HEADER search → search.html -->
         <div class="hidden md:flex items-center gap-4">
-          <label class="relative" aria-label="Search latest">
-            <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <label class="relative" aria-label="Search site">
+            <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
             <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
-            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Search">↵</button>
+            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Go to search">↵</button>
           </label>
         </div>
 
@@ -128,8 +118,8 @@
         <a class="block u-underline font-semibold text-accent" href="latest.html" aria-current="page">Latest</a>
         <a class="block u-underline" href="sections.html">Sections</a>
         <a class="block u-underline" href="about2.html">About</a>
-        <!-- Mobile HEADER search — routes to /search -->
-        <label class="relative block mt-3" aria-label="Search latest">
+        <!-- Mobile HEADER search → search.html -->
+        <label class="relative block mt-3" aria-label="Search site">
           <input id="q-mobile" type="search" placeholder="Search..." class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
           <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
         </label>
@@ -150,15 +140,40 @@
         <select id="sort" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
           <option value="new">Newest</option>
           <option value="old">Oldest</option>
-          <option value="read">Read time</option>
           <option value="title">Title (A–Z)</option>
+          <option value="read">Read time</option>
         </select>
       </div>
     </div>
   </section>
 
+  <!-- Hero (newest overall) -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <article id="hero" class="grid lg:grid-cols-3 gap-8 items-stretch card hidden">
+      <div class="lg:col-span-2">
+        <img id="heroImg" class="w-full h-full object-cover aspect-[16/9]" src="" alt="Latest hero image">
+      </div>
+      <div class="p-6 sm:p-8 flex flex-col">
+        <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
+          <span id="heroSection" class="bg-accent/10 text-accent px-2.5 py-1 rounded-full">Latest</span>
+          <time id="heroDate" class="text-ink-300" datetime=""></time>
+        </div>
+        <h2 id="heroTitle" class="font-serif text-3xl mt-3 leading-tight"></h2>
+        <p id="heroExcerpt" class="text-ink-500 mt-3"></p>
+        <div class="mt-auto pt-5 flex items-center gap-4">
+          <img id="heroAvatar" class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/100?img=15" alt="Author avatar"/>
+          <div>
+            <p class="text-sm font-medium">By <a class="u-underline" href="about2.html">Camila Tiburcio Rubio</a></p>
+            <p id="heroRead" class="text-xs text-ink-300"></p>
+          </div>
+        </div>
+        <a id="heroLink" href="#" class="mt-4 inline-block u-underline">Read the story →</a>
+      </div>
+    </article>
+  </section>
+
   <!-- Controls -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <!-- Section chips -->
       <div class="flex flex-wrap gap-2">
@@ -171,65 +186,53 @@
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
 
-      <!-- INLINE page search (filters THIS page only) + page size -->
+      <!-- Inline search (filters this page only) + per-page -->
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Search title or tags</label>
         <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
         <label class="text-sm text-ink-500" for="pageSize">Per page</label>
         <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
-          <option>5</option>
-          <option selected>9</option>
-          <option>12</option>
-          <option>18</option>
+          <option>6</option><option selected>9</option><option>12</option><option>18</option>
         </select>
       </div>
     </div>
   </section>
 
-  <!-- List + Sidebar -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
-    <!-- List -->
-    <div class="lg:col-span-2">
-      <div id="list" class="card divide-y divide-black/10">
-        <!-- rows injected by JS -->
-      </div>
+  <!-- Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
 
-      <!-- Pagination -->
-      <div class="mt-6 flex items-center justify-between">
-        <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
-        <div class="text-sm text-ink-300">
-          Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
-        </div>
-        <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
+    <!-- Pagination -->
+    <div class="mt-6 flex items-center justify-between">
+      <button id="prevBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">← Newer</button>
+      <div class="text-sm text-ink-300">
+        Page <span id="pageNum">1</span> of <span id="pageTotal">1</span> • <span id="countShown">0</span>/<span id="countTotal">0</span> posts
       </div>
+      <button id="nextBtn" class="px-4 py-2 rounded-full border border-black/10 hover:bg-white disabled:opacity-40 disabled:pointer-events-none">Older →</button>
     </div>
 
-    <!-- Sidebar -->
-    <aside class="space-y-6">
-      <div class="card p-6">
-        <h3 class="font-serif text-xl">About</h3>
-        <p class="text-ink-500 mt-2">A blog documenting and expanding upon Camila’s research, interests, and experiences.</p>
-        <a href="about2.html" class="mt-3 inline-block u-underline">Read More About the Author</a>
-      </div>
-
-      <div class="card p-6">
-        <h3 class="font-serif text-xl">Newsletter</h3>
-        <p class="text-ink-500 mt-2">Monthly roundup of essays, interviews, and events.</p>
-        <form class="mt-4 flex gap-2" method="post" action="/subscribe">
-          <input type="email" name="email" placeholder="you@example.com" required class="flex-1 px-4 py-3 rounded-xl border border-black/10 focus:ring-2 focus:ring-accent/40 outline-none" />
-          <button type="submit" class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark">Subscribe</button>
-        </form>
-        <p class="text-xs text-ink-300 mt-2">By subscribing you agree to our terms.</p>
-      </div>
-    </aside>
-  </section>
+    <!-- Card template -->
+    <template id="cardTemplate">
+      <article class="card flex flex-col">
+        <img class="aspect-[16/10] object-cover" src="" alt="" />
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="text-xs uppercase tracking-wide text-accent sectionLabel"></div>
+          <h3 class="font-serif text-xl mt-2 leading-snug">
+            <a class="u-underline link" href="#"></a>
+          </h3>
+          <p class="text-ink-500 mt-2 desc"></p>
+          <div class="mt-auto pt-4 text-sm text-ink-300 meta"></div>
+        </div>
+      </article>
+    </template>
+  </main>
 
   <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
 
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
       <!-- Brand -->
@@ -293,90 +296,90 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-     // Back to top visibility + behavior
+    // Back to top
     const backTop = document.getElementById('backTop');
-    const toggleTop = () => {
-      if (window.scrollY > 600) backTop.classList.remove('hidden');
-      else backTop.classList.add('hidden');
-    };
+    const toggleTop = () => { if (window.scrollY > 600) backTop.classList.remove('hidden'); else backTop.classList.add('hidden'); };
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-    // ---------- Path helper for routing to /search (GitHub Pages–safe) ----------
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // "/repo/" if hosted under subpath
+    // ---------- Header search routing (no on-page filtering) ----------
+    const basePath = location.pathname.replace(/[^/]*$/, ''); // supports GitHub Pages subpaths
     function goSearch(q){
       const term = (q || '').trim();
-      const url = basePath + (term ? `search?q=${encodeURIComponent(term)}` : `search`);
+      const url = basePath + (term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`);
       window.location.href = url;
     }
-    function bindHeaderSearch(input){
-      if (!input) return;
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          goSearch(input.value);
-        }
-      });
-    }
+    document.getElementById('qHeaderBtn')?.addEventListener('click', (e)=>{ e.preventDefault(); goSearch(document.getElementById('q-desktop').value); });
+    document.getElementById('q-desktop')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); goSearch(e.target.value);} });
+    document.getElementById('q-mobile')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); goSearch(e.target.value);} });
 
-    // Bind HEADER search (desktop + mobile) — does NOT affect page filtering
-    bindHeaderSearch(document.getElementById('q-desktop'));
-    bindHeaderSearch(document.getElementById('q-mobile'));
+    // ---------- Data loading ----------
+    const FALLBACK = 'https://picsum.photos/seed/ctr-latest/1200/675';
 
-    // ---------- Data loading (posts.json -> localStorage -> demo) ----------
     async function fetchPostsJson(){
       try{
-        const res = await fetch('posts.json', { cache: 'no-store' });
+        const res = await fetch(basePath + 'posts.json', { cache:'no-store' });
         if(!res.ok) throw new Error('bad status');
         const data = await res.json();
         return Array.isArray(data) ? data : null;
       }catch{ return null; }
     }
-
     function loadPublishedLocal(){
       const out=[];
       for(let i=0;i<localStorage.length;i++){
         const k = localStorage.key(i);
         if(k && k.startsWith('ctr:admin:published:')){
-          try{
-            const obj = JSON.parse(localStorage.getItem(k));
-            if(obj && obj.title) out.push(obj);
-          }catch{}
+          try{ const obj = JSON.parse(localStorage.getItem(k)); if(obj && obj.title) out.push(obj);}catch{}
         }
       }
       return out;
     }
 
-    const DEMO = [
-      { title:'Street Art as Unofficial Syllabus', section:'Essay', url:'article/street-art-syllabus.html', excerpt:'What murals teach us about place, politics, and public imagination.', date:'2025-10-01', readMinutes:7, tags:['Miami','Politics','Public Space'], cover:'https://picsum.photos/600/375?4' },
-      { title:'Life as an Archivist', section:'Interview', url:'article/life-as-an-archivist.html', excerpt:'On preserving local histories beyond institutions.', date:'2025-09-28', readMinutes:12, tags:['Archives','Practice','Interview'], cover:'https://picsum.photos/600/375?5' },
-      { title:'Films that Map the Diaspora', section:'Review', url:'article/films-that-map-the-diaspora.html', excerpt:'Must see films regarding the diaspora far and wide.', date:'2025-09-22', readMinutes:9, tags:['Film','Diaspora','Review'], cover:'https://picsum.photos/600/375?6' }
-    ];
+    function canonicalSection(s=''){
+      const x = String(s).trim().toLowerCase();
+      if (x==='essays') return 'Essay';
+      if (x==='interviews') return 'Interview';
+      if (x==='reviews') return 'Review';
+      if (x==='visuals') return 'Visual';
+      if (x==='memoir' || x==='memoirs') return 'Memoirs';
+      if (x==='communities') return 'Community';
+      return x ? x.charAt(0).toUpperCase()+x.slice(1) : 'Essay';
+    }
 
     function normalize(p){
       const href = (p.url && p.url.trim()) ? p.url.trim() : (p.slug ? `${p.slug}.html` : '#');
-      const cover = p.cover || 'https://picsum.photos/seed/ctr-latest/600/400';
-      const read = p.readMinutes || p.read || '';
-      const tags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(s=>s.trim()) : []);
+      const coverStr = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src);
+      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()) : []);
       return {
-        title: p.title || '',
-        section: p.section || '',
+        title:   p.title || '',
+        section: canonicalSection(p.section || ''),
         href,
         excerpt: p.excerpt || p.description || '',
-        date: p.date || p.publishedAt || '',
-        read,
-        tags,
-        img: cover
+        date:    p.date || p.publishedAt || '',
+        read:    p.readMinutes || p.read || '',
+        tags:    tagsArr,
+        cover:   coverStr || FALLBACK
       };
     }
 
-    function fmtDate(iso){
-      try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
-      catch { return iso || ''; }
-    }
-
     // ---------- Elements ----------
-    const listEl = document.getElementById('list');
+    const hero    = document.getElementById('hero');
+    const heroImg = document.getElementById('heroImg');
+    const heroSection = document.getElementById('heroSection');
+    const heroDate = document.getElementById('heroDate');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroExcerpt = document.getElementById('heroExcerpt');
+    const heroRead = document.getElementById('heroRead');
+    const heroLink = document.getElementById('heroLink');
+
+    const gridEl = document.getElementById('grid');
+    const tpl = document.getElementById('cardTemplate');
+
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    const qInline = document.getElementById('q-inline');
+    const sortSel = document.getElementById('sort');
+    const pageSizeSel = document.getElementById('pageSize');
+
     const pageNumEl = document.getElementById('pageNum');
     const pageTotalEl = document.getElementById('pageTotal');
     const countShownEl = document.getElementById('countShown');
@@ -384,13 +387,8 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    const chips = Array.from(document.querySelectorAll('.chip'));
-    const sortSel = document.getElementById('sort');
-    const pageSizeSel = document.getElementById('pageSize');
-    const qInline  = document.getElementById('q-inline'); // INLINE ONLY
-
     // ---------- State ----------
-    let POSTS = []; // normalized full list
+    let ALL = [];
     let state = {
       filter: 'all',
       sort: 'new',
@@ -399,114 +397,123 @@
       q: ''
     };
 
-    function rowHTML(p, term){
-      const titleHTML  = highlight(p.title, term);
-      const excerptHTML = highlight(p.excerpt || '', term);
-      return `
-      <article class="list-row">
-        <img class="thumb" src="${p.img}" alt="${p.title}">
-        <div class="flex-1">
-          <a class="text-xs uppercase tracking-wide text-accent" href="#">${p.section || 'Article'}</a>
-          <h3 class="font-serif text-2xl leading-tight mt-1">
-            <a class="u-underline" href="${p.href}">${titleHTML}</a>
-          </h3>
-          <p class="text-ink-500 mt-2">${excerptHTML}</p>
-          <div class="mt-4 text-sm text-ink-300">${fmtDate(p.date)}${p.read ? ` • ${p.read} min` : ''}</div>
-        </div>
-      </article>`;
-    }
-
-
-    function normalizeText(s){ return (s||'').toLowerCase(); }
-
-    // --- highlighting helpers for inline search ---
+    // ---------- Helpers ----------
+    const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
     const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     function highlight(text, rawTerm){
       if (!rawTerm) return String(text || '');
-      const parts = String(rawTerm).trim().split(/\s+/).filter(Boolean);
+      const parts = String(rawTerm).trim().split(/\s+/).filter(w => w.length >= 2);
       if (!parts.length) return String(text || '');
       const pat = new RegExp('(' + parts.map(esc).join('|') + ')', 'ig');
       return String(text || '').replace(pat, '<mark class="hl">$1</mark>');
     }
 
+    function buildCard(p, term){
+      const node = tpl.content.cloneNode(true);
+      const img = node.querySelector('img'); img.src = p.cover; img.alt = `${p.title} cover`;
+      node.querySelector('.sectionLabel').textContent = p.section || 'Article';
+      const a = node.querySelector('.link'); a.href = p.href; a.innerHTML = highlight(p.title, term);
+      const desc = node.querySelector('.desc'); desc.innerHTML = highlight(p.excerpt || '', term);
+      const meta = [];
+      if (p.date) meta.push(fmtDate(p.date));
+      if (p.read) meta.push(`${p.read} min`);
+      node.querySelector('.meta').textContent = meta.join(' • ');
+      return node;
+    }
 
-    function applyFilters(posts){
-      // section
-      let out = state.filter === 'all' ? posts.slice() : posts.filter(p => p.section === state.filter);
-      // search (INLINE ONLY)
+    function applyFilters(list){
+      const norm = s => (s||'').toLowerCase();
+      let out = list.slice();
+
+      if (state.filter !== 'all'){
+        const f = norm(state.filter);
+        out = out.filter(p => norm(p.section) === f || (p.tags||[]).map(norm).includes(f));
+      }
+
       if (state.q){
-        const q = normalizeText(state.q);
+        const q = norm(state.q);
         out = out.filter(p =>
-          normalizeText(p.title).includes(q) ||
-          normalizeText(p.excerpt).includes(q) ||
-          (p.tags||[]).join(' ').toLowerCase().includes(q)
+          norm(p.title).includes(q) || norm(p.excerpt).includes(q) || (p.tags||[]).some(t => norm(t).includes(q))
         );
       }
-      // sort
+
       out.sort((a,b) => {
-        if (state.sort === 'new') return new Date(b.date) - new Date(a.date);
-        if (state.sort === 'old') return new Date(a.date) - new Date(b.date);
-        if (state.sort === 'read') return (a.read||0) - (b.read||0);
         if (state.sort === 'title') return (a.title||'').localeCompare(b.title||'');
-        return 0;
+        if (state.sort === 'old')   return new Date(a.date||0) - new Date(b.date||0);
+        if (state.sort === 'read')  return (a.read||0) - (b.read||0);
+        return new Date(b.date||0) - new Date(a.date||0); // 'new'
       });
+
       return out;
     }
 
     function render(){
-      const filtered = applyFilters(POSTS);
+      const filtered = applyFilters(ALL);
       const total = filtered.length;
-      const pages = Math.max(1, Math.ceil(total / state.pageSize));
+
+      // hero visible only on page 1 and when we have posts
+      const heroVisible = (state.page === 1 && total > 0);
+      if (heroVisible){
+        const h = filtered[0];
+        heroImg.src = h.cover; heroImg.alt = h.title || 'Latest hero image';
+        heroSection.textContent = h.section || 'Latest';
+        heroDate.textContent = fmtDate(h.date); heroDate.dateTime = h.date || '';
+        heroTitle.innerHTML = highlight(h.title, state.q);
+        heroExcerpt.innerHTML = highlight(h.excerpt || '', state.q);
+        heroRead.textContent = h.read ? `${h.read} min read` : '';
+        heroLink.href = h.href || '#';
+        hero.classList.remove('hidden');
+      } else {
+        hero.classList.add('hidden');
+      }
+
+      const perPage = state.pageSize;
+      const pages = Math.max(1, Math.ceil((total - (heroVisible ? 1 : 0)) / perPage));
       if (state.page > pages) state.page = pages;
 
-      const start = (state.page - 1) * state.pageSize;
-      const pageItems = filtered.slice(start, start + state.pageSize);
+      // slice grid items (skip hero if shown)
+      const start = heroVisible ? 1 + (state.page - 1) * perPage : (state.page - 1) * perPage;
+      const end = start + perPage;
+      const pageItems = filtered.slice(start, end);
 
+      // render grid
+      gridEl.innerHTML = '';
       const term = (state.q || '').trim();
-      listEl.innerHTML = pageItems.map(p => rowHTML(p, term)).join('');
+      pageItems.forEach(p => gridEl.appendChild(buildCard(p, term)));
+
+      // footer stats + buttons
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length);
+      countShownEl.textContent = String(pageItems.length + (heroVisible ? 1 : 0));
       countTotalEl.textContent = String(total);
-
       prevBtn.disabled = state.page <= 1;
       nextBtn.disabled = state.page >= pages;
     }
 
     // ---------- Events ----------
     chips.forEach(chip => chip.addEventListener('click', () => {
-      chips.forEach(c => c.dataset.active = 'false');
-      chip.dataset.active = 'true';
-      chip.setAttribute('aria-pressed','true');
+      chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
+      chip.dataset.active = 'true'; chip.setAttribute('aria-pressed','true');
       state.filter = chip.dataset.filter || 'all';
       state.page = 1;
       render();
     }));
-
-    // INLINE search ONLY affects this page
-    qInline?.addEventListener('input', (e) => {
-      state.q = e.target.value;
-      state.page = 1;
-      render();
-    });
-
-    sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
-    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
-
-    prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
-    nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
+    qInline?.addEventListener('input', (e)=>{ state.q = e.target.value; state.page = 1; render(); });
+    sortSel?.addEventListener('change', ()=>{ state.sort = sortSel.value; state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', ()=>{ state.pageSize = parseInt(pageSizeSel.value,10)||9; state.page = 1; render(); });
+    prevBtn.addEventListener('click', ()=>{ state.page = Math.max(1, state.page - 1); render(); });
+    nextBtn.addEventListener('click', ()=>{ state.page = state.page + 1; render(); });
 
     // ---------- Init ----------
     (async function init(){
-      const j = await fetchPostsJson();
-      if (j && j.length){
-        POSTS = j.map(normalize);
-      } else {
+      let data = await fetchPostsJson();
+      if (!data || !data.length){
         const local = loadPublishedLocal();
-        POSTS = (local.length ? local : DEMO).map(normalize);
+        if (local.length) data = local;
       }
-      // default sort newest
-      POSTS.sort((a,b)=> new Date(b.date) - new Date(a.date));
+      if (!data) data = [];
+
+      ALL = data.map(normalize).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
       render();
     })();
   </script>
