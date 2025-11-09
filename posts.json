@@ -1,5 +1,22 @@
 [
   {
+    "slug": "baggaboosh",
+    "title": "Baggaboosh",
+    "section": "Essay",
+    "tags": [
+      "Cuba",
+      "NYC",
+      "Diaspora"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "YeYeYe",
+    "date": "2025-11-09T01:04",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/baggaboosh/cover.png",
+    "url": "baggaboosh.html"
+  },
+  {
     "slug": "i-think-this-works-now",
     "title": "I Think This Works Now",
     "section": "Essay",
