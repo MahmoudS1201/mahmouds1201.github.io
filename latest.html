@@ -60,7 +60,7 @@
   <link rel="canonical" href="https://example.com/latest" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Latest — Camila Tiburcio Rubio">
-  <meta property="og:description" content="Fresh essays, interviews, reviews, and visual stories.">
+  <meta property="og:description" content="Fresh essays, interviews, reviews, and visual stories">
   <meta property="og:url" content="https://example.com/latest">
   <meta property="og:image" content="https://picsum.photos/1200/630?latest">
   <meta name="twitter:card" content="summary_large_image">
@@ -145,7 +145,7 @@
     </div>
   </section>
 
-  <!-- Hero (newest overall) -->
+  <!-- Hero (featured/newest overall) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
     <article id="hero" class="grid lg:grid-cols-3 gap-8 items-stretch card hidden" data-href="#">
       <div class="lg:col-span-2">
@@ -359,6 +359,7 @@
         date:    p.date || p.publishedAt || '',
         read:    p.readMinutes || p.read || '',
         tags:    tagsArr,
+        featured: Boolean(p.featured),
         cover:   coverStr ? toBase(coverStr) : FALLBACK
       };
     }
@@ -401,6 +402,7 @@
     // ---------- Helpers ----------
     const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
     const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
     function highlight(text, rawTerm){
       if (!rawTerm) return String(text || '');
       const parts = String(rawTerm).trim().split(/\s+/).filter(w => w.length >= 2);
@@ -409,10 +411,38 @@
       return String(text || '').replace(pat, '<mark class="hl">$1</mark>');
     }
 
+    const isNew = iso => {
+      try { return (Date.now() - new Date(iso).getTime()) / 86400000 <= 7; }
+      catch { return false; }
+    };
+
+    function pickHero(list){
+      const featured = list.find(p => p.featured === true);
+      return featured || list[0];
+    }
+
+    function bucketLabel(d){
+      const now = new Date();
+      const dt = new Date(d || 0);
+      const days = Math.floor((now - dt)/86400000);
+      if (days <= 7) return 'This week';
+      return dt.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+    }
+
     function buildCard(p, term){
       const node = tpl.content.cloneNode(true);
       const img = node.querySelector('img'); img.src = p.cover; img.alt = `${p.title} cover`;
-      node.querySelector('.sectionLabel').textContent = p.section || 'Article';
+      const sectionEl = node.querySelector('.sectionLabel');
+      sectionEl.textContent = p.section || 'Article';
+
+      // NEW badge
+      if (isNew(p.date)) {
+        const tag = document.createElement('span');
+        tag.className = 'inline-block ml-2 px-2 py-0.5 text-[10px] rounded-full bg-accent/10 text-accent border border-accent/30';
+        tag.textContent = 'NEW';
+        sectionEl.appendChild(tag);
+      }
+
       const a = node.querySelector('.link'); a.href = p.href; a.innerHTML = highlight(p.title, term);
       const desc = node.querySelector('.desc'); desc.innerHTML = highlight(p.excerpt || '', term);
       const meta = [];
@@ -474,14 +504,69 @@
       return out;
     }
 
+    function renderGridWithGroups(items, term){
+      gridEl.innerHTML = '';
+      let current = '';
+      items.forEach(p => {
+        const label = bucketLabel(p.date);
+        if (label !== current){
+          current = label;
+          const h = document.createElement('h2');
+          h.className = 'col-span-full text-sm uppercase tracking-wide text-ink-300 mt-2';
+          h.textContent = label;
+          gridEl.appendChild(h);
+        }
+        gridEl.appendChild(buildCard(p, term));
+      });
+    }
+
+    // ---------- URL state sync ----------
+    function stateToURL(){
+      const params = new URLSearchParams();
+      if (state.filter !== 'all') params.set('filter', state.filter);
+      if (state.sort !== 'new') params.set('sort', state.sort);
+      if (state.q) params.set('q', state.q);
+      if (state.page > 1) params.set('page', String(state.page));
+      const url = `${location.pathname}?${params.toString()}`;
+      history.replaceState(null, '', url);
+    }
+
+    function stateFromURL(){
+      const sp = new URLSearchParams(location.search);
+      state.filter = sp.get('filter') || 'all';
+      state.sort = sp.get('sort') || 'new';
+      state.q = sp.get('q') || '';
+      state.page = parseInt(sp.get('page') || '1', 10) || 1;
+
+      // reflect in controls
+      chips.forEach(c => {
+        const active = (c.dataset.filter || 'all') === state.filter;
+        c.dataset.active = String(active);
+        c.setAttribute('aria-pressed', String(active));
+      });
+      sortSel.value = state.sort;
+      qInline.value = state.q;
+      pageSizeSel.value = String(state.pageSize);
+    }
+
+    // ---------- Render ----------
     function render(){
       const filtered = applyFilters(ALL);
       const total = filtered.length;
+      const perPage = state.pageSize;
 
-      // hero visible only on page 1 and when we have posts
+      // normal pages (hero is ALSO included in grid on page 1)
+      const pages = Math.max(1, Math.ceil(total / perPage));
+      if (state.page > pages) state.page = pages;
+
+      const start = (state.page - 1) * perPage;
+      const end = start + perPage;
+      const pageItems = filtered.slice(start, end);
+
+      // Hero visible only on page 1 and when there are posts
       const heroVisible = (state.page === 1 && total > 0);
       if (heroVisible){
-        const h = filtered[0];
+        const h = pickHero(filtered);
         heroImg.src = h.cover; heroImg.alt = h.title || 'Latest hero image';
         heroSection.textContent = h.section || 'Latest';
         heroDate.textContent = fmtDate(h.date); heroDate.dateTime = h.date || '';
@@ -490,34 +575,39 @@
         heroRead.textContent = h.read ? `${h.read} min read` : '';
         heroLink.href = h.href || '#';
         hero.setAttribute('data-href', h.href || '#');
+
+        // add NEW badge to hero if applicable
+        // place it after the date
+        if (isNew(h.date)) {
+          // remove previous badge if multiple renders
+          const old = hero.querySelector('[data-hero-new]');
+          old?.remove();
+          const badge = document.createElement('span');
+          badge.setAttribute('data-hero-new','');
+          badge.className = 'ml-2 px-2 py-0.5 text-[10px] rounded-full bg-accent/10 text-accent border border-accent/30';
+          badge.textContent = 'NEW';
+          heroDate.parentElement.appendChild(badge);
+        }
         hero.classList.remove('hidden');
         enableCardClicks(hero.parentElement);
       } else {
         hero.classList.add('hidden');
       }
 
-      const perPage = state.pageSize;
-      const pages = Math.max(1, Math.ceil((total - (heroVisible ? 1 : 0)) / perPage));
-      if (state.page > pages) state.page = pages;
-
-      // slice grid items (skip hero if shown)
-      const start = heroVisible ? 1 + (state.page - 1) * perPage : (state.page - 1) * perPage;
-      const end = start + perPage;
-      const pageItems = filtered.slice(start, end);
-
-      // render grid
-      gridEl.innerHTML = '';
+      // render grid (includes hero item when on page 1 because we didn't skip it)
       const term = (state.q || '').trim();
-      pageItems.forEach(p => gridEl.appendChild(buildCard(p, term)));
+      renderGridWithGroups(pageItems, term);
       enableCardClicks(gridEl);
 
       // footer stats + buttons
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length + (heroVisible ? 1 : 0));
+      countShownEl.textContent = String(pageItems.length); // accurate; hero is included in pageItems
       countTotalEl.textContent = String(total);
       prevBtn.disabled = state.page <= 1;
       nextBtn.disabled = state.page >= pages;
+
+      stateToURL();
     }
 
     // ---------- Events ----------
@@ -536,6 +626,7 @@
 
     // ---------- Init ----------
     (async function init(){
+      stateFromURL();
       let data = await fetchPostsJson();
       if (!data || !data.length){
         const local = loadPublishedLocal();
