@@ -92,21 +92,23 @@
       <select id="sectionFilter" class="px-3 py-3 rounded-xl border border-black/10 bg-white outline-none focus:ring-2 focus:ring-accent/40" aria-label="Filter by section">
         <option value="">All sections</option>
       </select>
-          <!-- Stats / sorting -->
-      <div class="mt-6 flex items-center justify-between text-sm text-ink-400">
-        <div id="resultCount" aria-live="polite">0 results</div>
-        <div>
-          <label class="mr-2" for="sortBy">Sort:</label>
-          <select id="sortBy" class="px-3 py-2 rounded-lg border border-black/10 bg-white">
-            <option value="dateDesc">Newest</option>
-            <option value="dateAsc">Oldest</option>
-            <option value="titleAsc">Title A–Z</option>
-            <option value="titleDesc">Title Z–A</option>
-            <option value="best">Best match</option>
-          </select>
-        </div>
-      </div>
+      <button class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark" aria-label="Run search">Search</button>
     </form>
+
+    <!-- Stats / sorting -->
+    <div class="mt-6 flex items-center justify-between text-sm text-ink-400">
+      <div id="resultCount" aria-live="polite">0 results</div>
+      <div>
+        <label class="mr-2" for="sortBy">Sort:</label>
+        <select id="sortBy" class="px-3 py-2 rounded-lg border border-black/10 bg-white">
+          <option value="dateDesc">Newest</option>
+          <option value="dateAsc">Oldest</option>
+          <option value="titleAsc">Title A–Z</option>
+          <option value="titleDesc">Title Z–A</option>
+          <option value="best">Best match</option>
+        </select>
+      </div>
+    </div>
 
     <!-- Results -->
     <section id="results" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8"></section>
