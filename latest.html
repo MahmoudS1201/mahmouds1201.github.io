@@ -162,6 +162,10 @@
         </div>
         <h2 id="heroTitle" class="font-serif text-3xl mt-3 leading-tight"></h2>
         <p id="heroExcerpt" class="text-ink-500 mt-3"></p>
+
+        <!-- HERO TAGS -->
+        <div id="heroTags" class="hidden mt-3 flex flex-wrap gap-2"></div>
+
         <div class="mt-auto pt-5 flex items-center gap-4">
           <img id="heroAvatar" class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/100?img=15" alt="Author avatar"/>
           <div>
@@ -236,6 +240,10 @@
             <a class="u-underline link" href="#"></a>
           </h3>
           <p class="text-ink-500 mt-2 desc"></p>
+
+          <!-- TAGS -->
+          <div class="tagsWrap mt-3 flex flex-wrap gap-2"></div>
+
           <div class="mt-auto pt-4 text-sm text-ink-300 meta"></div>
         </div>
       </article>
@@ -314,13 +322,13 @@
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
     // ---------- GitHub Pages subpath helper ----------
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    const basePath = location.pathname.replace(/[^/]*$/, '');
     function toBase(u){
       if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;                    // absolute URL
+      if (/^https?:\/\//i.test(u)) return u;
       if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
-      if (u.startsWith('/')) return basePath + u.slice(1);      // strip leading slash to repo subdir
-      return basePath + u;                                      // plain relative
+      if (u.startsWith('/')) return basePath + u.slice(1);
+      return basePath + u;
     }
 
     // ---------- Header search routing ----------
@@ -383,7 +391,7 @@
       const slug = (p.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href0 = (p.url && p.url.trim()) ? p.url.trim() : (slug ? `${slug}.html` : '#');
       const coverStr = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src);
-      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()) : []);
+      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
       return {
         title:   p.title || '',
         section: canonicalSection(p.section || ''),
@@ -407,6 +415,7 @@
     const heroExcerpt = document.getElementById('heroExcerpt');
     const heroRead = document.getElementById('heroRead');
     const heroLink = document.getElementById('heroLink');
+    const heroTags = document.getElementById('heroTags');
 
     const gridEl = document.getElementById('grid');
     const tpl = document.getElementById('cardTemplate');
@@ -467,6 +476,13 @@
       return dt.toLocaleDateString(undefined, { month:'long', year:'numeric' });
     }
 
+    function makeTagChip(text){
+      const el=document.createElement('span');
+      el.className='inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 text-xs font-semibold';
+      el.textContent=text;
+      return el;
+    }
+
     function buildCard(p, term){
       const node = tpl.content.cloneNode(true);
       const img = node.querySelector('img'); img.src = p.cover; img.alt = `${p.title} cover`;
@@ -486,6 +502,14 @@
 
       const a = node.querySelector('.link'); a.href = p.href; a.innerHTML = highlight(p.title, term);
       const desc = node.querySelector('.desc'); desc.innerHTML = highlight(p.excerpt || '', term);
+
+      // TAGS on card
+      const wrap = node.querySelector('.tagsWrap');
+      wrap.innerHTML = '';
+      if (p.tags && p.tags.length) {
+        p.tags.forEach(t => wrap.appendChild(makeTagChip(t)));
+      }
+
       const meta = [];
       if (p.date) meta.push(fmtDate(p.date));
       if (p.read) meta.push(`${p.read} min`);
@@ -645,13 +669,23 @@
           badge.textContent = 'NEW';
           heroDate.parentElement.appendChild(badge);
         }
+
+        // HERO TAGS
+        heroTags.innerHTML = '';
+        if (h.tags && h.tags.length){
+          heroTags.classList.remove('hidden');
+          h.tags.forEach(t => heroTags.appendChild(makeTagChip(t)));
+        } else {
+          heroTags.classList.add('hidden');
+        }
+
         hero.classList.remove('hidden');
         enableCardClicks(hero.parentElement);
       } else {
         hero.classList.add('hidden');
       }
 
-      // render grid (includes hero item when on page 1 because we didn't skip it)
+      // render grid (grouped labels)
       const term = (state.q || '').trim();
       renderGridWithGroups(pageItems, term);
       enableCardClicks(gridEl);
@@ -661,21 +695,17 @@
       emptyState.classList.toggle('hidden', !empty);
       gridEl.classList.toggle('hidden', empty);
 
-      // footer stats + buttons (hide if error/empty with zero total)
+      // footer stats + buttons
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length); // accurate; hero is included
+      countShownEl.textContent = String(pageItems.length);
       countTotalEl.textContent = String(total);
 
-      // if there are no posts at all, hide pager; otherwise show
       pager.classList.toggle('hidden', total === 0);
-
       prevBtn.disabled = state.page <= 1;
       nextBtn.disabled = state.page >= pages;
 
-      // ensure error state is hidden when rendering succeeds
       errorState.classList.add('hidden');
-
       stateToURL();
     }
 
@@ -714,7 +744,7 @@
       init();
     });
 
-    // ---------- Init (named so Retry can call it) ----------
+    // ---------- Init ----------
     async function init(){
       stateFromURL();
 

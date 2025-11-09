@@ -168,6 +168,10 @@
           The Archive Sings: Sound, Memory, and Diaspora
         </h2>
         <p id="heroExcerpt" class="text-ink-500 mt-3">A longform essay weaving field recordings, neighborhood histories, and oral tradition into a listening guide for place.</p>
+
+        <!-- HERO TAGS -->
+        <div id="heroTags" class="hidden mt-3 flex flex-wrap gap-2"></div>
+
         <div class="mt-auto pt-5 flex items-center gap-4">
           <img id="heroAvatar" class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/100?img=15" alt="Author avatar"/>
           <div>
@@ -245,6 +249,10 @@
             <a class="u-underline link" href="#"></a>
           </h3>
           <p class="text-ink-500 mt-2 desc"></p>
+
+          <!-- TAGS get injected here -->
+          <div class="tagsWrap mt-3 flex flex-wrap gap-2"></div>
+
           <div class="mt-auto pt-4 text-sm text-ink-300 meta"></div>
         </div>
       </article>
@@ -368,6 +376,14 @@
       return text.replace(pat, '<mark class="hl">$1</mark>');
     }
 
+    // Tag chip factory (accent scheme)
+    function makeTagChip(text){
+      const s = document.createElement('span');
+      s.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 text-xs font-semibold';
+      s.textContent = text;
+      return s;
+    }
+
     // Make any element behave like a full-card link (used for hero too)
     function setStretchedClick(el, url){
       if (!el || !url) return;
@@ -433,7 +449,7 @@
     function normalize(p){
       const href = p.url || (p.slug ? `${p.slug}.html` : '#');
       const coverSrc = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src ? p.cover.src : '');
-      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()) : []);
+      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
       return {
         title:   p.title || '',
         href:    toBase(href),
@@ -464,6 +480,16 @@
       const href = post.href || '#';
       document.getElementById('heroLink').href = href;
 
+      // HERO TAGS
+      const heroTags = document.getElementById('heroTags');
+      heroTags.innerHTML = '';
+      if (post.tags && post.tags.length){
+        heroTags.classList.remove('hidden');
+        post.tags.forEach(t => heroTags.appendChild(makeTagChip(t)));
+      } else {
+        heroTags.classList.add('hidden');
+      }
+
       // Make the ENTIRE hero card clickable
       setStretchedClick(document.getElementById('heroWrap'), href);
     }
@@ -484,6 +510,13 @@
 
       const desc = tpl.querySelector('.desc');
       desc.textContent = post.excerpt || '';
+
+      // TAGS (accent chips)
+      const tagsWrap = tpl.querySelector('.tagsWrap');
+      tagsWrap.innerHTML = '';
+      if (post.tags && post.tags.length){
+        post.tags.forEach(t => tagsWrap.appendChild(makeTagChip(t)));
+      }
 
       const meta = [];
       if (post.date) meta.push(fmtDate(post.date));
