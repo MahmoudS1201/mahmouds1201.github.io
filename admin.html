@@ -62,7 +62,7 @@
         </a>
       </div>
       <nav class="hidden md:flex items-center gap-3 text-sm">
-        <a class="u-underline" href="/" title="Back to site">↩ Back to site</a>
+        <a class="u-underline" href="index.html" title="Back to site">↩ Back to site</a>
         <button id="importJsonBtn" class="btn">Import JSON</button>
         <button id="exportJsonBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark">Export JSON</button>
         <button id="exportHtmlBtn" class="btn">Export HTML</button>
@@ -810,7 +810,7 @@
                   <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
                 </a>
               </div>
-              <a class="u-underline text-sm" href="/">← Back to Home</a>
+              <a id="backBtn" class="u-underline text-sm" href="index.html" title="Go back">← Back</a>
             </div>
           </header>
     
@@ -971,6 +971,31 @@
               }
               window.addEventListener('scroll', onScroll, {passive:true});
               onScroll();
+            })();
+
+            (function () {
+              const link = document.getElementById('backBtn');
+              if (!link) return;
+
+              // keep whatever you set in href as the fallback destination
+              const fallbackHref = link.getAttribute('href') || '/';
+
+              link.addEventListener('click', (e) => {
+                const ref = document.referrer;
+                // Only “go back” if there is a previous page and it’s the same origin
+                const sameOrigin = ref && new URL(ref, location.href).origin === location.origin;
+
+                if (sameOrigin) {
+                  e.preventDefault();
+                  history.back();
+                } else if (!ref) {
+                  // no referrer (e.g., opened in new tab) -> let it fall back to href
+                  link.setAttribute('href', fallbackHref);
+                } else {
+                  // cross-site referrer — optional: comment this out if you DO want to go back off-site
+                  link.setAttribute('href', fallbackHref);
+                }
+              });
             })();
 
             // Back to top visibility + behavior
