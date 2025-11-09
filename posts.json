@@ -228,5 +228,21 @@
     "featured": false,
     "cover": "/images/2025/11/test/cover.jpg",
     "url": "test.html"
+  },
+  {
+    "slug": "letter-to-profe-vasquez",
+    "title": "Letter to Profe. Vasquez",
+    "section": "Memoirs",
+    "tags": [
+      "Yale",
+      "Letter"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Letter correspondence with Profe. Vasquez, Performance Studies professor at Yale.",
+    "date": "2024-01-12T21:30",
+    "readMinutes": 4,
+    "featured": true,
+    "cover": "images/2024/01/letter-to-profe-vasquez/cover.jpg",
+    "url": "letter-to-profe-vasquez.html"
   }
 ]
