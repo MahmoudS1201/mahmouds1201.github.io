@@ -39,12 +39,10 @@
     ::selection { background: rgba(197,61,47,0.15); }
 
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
-    .feat-img { aspect-ratio:16/9; width:100%; object-fit:cover; }
     .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:.75rem; }
     .kicker { text-transform:uppercase; letter-spacing:.14em; font-weight:700; font-size:.65rem; color:#C53D2F; }
     mark.hl { background: rgba(197,61,47,.22); color: inherit; padding: 0 .15em; border-radius: .25em; }
 
-    /* Tiles at top */
     .tile { transition: transform .2s ease, box-shadow .2s ease; }
     .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
 
@@ -65,7 +63,7 @@
       border: 1px solid rgba(0,0,0,.12);
       border-radius: 9999px;
       background: #fff;
-      color: #0E0E0E; /* make icon black */
+      color: #0E0E0E; /* black */
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
       will-change: transform;
     }
@@ -73,7 +71,7 @@
     .icon-toggle:active { transform: scale(0.98); }
     .icon-toggle::before,
     .icon-toggle::after {
-      content: ""; position: absolute; background: currentColor; /* use currentColor (black) */
+      content: ""; position: absolute; background: currentColor;
       border-radius: 1px;
       transition: transform .18s ease, opacity .18s ease;
     }
@@ -81,28 +79,16 @@
     .icon-toggle::after  { width: 2px; height: 18px; } /* vertical */
     .icon-toggle[aria-expanded="true"]::after { transform: scaleY(0.1); opacity: 0; } /* morph to minus */
 
-    .icon-toggle .sr-only {
-      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-    }
-
-    /* Full-card click hover/focus cues (matches index.html behavior) */
-    [data-href]{
-      transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
-    }
-    [data-href]:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
-    }
+    /* Full-card click hover/focus cues */
+    [data-href]{ transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease; }
+    [data-href]:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06); }
     [data-href]:focus-visible{
-      outline: 2px solid #C53D2F;
-      outline-offset: 2px;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+      outline: 2px solid #C53D2F; outline-offset: 2px;
+      transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
     }
   </style>
 
-  <!-- Canonical / Social (update domain when live) -->
+  <!-- Canonical / Social -->
   <link rel="canonical" href="https://example.com/sections" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sections — Camila Tiburcio Rubio">
@@ -126,13 +112,11 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <!-- Brand -->
         <a href="index.html" class="flex items-center gap-2" aria-label="Home">
           <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-10 w-10 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
 
-        <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline" href="features.html">Features</a>
           <a class="u-underline" href="latest.html">Latest</a>
@@ -140,7 +124,6 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search (routes to search page) -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -149,7 +132,6 @@
           </label>
         </div>
 
-        <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
             <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -160,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Mobile dropdown -->
+  <!-- Mobile dropdown -->
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
         <a class="block u-underline" href="features.html">Features</a>
@@ -205,14 +187,11 @@
       <p class="text-xs text-ink-300">Tip: Click a tile to jump to its section.</p>
     </div>
 
-    <!-- Section tiles (counts update with filter) -->
     <div id="tiles" class="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
   </section>
 
   <!-- Accordion groups -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-6" id="groups">
-    <!-- JS injects groups -->
-  </section>
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-6" id="groups"></section>
 
   <!-- Back to top -->
   <button id="backTop"
@@ -222,7 +201,6 @@
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-      <!-- Brand -->
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
@@ -234,7 +212,6 @@
           Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
         </p>
       </div>
-      <!-- Explore -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
@@ -245,7 +222,6 @@
           <li><a href="search.html" class="u-underline">Search</a></li>
         </ul>
       </div>
-      <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
@@ -256,7 +232,6 @@
           <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
-      <!-- Follow -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
         <ul class="space-y-2">
@@ -283,7 +258,7 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    // Back to top visibility + behavior
+    // Back to top
     const backTop = document.getElementById('backTop');
     const toggleTop = () => {
       if (window.scrollY > 600) backTop.classList.remove('hidden');
@@ -292,9 +267,7 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-    // -------------------------------------
-    // Load posts (real posts or local cache)
-    // -------------------------------------
+    // Data
     const POSTS_JSON_URL = '/posts.json';
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
@@ -307,12 +280,11 @@
     const tilesEl   = document.getElementById('tiles');
     const groupsEl  = document.getElementById('groups');
 
-    // ---------- Utilities ----------
+    // Utils
     function fmtDate(iso){
       try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch { return iso; }
     }
-
     function canonSection(s=''){
       const x = String(s).trim().toLowerCase();
       if (x === 'essays') return 'Essay';
@@ -323,7 +295,6 @@
       if (x === 'memoir' || x === 'memoirs') return 'Memoirs';
       return x ? x.charAt(0).toUpperCase() + x.slice(1) : 'Essay';
     }
-
     function highlight(text, termsOrString){
       const raw = Array.isArray(termsOrString) ? termsOrString.join(' ') : (termsOrString || '');
       const terms = raw.split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);
@@ -332,7 +303,6 @@
       const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
       return String(text).replace(pat, '<mark class="hl">$1</mark>');
     }
-
     const escapeHtml = s => (s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
     function normalizeFromJson(p = {}){
@@ -349,7 +319,6 @@
         img:     coverStr || FALLBACK_IMG
       };
     }
-
     function normalizeFromAdmin(d = {}){
       const slug = (d.slug || '').replace(/^\/+/,'').replace(/\.html$/,'');
       const href = `${slug || 'index'}.html`;
@@ -364,7 +333,6 @@
         img:     coverStr || FALLBACK_IMG
       };
     }
-
     async function loadPosts(){
       try{
         const res = await fetch(POSTS_JSON_URL + '?ts=' + Date.now(), { cache: 'no-store' });
@@ -383,7 +351,7 @@
       return items;
     }
 
-    // ---------- Full-card clickable helper (like index.html) ----------
+    // Full-card clicks
     function enableCardClicks(root=document){
       root.querySelectorAll('[data-href]').forEach(el => {
         if (el.__clickBound) return;
@@ -392,7 +360,7 @@
         el.setAttribute('role','link');
         el.setAttribute('tabindex','0');
         el.addEventListener('click', e => {
-          if (e.target.closest && e.target.closest('a')) return; // let real links work
+          if (e.target.closest && e.target.closest('a')) return;
           const url = el.getAttribute('data-href');
           if (url) window.location.href = url;
         });
@@ -406,7 +374,7 @@
       });
     }
 
-    // ---------- Card template now uses data-href ----------
+    // Card
     function cardHTML(p, query){
       const t = highlight(escapeHtml(p.title), query);
       const e = highlight(escapeHtml(p.excerpt || ''), query);
@@ -424,13 +392,13 @@
       </article>`;
     }
 
-    // -------- State / constants --------
+    // State
     let ALL_POSTS = [];
     let state = {
       q: '',
       sort: 'new',
-      openSections: new Set(),   // which groups expanded
-      showMoreOpen: new Set()    // which groups revealed extras
+      openSections: new Set(),   // expanded accordions
+      showMoreOpen: new Set()    // sections showing all items
     };
 
     const ORDER = ['Essay','Interview','Visual','Review','Community','Memoirs'];
@@ -453,7 +421,6 @@
         return 0;
       });
     }
-
     function filterByQuery(arr){
       if (!state.q) return arr;
       const q = state.q.toLowerCase();
@@ -462,7 +429,6 @@
         (p.excerpt||'').toLowerCase().includes(q)
       );
     }
-
     function groupPosts(){
       const groups = {};
       ORDER.forEach(s => groups[s] = []);
@@ -495,7 +461,7 @@
       tilesEl.querySelectorAll('[data-goto]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-goto');
-          state.openSections.add(id); // persist open
+          state.openSections.add(id);
           const el = document.getElementById('group-' + id);
           if (el) {
             el.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -508,27 +474,25 @@
       });
     }
 
+    // SINGLE grid per section. No separate "rest" grid => no awkward gap.
     function groupSectionHTML(sectionName, posts){
       const count = posts.length;
       const isOpen = state.openSections.has(sectionName);
-      const hasShowMore = state.showMoreOpen.has(sectionName);
+      const expanded = state.showMoreOpen.has(sectionName);
 
-      const preview = posts.slice(0, 4);
-      const rest    = posts.slice(4);
-
-      const previewGrid = preview.length
-        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">${preview.map(p => cardHTML(p, state.q)).join('')}</div>`
-        : `<p class="text-ink-300 mt-4">No posts yet.</p>`;
-
-      const restGrid = rest.length
-        ? `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 ${hasShowMore ? '' : 'hidden'}" data-rest>${rest.map(p => cardHTML(p, state.q)).join('')}</div>`
+      const visible = expanded ? posts : posts.slice(0, 6);
+      const canToggle = count > 6;
+      const toggleBtn = canToggle
+        ? (expanded
+            ? `<button class="mt-4 px-4 py-2 rounded-full border border-black/10 hover:bg-white text-sm" data-showless>Show less</button>`
+            : `<button class="mt-4 px-4 py-2 rounded-full border border-black/10 hover:bg-white text-sm" data-showmore>Show ${count - 4} more</button>`
+          )
         : '';
 
-      const moreBtn = (rest.length && !hasShowMore)
-        ? `<button class="mt-4 px-4 py-2 rounded-full border border-black/10 hover:bg-white text-sm" data-showmore>
-             Show ${rest.length} more
-           </button>`
-        : '';
+      const gridHTML = `
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4" data-grid>
+          ${visible.map(p => cardHTML(p, state.q)).join('')}
+        </div>`;
 
       return `
         <section id="group-${sectionName}" class="card p-5 sm:p-6" aria-labelledby="h-${sectionName}">
@@ -552,9 +516,8 @@
           </div>
 
           <div id="body-${sectionName}" class="mt-2 ${isOpen ? '' : 'hidden'}">
-            ${previewGrid}
-            ${restGrid}
-            ${moreBtn}
+            ${gridHTML}
+            ${toggleBtn}
             <div class="mt-6 text-sm text-ink-300">
               <a class="u-underline" href="archive.html?section=${encodeURIComponent(sectionName)}">Open full archive →</a>
             </div>
@@ -566,40 +529,84 @@
     function renderGroups(groups){
       groupsEl.innerHTML = ORDER.map(s => groupSectionHTML(s, groups[s] || [])).join('');
 
-      // Bind +/− toggles (persist open state)
+      // Toggle accordion (persist open)
       groupsEl.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
-          const idAttr = sectionEl?.id || '';       // "group-Essay"
-          const name = idAttr.replace(/^group-/, ''); // "Essay"
-
+          const name = (sectionEl?.id || '').replace(/^group-/, '');
           const expanded = btn.getAttribute('aria-expanded') === 'true';
           btn.setAttribute('aria-expanded', String(!expanded));
           const body = sectionEl.querySelector('[id^="body-"]');
           if (body) body.classList.toggle('hidden');
-
-          if (!expanded) state.openSections.add(name);
-          else state.openSections.delete(name);
+          if (!expanded) state.openSections.add(name); else state.openSections.delete(name);
         });
       });
 
-      // Bind "Show more" (persist)
+      // Show more (persist)
       groupsEl.querySelectorAll('[data-showmore]').forEach(btn => {
         btn.addEventListener('click', () => {
           const sectionEl = btn.closest('section');
-          const idAttr = sectionEl?.id || '';
-          const name = idAttr.replace(/^group-/, '');
-          const rest = sectionEl.querySelector('[data-rest]');
-          if (rest) {
-            rest.classList.remove('hidden');
-            state.showMoreOpen.add(name);
-            btn.remove();
-          }
+          const name = (sectionEl?.id || '').replace(/^group-/, '');
+          state.showMoreOpen.add(name);
+          // re-render that one section to keep scroll position tight
+          rerenderOneSection(name);
+        });
+      });
+
+      // Show less (persist)
+      groupsEl.querySelectorAll('[data-showless]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sectionEl = btn.closest('section');
+          const name = (sectionEl?.id || '').replace(/^group-/, '');
+          state.showMoreOpen.delete(name);
+          rerenderOneSection(name, { scrollIntoView: true });
         });
       });
 
       // Make all injected cards clickable
       enableCardClicks(groupsEl);
+    }
+
+    function rerenderOneSection(name, opts = {}){
+      const groups = groupPosts();
+      const html = groupSectionHTML(name, groups[name] || []);
+      const old = document.getElementById('group-' + name);
+      if (old) {
+        // Keep current vertical position stable
+        const top = old.getBoundingClientRect().top + window.scrollY;
+        old.outerHTML = html;
+        // rebind just this section
+        const fresh = document.getElementById('group-' + name);
+        // bind toggles/buttons inside
+        fresh.querySelectorAll('[data-accordion-toggle]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const sectionEl = btn.closest('section');
+            const nm = (sectionEl?.id || '').replace(/^group-/, '');
+            const expanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', String(!expanded));
+            const body = sectionEl.querySelector('[id^="body-"]');
+            if (body) body.classList.toggle('hidden');
+            if (!expanded) state.openSections.add(nm); else state.openSections.delete(nm);
+          });
+        });
+        fresh.querySelectorAll('[data-showmore]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.showMoreOpen.add(name);
+            rerenderOneSection(name);
+          });
+        });
+        fresh.querySelectorAll('[data-showless]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            state.showMoreOpen.delete(name);
+            rerenderOneSection(name, { scrollIntoView: true });
+          });
+        });
+        enableCardClicks(fresh);
+        if (opts.scrollIntoView) {
+          // keep user near the section header when collapsing
+          window.scrollTo({ top: top - 16, behavior: 'smooth' });
+        }
+      }
     }
 
     function renderAll(){
@@ -608,16 +615,14 @@
       renderGroups(groups);
     }
 
-    // Desktop header search -> search page
+    // Header search -> search page
     function goToSearch(){
       const q = (qDesktop?.value || '').trim();
       const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
       location.href = url;
     }
     qHeaderBtn?.addEventListener('click', (e) => { e.preventDefault(); goToSearch(); });
-    qDesktop?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }
-    });
+    qDesktop?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }});
 
     // Controls
     sortSel?.addEventListener('change', () => { state.sort = sortSel.value; renderAll(); });
@@ -630,7 +635,7 @@
     (async function init(){
       ALL_POSTS = await loadPosts();
       renderAll();
-      // Open the first non-empty section by default (persist across sorts)
+      // Open the first non-empty section by default
       for (const name of ORDER){
         const groupsNow = groupPosts();
         if ((groupsNow[name] || []).length > 0) {
