@@ -94,6 +94,11 @@
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
+
+    /* Make + / − icon black */
+    .icon-toggle { color: #0E0E0E; }               /* or #000 */
+    .icon-toggle::before,
+    .icon-toggle::after { background: currentColor; }
   </style>
 
   <!-- Canonical / Social (update domain when live) -->
