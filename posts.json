@@ -1,5 +1,18 @@
 [
   {
+    "slug": "youknowwhatimean",
+    "title": "YouKnowWhatIMean",
+    "section": "Interview",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "ShoutoutShoutout",
+    "date": "2025-11-09T01:24",
+    "readMinutes": 1,
+    "featured": true,
+    "cover": "images/2025/11/youknowwhatimean/cover.png",
+    "url": "youknowwhatimean.html"
+  },
+  {
     "slug": "this-must-work",
     "title": "This Must Work",
     "section": "Essay",
