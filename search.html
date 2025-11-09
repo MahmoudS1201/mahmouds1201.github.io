@@ -40,14 +40,16 @@
     .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     ::selection{background:rgba(197,61,47,.15)}
     .result-title mark,.result-excerpt mark{background:rgba(197,61,47,.15);padding:0 .125rem;border-radius:.2rem}
-    input[type="search"]::-webkit-search-cancel-button {
-      -webkit-appearance: none;
-      appearance: none;
-      display: none;
-    }
-    input[type="search"]::-ms-clear {
-      display: none;
-    }
+
+    /* Tag chips (matches the rest of the site) */
+    .chip{border:1px solid rgba(0,0,0,.10);border-radius:9999px;padding:.35rem .65rem;font-weight:600;font-size:.75rem;line-height:1}
+
+    /* Hide native clear buttons */
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
+    input[type="search"]::-ms-clear { display:none; }
   </style>
 
   <!-- JSON-LD -->
@@ -131,7 +133,7 @@
     </div>
   </main>
 
-          <!-- Back to top -->
+  <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
@@ -190,27 +192,24 @@
     </div>
   </footer>
 
-    <script>
+  <script>
     // ---------- Utilities ----------
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
     const WORDS_RE = /[a-z0-9\u00C0-\u017F]+/gi;
 
     const words = (s='') => (s.toLowerCase().match(WORDS_RE) || []);
-    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     function highlight(text='', terms=[]){
-      if (!terms.length || !text) return text;
+      if (!terms.length || !text) return String(text || '');
       const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
-      return text.replace(pat, '<mark>$1</mark>');
+      return String(text).replace(pat, '<mark>$1</mark>');
     }
 
-        // Back to top visibility + behavior
+    // Back to top visibility + behavior
     const backTop = document.getElementById('backTop');
-    const toggleTop = () => {
-      if (window.scrollY > 600) backTop.classList.remove('hidden');
-      else backTop.classList.add('hidden');
-    };
+    const toggleTop = () => { if (window.scrollY > 600) backTop.classList.remove('hidden'); else backTop.classList.add('hidden'); };
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
@@ -227,16 +226,29 @@
     }
 
     function normalizeItem(x){
+      const tagsArr =
+        Array.isArray(x.tags) ? x.tags :
+        (typeof x.tags === 'string' ? x.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
+
+      const coverStr =
+        typeof x.cover === 'string' ? x.cover :
+        (x.cover && x.cover.src ? x.cover.src : '');
+
+      const href =
+        (x.url && String(x.url).trim()) ? String(x.url).trim() :
+        (x.slug ? `${x.slug}.html` : '#');
+
       return {
         title: x.title || '',
         slug:  x.slug  || '',
+        url:   href,
         section: x.section || '',
         excerpt: x.excerpt || '',
-        date: x.date || '',
-        readMinutes: x.readMinutes || 0,
-        tags: Array.isArray(x.tags) ? x.tags : [],
-        cover: x.cover && x.cover.src ? x.cover.src : '',
-        bodyText: (x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ')
+        date: x.date || x.publishedAt || '',
+        readMinutes: x.readMinutes || x.read || 0,
+        tags: tagsArr,
+        cover: coverStr,
+        bodyText: String(x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ').slice(0, 2000) // cap for perf
       };
     }
 
@@ -305,7 +317,7 @@
       empty.classList.add('hidden');
 
       for (const it of list){
-        const href = `${it.slug ? it.slug : 'article'}.html`;
+        const href = it.url && it.url !== '#' ? it.url : `${it.slug ? it.slug : 'article'}.html`;
 
         const card = document.createElement('article');
         card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
@@ -315,6 +327,9 @@
           img.className = 'aspect-[16/10] object-cover';
           img.src = it.cover;
           img.alt = it.title || 'Cover image';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          img.sizes = '(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw';
           card.appendChild(img);
         }
 
@@ -337,9 +352,25 @@
         p.innerHTML = highlight(raw, qTerms);
         body.appendChild(p);
 
+        /* TAGS ROW */
+        if (it.tags && it.tags.length){
+          const tagsWrap = document.createElement('div');
+          tagsWrap.className = 'mt-3 flex flex-wrap gap-2';
+          it.tags.forEach(tag => {
+            const chip = document.createElement('span');
+            chip.className = 'chip';
+            chip.innerHTML = highlight(tag, qTerms);
+            tagsWrap.appendChild(chip);
+          });
+          body.appendChild(tagsWrap);
+        }
+
         const f = document.createElement('div');
         f.className = 'mt-auto pt-4 text-sm text-ink-300';
-        f.textContent = `${formatDate(it.date)} • ${it.readMinutes||0} min`;
+        const parts = [];
+        if (it.date) parts.push(formatDate(it.date));
+        if (it.readMinutes) parts.push(`${it.readMinutes} min`);
+        f.textContent = parts.join(' • ');
         body.appendChild(f);
 
         card.appendChild(body);
@@ -355,7 +386,7 @@
       // Footer year
       $('#year').textContent = new Date().getFullYear();
 
-      // Load + normalize once
+      // Load + normalize once (from localStorage; your admin page writes here)
       const ALL = loadPublished().map(normalizeItem);
 
       // Build the complete Section list once
@@ -383,7 +414,7 @@
         const qTerms = words(q);
         const sort = sortSel.value || 'best';
 
-        // Shrink section options to only those that have a match for this query
+        // Narrow section options based on current query
         updateSectionOptionsForQuery(ALL, qTerms);
 
         // Re-read section AFTER pruning
@@ -394,9 +425,7 @@
           .filter(it => (!section || it.section === section))
           .filter(it => matchesQuery(it, qTerms));
 
-        sortItems(filtered, (
-          sort === 'best' ? 'dateDesc' : sort // 'best' falls back to newest
-        ));
+        sortItems(filtered, (sort === 'best' ? 'dateDesc' : sort));
 
         renderResults(filtered, qTerms);
         clearQ.classList.toggle('hidden', q.length === 0);
