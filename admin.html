@@ -756,25 +756,34 @@
     async function updatePrevNextPreview(){
       if (!previewPrev || !previewNext) return;
 
-      const posts = (await loadPostsList()).map(normalizePreviewItem);
+      // Hide by default
+      previewPrev.classList.add('hidden');
+      previewNext.classList.add('hidden');
 
-      // Compose current draft as if it were already published
+      // Only show neighbors when the draft looks "real"
       const current = collect();
-      const slug = current.slug || slugify(current.title || '');
-      const title = current.title || 'Untitled';
-      const date = current.date || new Date().toISOString();
+      const slug = (current.slug || '').trim();
+      const title = (current.title || '').trim();
 
-      // De-duplicate by slug then insert/replace current draft
-      const map = new Map(posts.map(p => [p.slug, p]));
-      map.set(slug, { slug, title, date });
-      const arr = Array.from(map.values()).sort(sortByDateDesc);
+      // Guard: no title or slug? don't compute neighbors yet.
+      if (!title || !slug) return;
 
-      const idx = arr.findIndex(p => p.slug === slug);
-      if (idx === -1){
-        previewPrev.classList.add('hidden');
-        previewNext.classList.add('hidden');
+      // Guard: don't try without posts.json or with an empty list
+      let posts;
+      try {
+        posts = (await loadPostsList()).map(normalizePreviewItem);
+      } catch {
         return;
       }
+      if (!Array.isArray(posts) || posts.length === 0) return;
+
+      // Merge draft into list (de-dupe by slug)
+      const map = new Map(posts.map(p => [p.slug, p]));
+      map.set(slug, { slug, title, date: current.date || new Date().toISOString() });
+      const arr = Array.from(map.values()).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      const idx = arr.findIndex(p => p.slug === slug);
+      if (idx === -1) return;
 
       const prev = arr[idx + 1]; // older
       const next = arr[idx - 1]; // newer
@@ -783,16 +792,11 @@
         previewPrev.textContent = '← ' + prev.title;
         previewPrev.href = `${prev.slug}.html`;
         previewPrev.classList.remove('hidden');
-      } else {
-        previewPrev.classList.add('hidden');
       }
-
       if (next){
         previewNext.textContent = next.title + ' →';
         previewNext.href = `${next.slug}.html`;
         previewNext.classList.remove('hidden');
-      } else {
-        previewNext.classList.add('hidden');
       }
     }
 
