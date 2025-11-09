@@ -248,27 +248,32 @@
 
   <!-- Sections / Categories -->
   <section id="sections" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-    <h2 class="font-serif text-2xl mb-6">Sections</h2>
+    <div class="flex items-end justify-between mb-6">
+      <h2 class="font-serif text-2xl">Sections</h2>
+      <!-- NEW: View all for Sections -->
+      <a class="u-underline text-sm" href="sections.html">View all</a>
+    </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <a href="sections.html#essays" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
+      <!-- UPDATED: direct anchors to matching group IDs -->
+      <a href="sections.html#group-Essay" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
         <div class="text-xs uppercase tracking-wide text-accent">Essays</div>
         <h3 class="font-serif text-xl mt-2">Ideas &amp; Analysis</h3>
         <p class="text-ink-500 mt-2">Longform reflections on culture, politics, and place.</p>
         <span class="mt-4 text-sm text-ink-300 group-hover:text-accent">Explore →</span>
       </a>
-      <a href="sections.html#interviews" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
+      <a href="sections.html#group-Interview" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
         <div class="text-xs uppercase tracking-wide text-accent">Interviews</div>
         <h3 class="font-serif text-xl mt-2">Conversations</h3>
         <p class="text-ink-500 mt-2">Artists, scholars, and organizers in dialogue.</p>
         <span class="mt-4 text-sm text-ink-300 group-hover:text-accent">Explore →</span>
       </a>
-      <a href="sections.html#visual" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
+      <a href="sections.html#group-Visual" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
         <div class="text-xs uppercase tracking-wide text-accent">Visual</div>
         <h3 class="font-serif text-xl mt-2">Photography &amp; Art</h3>
         <p class="text-ink-500 mt-2">Portfolios and visual essays.</p>
         <span class="mt-4 text-sm text-ink-300 group-hover:text-accent">Explore →</span>
       </a>
-      <a href="sections.html#reviews" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
+      <a href="sections.html#group-Review" class="group bg-white rounded-2xl p-6 shadow-soft hover:shadow transition flex flex-col">
         <div class="text-xs uppercase tracking-wide text-accent">Reviews</div>
         <h3 class="font-serif text-xl mt-2">Books &amp; Film</h3>
         <p class="text-ink-500 mt-2">Critical takes and recommendations.</p>
@@ -500,7 +505,7 @@
         document.getElementById('picks').innerHTML = picks.map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
 
         // Featured grid (3)
-        const grid = featured.filter(p => p !== leadPost).slice(1,4);
+        const grid = featured.filter(p => p !== leadPost).slice(0,3);
         for (const p of posts){
           if (grid.length >= 3) break;
           if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
