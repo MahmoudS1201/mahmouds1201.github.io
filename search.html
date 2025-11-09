@@ -223,6 +223,21 @@
       return basePath + u;                                  // plain relative
     }
 
+    // ---------- Blob -> Raw rewriter (for GitHub file links) ----------
+    function toRawIfGithubBlob(u){
+      if (!u) return u;
+      try{
+        const url = new URL(u, location.origin);
+        if (url.hostname === 'github.com' && url.pathname.includes('/blob/')){
+          const parts = url.pathname.split('/').filter(Boolean); // user, repo, blob, branch, ...path
+          const user = parts[0], repo = parts[1], branch = parts[3];
+          const rest = parts.slice(4).join('/');
+          return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${rest}`;
+        }
+        return u;
+      }catch{ return u; }
+    }
+
     // ---------- Data ----------
     function loadPublished(){
       const out = [];
@@ -242,13 +257,18 @@
         Array.isArray(x.tags) ? x.tags :
         (typeof x.tags === 'string' ? x.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
 
-      const coverRaw =
+      let coverRaw =
         typeof x.cover === 'string' ? x.cover :
         (x.cover && x.cover.src ? x.cover.src : '');
 
-      const hrefRaw =
+      coverRaw = toRawIfGithubBlob(coverRaw);
+      const cover = toBase(coverRaw || FALLBACK);
+
+      let hrefRaw =
         (x.url && String(x.url).trim()) ? String(x.url).trim() :
         (x.slug ? `${x.slug}.html` : '#');
+
+      hrefRaw = toRawIfGithubBlob(hrefRaw);
 
       return {
         title: x.title || '',
@@ -259,7 +279,7 @@
         date: x.date || x.publishedAt || '',
         readMinutes: x.readMinutes || x.read || 0,
         tags: tagsArr,
-        cover: toBase(coverRaw || FALLBACK),   // <-- critical: resolve through toBase
+        cover,
         bodyText: String(x.bodyMarkdown || x.bodyHtml || '').replace(/<[^>]+>/g,' ').slice(0, 2000)
       };
     }
@@ -334,7 +354,7 @@
         if (it.cover){
           const img = document.createElement('img');
           img.className = 'aspect-[16/10] object-cover';
-          img.src = it.cover;                          // already normalized with toBase
+          img.src = it.cover;                          // already normalized
           img.alt = it.title || 'Cover image';
           img.loading = 'lazy';
           img.decoding = 'async';
