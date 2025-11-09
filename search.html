@@ -42,6 +42,32 @@
     .result-title mark,.result-excerpt mark{background:rgba(197,61,47,.15);padding:0 .125rem;border-radius:.2rem}
     .chip{border:1px solid rgba(0,0,0,.10);border-radius:9999px;padding:.35rem .65rem;font-weight:600;font-size:.75rem;line-height:1}
 
+    /* full-card click affordance (same as other pages) */
+    [data-href]{
+      transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+      cursor: pointer;
+    }
+    [data-href]:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+      background:#fff;
+    }
+    [data-href]:focus-visible{
+      outline: 2px solid #C53D2F;
+      outline-offset: 2px;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    /* Number badge */
+    .num-badge{
+      position:absolute; top:.5rem; left:.5rem;
+      background:rgba(229, 90, 73, .95); /* accent light */
+      color:white; font-weight:700; font-size:.85rem;
+      border-radius:.65rem; padding:.25rem .5rem;
+      line-height:1;
+    }
+
     /* hide native clear buttons */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
@@ -101,10 +127,11 @@
       </select>
     </form>
 
-    <!-- Stats / sorting -->
-    <div class="mt-6 flex items-center justify-between text-sm text-ink-400">
+    <!-- Stats / controls -->
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm text-ink-400">
       <div id="resultCount" aria-live="polite">0 results</div>
-      <div>
+
+      <div class="flex items-center gap-2">
         <label class="mr-2" for="sortBy">Sort:</label>
         <select id="sortBy" class="px-3 py-2 rounded-lg border border-black/10 bg-white">
           <option value="best">Best match</option>
@@ -113,6 +140,13 @@
           <option value="titleAsc">Title A–Z</option>
           <option value="titleDesc">Title Z–A</option>
         </select>
+
+        <!-- View toggle + Numbered (like other pages) -->
+        <div class="ml-4 inline-flex rounded-lg overflow-hidden border border-black/10">
+          <button id="modeGrid" type="button" class="px-3 py-2 bg-white text-ink-500 hover:text-ink-900">Grid</button>
+          <button id="modeList" type="button" class="px-3 py-2 bg-white text-ink-500 hover:text-ink-900">List</button>
+        </div>
+        <button id="toggleNums" type="button" class="px-3 py-2 rounded-lg border border-black/10 bg-white hover:shadow-soft">Numbered</button>
       </div>
     </div>
 
@@ -191,8 +225,8 @@
   </footer>
 
   <script>
-    /* ========= Same helpers as index.html ========= */
-    const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
+    /* ===== Subpath helper (same as index.html) ===== */
+    const basePath = location.pathname.replace(/[^/]*$/, '');
     function toBase(u){
       if (!u) return '';
       if (/^https?:\/\//i.test(u)) return u;
@@ -210,7 +244,7 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    /* ========= Posts loader (exact flow as index) ========= */
+    /* ===== Data loader (same as index) ===== */
     async function loadPosts(){
       const url = toBase('posts.json');
       const res = await fetch(url, { cache: 'no-store' });
@@ -218,9 +252,7 @@
       const arr = await res.json();
       return arr.map(normalize).sort(byNewest);
     }
-
     function normalize(item){
-      // URLs and cover resolve with toBase like index.html
       const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
       const cover = item.cover || (item.cover && item.cover.src) || '';
       const tags  = Array.isArray(item.tags) ? item.tags :
@@ -237,11 +269,10 @@
         bodyText: String(item.bodyMarkdown || item.bodyHtml || '').replace(/<[^>]+>/g,' ')
       };
     }
-
     const byNewest = (a,b)=> new Date(b.date) - new Date(a.date);
     const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
 
-    /* ========= Search utilities ========= */
+    /* ===== Search utilities ===== */
     const WORDS_RE = /[a-z0-9\u00C0-\u017F]+/gi;
     const words = s => (String(s||'').toLowerCase().match(WORDS_RE) || []);
     const esc = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -250,7 +281,6 @@
       const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
       return String(text).replace(pat, '<mark>$1</mark>');
     }
-
     function matchesQuery(post, qTerms){
       if (!qTerms.length) return true;
       const fields = [
@@ -262,7 +292,6 @@
       ];
       return fields.some(f => qTerms.every(t => f.includes(t)));
     }
-
     function sortItems(arr, mode){
       if (mode === 'dateAsc')  return arr.sort((a,b)=> new Date(a.date) - new Date(b.date));
       if (mode === 'dateDesc') return arr.sort((a,b)=> new Date(b.date) - new Date(a.date));
@@ -270,7 +299,6 @@
       if (mode === 'titleDesc')return arr.sort((a,b)=> (b.title||'').localeCompare(a.title||''));
       return arr.sort((a,b)=> new Date(b.date) - new Date(a.date)); // 'best' → newest
     }
-
     function populateSectionsAll(items){
       const sel = document.getElementById('sectionFilter');
       const set = new Set(items.map(i => (i.section||'').trim()).filter(Boolean));
@@ -278,19 +306,41 @@
         [...set].sort().map(s=>`<option value="${s}">${s}</option>`).join('');
     }
 
-    function updateSectionOptionsForQuery(items, qTerms){
-      const sel = document.getElementById('sectionFilter');
-      const keep = sel.value;
-      const allowed = new Set(items.filter(p => matchesQuery(p, qTerms)).map(p => p.section).filter(Boolean));
-      [...sel.options].forEach(opt => {
-        if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; }
-        const ok = allowed.has(opt.value);
-        opt.hidden = !ok; opt.disabled = !ok;
+    /* ===== Full-card click behavior (same as other pages) ===== */
+    function enableCardClicks(root=document){
+      root.querySelectorAll('[data-href]').forEach(el => {
+        if (el.__clickBound) return;
+        el.__clickBound = true;
+        el.setAttribute('role','link');
+        el.setAttribute('tabindex','0');
+        el.addEventListener('click', e => {
+          if (e.target.closest && e.target.closest('a')) return;
+          const url = el.getAttribute('data-href');
+          if (url) window.location.href = url;
+        });
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const url = el.getAttribute('data-href');
+            if (url) window.location.href = url;
+          }
+        });
       });
-      if (keep && !allowed.has(keep)) sel.value = '';
+    }
+
+    /* ===== Render ===== */
+    const state = { mode:'grid', numbered:false }; // mode: 'grid' | 'list'
+    function applyContainerLayout(){
+      const wrap = document.getElementById('results');
+      if (state.mode === 'list'){
+        wrap.className = 'mt-6 space-y-4'; // stacked list
+      } else {
+        wrap.className = 'mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-8'; // grid
+      }
     }
 
     function renderResults(list, qTerms){
+      applyContainerLayout();
       const wrap = document.getElementById('results');
       wrap.innerHTML = '';
 
@@ -300,22 +350,45 @@
       if (!list.length){ empty.classList.remove('hidden'); return; }
       empty.classList.add('hidden');
 
-      for (const it of list){
+      list.forEach((it, idx) => {
+        // CARD ROOT
         const card = document.createElement('article');
-        card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
+        card.setAttribute('data-href', it.href);
 
+        if (state.mode === 'list'){
+          card.className = 'bg-white rounded-2xl shadow-soft p-5 sm:p-6 flex gap-5 items-stretch';
+        } else {
+          card.className = 'bg-white rounded-2xl shadow-soft overflow-hidden flex flex-col';
+        }
+
+        // IMAGE
         if (it.cover){
           const img = document.createElement('img');
-          img.className = 'aspect-[16/10] object-cover';
-          img.src = it.cover;               // resolved via toBase(), same as index.html
           img.alt = it.title || 'Cover image';
           img.loading = 'lazy';
           img.decoding = 'async';
+          if (state.mode === 'list'){
+            img.className = 'w-44 h-32 object-cover rounded-xl hidden sm:block';
+          } else {
+            img.className = 'aspect-[16/10] object-cover';
+          }
+          img.src = it.cover; // already toBase()
           card.appendChild(img);
         }
 
+        // BODY
         const body = document.createElement('div');
-        body.className = 'p-6 flex-1 flex flex-col';
+        body.className = state.mode === 'list' ? 'flex-1 flex flex-col' : 'p-6 flex-1 flex flex-col';
+        if (state.mode !== 'list' && !it.cover) body.classList.add('p-6');
+
+        // number badge
+        if (state.numbered){
+          const badge = document.createElement('div');
+          badge.className = 'num-badge';
+          badge.textContent = (idx + 1) + '.';
+          card.style.position = 'relative';
+          card.appendChild(badge);
+        }
 
         const meta = document.createElement('div');
         meta.className = 'text-xs uppercase tracking-wide text-accent';
@@ -323,7 +396,7 @@
         body.appendChild(meta);
 
         const h3 = document.createElement('h3');
-        h3.className = 'font-serif text-xl mt-2 leading-snug result-title';
+        h3.className = state.mode === 'list' ? 'font-serif text-xl mt-1 leading-snug result-title' : 'font-serif text-xl mt-2 leading-snug result-title';
         h3.innerHTML = `<a class="u-underline" href="${it.href}">${highlight(it.title, qTerms)}</a>`;
         body.appendChild(h3);
 
@@ -333,7 +406,7 @@
         p.innerHTML = highlight(raw, qTerms);
         body.appendChild(p);
 
-        // tags (chips, same site style)
+        // tags
         if (it.tags && it.tags.length){
           const tagsWrap = document.createElement('div');
           tagsWrap.className = 'mt-3 flex flex-wrap gap-2';
@@ -354,23 +427,37 @@
         f.textContent = bits.join(' • ');
         body.appendChild(f);
 
-        card.appendChild(body);
+        if (state.mode === 'list'){
+          // in list mode, body already has padding from parent; keep clean
+          card.appendChild(body);
+        } else {
+          card.appendChild(body);
+        }
+
         wrap.appendChild(card);
-      }
+      });
+
+      // activate stretched-click behavior
+      enableCardClicks(wrap);
     }
 
     function debounce(fn, ms=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
     const getParam = (name) => new URL(location.href).searchParams.get(name) || '';
 
-    /* ========= Init ========= */
+    /* ===== Init ===== */
     (async function(){
-      const ALL = await loadPosts();                 // ← same data source & URL logic as index.html
+      const ALL = await loadPosts();
       populateSectionsAll(ALL);
 
       const qInput = document.getElementById('q');
       const clearQ = document.getElementById('clearQ');
       const sectionSel = document.getElementById('sectionFilter');
       const sortSel = document.getElementById('sortBy');
+
+      // controls
+      const btnGrid = document.getElementById('modeGrid');
+      const btnList = document.getElementById('modeList');
+      const btnNums = document.getElementById('toggleNums');
 
       const initQ = getParam('q');
       if (initQ){ qInput.value = initQ; clearQ.classList.remove('hidden'); }
@@ -387,7 +474,17 @@
         const qTerms = words(q);
         const sort = sortSel.value || 'best';
 
-        updateSectionOptionsForQuery(ALL, qTerms);
+        // shrink section options based on query
+        const allowed = new Set(ALL.filter(p => matchesQuery(p, qTerms)).map(p => p.section).filter(Boolean));
+        const sel = sectionSel;
+        const keep = sel.value;
+        [...sel.options].forEach(opt => {
+          if (opt.value === '') { opt.hidden = false; opt.disabled = false; return; }
+          const ok = allowed.has(opt.value);
+          opt.hidden = !ok; opt.disabled = !ok;
+        });
+        if (keep && !allowed.has(keep)) sel.value = '';
+
         const section = sectionSel.value;
 
         const filtered = ALL
@@ -395,6 +492,8 @@
           .filter(it => matchesQuery(it, qTerms));
 
         sortItems(filtered, sort === 'best' ? 'dateDesc' : sort);
+
+        document.getElementById('resultCount').textContent = `${filtered.length} ${filtered.length===1?'result':'results'}`;
 
         renderResults(filtered, qTerms);
         clearQ.classList.toggle('hidden', q.length === 0);
@@ -405,6 +504,14 @@
       clearQ.addEventListener('click', ()=>{ qInput.value=''; run(); syncURL(); qInput.focus(); });
       sectionSel.addEventListener('change', run);
       sortSel.addEventListener('change', run);
+
+      // mode toggles
+      btnGrid.addEventListener('click', () => { state.mode = 'grid'; btnGrid.classList.add('bg-accent','text-white'); btnList.classList.remove('bg-accent','text-white'); run(); });
+      btnList.addEventListener('click', () => { state.mode = 'list'; btnList.classList.add('bg-accent','text-white'); btnGrid.classList.remove('bg-accent','text-white'); run(); });
+      btnNums.addEventListener('click', () => { state.numbered = !state.numbered; btnNums.classList.toggle('bg-accent'); btnNums.classList.toggle('text-white'); run(); });
+
+      // default active state
+      btnGrid.classList.add('bg-accent','text-white');
 
       run();
     })().catch(err => {
