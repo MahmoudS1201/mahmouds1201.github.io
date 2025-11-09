@@ -487,7 +487,7 @@
       grid.innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
+      countShownEl.textContent = String(pageItems.length);
       countTotalEl.textContent = String(total);
 
       prevBtn.disabled = state.page <= 1;
