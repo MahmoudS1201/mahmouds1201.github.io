@@ -606,6 +606,41 @@
       init();
     });
 
+    function setStretchedClick(el, url){
+      if (!el || !url) return;
+      el.setAttribute('data-href', url);
+      el.setAttribute('role','link');
+      el.setAttribute('tabindex','0');
+
+      if (el.__clickBound) return; // avoid double-binding
+      el.__clickBound = true;
+
+      el.addEventListener('click', (e) => {
+        // let inner <a> clicks behave normally
+        if (e.target.closest && e.target.closest('a')) return;
+        const to = el.getAttribute('data-href');
+        if (to) window.location.href = to;
+      });
+
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const to = el.getAttribute('data-href');
+          if (to) window.location.href = to;
+        }
+      });
+
+      el.addEventListener('mouseenter', () => {
+        const to = el.getAttribute('data-href');
+        if (!to) return;
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = to;
+        document.head.appendChild(link);
+        setTimeout(()=>link.remove(), 4000);
+      });
+    }
+
     /* ---------- Init ---------- */
     async function init(){
       let data = await fetchPostsJson();
@@ -624,6 +659,7 @@
       if (FEATURED.length) {
         document.getElementById('heroWrap').classList.remove('hidden');
         fillHero(FEATURED[0]);
+        setStretchedClick(document.getElementById('heroWrap'), post.href || '#');
       } else {
         document.getElementById('heroWrap').classList.add('hidden');
       }
