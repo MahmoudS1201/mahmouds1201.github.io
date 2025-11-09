@@ -1,5 +1,20 @@
 [
   {
+    "slug": "this-must-work",
+    "title": "This Must Work",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Howdy Doody",
+    "date": "2025-11-09T01:16",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/this-must-work/cover.png",
+    "url": "this-must-work.html"
+  },
+  {
     "slug": "baggaboosh",
     "title": "Baggaboosh",
     "section": "Essay",
