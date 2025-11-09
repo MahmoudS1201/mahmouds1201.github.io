@@ -53,19 +53,15 @@
       .tab { padding:.45rem .8rem; }
     }
 
-    /* Hide native clear buttons on search inputs (kept outside the media query) */
+    /* Hide native clear buttons on search inputs */
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
-    input[type="search"]::-webkit-search-results-decoration {
-      -webkit-appearance: none;
-      appearance: none;
-      display: none;
-    }
-    input[type="search"]::-ms-clear { display: none; }
+    input[type="search"]::-webkit-search-results-decoration { -webkit-appearance:none; appearance:none; display:none; }
+    input[type="search"]::-ms-clear { display:none; }
   </style>
 
-  <!-- Canonical / Social (update domain when live) -->
+  <!-- Canonical / Social -->
   <link rel="canonical" href="https://example.com/sections" />
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sections — Camila Tiburcio Rubio">
@@ -103,7 +99,7 @@
           <a class="u-underline" href="about2.html">About</a>
         </nav>
 
-        <!-- Desktop search (routes to search page) -->
+        <!-- Desktop search -->
         <div class="hidden md:flex items-center gap-4">
           <label class="relative" aria-label="Search site">
             <input id="q-desktop" type="search" placeholder="Search…" class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -158,7 +154,7 @@
     </div>
   </section>
 
-  <!-- Tabs + search -->
+  <!-- Tabs + search + view toggle -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
       <div id="tabs" class="flex flex-wrap gap-2" role="tablist" aria-label="Sections">
@@ -173,6 +169,12 @@
       <div class="flex items-center gap-3">
         <label class="sr-only" for="q-inline">Search titles in section</label>
         <input id="q-inline" type="search" placeholder="Search titles in section…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+
+        <div class="hidden sm:flex items-center gap-2" role="group" aria-label="View options">
+          <button id="viewCards" class="px-3 py-2 rounded-xl border border-black/10 bg-white data-[active=true]:bg-accent/10 data-[active=true]:border-accent/30 data-[active=true]:text-accent" data-active="true" aria-pressed="true">Cards</button>
+          <button id="viewList"  class="px-3 py-2 rounded-xl border border-black/10 bg-white data-[active=true]:bg-accent/10 data-[active=true]:border-accent/30 data-[active=true]:text-accent" data-active="false" aria-pressed="false">List</button>
+        </div>
+
         <label class="text-sm text-ink-500" for="pageSize">Per page</label>
         <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
           <option>6</option><option selected>9</option><option>12</option>
@@ -185,8 +187,8 @@
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid lg:grid-cols-3 gap-10">
     <!-- Main column -->
     <div class="lg:col-span-2 space-y-8">
-      <!-- Featured -->
-      <article id="featured" class="card overflow-hidden hidden">
+      <!-- Featured (Cards view only) -->
+      <article id="featured" class="card overflow-hidden hidden" aria-hidden="true">
         <img id="featImg" class="feat-img" src="" alt="">
         <div class="p-6 sm:p-8">
           <div class="flex items-center gap-3 text-xs uppercase tracking-wide text-accent">
@@ -201,9 +203,19 @@
         </div>
       </article>
 
-      <!-- Grid -->
-      <div id="grid" class="grid sm:grid-cols-2 gap-6">
-        <!-- cards injected here -->
+      <!-- Cards grid -->
+      <div id="gridWrap" class="block">
+        <div id="grid" class="grid sm:grid-cols-2 gap-6"></div>
+      </div>
+
+      <!-- List view container (grouped by year) -->
+      <div id="listWrap" class="hidden">
+        <div id="listContainer" class="space-y-8"></div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty" class="hidden rounded-xl border border-dashed border-black/10 bg-white p-8 text-center text-ink-500">
+        <p>No posts match your filters yet. Try changing the section, search, or sort.</p>
       </div>
 
       <!-- Pagination -->
@@ -336,7 +348,12 @@
     const featExcerpt = document.getElementById('featExcerpt');
     const featLink = document.getElementById('featLink');
 
+    const gridWrap = document.getElementById('gridWrap');
     const grid = document.getElementById('grid');
+    const listWrap = document.getElementById('listWrap');
+    const listContainer = document.getElementById('listContainer');
+    const emptyEl = document.getElementById('empty');
+
     const pageNumEl = document.getElementById('pageNum');
     const pageTotalEl = document.getElementById('pageTotal');
     const countShownEl = document.getElementById('countShown');
@@ -344,10 +361,38 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
+    const viewCardsBtn = document.getElementById('viewCards');
+    const viewListBtn = document.getElementById('viewList');
+
     // ---------- Utilities ----------
     function fmtDate(iso){
       try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }
       catch { return iso; }
+    }
+    function getYear(iso){
+      try { return new Date(iso).getFullYear(); }
+      catch { return 'Unknown'; }
+    }
+
+    function updateURLState(){
+      const params = new URLSearchParams();
+      params.set('section', state.section);
+      if (state.q) params.set('q', state.q);
+      params.set('view', state.view);
+      params.set('sort', state.sort);
+      params.set('page', String(state.page));
+      history.replaceState(null, '', `?${params.toString()}`);
+    }
+
+    function readURLState(){
+      const p = new URLSearchParams(location.search);
+      return {
+        section: p.get('section') || 'Essay',
+        q: p.get('q') || '',
+        view: (p.get('view') === 'list') ? 'list' : 'cards',
+        sort: p.get('sort') || 'new',
+        page: parseInt(p.get('page') || '1', 10) || 1
+      };
     }
 
     // Canonicalize plural/variant section labels to match tabs
@@ -440,13 +485,37 @@
       </article>`;
     }
 
+    function listItemHTML(p, query){
+      const t = highlight(escapeHtml(p.title), query);
+      const e = highlight(escapeHtml(p.excerpt || ''), query);
+      return `
+        <li class="flex gap-4 items-start">
+          <a href="${p.href}" class="shrink-0 hidden sm:block">
+            <img class="w-28 h-20 object-cover rounded-lg border border-black/5" src="${p.img}" alt="${escapeHtml(p.title)}">
+          </a>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2 text-xs uppercase tracking-wide">
+              <span class="bg-accent/10 text-accent px-2 py-0.5 rounded-full">${escapeHtml(p.section)}</span>
+              <time class="text-ink-300">${fmtDate(p.date)}</time>
+              ${p.read ? `<span class="text-ink-300">• ${p.read} min</span>` : ``}
+            </div>
+            <h3 class="font-serif text-lg sm:text-xl leading-snug mt-1">
+              <a href="${p.href}" class="u-underline">${t}</a>
+            </h3>
+            ${e ? `<p class="text-ink-500 mt-1 line-clamp-2">${e}</p>` : ``}
+          </div>
+        </li>
+      `;
+    }
+
     // State
     let state = {
       section: 'Essay',
       sort: 'new',
       page: 1,
-      pageSize: parseInt(pageSizeSel.value,10) || 9,
-      q: ''   // inline/mobile filter only
+      pageSize: 9,
+      q: '',
+      view: 'cards' // 'cards' | 'list'
     };
 
     let ALL_POSTS = [];
@@ -472,20 +541,26 @@
       return out;
     }
 
-    function render(){
-      const posts = applyFilters();
+    function groupByYear(posts){
+      const map = new Map();
+      posts.forEach(p => {
+        const y = getYear(p.date);
+        if (!map.has(y)) map.set(y, []);
+        map.get(y).push(p);
+      });
+      // years descending for intuitive scanning
+      return Array.from(map.entries()).sort((a,b) => b[0] - a[0]);
+    }
+
+    function renderCards(posts){
       const total = posts.length;
+      const showFeatured = (state.page === 1 && total > 0);
 
-      // Featured shows only on page 1, counts toward "shown"
-      const featuredVisible = (state.page === 1 && total > 0);
-      const effectivePerPage = featuredVisible ? Math.max(1, state.pageSize) : state.pageSize;
-
-      // pages excludes the featured slot on page 1
-      const pages = Math.max(1, Math.ceil((total - (featuredVisible ? 1 : 0)) / effectivePerPage));
+      // Compute pagination as before
+      const pages = Math.max(1, Math.ceil((total - (showFeatured ? 1 : 0)) / state.pageSize));
       if (state.page > pages) state.page = pages;
 
-      // Featured fill
-      if (featuredVisible) {
+      if (showFeatured){
         const f = posts[0];
         featImg.src = f.img; featImg.alt = f.title;
         featSection.textContent = f.section;
@@ -494,34 +569,119 @@
         featExcerpt.innerHTML = highlight(escapeHtml(f.excerpt), state.q);
         featLink.href = f.href;
         featured.classList.remove('hidden');
+        featured.setAttribute('aria-hidden','false');
       } else {
         featured.classList.add('hidden');
+        featured.setAttribute('aria-hidden','true');
       }
 
-      // Page items (skip featured if visible)
-      let startIndex = featuredVisible ? 1 + (state.page - 1) * state.pageSize
-                                      : (state.page - 1) * state.pageSize;
-      const endIndex = startIndex + state.pageSize;
-      const pageItems = posts.slice(startIndex, endIndex);
+      const startIndex = showFeatured
+        ? 1 + (state.page - 1) * state.pageSize
+        : (state.page - 1) * state.pageSize;
+      const endIndex   = startIndex + state.pageSize;
+      const pageItems  = posts.slice(startIndex, endIndex);
 
       grid.innerHTML = pageItems.map(p => cardHTML(p, state.q)).join('');
+
+      // Counters
+      const pagesCount = Math.max(1, Math.ceil((total - (showFeatured ? 1 : 0)) / state.pageSize));
+      pageNumEl.textContent = String(state.page);
+      pageTotalEl.textContent = String(pagesCount);
+      countShownEl.textContent = String(pageItems.length + (showFeatured ? 1 : 0));
+      countTotalEl.textContent = String(total);
+
+      prevBtn.disabled = state.page <= 1;
+      nextBtn.disabled = state.page >= pagesCount;
+
+      // Toggle visibility
+      gridWrap.classList.remove('hidden');
+      listWrap.classList.add('hidden');
+    }
+
+    function renderList(posts){
+      // No featured in list view—focus on scanability
+      featured.classList.add('hidden');
+      featured.setAttribute('aria-hidden','true');
+
+      const total = posts.length;
+      const pages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.page > pages) state.page = pages;
+
+      const startIndex = (state.page - 1) * state.pageSize;
+      const endIndex   = startIndex + state.pageSize;
+      const pageItems  = posts.slice(startIndex, endIndex);
+
+      // Group current page by year
+      const groups = groupByYear(pageItems);
+      listContainer.innerHTML = groups.map(([year, arr]) => {
+        return `
+          <section>
+            <h2 class="font-serif text-2xl text-ink-700 mb-3">${year}</h2>
+            <ul class="space-y-4">
+              ${arr.map(p => listItemHTML(p, state.q)).join('')}
+            </ul>
+          </section>
+        `;
+      }).join('');
+
+      // Counters
       pageNumEl.textContent = String(state.page);
       pageTotalEl.textContent = String(pages);
-      countShownEl.textContent = String(pageItems.length + (featuredVisible ? 1 : 0));
+      countShownEl.textContent = String(pageItems.length);
       countTotalEl.textContent = String(total);
 
       prevBtn.disabled = state.page <= 1;
       nextBtn.disabled = state.page >= pages;
+
+      // Toggle visibility
+      gridWrap.classList.add('hidden');
+      listWrap.classList.remove('hidden');
+    }
+
+    function render(){
+      const posts = applyFilters();
+      const total = posts.length;
+
+      // Empty state
+      if (total === 0){
+        grid.innerHTML = '';
+        listContainer.innerHTML = '';
+        featured.classList.add('hidden');
+        emptyEl.classList.remove('hidden');
+        pageNumEl.textContent = '1';
+        pageTotalEl.textContent = '1';
+        countShownEl.textContent = '0';
+        countTotalEl.textContent = '0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        updateURLState();
+        return;
+      } else {
+        emptyEl.classList.add('hidden');
+      }
+
+      if (state.view === 'cards') {
+        renderCards(posts);
+      } else {
+        renderList(posts);
+      }
+
+      updateURLState();
     }
 
     // Tabs
     const tabsEls = Array.from(document.querySelectorAll('.tab'));
+    function setActiveTabBySection(sec){
+      tabsEls.forEach(x => {
+        const on = x.dataset.section === canonSection(sec);
+        x.dataset.active = on ? 'true' : 'false';
+        x.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
     tabsEls.forEach(t => t.addEventListener('click', () => {
-      tabsEls.forEach(x => { x.dataset.active = 'false'; x.setAttribute('aria-selected','false'); });
-      t.dataset.active = 'true';
-      t.setAttribute('aria-selected','true');
       state.section = t.dataset.section;
       state.page = 1;
+      setActiveTabBySection(state.section);
       render();
     }));
 
@@ -532,7 +692,7 @@
       render();
     }));
 
-    // Desktop header search -> send to search page (no on-page filtering)
+    // Desktop header search -> send to search page
     function goToSearch(){
       const q = (qDesktop.value || '').trim();
       const url = q ? `search.html?q=${encodeURIComponent(q)}` : 'search.html';
@@ -545,14 +705,36 @@
 
     // Sort & pagination controls
     sortSel?.addEventListener('change', () => { state.sort = sortSel.value; state.page = 1; render(); });
-    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10); state.page = 1; render(); });
+    pageSizeSel.addEventListener('change', () => { state.pageSize = parseInt(pageSizeSel.value,10)||9; state.page = 1; render(); });
     prevBtn.addEventListener('click', () => { state.page = Math.max(1, state.page - 1); render(); });
     nextBtn.addEventListener('click', () => { state.page = state.page + 1; render(); });
 
+    // View toggle
+    function setView(view){
+      state.view = view;
+      const isCards = view === 'cards';
+      viewCardsBtn.dataset.active = String(isCards);
+      viewListBtn.dataset.active  = String(!isCards);
+      viewCardsBtn.setAttribute('aria-pressed', String(isCards));
+      viewListBtn.setAttribute('aria-pressed', String(!isCards));
+      state.page = 1; // reset for clarity
+      render();
+    }
+    viewCardsBtn.addEventListener('click', () => setView('cards'));
+    viewListBtn.addEventListener('click', () => setView('list'));
+
     // Init
     (async function init(){
+      const urlState = readURLState();
+      state = { ...state, ...urlState, pageSize: parseInt(pageSizeSel.value,10)||9 };
       const posts = await loadPosts();
       ALL_POSTS = posts;
+
+      // hydrate UI controls
+      sortSel.value = state.sort;
+      setActiveTabBySection(state.section);
+      qInline.value = state.q;
+      if (state.view === 'list') setView('list'); else setView('cards');
       render();
     })();
   </script>
