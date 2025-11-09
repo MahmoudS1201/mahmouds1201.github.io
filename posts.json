@@ -1,5 +1,21 @@
 [
   {
+    "slug": "test-next-prev",
+    "title": "Test Next Prev",
+    "section": "Essay",
+    "tags": [
+      "Next",
+      "Prev"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Test Next Prev",
+    "date": "2025-11-09T16:27",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/test-next-prev/cover.png",
+    "url": "test-next-prev.html"
+  },
+  {
     "slug": "you-know-the-vibes-fr",
     "title": "You know the vibes fr",
     "section": "Essay",
