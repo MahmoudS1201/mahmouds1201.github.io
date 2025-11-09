@@ -1,5 +1,18 @@
 [
   {
+    "slug": "woot-woot",
+    "title": "Woot Woot",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Woot Woot Woot",
+    "date": "2025-11-09T00:33",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/woot-woot/cover.jpg",
+    "url": "woot-woot.html"
+  },
+  {
     "slug": "yes",
     "title": "Yes",
     "section": "Essay",
