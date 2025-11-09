@@ -209,6 +209,11 @@
     </section>
   </main>
 
+          <!-- Back to top -->
+  <button id="backTop"
+          class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+          aria-label="Back to top">↑ Top</button>
+
   <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
@@ -261,6 +266,15 @@
   <script>
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Back to top visibility + behavior
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
     // Copy email
     const copyBtn = document.getElementById('copyEmail');
