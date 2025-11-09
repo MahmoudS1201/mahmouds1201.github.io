@@ -500,7 +500,7 @@
         document.getElementById('picks').innerHTML = picks.map(pickItemHTML).join('') || `<li class="text-ink-300">No picks yet.</li>`;
 
         // Featured grid (3)
-        const grid = featured.filter(p => p !== leadPost).slice(0,3);
+        const grid = featured.filter(p => p !== leadPost).slice(1,4);
         for (const p of posts){
           if (grid.length >= 3) break;
           if (p !== leadPost && !grid.includes(p) && !picks.includes(p)) grid.push(p);
