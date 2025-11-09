@@ -392,24 +392,37 @@
 
     /* ---------- Filters / Search / Sort + highlight (INLINE ONLY) ---------- */
     function wireFilters(){
-      const chips = Array.from(document.querySelectorAll('.chip'));
-      const qInline = document.getElementById('q-inline');   // inline search ONLY (not header)
+      const chips   = Array.from(document.querySelectorAll('.chip'));
+      const qInline = document.getElementById('q-inline');   // inline search ONLY
       const sortSel = document.getElementById('sort');
 
-      function norm(s){ return (s||'').toLowerCase(); }
+      const norm = s => (s||'').toLowerCase();
+
+      function currentFilter(){
+        const active = chips.find(c => c.dataset.active === 'true');
+        return (active?.dataset.filter || 'all');
+      }
 
       function apply(){
-        const termRaw = qInline?.value || '';                // <-- no #q or #q-mobile here
+        const filter = norm(currentFilter());                  // 'all' | 'essay' | ...
+        const termRaw = qInline?.value || '';
         const term = norm(termRaw);
         const terms = term ? term.split(/\s+/).filter(Boolean) : [];
 
         const cards = Array.from(document.querySelectorAll('#grid article.card'));
         cards.forEach(card => {
-          const section = card.dataset.section;
-          const title = card.dataset.title || '';
-          const tags  = card.dataset.tags || '';
-          const matchesSection = true; // page is features-only; chips still change section if you want to wire them later
-          const matchesQuery = term ? (title.toLowerCase().includes(term) || tags.toLowerCase().includes(term)) : true;
+          const section = norm(card.dataset.section);          // from buildCard()
+          const title   = card.dataset.title || '';
+          const tags    = card.dataset.tags  || '';
+
+          const matchesSection =
+            (filter === 'all') ||
+            section === filter ||
+            norm(tags).includes(filter);
+
+          const matchesQuery =
+            term ? (norm(title).includes(term) || norm(tags).includes(term)) : true;
+
           card.style.display = (matchesSection && matchesQuery) ? '' : 'none';
 
           // highlight title + desc
@@ -422,14 +435,46 @@
           if (!desc.dataset.original) desc.dataset.original = fullDesc;
 
           if (terms.length){
-            link.innerHTML = highlight(title, terms);
-            desc.innerHTML = highlight(fullDesc, terms);
+            const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pat = new RegExp('(' + terms.map(esc).join('|') + ')', 'ig');
+            link.innerHTML = title.replace(pat, '<mark class="hl">$1</mark>');
+            desc.innerHTML = fullDesc.replace(pat, '<mark class="hl">$1</mark>');
           } else {
             link.textContent = title;
             desc.textContent = fullDesc;
           }
         });
       }
+
+      // Chip clicks: toggle visual state + filter
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => { c.dataset.active = 'false'; c.setAttribute('aria-pressed','false'); });
+          chip.dataset.active = 'true';
+          chip.setAttribute('aria-pressed','true');
+          apply();
+        });
+      });
+
+      // Inline search & sort
+      qInline?.addEventListener('input', apply);
+      sortSel?.addEventListener('change', () => {
+        const grid  = document.getElementById('grid');
+        const items = Array.from(grid.children).filter(el => el.matches('article.card'));
+        const mode  = sortSel.value;
+
+        if (mode === 'title') {
+          items.sort((a,b)=> (a.dataset.title||'').localeCompare(b.dataset.title||''));
+        } else if (mode === 'old') {
+          items.sort((a,b)=> new Date(a.dataset.date||0) - new Date(b.dataset.date||0));
+        } else {
+          items.sort((a,b)=> new Date(b.dataset.date||0) - new Date(a.dataset.date||0));
+        }
+        items.forEach(it => grid.appendChild(it));
+      });
+
+      apply();
+    }
 
       // Chips (optional: currently only toggles visual state then reapplies)
       chips.forEach(chip => {
