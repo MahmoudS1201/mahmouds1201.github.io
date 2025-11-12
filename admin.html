@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin · Write & Upload Articles — Camila Tiburcio Rubio</title>
-
-  <!-- Fonts & Tailwind -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -28,33 +26,32 @@
       }
     }
   </script>
-
   <style>
+    body { -webkit-font-smoothing: antialiased; }
     .u-underline { position: relative; }
     .u-underline::after { content: ''; position: absolute; left: 0; bottom: -2px; height: 2px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
     .u-underline:hover::after { transform: scaleX(1); }
+
     .prose h1,.prose h2,.prose h3,.prose h4 { font-family: 'Source Serif 4', Georgia, serif; }
     .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0;}
+    .prose p { margin:0.9em 0; line-height:1.75; }
+    .prose .dropcap::first-letter { font-family:'Source Serif 4', Georgia, serif; float:left; font-size:5.2rem; line-height:.9; margin-right:.1rem; font-weight:500; margin-top:-.2rem; color:#C53D2F; }
     .hero-img { width:100%; height:480px; object-fit:cover; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); }
-    .btn { padding:.5rem 1rem; border-radius:.75rem; font-weight:600; border:1px solid rgba(0,0,0,.1); }
+
+    .btn { padding:.5rem 1rem; border-radius:.75rem; font-weight:600; border:1px solid rgba(0,0,0,.1); background:#fff; }
     .btn:hover { box-shadow:0 10px 30px rgba(0,0,0,0.06); }
-    .prose p { margin:0.8em 0; line-height:1.7; }
-    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:rgba(197,61,47,.05); box-shadow:0 18px 60px rgba(0,0,0,0.06); margin:0 auto; }
-    .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#A3ACB9; user-select:none; margin-right:2px; }
-    .socialContainer{ width:46px; height:46px; border-radius:14px; background:#2E2E2E; display:flex; align-items:center; justify-content:center; transition:transform .2s ease, background-color .2s ease, box-shadow .2s ease; color:#fff; text-decoration:none; border:none; cursor:pointer; }
-    .socialContainer:hover{ transform:translateY(-2px); }
-    .socialContainer:active{ transform:scale(.96); }
-    .containerX:hover{ background:#000; }
-    .containerFB:hover{ background:#1877F2; }
-    .containerMail:hover{ background:#6B7280; }
-    .containerCopy:hover{ background:#059669; }
+
+    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:#ffffff; border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto; }
+    .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
+    .socialContainer{ width:40px; height:40px; border-radius:12px; background:transparent; border:1px solid rgba(0,0,0,.10); color:#3A3A3A; display:flex; align-items:center; justify-content:center; transition:transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease; text-decoration:none; cursor:pointer; }
+    .socialContainer:hover{ background:rgba(197,61,47,.08); border-color:rgba(197,61,47,.35); color:#C53D2F; transform:translateY(-1px); }
+    .socialContainer:active{ transform:scale(.97); }
     .socialContainer svg.fill-icon path { fill: currentColor; }
-    .xSvg{ width:17px; height:17px; color:#fff; }
-    .socialSvg{ width:20px; height:20px; color:#fff; }
-    .clipboard-svg{ width:20px; height:20px; stroke:#fff; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+    .xSvg{ width:16px; height:16px; color:inherit; }
+    .socialSvg{ width:18px; height:18px; color:inherit; }
+    .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
   </style>
 </head>
-
 <body class="bg-cream text-ink-900 antialiased">
   <!-- Top bar -->
   <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
@@ -76,11 +73,11 @@
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Grid: form (left) + preview (right) -->
     <div class="grid lg:grid-cols-2 gap-8">
       <!-- Form -->
       <section class="bg-white shadow-soft rounded-2xl p-6 lg:p-8">
         <h2 class="font-serif text-2xl mb-4">Write Article</h2>
+
         <form id="articleForm" class="space-y-6" onsubmit="return false;">
           <div class="grid sm:grid-cols-2 gap-4">
             <label class="block">
@@ -164,7 +161,7 @@
                 <button type="button" id="insertImageBtn" class="btn">Insert img</button>
               </div>
             </div>
-            <textarea id="body" rows="14" class="w-full px-3 py-3 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Write or paste your text here, love..."></textarea>
+            <textarea id="body" rows="14" class="w-full px-3 py-3 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Write or paste your text here..."></textarea>
             <input id="inlineImageInput" type="file" accept="image/*" class="hidden" />
           </div>
 
@@ -203,7 +200,9 @@
           <h1 id="previewTitle" class="font-serif text-3xl lg:text-4xl mt-3 leading-tight">Title…</h1>
           <p id="previewExcerpt" class="text-ink-500 mt-3 max-w-2xl">Excerpt…</p>
           <div class="mt-6 flex items-center gap-4">
-            <div class="h-10 w-10 rounded-full bg-ink-300"></div>
+            <div class="h-10 w-10 rounded-full bg-ink-300 overflow-hidden">
+              <img src="assets/camila.jpg" alt="" class="w-full h-full object-cover"/>
+            </div>
             <div>
               <p class="text-sm font-medium">By <span id="previewAuthor">Author</span></p>
               <p class="text-xs text-ink-300"><span id="previewRead">0</span> min read</p>
@@ -215,15 +214,13 @@
     </div>
   </main>
 
-  <!-- hidden helper for JSON import -->
   <input id="jsonFileInput" type="file" accept="application/json" class="hidden" />
 
-  <!-- =============================== -->
-  <!-- ADMIN + EXPORT + GITHUB SCRIPT  -->
-  <!-- =============================== -->
   <script>
-    // ---------- Utilities ----------
-    const $ = sel => document.querySelector(sel);
+    /* =========================
+       Utilities
+    ========================= */
+    const $  = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
 
     function insertAtCursor(el, before, after = null, opts = { selectInside: false }) {
@@ -285,53 +282,58 @@
       });
     }
 
-    // Tiny Markdown -> HTML with working blockquotes
+    // Tiny Markdown -> HTML (single, non-conflicting pass)
     function md(str = '') {
       let s = (str || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;');
 
+      // code blocks
       s = s.replace(/```([\s\S]*?)```/g, (m, code) =>
         `<pre class="bg-cream p-4 rounded-xl overflow-auto"><code>${code.replace(/\n/g,'<br/>')}</code></pre>`
       );
 
+      // inline code
       s = s.replace(/`([^`]+)`/g, '<code class="bg-cream px-1 rounded">$1</code>');
 
-      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)\n\*([^*]+)\*/g, '<figure><img src="$2" alt="$1"><figcaption>$3</figcaption></figure>');
-      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<figure><img src="$2" alt="$1"></figure>');
+      // images (with optional caption line after)
+      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)(?:\n\*([^\n]+)\*)?/g, (m, alt, src, caption) => {
+        if (caption) {
+          return `<figure><img src="${src}" alt="${alt}"><figcaption class="text-center text-sm text-ink-300 mt-2">${caption.trim()}</figcaption></figure>`;
+        }
+        return `<figure><img src="${src}" alt="${alt}"></figure>`;
+      });
 
+      // links
       s = s.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a class="u-underline" href="$2">$1</a>');
 
+      // bold + italic
       s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
       s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
+      // headers
       s = s.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
       s = s.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
       s = s.replace(/^#\s+(.+)$/gm,  '<h1>$1</h1>');
 
+      // blockquotes with optional last-line attribution
       s = s.replace(/(^|\n)(>(?:[^\n]*)(?:\n>.*)*)/g, (_, lead, block) => {
         const lines = block.trim().split(/\n/).map(l => l.replace(/^>\s?/, '').trim());
         const quote = lines.slice(0, -1).join('<br/>');
         const last = lines[lines.length - 1];
-        theAtt = /^[-–—]\s?/.test(last);
-        const attribution = theAtt ? `<cite class="quote-cite">${last.replace(/^[-–—]\s?/, '')}</cite>` : '';
-        const content = theAtt ? quote : lines.join('<br/>');
+        const isAttr = /^[-–—]\s?/.test(last);
+        const attribution = isAttr ? `<cite class="quote-cite">${last.replace(/^[-–—]\s?/, '')}</cite>` : '';
+        const content = isAttr ? quote : lines.join('<br/>');
         return `${lead}<blockquote>${content}${attribution}</blockquote>`;
       });
 
+      // unordered lists
       s = s.replace(/(?:^|\n)(-\s+.+(?:\n-\s+.+)*)/g, (m) => {
         const items = m.trim().split(/\n/).map(l => l.replace(/^-+\s+/, '').trim());
         return '<ul class="list-disc pl-6">' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
       });
 
-      // second pass for images with optional caption one-liner
-      s = s.replace(/!\[([^\]]*)\]\(([^\)]+)\)(?:\n\*([^\n]+)\*)?/g, (m, alt, src, caption) => {
-        if (caption) {
-          return `<figure><img alt="${alt}" src="${src}" /><figcaption class="text-center text-sm text-ink-300 mt-2">${caption.trim()}</figcaption></figure>`;
-        }
-        return `<img alt="${alt}" src="${src}" />`;
-      });
-
+      // paragraphs
       const BLOCK_RE = /^<(?:h[1-6]|ul|ol|li|pre|code|blockquote|img|figure|p)(\s|>)/i;
       s = s
         .split(/\n{2,}/)
@@ -343,7 +345,9 @@
       return s;
     }
 
-    // Elements
+    /* =========================
+       Elements
+    ========================= */
     const titleEl = $('#title');
     const slugEl = $('#slug');
     const sectionEl = $('#section');
@@ -377,7 +381,9 @@
 
     const statusMsg = $('#statusMsg');
 
-    // Toolbar buttons insert markdown
+    /* =========================
+       Toolbar buttons
+    ========================= */
     $$('#articleForm [data-md]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -510,6 +516,11 @@
       });
     });
 
+    /* =========================
+       Inline image insertion
+    ========================= */
+    let inlineImageStore = {}; // token -> dataURL
+
     $('#insertImageBtn').addEventListener('click', () => $('#inlineImageInput').click());
     $('#inlineImageInput').addEventListener('change', async (e) => {
       const file = e.target.files[0];
@@ -528,7 +539,15 @@
       e.target.value = '';
     });
 
-    // Cover upload/drag
+    function expandInlineImages(markdown='') {
+      return markdown.replace(/\((ctr-img:([a-z0-9-]+))\)/gi, (m, full, id) => {
+        return `(${inlineImageStore[id] || full})`;
+      });
+    }
+
+    /* =========================
+       Cover upload / drag
+    ========================= */
     dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('bg-white'); });
     dropzone.addEventListener('dragleave', () => dropzone.classList.remove('bg-white'));
     dropzone.addEventListener('drop', async (e) => {
@@ -544,7 +563,9 @@
       previewCover.innerHTML = `<img class="w-full h-full object-cover" src="${b64}" alt="">`;
     }
 
-    // Auto-slug + read time + preview
+    /* =========================
+       Derived preview values
+    ========================= */
     titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
     slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
     bodyEl.addEventListener('input', updateDerived);
@@ -558,23 +579,23 @@
       previewSection.textContent = sectionEl.value;
       previewTitle.textContent = titleEl.value || 'Title…';
       previewExcerpt.textContent = excerptEl.value || 'Excerpt…';
-      previewAuthor.textContent = authorEl.value || 'Author';
+      previewAuthor.textContent = authorEl.value || 'Camila Tiburcio Rubio';
       previewRead.textContent = estimateReadMinutes(bodyEl.value);
-      previewDate.textContent = dateEl.value ? new Date(dateEl.value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+      previewDate.textContent = dateEl.value
+        ? new Date(dateEl.value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})
+        : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
       previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
       addDropcap();
     }
 
     function addDropcap() {
-      const container = document.getElementById('previewBody');
-      if (!container) return;
-      const firstP = container.querySelector('p');
-      if (firstP && !firstP.classList.contains('dropcap')) {
-        firstP.classList.add('dropcap');
-      }
+      const firstP = document.querySelector('#previewBody p');
+      if (firstP && !firstP.classList.contains('dropcap')) firstP.classList.add('dropcap');
     }
 
-    // Draft persistence (localStorage)
+    /* =========================
+       Draft (localStorage)
+    ========================= */
     function collect(){
       const coverSrc = coverImg.src || '';
       const mdRaw = bodyEl.value;
@@ -609,13 +630,13 @@
 
     function saveDraft(){
       const data = collect();
-      localStorage.setItem(draftKey(), JSON.stringify(data));
+      localStorage.setItem('ctr:admin:draft', JSON.stringify(data));
       statusMsg.textContent = 'Draft saved locally ✓';
       setTimeout(()=> statusMsg.textContent = '', 2000);
     }
 
     function loadDraft(){
-      const raw = localStorage.getItem(draftKey());
+      const raw = localStorage.getItem('ctr:admin:draft');
       if(!raw) return;
       try{
         const d = JSON.parse(raw);
@@ -629,7 +650,12 @@
         dateEl.value = d.date ? d.date.slice(0,16) : '';
         readEl.value = (d.readMinutes||0) + ' min';
         featuredEl.checked = !!d.featured;
-        if(d.cover && d.cover.src){ coverImg.src = d.cover.src; coverPreview.classList.remove('hidden'); previewCover.innerHTML = `<img class='w-full h-full object-cover' src='${d.cover.src}' alt=''>`; coverAlt.value = d.cover.alt || ''; }
+        if(d.cover && d.cover.src){
+          coverImg.src = d.cover.src;
+          coverPreview.classList.remove('hidden');
+          previewCover.innerHTML = `<img class="w-full h-full object-cover" src="${d.cover.src}" alt="">`;
+          coverAlt.value = d.cover.alt || '';
+        }
         bodyEl.value = d.bodyMarkdown || '';
         metaTitleEl.value = d.seo?.title || '';
         metaDescEl.value = d.seo?.description || '';
@@ -637,32 +663,12 @@
       }catch(e){ console.warn('Failed to load draft', e); }
     }
 
-    // Buttons
     $('#saveDraftBtn').addEventListener('click', saveDraft);
     $('#previewBtn').addEventListener('click', updateDerived);
 
-    // Store full data URLs for inline images
-    let inlineImageStore = {};
-
-    function expandInlineImages(markdown='') {
-      return markdown.replace(/\((ctr-img:([a-z0-9-]+))\)/gi, (m, full, id) => {
-        return `(${inlineImageStore[id] || full})`;
-      });
-    }
-
-    // JSON Export/Import
-    const exportJsonBtn = $('#exportJsonBtn');
-    exportJsonBtn.addEventListener('click', () => {
-      const data = collect();
-      const errs = validate(data);
-      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
-      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `article-${data.slug}.json`;
-      a.click();
-    });
-
+    /* =========================
+       JSON Import / Export
+    ========================= */
     $('#importJsonBtn').addEventListener('click', () => $('#jsonFileInput').click());
     $('#jsonFileInput').addEventListener('change', async (e) => {
       const file = e.target.files[0]; if(!file) return;
@@ -682,29 +688,55 @@
       dateEl.value = d.date ? d.date.slice(0,16) : '';
       readEl.value = (d.readMinutes||estimateReadMinutes(d.bodyMarkdown||'')) + ' min';
       featuredEl.checked = !!d.featured;
-      if(d.cover && d.cover.src){ coverImg.src = d.cover.src; coverPreview.classList.remove('hidden'); previewCover.innerHTML = `<img class='w-full h-full object-cover' src='${d.cover.src}' alt=''>`; coverAlt.value = d.cover.alt || ''; }
+      if(d.cover && d.cover.src){
+        coverImg.src = d.cover.src;
+        coverPreview.classList.remove('hidden');
+        previewCover.innerHTML = `<img class='w-full h-full object-cover' src='${d.cover.src}' alt=''>`;
+        coverAlt.value = d.cover.alt || '';
+      }
       bodyEl.value = d.bodyMarkdown || '';
       metaTitleEl.value = d.seo?.title || '';
       metaDescEl.value = d.seo?.description || '';
       updateDerived();
     }
 
-    // ---------- Standalone Article HTML (with “More from {Section}”) ----------
+    const exportJsonBtn = $('#exportJsonBtn');
+    exportJsonBtn.addEventListener('click', () => {
+      const data = collect();
+      const errs = validate(data);
+      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `article-${data.slug}.json`;
+      a.click();
+    });
+
+    /* =========================
+       Export Standalone HTML
+    ========================= */
+    $('#exportHtmlBtn').addEventListener('click', () => {
+      const data = collect();
+      const errs = validate(data);
+      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
+      const html = buildArticleHtml(data);
+      const blob = new Blob([html], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${data.slug}.html`;
+      a.click();
+    });
+
     function escapeHtml(s=''){
-      return s.replace(/[&<>\"']/g, c => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[c]));
+      return s.replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
+    /* =========================
+       Build Article HTML
+    ========================= */
     function buildArticleHtml(data){
       const hasTags   = Array.isArray(data.tags) && data.tags.length;
       const coverCredit = data.cover?.credit || "";
-
-      const CURRENT = {
-        slug: data.slug,
-        section: data.section,
-        tags: Array.isArray(data.tags) ? data.tags : []
-      };
 
       return `<!DOCTYPE html>
 <html lang="en">
@@ -741,15 +773,17 @@
     .u-underline:hover:after{transform:scaleX(1)}
     .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
     .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
-    .prose p{margin:1.1em 0; line-height:1.75}
+    .prose p{margin:1.05em 0;line-height:1.8}
     .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
     .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
     #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
-    blockquote .quote-cite{display:block;text-align:right;font-size:.875rem;font-style:normal;color:#9CA3AF;margin-top:.5rem}
-    ::selection { background: rgba(197,61,47,0.15); }
+    blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
     .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
     .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
+    article.prose { animation: fadeIn 0.35s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    ::selection { background: rgba(197,61,47,0.15); }
   </style>
 </head>
 
@@ -809,24 +843,41 @@
   <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <article class="prose prose-neutral max-w-none">${data.bodyHtml}</article>
 
-    <!-- Share -->
     <div class="mt-10 not-prose flex justify-center">
-      <div class="flex items-center gap-3 border border-black/10 bg-white rounded-full px-3 py-2 shadow-soft" role="group" aria-label="Share">
-        <span class="text-xs uppercase tracking-[.12em] text-ink-300 font-semibold">Share</span>
-        <a id="share-x"   class="u-underline text-sm" aria-label="Share on X" target="_blank" rel="noopener">X</a>
-        <a id="share-fb"  class="u-underline text-sm" aria-label="Share on Facebook" target="_blank" rel="noopener">Facebook</a>
-        <a id="share-mail" class="u-underline text-sm" aria-label="Share via Email">Email</a>
-        <button id="share-copy" class="text-sm" type="button" aria-label="Copy link">Copy</button>
+      <div class="shareCard" role="group" aria-label="Share">
+        <span class="shareLabel">Share</span>
+
+        <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener">
+          <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
+            <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
+          </svg>
+        </a>
+
+        <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener">
+          <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
+          </svg>
+        </a>
+
+        <a id="share-mail" class="socialContainer containerMail" aria-label="Share via Email">
+          <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+          </svg>
+        </a>
+
+        <button id="share-copy" class="socialContainer containerCopy" aria-label="Copy link" type="button">
+          <svg class="clipboard-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          </svg>
+        </button>
       </div>
     </div>
 
-    <!-- Author -->
     <section class="mt-12 border-t border-black/10 pt-6">
       <div class="flex items-start gap-4">
         ${data.author === 'Camila Tiburcio Rubio'
-          ? `<img src="assets/camila.jpg"
-                  alt="Photo of Camila Tiburcio Rubio"
-                  class="w-14 h-14 rounded-full object-cover" />`
+          ? `<img src="assets/camila.jpg" alt="Photo of Camila Tiburcio Rubio" class="w-14 h-14 rounded-full object-cover" />`
           : `<div class="w-14 h-14 rounded-full bg-ink-300"></div>`}
         <div>
           <p class="font-semibold">${escapeHtml(data.author || 'Camila Tiburcio Rubio')}</p>
@@ -838,18 +889,19 @@
       </div>
     </section>
 
-    <!-- More from {Section} -->
     <section id="more" class="mt-12 border-t border-black/10 pt-8">
-      <h2 class="font-serif text-2xl mb-5">More from ${escapeHtml(data.section || '')}</h2>
+      <h2 class="font-serif text-2xl mb-5">More from ${escapeHtml(data.section)}</h2>
       <div id="moreGrid" class="grid gap-6 sm:grid-cols-2"></div>
       <p id="moreEmpty" class="hidden text-sm text-ink-300">No related articles yet.</p>
     </section>
   </main>
 
+  <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
 
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
       <div>
@@ -898,144 +950,165 @@
       © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
     </div>
   </footer>
-  
+
   <script>
-    // Progress bar
     (function(){
       const bar = document.getElementById('progress-bar');
       function onScroll(){
         const max = document.body.scrollHeight - innerHeight;
         const pct = Math.max(0, Math.min(100, (scrollY / max) * 100));
-        if (bar) bar.style.width = pct + '%';
+        bar.style.width = pct + '%';
       }
       window.addEventListener('scroll', onScroll, {passive:true});
       onScroll();
     })();
 
+    // Back/Top buttons
     (function () {
       const link = document.getElementById('backBtn');
       if (!link) return;
-
       const fallbackHref = link.getAttribute('href') || '/';
       link.addEventListener('click', (e) => {
         const ref = document.referrer;
         const sameOrigin = ref && new URL(ref, location.href).origin === location.origin;
-
-        if (sameOrigin) {
-          e.preventDefault();
-          history.back();
-        } else if (!ref) {
-          link.setAttribute('href', fallbackHref);
-        } else {
-          link.setAttribute('href', fallbackHref);
-        }
+        if (sameOrigin) { e.preventDefault(); history.back(); }
+        else if (!ref)  { link.setAttribute('href', fallbackHref); }
+        else            { link.setAttribute('href', fallbackHref); }
       });
     })();
 
-    // Back to top visibility + behavior
     const backTop = document.getElementById('backTop');
     const toggleTop = () => {
-      if (window.scrollY > 600) backTop?.classList.remove('hidden');
-      else backTop?.classList.add('hidden');
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
     };
     window.addEventListener('scroll', toggleTop, { passive:true });
-    backTop?.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
     (function addDropcap(){
       const firstP = document.querySelector('article.prose p');
       if(firstP) firstP.classList.add('dropcap');
     })();
 
+    // Share links
     (function(){
       const url  = encodeURIComponent(location.href);
       const text = encodeURIComponent(document.title || 'Check this out');
-
       const x    = document.getElementById('share-x');
       const fb   = document.getElementById('share-fb');
       const mail = document.getElementById('share-mail');
       const copy = document.getElementById('share-copy');
-
-      if (x)   x.href   = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
-      if (fb)  fb.href  = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+      if (x)  x.href  = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
+      if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
       if (mail){
         mail.href = 'mailto:?subject=' + text + '&body=' + url;
         mail.addEventListener('click', async (e) => {
-          if (navigator.share) {
-            e.preventDefault();
-            try { await navigator.share({ title: document.title, url: location.href }); } catch {}
-          }
+          if (navigator.share) { e.preventDefault(); try { await navigator.share({ title: document.title, url: location.href }); } catch {} }
         });
       }
-
       if (copy){
         copy.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(location.href);
-            copy.style.transform = 'scale(0.96)';
-            setTimeout(()=>{ copy.style.transform = ''; }, 120);
-          } catch {
-            alert("Couldn't copy the link.");
-          }
+          try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(()=>{ copy.style.transform = ''; }, 120); }
+          catch { alert("Couldn't copy the link."); }
         });
       }
     })();
 
     /* ---- Related / More Articles ---- */
-    (function loadRelated(){
-      // injected by buildArticleHtml using CURRENT
-      // (No-op on admin page; runs only on exported article)
-    })();
+    const CURRENT = {
+      slug: ${JSON.stringify((d=>d.slug)(data))},
+      section: ${JSON.stringify((d=>d.section)(data))},
+      tags: ${JSON.stringify((d=>Array.isArray(d.tags)?d.tags:[])(data))}
+    };
+
+    async function loadRelated() {
+      const grid = document.getElementById('moreGrid');
+      const empty = document.getElementById('moreEmpty');
+      const container = document.getElementById('more');
+      if (!grid || !container) return;
+
+      try {
+        const res = await fetch('./posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        const list = await res.json();
+
+        const scored = list
+          .filter(p => p.slug !== CURRENT.slug)
+          .map(p => {
+            const tags = Array.isArray(p.tags) ? p.tags : [];
+            const overlap = tags.filter(t => CURRENT.tags.includes(t)).length;
+            const sameSection = p.section === CURRENT.section ? 1 : 0;
+            const score = sameSection * 3 + overlap;
+            return { ...p, score };
+          })
+          .sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
+
+        const pool = scored.some(p => p.score > 0)
+          ? scored.filter(p => p.score > 0)
+          : list.filter(p => p.slug !== CURRENT.slug)
+                .sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+        const picks = pool.slice(0, 6);
+
+        if (!picks.length) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        grid.innerHTML = picks.map(p => {
+          const date = new Date(p.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+          const cover = p.cover ? `
+            <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-ink-900/5">
+              <img src="${p.cover}" alt="" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" loading="lazy"/>
+            </div>` : '';
+
+          const href = p.url || (p.slug + '.html');
+
+          return `
+            <a href="${href}" class="group block rounded-2xl border border-black/10 bg-white p-3 hover:shadow-soft transition">
+              ${cover}
+              <div class="p-3">
+                <div class="mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent">${p.section || ''}</div>
+                <h3 class="font-serif text-lg leading-snug text-ink-900">${p.title}</h3>
+                <div class="mt-1 text-xs text-ink-300">${date} • ${p.readMinutes || 1} min read</div>
+              </div>
+            </a>`;
+        }).join('');
+      } catch (e) {
+        if (container) container.classList.add('hidden');
+        console.warn('Related articles unavailable:', e);
+      }
+    }
+
+    if (document.readyState !== 'loading') loadRelated();
+    else document.addEventListener('DOMContentLoaded', loadRelated);
   <\/script>
 </body>
 </html>`;
     }
 
-    function draftKey(){ return 'ctr:admin:draft'; }
-
-    // Clear draft
-    $('#clearDraftBtn').addEventListener('click', () => {
-      if (confirm('Clear current draft from this browser?')) {
-        localStorage.removeItem(draftKey());
-        location.reload();
-      }
-    });
-
-    // Init
-    (function init(){
-      authorEl.value = 'Camila Tiburcio Rubio';
-      dateEl.value = new Date().toISOString().slice(0,16);
-      updateDerived();
-      loadDraft();
-    })();
-
-    // ---------- Export HTML ----------
-    $('#exportHtmlBtn').addEventListener('click', () => {
-      const data = collect();
-      const errs = validate(data);
-      if(errs.length){ alert('Please fix:\n' + errs.join('\n')); return; }
-      const html = buildArticleHtml(data);
-      const blob = new Blob([html], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `${data.slug}.html`;
-      a.click();
-    });
-
-    // ===============================
-    // GITHUB PUBLISH ADD-ONS
-    // ===============================
-    const GH_OWNER  = 'MahmoudS1201';          // <-- change if needed
-    const GH_REPO   = 'CamilaTiburcioRubio';   // <-- change if needed
+    /* ===============================
+       GitHub PUBLISH ADD-ONS
+    =============================== */
+    const GH_OWNER  = 'MahmoudS1201';
+    const GH_REPO   = 'CamilaTiburcioRubio';
     const GH_BRANCH = 'main';
     const GH_IMAGES_ROOT = 'images';
     let   GH_TOKEN = localStorage.getItem('ctr:gh:token') || '';
 
     function apiPath(p){ return (p||'').split('/').map(encodeURIComponent).join('/'); }
     function stripLeadingSlash(p){ return (p||'').replace(/^\/+/, ''); }
+    function yyyymm(dateIso){
+      const d = dateIso ? new Date(dateIso) : new Date();
+      const y = d.getUTCFullYear();
+      const m = String(d.getUTCMonth()+1).padStart(2,'0');
+      return `${y}/${m}`;
+    }
+    function b64utf8(s){ return btoa(unescape(encodeURIComponent(s))); }
 
     function ensureToken(){
       if (!GH_TOKEN) {
-        GH_TOKEN = prompt('Paste a GitHub Personal Access Token (repo contents permission):') || '';
+        GH_TOKEN = prompt('Paste a GitHub Personal Access Token (Contents: Read/Write for this repo):') || '';
         if (!GH_TOKEN) throw new Error('GitHub token required.');
         localStorage.setItem('ctr:gh:token', GH_TOKEN);
       }
@@ -1105,24 +1178,17 @@
       const base = (s || '').toLowerCase().replace(/[^a-z0-9-_]+/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
       return base.slice(0,max) || 'img';
     }
-    function yyyymm(dateIso){
-      const d = dateIso ? new Date(dateIso) : new Date();
-      const y = d.getUTCFullYear();
-      const m = String(d.getUTCMonth()+1).padStart(2,'0');
-      return `${y}/${m}`;
-    }
-    function b64utf8(s){ return btoa(unescape(encodeURIComponent(s))); }
 
     async function uploadDataImageForPost(slug, dateIso, dataUrl, hintName='image'){
       const info = dataUrlInfo(dataUrl);
-      if (!info) return dataUrl; // already a path; nothing to upload
+      if (!info) return dataUrl; // already a path
 
       const ext = mimeToExt(info.mime);
       const dir = `${GH_IMAGES_ROOT}/${yyyymm(dateIso)}/${slug}`;
       const file = `${dir}/${safeFilename(hintName)}.${ext}`;
 
       await putRepoFile(file, info.b64, `image: ${slug}/${hintName}.${ext}`);
-      return file;
+      return file; // repo-relative path
     }
 
     async function uploadAndRewriteInlineImages(slug, dateIso, bodyMarkdown, bodyHtml, imageStore){
@@ -1193,7 +1259,9 @@
       await putRepoFile(path, contentB64, `posts.json: ${entry.slug}`);
     }
 
-    // ---------- Publish to GitHub ----------
+    /* ===============================
+       PUBLISH
+    =============================== */
     document.getElementById('publishBtn').addEventListener('click', async () => {
       const data = collect();
       const errs = validate(data);
@@ -1203,7 +1271,7 @@
         data.slug = data.slug || (data.title ? data.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') : String(Date.now()));
         data.date = data.date || new Date().toISOString();
 
-        // Upload cover if needed
+        // Upload cover if it is a data URL
         if (data.cover?.src && /^data:/i.test(data.cover.src)) {
           const path = await uploadDataImageForPost(data.slug, data.date, data.cover.src, 'cover');
           data.cover.src = stripLeadingSlash(path);
@@ -1211,7 +1279,7 @@
           data.cover.src = stripLeadingSlash(data.cover.src);
         }
 
-        // Upload inline images and rewrite body
+        // Inline images
         const expanded = await uploadAndRewriteInlineImages(
           data.slug,
           data.date,
@@ -1224,36 +1292,32 @@
 
         data.status = 'published';
 
-        // store tiny record locally (best-effort)
+        // Small cache
         const tiny = (({ slug, title, date, readMinutes, section, author, excerpt, status }) =>
           ({ slug, title, date, readMinutes, section, author, excerpt, status }))(data);
-        try { localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(tiny)); } catch {}
 
-        // clear draft after publish
+        try { localStorage.setItem(`ctr:admin:published:${data.slug}`, JSON.stringify(tiny)); }
+        catch (e) { console.warn('Skipping published cache (quota):', e); }
+
         try { localStorage.removeItem('ctr:admin:draft'); } catch {}
 
-        // Make minimal list entry
+        // 1) Update posts.json (minimal entry)
         const entry = normalize({
           ...data,
           cover: data.cover ? { src: stripLeadingSlash(data.cover.src), alt: data.cover.alt || '' } : null
         });
-
-        // 1) Update posts.json
         await pushPostsJson(entry);
 
-        // 2) Build and commit the standalone HTML page (with related section logic)
-        const html = buildArticleHtml(data)
-          .replace(
-            /<\/footer>\s*<script>[\s\S]*?<\/script>\s*<\/body>\s*<\/html>/,
-            match => match // keep footer script as-is
-          )
-          .replace(
-            /\/\* ---- Related \/ More Articles ---- \*\/[\s\S]*?\(\);\s*\}\)\(\);/,
-            '/* Related section is generated within the exported page itself */'
-          );
+        // 2) Commit the standalone article page
+        const html = buildArticleHtml(data);
+        const htmlRes = await putRepoFile(`${entry.url}`, b64utf8(html), `page: ${entry.slug}.html`);
 
-        const htmlB64 = b64utf8(html);
-        const htmlRes = await putRepoFile(`${entry.url}`, htmlB64, `page: ${entry.slug}.html`);
+        console.log('HTML commit response:', {
+          path: htmlRes.content?.path,
+          sha: htmlRes.content?.sha,
+          url: htmlRes.content?.html_url
+        });
+        if (!htmlRes.content?.path) throw new Error('HTML commit returned no content.path');
 
         statusMsg.textContent = 'Published ✓ — page and posts.json committed';
         setTimeout(()=> statusMsg.textContent = '', 2500);
@@ -1263,6 +1327,26 @@
         alert('Publish failed: ' + e.message);
       }
     });
+
+    /* ===============================
+       Clear draft
+    =============================== */
+    $('#clearDraftBtn').addEventListener('click', () => {
+      if (confirm('Clear current draft from this browser?')) {
+        localStorage.removeItem('ctr:admin:draft');
+        location.reload();
+      }
+    });
+
+    /* ===============================
+       Init
+    =============================== */
+    (function init(){
+      authorEl.value = 'Camila Tiburcio Rubio';
+      dateEl.value = new Date().toISOString().slice(0,16);
+      updateDerived();
+      loadDraft();
+    })();
   </script>
 </body>
 </html>
