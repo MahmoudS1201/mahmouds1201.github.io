@@ -787,6 +787,26 @@
     ::selection { background: rgba(197,61,47,0.15); }
     /* Keep share bar horizontal on standalone page too */
     .shareCard{ display:inline-flex; flex-direction:row; }
+    /* Share bar styles — paste into the <style> block */
+    .shareCard{
+      display:inline-flex; flex-direction:row; align-items:center; gap:14px;
+      width:fit-content; padding:16px 18px; border-radius:9999px; background:#fff;
+      border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto;
+    }
+    .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
+    .socialContainer{
+      width:40px; height:40px; border-radius:12px; background:transparent;
+      border:1px solid rgba(0,0,0,.10); color:#3A3A3A; display:flex; align-items:center; justify-content:center;
+      transition:transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease;
+      text-decoration:none; cursor:pointer;
+    }
+    .socialContainer:hover{ background:rgba(197,61,47,.08); border-color:rgba(197,61,47,.35); color:#C53D2F; transform:translateY(-1px); }
+    .socialContainer:active{ transform:scale(.97); }
+    .xSvg{ width:16px; height:16px; color:inherit; }
+    .socialSvg{ width:18px; height:18px; color:inherit; }
+    /* make SVGs inherit color */
+    .fill-icon path{ fill: currentColor; }
+    .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
   </style>
 </head>
 
