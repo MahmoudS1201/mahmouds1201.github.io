@@ -1014,21 +1014,14 @@
       }
     })();
 
-    /* ---- Related / More Articles ---- */
-    const CURRENT = {
-      slug: ${JSON.stringify((d=>d.slug)(data))},
-      section: ${JSON.stringify((d=>d.section)(data))},
-      tags: ${JSON.stringify((d=>Array.isArray(d.tags)?d.tags:[])(data))}
-    };
-
-    async function loadRelated() {
+    async function loadRelated () {
       const grid = document.getElementById('moreGrid');
       const empty = document.getElementById('moreEmpty');
       const container = document.getElementById('more');
       if (!grid || !container) return;
 
       try {
-        const res = await fetch('./posts.json', { cache: 'no-store' });
+        const res = await fetch('posts.json', { cache: 'no-store' });
         if (!res.ok) throw new Error('posts.json not found');
         const list = await res.json();
 
@@ -1036,50 +1029,73 @@
           .filter(p => p.slug !== CURRENT.slug)
           .map(p => {
             const tags = Array.isArray(p.tags) ? p.tags : [];
-            const overlap = tags.filter(t => CURRENT.tags.includes(t)).length;
+            const overlap = tags.filter(t => (CURRENT.tags || []).includes(t)).length;
             const sameSection = p.section === CURRENT.section ? 1 : 0;
-            const score = sameSection * 3 + overlap;
-            return { ...p, score };
+            return { ...p, score: sameSection * 3 + overlap };
           })
           .sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
 
         const pool = scored.some(p => p.score > 0)
           ? scored.filter(p => p.score > 0)
           : list.filter(p => p.slug !== CURRENT.slug)
-                .sort((a,b)=> new Date(b.date) - new Date(a.date));
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const picks = pool.slice(0, 6);
-
         if (!picks.length) {
           empty.classList.remove('hidden');
           return;
         }
 
-        grid.innerHTML = picks.map(p => {
-          const date = new Date(p.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
-          const cover = p.cover ? `
-            <div class="aspect-[16/9] w-full overflow-hidden rounded-xl bg-ink-900/5">
-              <img src="${p.cover}" alt="" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" loading="lazy"/>
-            </div>` : '';
+        grid.replaceChildren(); // clear existing
 
-          const href = p.url || (p.slug + '.html');
+        picks.forEach(p => {
+          const card = document.createElement('a');
+          card.href = p.url || (p.slug + '.html');
+          card.className = 'group block rounded-2xl border border-black/10 bg-white p-3 hover:shadow-soft transition';
 
-          return `
-            <a href="${href}" class="group block rounded-2xl border border-black/10 bg-white p-3 hover:shadow-soft transition">
-              ${cover}
-              <div class="p-3">
-                <div class="mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent">${p.section || ''}</div>
-                <h3 class="font-serif text-lg leading-snug text-ink-900">${p.title}</h3>
-                <div class="mt-1 text-xs text-ink-300">${date} • ${p.readMinutes || 1} min read</div>
-              </div>
-            </a>`;
-        }).join('');
+          if (p.cover) {
+            const wrap = document.createElement('div');
+            wrap.className = 'aspect-[16/9] w-full overflow-hidden rounded-xl bg-ink-900/5';
+
+            const img = document.createElement('img');
+            img.src = p.cover;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.className = 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]';
+
+            wrap.appendChild(img);
+            card.appendChild(wrap);
+          }
+
+          const info = document.createElement('div');
+          info.className = 'p-3';
+
+          const sec = document.createElement('div');
+          sec.className = 'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
+          sec.textContent = p.section || '';
+          info.appendChild(sec);
+
+          const h3 = document.createElement('h3');
+          h3.className = 'font-serif text-lg leading-snug text-ink-900';
+          h3.textContent = p.title || '';
+          info.appendChild(h3);
+
+          const meta = document.createElement('div');
+          meta.className = 'mt-1 text-xs text-ink-300';
+          const dateStr = p.date ? new Date(p.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' }) : '';
+          meta.textContent = (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
+          info.appendChild(meta);
+
+          card.appendChild(info);
+          grid.appendChild(card);
+        });
       } catch (e) {
         if (container) container.classList.add('hidden');
         console.warn('Related articles unavailable:', e);
       }
     }
 
+    // kick it off
     if (document.readyState !== 'loading') loadRelated();
     else document.addEventListener('DOMContentLoaded', loadRelated);
   <\/script>
