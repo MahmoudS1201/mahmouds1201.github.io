@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>More Options Test Again — Camila Tiburcio Rubio</title>
+  <meta name="description" content="Yeth" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+            cream: '#FAF7F2',
+            accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+          },
+          boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    .u-underline{position:relative}
+    .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
+    .u-underline:hover:after{transform:scaleX(1)}
+    .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
+    .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
+    .prose p{margin:1.05em 0;line-height:1.8}
+    .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
+    .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+    #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
+    blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
+    .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
+    .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
+    article.prose { animation: fadeIn 0.35s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    ::selection { background: rgba(197,61,47,0.15); }
+  </style>
+</head>
+
+<body class="bg-cream text-ink-900 antialiased">
+  <div id="progress-bar"></div>
+
+  <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-1">
+        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        </a>
+      </div>
+      <a id="backBtn" class="u-underline text-sm" href="index.html" title="Go back">← Go back</a>
+    </div>
+  </header>
+
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
+    <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">
+      Essay
+    </div>
+
+    <h1 class="font-serif text-4xl sm:text-5xl mt-3 leading-tight">
+      More Options Test Again
+    </h1>
+
+    <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Yeth</p>
+
+    <div class="mt-4 flex items-center justify-center gap-3 text-sm">
+      <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+        <img src="assets/camila.jpg" alt="Camila Tiburcio Rubio" class="w-full h-full object-cover"/>
+      </div>
+      <div class="text-left">
+        <div class="font-medium">By Camila Tiburcio Rubio</div>
+        <div class="text-ink-300">
+          November 12, 2025
+          • 1 min read
+        </div>
+      </div>
+    </div>
+
+    
+  </section>
+
+  
+  <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+    <img class="hero-img" src="images/2025/11/more-options-test-again/cover.png" alt=""/>
+    
+  </figure>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <article class="prose prose-neutral max-w-none"><p>Attemps</p></article>
+
+    <div class="mt-10 not-prose flex justify-center">
+      <div class="shareCard" role="group" aria-label="Share">
+        <span class="shareLabel">Share</span>
+
+        <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener">
+          <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
+            <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
+          </svg>
+        </a>
+
+        <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener">
+          <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
+          </svg>
+        </a>
+
+        <a id="share-mail" class="socialContainer containerMail" aria-label="Share via Email">
+          <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+          </svg>
+        </a>
+
+        <button id="share-copy" class="socialContainer containerCopy" aria-label="Copy link" type="button">
+          <svg class="clipboard-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <section class="mt-12 border-t border-black/10 pt-6">
+      <div class="flex items-start gap-4">
+        <img src="assets/camila.jpg" alt="Photo of Camila Tiburcio Rubio" class="w-14 h-14 rounded-full object-cover" />
+        <div>
+          <p class="font-semibold">Camila Tiburcio Rubio</p>
+          <p class="text-sm text-ink-300 mt-1">
+            Writer and cultural researcher focusing on Cuba and the Caribbean,
+            Masters Candidate in Latin America and Caribbean Studies at NYU.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="more" class="mt-12 border-t border-black/10 pt-8">
+      <h2 class="font-serif text-2xl mb-5">More from Essay</h2>
+      <div id="moreGrid" class="grid gap-6 sm:grid-cols-2"></div>
+      <p id="moreEmpty" class="hidden text-sm text-ink-300">No related articles yet.</p>
+    </section>
+  </main>
+
+  <!-- Back to top -->
+  <button id="backTop"
+          class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+          aria-label="Back to top">↑ Top</button>
+
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="features.html" class="u-underline">Features</a></li>
+          <li><a href="latest.html" class="u-underline">Latest</a></li>
+          <li><a href="sections.html" class="u-underline">Sections</a></li>
+          <li><a href="archive.html" class="u-underline">Archive</a></li>
+          <li><a href="search.html" class="u-underline">Search</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="about2.html" class="u-underline">About</a></li>
+          <li><a href="contact.html" class="u-underline">Contact</a></li>
+          <li><a href="mission.html" class="u-underline">Mission</a></li>
+          <li><a href="resume.html" class="u-underline">Résumé</a></li>
+          <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+          <li><a href="https://facebook.com" class="u-underline">Facebook</a></li>
+          <li><a href="https://linkedin.com" class="u-underline">Linkedin</a></li>
+          <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const bar = document.getElementById('progress-bar');
+      function onScroll(){
+        const max = document.body.scrollHeight - innerHeight;
+        const pct = Math.max(0, Math.min(100, (scrollY / max) * 100));
+        bar.style.width = pct + '%';
+      }
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+
+    // Back/Top buttons
+    (function () {
+      const link = document.getElementById('backBtn');
+      if (!link) return;
+      const fallbackHref = link.getAttribute('href') || '/';
+      link.addEventListener('click', (e) => {
+        const ref = document.referrer;
+        const sameOrigin = ref && new URL(ref, location.href).origin === location.origin;
+        if (sameOrigin) { e.preventDefault(); history.back(); }
+        else if (!ref)  { link.setAttribute('href', fallbackHref); }
+        else            { link.setAttribute('href', fallbackHref); }
+      });
+    })();
+
+    const backTop = document.getElementById('backTop');
+    const toggleTop = () => {
+      if (window.scrollY > 600) backTop.classList.remove('hidden');
+      else backTop.classList.add('hidden');
+    };
+    window.addEventListener('scroll', toggleTop, { passive:true });
+    backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+    (function addDropcap(){
+      const firstP = document.querySelector('article.prose p');
+      if(firstP) firstP.classList.add('dropcap');
+    })();
+
+    // Share links
+    (function(){
+      const url  = encodeURIComponent(location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      const x    = document.getElementById('share-x');
+      const fb   = document.getElementById('share-fb');
+      const mail = document.getElementById('share-mail');
+      const copy = document.getElementById('share-copy');
+      if (x)  x.href  = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
+      if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+      if (mail){
+        mail.href = 'mailto:?subject=' + text + '&body=' + url;
+        mail.addEventListener('click', async (e) => {
+          if (navigator.share) { e.preventDefault(); try { await navigator.share({ title: document.title, url: location.href }); } catch {} }
+        });
+      }
+      if (copy){
+        copy.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(()=>{ copy.style.transform = ''; }, 120); }
+          catch { alert("Couldn't copy the link."); }
+        });
+      }
+    })();
+
+    async function loadRelated () {
+      const grid = document.getElementById('moreGrid');
+      const empty = document.getElementById('moreEmpty');
+      const container = document.getElementById('more');
+      if (!grid || !container) return;
+
+      try {
+        const res = await fetch('posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        const list = await res.json();
+
+        const scored = list
+          .filter(p => p.slug !== CURRENT.slug)
+          .map(p => {
+            const tags = Array.isArray(p.tags) ? p.tags : [];
+            const overlap = tags.filter(t => (CURRENT.tags || []).includes(t)).length;
+            const sameSection = p.section === CURRENT.section ? 1 : 0;
+            return { ...p, score: sameSection * 3 + overlap };
+          })
+          .sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
+
+        const pool = scored.some(p => p.score > 0)
+          ? scored.filter(p => p.score > 0)
+          : list.filter(p => p.slug !== CURRENT.slug)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const picks = pool.slice(0, 6);
+        if (!picks.length) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        grid.replaceChildren(); // clear existing
+
+        picks.forEach(p => {
+          const card = document.createElement('a');
+          card.href = p.url || (p.slug + '.html');
+          card.className = 'group block rounded-2xl border border-black/10 bg-white p-3 hover:shadow-soft transition';
+
+          if (p.cover) {
+            const wrap = document.createElement('div');
+            wrap.className = 'aspect-[16/9] w-full overflow-hidden rounded-xl bg-ink-900/5';
+
+            const img = document.createElement('img');
+            img.src = p.cover;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.className = 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]';
+
+            wrap.appendChild(img);
+            card.appendChild(wrap);
+          }
+
+          const info = document.createElement('div');
+          info.className = 'p-3';
+
+          const sec = document.createElement('div');
+          sec.className = 'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
+          sec.textContent = p.section || '';
+          info.appendChild(sec);
+
+          const h3 = document.createElement('h3');
+          h3.className = 'font-serif text-lg leading-snug text-ink-900';
+          h3.textContent = p.title || '';
+          info.appendChild(h3);
+
+          const meta = document.createElement('div');
+          meta.className = 'mt-1 text-xs text-ink-300';
+          const dateStr = p.date ? new Date(p.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' }) : '';
+          meta.textContent = (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
+          info.appendChild(meta);
+
+          card.appendChild(info);
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        if (container) container.classList.add('hidden');
+        console.warn('Related articles unavailable:', e);
+      }
+    }
+
+    // kick it off
+    if (document.readyState !== 'loading') loadRelated();
+    else document.addEventListener('DOMContentLoaded', loadRelated);
+  </script>
+</body>
+</html>
