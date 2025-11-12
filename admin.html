@@ -41,7 +41,8 @@
     .btn { padding:.5rem 1rem; border-radius:.75rem; font-weight:600; border:1px solid rgba(0,0,0,.1); background:#fff; }
     .btn:hover { box-shadow:0 10px 30px rgba(0,0,0,0.06); }
 
-    .shareCard{ display:flex; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:#ffffff; border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto; }
+    /* SHARE BAR — force a horizontal row */
+    .shareCard{ display:inline-flex; flex-direction:row; align-items:center; gap:14px; width:fit-content; padding:16px 18px; border-radius:9999px; background:#ffffff; border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto; }
     .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
     .socialContainer{ width:40px; height:40px; border-radius:12px; background:transparent; border:1px solid rgba(0,0,0,.10); color:#3A3A3A; display:flex; align-items:center; justify-content:center; transition:transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease; text-decoration:none; cursor:pointer; }
     .socialContainer:hover{ background:rgba(197,61,47,.08); border-color:rgba(197,61,47,.35); color:#C53D2F; transform:translateY(-1px); }
@@ -784,6 +785,8 @@
     article.prose { animation: fadeIn 0.35s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     ::selection { background: rgba(197,61,47,0.15); }
+    /* Keep share bar horizontal on standalone page too */
+    .shareCard{ display:inline-flex; flex-direction:row; }
   </style>
 </head>
 
@@ -847,13 +850,13 @@
       <div class="shareCard" role="group" aria-label="Share">
         <span class="shareLabel">Share</span>
 
-        <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener">
+        <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener noreferrer">
           <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
             <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
           </svg>
         </a>
 
-        <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener">
+        <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer">
           <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
           </svg>
@@ -951,6 +954,17 @@
     </div>
   </footer>
 
+  <!-- Define CURRENT so related-posts JS works -->
+  <script>
+    window.CURRENT = {
+      slug: ${JSON.stringify(data.slug)},
+      section: ${JSON.stringify(data.section || '')},
+      tags: ${JSON.stringify(hasTags ? data.tags : [])},
+      date: ${JSON.stringify(data.date)},
+      title: ${JSON.stringify(data.title)}
+    };
+  <\/script>
+
   <script>
     (function(){
       const bar = document.getElementById('progress-bar');
@@ -1026,18 +1040,18 @@
         const list = await res.json();
 
         const scored = list
-          .filter(p => p.slug !== CURRENT.slug)
+          .filter(p => p.slug !== (window.CURRENT?.slug || ''))
           .map(p => {
             const tags = Array.isArray(p.tags) ? p.tags : [];
-            const overlap = tags.filter(t => (CURRENT.tags || []).includes(t)).length;
-            const sameSection = p.section === CURRENT.section ? 1 : 0;
+            const overlap = tags.filter(t => (window.CURRENT?.tags || []).includes(t)).length;
+            const sameSection = p.section === window.CURRENT?.section ? 1 : 0;
             return { ...p, score: sameSection * 3 + overlap };
           })
           .sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
 
         const pool = scored.some(p => p.score > 0)
           ? scored.filter(p => p.score > 0)
-          : list.filter(p => p.slug !== CURRENT.slug)
+          : list.filter(p => p.slug !== (window.CURRENT?.slug || ''))
                 .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const picks = pool.slice(0, 6);
