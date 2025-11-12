@@ -1,5 +1,18 @@
 [
   {
+    "slug": "testing-more-article",
+    "title": "Testing More Article",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "hopefully this works better",
+    "date": "2025-11-12T01:25",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/testing-more-article/cover.png",
+    "url": "testing-more-article.html"
+  },
+  {
     "slug": "that-last-thing-broke-everything",
     "title": "That Last Thing Broke Everything",
     "section": "Essay",
