@@ -1,18 +1,4 @@
 [
-    "slug": "hello-world",
-    "title": "Hello World",
-    "section": "Interview",
-    "tags": [
-      "Welp"
-    ],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Yes",
-    "date": "2025-11-12T03:32",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": "images/2025/11/hello-world/cover.png",
-    "url": "hello-world.html"
-  },
   {
     "slug": "wooooot",
     "title": "Wooooot",
