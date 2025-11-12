@@ -1,5 +1,18 @@
 [
   {
+    "slug": "more-options-test-again",
+    "title": "More Options Test Again",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yeth",
+    "date": "2025-11-12T02:06",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/more-options-test-again/cover.png",
+    "url": "more-options-test-again.html"
+  },
+  {
     "slug": "testing-more-article",
     "title": "Testing More Article",
     "section": "Essay",
