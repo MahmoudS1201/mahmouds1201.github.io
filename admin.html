@@ -942,9 +942,46 @@
         ></div>
       </div>
 
-      <p id="moreEmpty" class="hidden text-sm text-ink-300 mt-4">No related articles yet.</p>
+      <p id="moreSectionEmpty" class="hidden text-sm text-ink-300 mt-4">
+        No related articles yet.
+      </p>
     </section>
-  </main>
+
+    <!-- Tag-based cross-section carousel -->
+    <section id="moreTags" class="mt-10">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 class="font-serif text-2xl">You may also like</h2>
+        <div class="hidden sm:flex items-center gap-2">
+          <button
+            id="moreTagsPrev"
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+            aria-label="Previous tagged articles"
+          >
+            ←
+          </button>
+          <button
+            id="moreTagsNext"
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+            aria-label="Next tagged articles"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <div class="-mx-4 sm:mx-0">
+        <div
+          id="moreTagsScroller"
+          class="flex gap-5 overflow-x-auto pb-3 pl-4 sm:pl-0 snap-x snap-mandatory scroll-smooth"
+        ></div>
+      </div>
+
+      <p id="moreTagsEmpty" class="hidden text-sm text-ink-300 mt-4">
+        No tag-related articles yet.
+      </p>
+    </section>
 
   <!-- Back to top -->
   <button id="backTop"
@@ -1076,95 +1113,73 @@
     })();
 
     async function loadRelated () {
-      const scroller  = document.getElementById('moreScroller');
-      const empty     = document.getElementById('moreEmpty');
-      const container = document.getElementById('more');
-      if (!scroller || !container) return;
+      const scrollerSection = document.getElementById('moreScroller');
+      const scrollerTags    = document.getElementById('moreTagsScroller');
+      const emptySection    = document.getElementById('moreSectionEmpty');
+      const emptyTags       = document.getElementById('moreTagsEmpty');
+      const sectionBlock    = document.getElementById('more');
+      const tagsBlock       = document.getElementById('moreTags');
 
-      try {
-        const res = await fetch('posts.json', { cache: 'no-store' });
-        if (!res.ok) throw new Error('posts.json not found');
-        const list = await res.json();
+      if (!scrollerSection && !scrollerTags) return;
 
-        const scored = list
-          .filter(p => p.slug !== (window.CURRENT?.slug || ''))
-          .map(p => {
-            const tags = Array.isArray(p.tags) ? p.tags : [];
-            const overlap = tags.filter(t => (window.CURRENT?.tags || []).includes(t)).length;
-            const sameSection = p.section === window.CURRENT?.section ? 1 : 0;
-            return { ...p, score: sameSection * 3 + overlap };
-          })
-          .sort((a, b) => (b.score - a.score) || (new Date(b.date) - new Date(a.date)));
+      // Helper: make a card element
+      function makeCard(p) {
+        const card = document.createElement('a');
+        card.href = p.url || (p.slug + '.html');
+        card.className =
+          'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
 
-        const pool = scored.some(p => p.score > 0)
-          ? scored.filter(p => p.score > 0)
-          : list
-              .filter(p => p.slug !== (window.CURRENT?.slug || ''))
-              .sort((a, b) => new Date(b.date) - new Date(a.date));
+        if (p.cover) {
+          const wrap = document.createElement('div');
+          wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
-        const picks = pool.slice(0, 6);
-        if (!picks.length) {
-          empty.classList.remove('hidden');
-          return;
+          const img = document.createElement('img');
+          img.src = p.cover;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.className =
+            'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
+
+          wrap.appendChild(img);
+          card.appendChild(wrap);
         }
 
-        scroller.replaceChildren(); // clear existing
+        const info = document.createElement('div');
+        info.className = 'p-3';
 
-        picks.forEach(p => {
-          const card = document.createElement('a');
-          card.href = p.url || (p.slug + '.html');
-          card.className =
-            'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
+        const sec = document.createElement('div');
+        sec.className =
+          'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
+        sec.textContent = p.section || '';
+        info.appendChild(sec);
 
-          if (p.cover) {
-            const wrap = document.createElement('div');
-            wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
+        const h3 = document.createElement('h3');
+        h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
+        h3.textContent = p.title || '';
+        info.appendChild(h3);
 
-            const img = document.createElement('img');
-            img.src = p.cover;
-            img.alt = '';
-            img.loading = 'lazy';
-            img.className =
-              'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
+        const meta = document.createElement('div');
+        meta.className = 'mt-1 text-xs text-ink-300';
+        const dateStr = p.date
+          ? new Date(p.date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            })
+          : '';
+        meta.textContent =
+          (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
+        info.appendChild(meta);
 
-            wrap.appendChild(img);
-            card.appendChild(wrap);
-          }
+        card.appendChild(info);
+        return card;
+      }
 
-          const info = document.createElement('div');
-          info.className = 'p-3';
-
-          const sec = document.createElement('div');
-          sec.className =
-            'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
-          sec.textContent = p.section || '';
-          info.appendChild(sec);
-
-          const h3 = document.createElement('h3');
-          h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
-          h3.textContent = p.title || '';
-          info.appendChild(h3);
-
-          const meta = document.createElement('div');
-          meta.className = 'mt-1 text-xs text-ink-300';
-          const dateStr = p.date
-            ? new Date(p.date).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              })
-            : '';
-          meta.textContent =
-            (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
-          info.appendChild(meta);
-
-          card.appendChild(info);
-          scroller.appendChild(card);
-        });
-
-        // hook up buttons
-        const prevBtn = document.getElementById('morePrev');
-        const nextBtn = document.getElementById('moreNext');
+      // Helper: attach button behavior
+      function setupButtons(prevId, nextId, scroller) {
+        const prevBtn = document.getElementById(prevId);
+        const nextBtn = document.getElementById(nextId);
+        if (!scroller) return;
 
         const amount = () => Math.max(scroller.clientWidth * 0.7, 260);
 
@@ -1178,9 +1193,104 @@
             scroller.scrollBy({ left: amount(), behavior: 'smooth' });
           };
         }
+      }
+
+      try {
+        const res = await fetch('posts.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('posts.json not found');
+        const list = await res.json();
+
+        const currentSlug   = window.CURRENT?.slug || '';
+        const currentTags   = Array.isArray(window.CURRENT?.tags) ? window.CURRENT.tags : [];
+        const currentSection= window.CURRENT?.section || '';
+
+        const baseList = list.filter(p => p.slug !== currentSlug);
+
+        const usedSlugs = new Set();
+
+        // 1) Section-based carousel (More from <Section>)
+        let sectionPicks = [];
+        if (scrollerSection) {
+          const scored = baseList
+            .map(p => {
+              const tags = Array.isArray(p.tags) ? p.tags : [];
+              const overlap = tags.filter(t => currentTags.includes(t)).length;
+              const sameSection = p.section === currentSection ? 1 : 0;
+              return { ...p, score: sameSection * 3 + overlap };
+            })
+            .sort(
+              (a, b) =>
+                (b.score - a.score) ||
+                (new Date(b.date) - new Date(a.date))
+            );
+
+          let pool = scored.filter(p => p.score > 0);
+          if (!pool.length) {
+            // fallback: latest in same section, then whole site
+            pool = baseList
+              .filter(p => p.section === currentSection)
+              .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (!pool.length) {
+              pool = baseList.slice().sort(
+                (a, b) => new Date(b.date) - new Date(a.date)
+              );
+            }
+          }
+
+          sectionPicks = pool.slice(0, 6);
+
+          if (!sectionPicks.length) {
+            if (emptySection) emptySection.classList.remove('hidden');
+          } else {
+            scrollerSection.replaceChildren();
+            sectionPicks.forEach(p => {
+              usedSlugs.add(p.slug);
+              scrollerSection.appendChild(makeCard(p));
+            });
+            setupButtons('morePrev', 'moreNext', scrollerSection);
+          }
+        }
+
+        // 2) Tag-based cross-section carousel (You may also like)
+        if (scrollerTags && currentTags.length) {
+          const tagCandidates = baseList.filter(p => !usedSlugs.has(p.slug));
+
+          const tagScored = tagCandidates
+            .map(p => {
+              const tags = Array.isArray(p.tags) ? p.tags : [];
+              const overlap = tags.filter(t => currentTags.includes(t)).length;
+              return { ...p, overlap };
+            })
+            .filter(p => p.overlap > 0)
+            .sort(
+              (a, b) =>
+                (b.overlap - a.overlap) ||
+                (new Date(b.date) - new Date(a.date))
+            );
+
+          const tagPicks = tagScored.slice(0, 6);
+
+          if (!tagPicks.length) {
+            // nothing meaningful by tags → hide the section
+            if (tagsBlock) tagsBlock.classList.add('hidden');
+            else if (emptyTags) emptyTags.classList.remove('hidden');
+          } else {
+            scrollerTags.replaceChildren();
+            tagPicks.forEach(p => {
+              usedSlugs.add(p.slug);
+              scrollerTags.appendChild(makeCard(p));
+            });
+            setupButtons('moreTagsPrev', 'moreTagsNext', scrollerTags);
+          }
+        } else if (tagsBlock && !currentTags.length) {
+          // current article has no tags → hide tag carousel
+          tagsBlock.classList.add('hidden');
+        }
       } catch (e) {
-        if (container) container.classList.add('hidden');
         console.warn('Related articles unavailable:', e);
+        if (sectionBlock) sectionBlock.classList.add('hidden');
+        if (tagsBlock) tagsBlock.classList.add('hidden');
       }
     }
 
