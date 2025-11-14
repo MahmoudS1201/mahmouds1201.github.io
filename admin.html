@@ -825,6 +825,66 @@
         .socialSvg{ width:18px; height:18px; color:inherit; }
         .fill-icon path{ fill: currentColor; }
         .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+                /* Floating desktop "Jump to" pill on the right */
+        #jumpFloatingDesktop{
+          position:fixed;
+          top:120px;              /* below sticky header */
+          right:32px;
+          z-index:40;
+          width:190px;
+          padding:10px 14px;
+          border-radius:9999px;
+          background:rgba(250,247,242,0.96); /* cream glassy */
+          backdrop-filter:blur(12px);
+          border:1px solid rgba(0,0,0,0.06);
+          box-shadow:0 10px 30px rgba(0,0,0,0.05);
+          font-size:11px;
+        }
+        @media (max-width:1023px){
+          #jumpFloatingDesktop{
+            display:none;         /* only desktop */
+          }
+        }
+        #jumpFloatingDesktop h3{
+          margin:0 0 4px;
+          text-transform:uppercase;
+          letter-spacing:.16em;
+          font-weight:600;
+          color:#9CA3AF;         /* inky gray */
+          font-size:9px;
+        }
+        #jumpFloatingDesktop ul{
+          list-style:none;
+          margin:0;
+          padding:0;
+          display:flex;
+          flex-direction:column;
+          gap:3px;
+        }
+        #jumpFloatingDesktop button{
+          width:100%;
+          text-align:left;
+          border-radius:9999px;
+          padding:4px 8px;
+          border:none;
+          background:transparent;
+          color:#6B7280;         /* muted ink */
+          cursor:pointer;
+          transition:
+            background-color .18s ease,
+            color .18s ease,
+            transform .18s ease;
+        }
+        #jumpFloatingDesktop button:hover{
+          background:rgba(0,0,0,0.03);
+          transform:translateY(-1px);
+        }
+        #jumpFloatingDesktop button[data-active="true"]{
+          background:rgba(197,61,47,0.10);  /* accent wash */
+          color:#C53D2F;
+          font-weight:600;
+        }
       </style>
     </head>
 
@@ -886,7 +946,7 @@
 
       <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <!-- Jump to section menu -->
-        <div id="jumpMenu" class="not-prose mb-6 mt-2">
+        <div id="jumpMenu" class="not-prose mb-6 mt-2 lg:mb-4">
           <!-- Mobile: collapsible -->
           <div class="lg:hidden">
             <button
@@ -907,14 +967,6 @@
               id="jumpMobileList"
               class="mt-2 hidden rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm space-y-1"
             ></div>
-          </div>
-
-          <!-- Desktop: sidebar-style list -->
-          <div class="hidden lg:block border-l border-black/5 pl-4 mt-4">
-            <p class="text-[10px] tracking-[0.14em] uppercase text-ink-300 font-semibold">
-              Jump to
-            </p>
-            <nav id="jumpDesktopList" class="mt-2 space-y-1 text-sm"></nav>
           </div>
         </div>
 
@@ -1187,76 +1239,116 @@
         })();
 
                 // Jump-to-section menu (auto from <h2> headings)
+                // Jump-to-section menu (auto from <h2> headings)
         (function setupJumpMenu(){
-          const article     = document.querySelector('article.prose');
-          const menu        = document.getElementById('jumpMenu');
-          const desktopList = document.getElementById('jumpDesktopList');
-          const mobileList  = document.getElementById('jumpMobileList');
-          const toggleBtn   = document.getElementById('jumpToggleBtn');
+          const article    = document.querySelector('article.prose');
+          const mobileBox  = document.getElementById('jumpMenu');
+          const mobileList = document.getElementById('jumpMobileList');
+          const toggleBtn  = document.getElementById('jumpToggleBtn');
 
-          if (!article || !menu || !desktopList || !mobileList || !toggleBtn) return;
+          if (!article) return;
 
           const headings = Array.from(article.querySelectorAll('h2'));
           // Only show if there are multiple sections
           if (headings.length < 2) {
-            menu.classList.add('hidden');
+            if (mobileBox) mobileBox.classList.add('hidden');
             return;
           }
 
-          function makeSlug(base, index) {
-            let slug = base
+          function makeId(text, index){
+            let slug = (text || '')
               .toLowerCase()
               .replace(/[^\w]+/g, '-')
               .replace(/^-+|-+$/g, '');
             if (!slug) slug = 'section-' + (index + 1);
-            // If an element with this id already exists, just use that id.
-            if (document.getElementById(slug)) return slug;
+            if (!document.getElementById(slug)) return slug;
             return slug;
           }
 
-          function scrollToId(id) {
+          const items = headings.map((h, index) => {
+            const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
+            const id    = h.id || makeId(label, index);
+            if (!h.id) h.id = id;
+            return { id, label, el: h };
+          });
+
+          const headerOffset = 90; // sticky header height
+
+          function scrollToId(id){
             const target = document.getElementById(id);
             if (!target) return;
-            const offset = 80; // account for sticky header
-            const top = target.getBoundingClientRect().top + window.scrollY - offset;
-            window.scrollTo({ top, behavior: 'smooth' });
+            const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+            window.scrollTo({ top, behavior:'smooth' });
           }
 
-          const items = headings.map((h, index) => {
-            const text = (h.textContent || '').trim() || ('Section ' + (index + 1));
-            const id   = h.id || makeSlug(text, index);
-            if (!h.id) h.id = id;
-            return { title: text, id };
-          });
+          // --- Mobile dropdown list ---
+          if (mobileBox && mobileList && toggleBtn){
+            mobileBox.classList.remove('hidden');
+            mobileList.innerHTML = '';
 
-          // Build desktop + mobile lists
-          items.forEach((item) => {
-            // Desktop link
-            const d = document.createElement('button');
-            d.type = 'button';
-            d.textContent = item.title;
-            d.className =
-              'block text-left text-xs text-ink-300 hover:text-ink-900 transition-colors';
-            d.addEventListener('click', () => scrollToId(item.id));
-            desktopList.appendChild(d);
-
-            // Mobile link
-            const m = document.createElement('button');
-            m.type = 'button';
-            m.textContent = item.title;
-            m.className =
-              'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
-            m.addEventListener('click', () => {
-              scrollToId(item.id);
-              mobileList.classList.add('hidden');
+            items.forEach(item => {
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.textContent = item.label;
+              b.className =
+                'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
+              b.addEventListener('click', () => {
+                scrollToId(item.id);
+                mobileList.classList.add('hidden');
+              });
+              mobileList.appendChild(b);
             });
-            mobileList.appendChild(m);
+
+            toggleBtn.addEventListener('click', () => {
+              mobileList.classList.toggle('hidden');
+            });
+          }
+
+          // --- Desktop floating pill ---
+          let desktopCard = document.getElementById('jumpFloatingDesktop');
+          if (!desktopCard){
+            desktopCard = document.createElement('aside');
+            desktopCard.id = 'jumpFloatingDesktop';
+            desktopCard.innerHTML = `
+              <h3>Jump to</h3>
+              <ul></ul>
+            `;
+            document.body.appendChild(desktopCard);
+          }
+
+          const ul = desktopCard.querySelector('ul');
+          ul.innerHTML = '';
+
+          items.forEach((item, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = item.label;
+            btn.dataset.id = item.id;
+            if (idx === 0) btn.dataset.active = 'true';
+            btn.addEventListener('click', () => scrollToId(item.id));
+
+            const li = document.createElement('li');
+            li.appendChild(btn);
+            ul.appendChild(li);
           });
 
-          // Toggle mobile menu
-          toggleBtn.addEventListener('click', () => {
-            mobileList.classList.toggle('hidden');
-          });
+          function updateActive(){
+            const scrollPos = window.scrollY + headerOffset + 10;
+            let currentIndex = 0;
+
+            items.forEach((item, idx) => {
+              const top = item.el.getBoundingClientRect().top + window.scrollY;
+              if (top <= scrollPos) currentIndex = idx;
+            });
+
+            const buttons = desktopCard.querySelectorAll('button');
+            buttons.forEach((btn, idx) => {
+              btn.dataset.active = idx === currentIndex ? 'true' : 'false';
+            });
+          }
+
+          window.addEventListener('scroll', updateActive, { passive:true });
+          updateActive();
         })();
 
 
