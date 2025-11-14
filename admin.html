@@ -1232,14 +1232,13 @@
           }
           if (copy){
             copy.addEventListener('click', async () => {
-              try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(()=>{ copy.style.transform = ''; }, 120); }
+              try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(function(){ copy.style.transform = ''; }, 120); }
               catch { alert("Couldn't copy the link."); }
             });
           }
         })();
 
-                // Jump-to-section menu (auto from <h2> headings)
-                // Jump-to-section menu (auto from <h2> headings)
+        // Jump-to-section menu (auto from <h2> headings)
         (function setupJumpMenu(){
           const article    = document.querySelector('article.prose');
           const mobileBox  = document.getElementById('jumpMenu');
@@ -1249,14 +1248,13 @@
           if (!article) return;
 
           const headings = Array.from(article.querySelectorAll('h2'));
-          // Only show if there are multiple sections
           if (headings.length < 2) {
             if (mobileBox) mobileBox.classList.add('hidden');
             return;
           }
 
           function makeId(text, index){
-            let slug = (text || '')
+            var slug = (text || '')
               .toLowerCase()
               .replace(/[^\w]+/g, '-')
               .replace(/^-+|-+$/g, '');
@@ -1265,67 +1263,64 @@
             return slug;
           }
 
-          const items = headings.map((h, index) => {
+          const items = headings.map(function(h, index){
             const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
             const id    = h.id || makeId(label, index);
             if (!h.id) h.id = id;
-            return { id, label, el: h };
+            return { id: id, label: label, el: h };
           });
 
-          const headerOffset = 90; // sticky header height
+          const headerOffset = 90;
 
           function scrollToId(id){
             const target = document.getElementById(id);
             if (!target) return;
             const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-            window.scrollTo({ top, behavior:'smooth' });
+            window.scrollTo({ top: top, behavior: 'smooth' });
           }
 
-          // --- Mobile dropdown list ---
+          // Mobile dropdown
           if (mobileBox && mobileList && toggleBtn){
             mobileBox.classList.remove('hidden');
             mobileList.innerHTML = '';
 
-            items.forEach(item => {
+            items.forEach(function(item){
               const b = document.createElement('button');
               b.type = 'button';
               b.textContent = item.label;
               b.className =
                 'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
-              b.addEventListener('click', () => {
+              b.addEventListener('click', function () {
                 scrollToId(item.id);
                 mobileList.classList.add('hidden');
               });
               mobileList.appendChild(b);
             });
 
-            toggleBtn.addEventListener('click', () => {
+            toggleBtn.addEventListener('click', function () {
               mobileList.classList.toggle('hidden');
             });
           }
 
-          // --- Desktop floating pill ---
+          // Desktop floating pill
           let desktopCard = document.getElementById('jumpFloatingDesktop');
           if (!desktopCard){
             desktopCard = document.createElement('aside');
             desktopCard.id = 'jumpFloatingDesktop';
-            desktopCard.innerHTML = `
-              <h3>Jump to</h3>
-              <ul></ul>
-            `;
+            desktopCard.innerHTML = '<h3>Jump to</h3><ul></ul>';
             document.body.appendChild(desktopCard);
           }
 
           const ul = desktopCard.querySelector('ul');
           ul.innerHTML = '';
 
-          items.forEach((item, idx) => {
+          items.forEach(function(item, idx){
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.textContent = item.label;
             btn.dataset.id = item.id;
             if (idx === 0) btn.dataset.active = 'true';
-            btn.addEventListener('click', () => scrollToId(item.id));
+            btn.addEventListener('click', function () { scrollToId(item.id); });
 
             const li = document.createElement('li');
             li.appendChild(btn);
@@ -1336,13 +1331,13 @@
             const scrollPos = window.scrollY + headerOffset + 10;
             let currentIndex = 0;
 
-            items.forEach((item, idx) => {
+            items.forEach(function(item, idx){
               const top = item.el.getBoundingClientRect().top + window.scrollY;
               if (top <= scrollPos) currentIndex = idx;
             });
 
             const buttons = desktopCard.querySelectorAll('button');
-            buttons.forEach((btn, idx) => {
+            buttons.forEach(function(btn, idx){
               btn.dataset.active = idx === currentIndex ? 'true' : 'false';
             });
           }
@@ -1350,7 +1345,6 @@
           window.addEventListener('scroll', updateActive, { passive:true });
           updateActive();
         })();
-
 
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
@@ -1362,7 +1356,6 @@
 
           if (!scrollerSection && !scrollerTags) return;
 
-          // Helper: make a card element
           function makeCard(p) {
             const card = document.createElement('a');
             card.href = p.url || (p.slug + '.html');
@@ -1415,21 +1408,20 @@
             return card;
           }
 
-          // Helper: attach button behavior
           function setupButtons(prevId, nextId, scroller) {
             const prevBtn = document.getElementById(prevId);
             const nextBtn = document.getElementById(nextId);
             if (!scroller) return;
 
-            const amount = () => Math.max(scroller.clientWidth * 0.7, 260);
+            const amount = function () { return Math.max(scroller.clientWidth * 0.7, 260); };
 
             if (prevBtn) {
-              prevBtn.onclick = () => {
+              prevBtn.onclick = function () {
                 scroller.scrollBy({ left: -amount(), behavior: 'smooth' });
               };
             }
             if (nextBtn) {
-              nextBtn.onclick = () => {
+              nextBtn.onclick = function () {
                 scroller.scrollBy({ left: amount(), behavior: 'smooth' });
               };
             }
@@ -1440,41 +1432,37 @@
             if (!res.ok) throw new Error('posts.json not found');
             const list = await res.json();
 
-            const currentSlug   = window.CURRENT?.slug || '';
-            const currentTags   = Array.isArray(window.CURRENT?.tags) ? window.CURRENT.tags : [];
-            const currentSection= window.CURRENT?.section || '';
+            const currentSlug   = window.CURRENT && window.CURRENT.slug || '';
+            const currentTags   = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
+            const currentSection= window.CURRENT && window.CURRENT.section || '';
 
-            const baseList = list.filter(p => p.slug !== currentSlug);
+            const baseList = list.filter(function(p){ return p.slug !== currentSlug; });
 
             const usedSlugs = new Set();
 
-            // 1) Section-based carousel (More from <Section>)
             let sectionPicks = [];
             if (scrollerSection) {
               const scored = baseList
-                .map(p => {
+                .map(function(p){
                   const tags = Array.isArray(p.tags) ? p.tags : [];
-                  const overlap = tags.filter(t => currentTags.includes(t)).length;
+                  const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
                   const sameSection = p.section === currentSection ? 1 : 0;
-                  return { ...p, score: sameSection * 3 + overlap };
+                  return Object.assign({}, p, { score: sameSection * 3 + overlap });
                 })
-                .sort(
-                  (a, b) =>
-                    (b.score - a.score) ||
-                    (new Date(b.date) - new Date(a.date))
-                );
+                .sort(function(a, b){
+                  return (b.score - a.score) || (new Date(b.date) - new Date(a.date));
+                });
 
-              let pool = scored.filter(p => p.score > 0);
+              let pool = scored.filter(function(p){ return p.score > 0; });
               if (!pool.length) {
-                // fallback: latest in same section, then whole site
                 pool = baseList
-                  .filter(p => p.section === currentSection)
-                  .sort((a, b) => new Date(b.date) - new Date(a.date));
+                  .filter(function(p){ return p.section === currentSection; })
+                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
 
                 if (!pool.length) {
-                  pool = baseList.slice().sort(
-                    (a, b) => new Date(b.date) - new Date(a.date)
-                  );
+                  pool = baseList.slice().sort(function(a, b){
+                    return new Date(b.date) - new Date(a.date);
+                  });
                 }
               }
 
@@ -1484,7 +1472,7 @@
                 if (emptySection) emptySection.classList.remove('hidden');
               } else {
                 scrollerSection.replaceChildren();
-                sectionPicks.forEach(p => {
+                sectionPicks.forEach(function(p){
                   usedSlugs.add(p.slug);
                   scrollerSection.appendChild(makeCard(p));
                 });
@@ -1492,53 +1480,46 @@
               }
             }
 
-            // 2) Tag-based cross-section carousel (You may also like)
             if (scrollerTags && currentTags.length) {
-              const tagCandidates = baseList.filter(p => !usedSlugs.has(p.slug));
+              const tagCandidates = baseList.filter(function(p){ return !usedSlugs.has(p.slug); });
 
               let tagPicks = [];
 
               if (tagCandidates.length) {
                 const tagScored = tagCandidates
-                  .map(p => {
+                  .map(function(p){
                     const tags = Array.isArray(p.tags) ? p.tags : [];
-                    const overlap = tags.filter(t => currentTags.includes(t)).length;
-                    return { ...p, overlap };
+                    const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
+                    return Object.assign({}, p, { overlap: overlap });
                   })
-                  .filter(p => p.overlap > 0)
-                  .sort(
-                    (a, b) =>
-                      (b.overlap - a.overlap) ||
-                      (new Date(b.date) - new Date(a.date))
-                  );
+                  .filter(function(p){ return p.overlap > 0; })
+                  .sort(function(a, b){
+                    return (b.overlap - a.overlap) || (new Date(b.date) - new Date(a.date));
+                  });
 
                 tagPicks = tagScored.slice(0, 6);
               }
 
-              // Fallback: if no tag matches left, just use latest posts
-              // that aren't already in the first carousel.
               if (!tagPicks.length) {
                 const fallback = baseList
-                  .filter(p => !usedSlugs.has(p.slug))
-                  .sort((a, b) => new Date(b.date) - new Date(a.date));
+                  .filter(function(p){ return !usedSlugs.has(p.slug); })
+                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
 
                 tagPicks = fallback.slice(0, 6);
               }
 
               if (!tagPicks.length) {
-                // truly nothing left to show
                 if (tagsBlock) tagsBlock.classList.add('hidden');
                 else if (emptyTags) emptyTags.classList.remove('hidden');
               } else {
                 scrollerTags.replaceChildren();
-                tagPicks.forEach(p => {
+                tagPicks.forEach(function(p){
                   usedSlugs.add(p.slug);
                   scrollerTags.appendChild(makeCard(p));
                 });
                 setupButtons('moreTagsPrev', 'moreTagsNext', scrollerTags);
               }
             } else if (tagsBlock && !currentTags.length) {
-              // current article has no tags at all → hide tag carousel
               tagsBlock.classList.add('hidden');
             }
           } catch (e) {
@@ -1548,10 +1529,10 @@
           }
         }
 
-        // kick it off
         if (document.readyState !== 'loading') loadRelated();
         else document.addEventListener('DOMContentLoaded', loadRelated);
       <\/script>
+
     </body>
     </html>`;
     }
