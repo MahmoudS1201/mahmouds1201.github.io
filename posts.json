@@ -1,5 +1,18 @@
 [
   {
+    "slug": "here-we-go-again",
+    "title": "Here we go again",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "WOOOOOOOOOO",
+    "date": "2025-11-14T23:29",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/here-we-go-again/cover.png",
+    "url": "here-we-go-again.html"
+  },
+  {
     "slug": "lets-this-one-more-itme",
     "title": "Lets this one more itme",
     "section": "Essay",
