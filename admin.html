@@ -1298,23 +1298,37 @@
             if (scrollerTags && currentTags.length) {
               const tagCandidates = baseList.filter(p => !usedSlugs.has(p.slug));
 
-              const tagScored = tagCandidates
-                .map(p => {
-                  const tags = Array.isArray(p.tags) ? p.tags : [];
-                  const overlap = tags.filter(t => currentTags.includes(t)).length;
-                  return { ...p, overlap };
-                })
-                .filter(p => p.overlap > 0)
-                .sort(
-                  (a, b) =>
-                    (b.overlap - a.overlap) ||
-                    (new Date(b.date) - new Date(a.date))
-                );
+              let tagPicks = [];
 
-              const tagPicks = tagScored.slice(0, 6);
+              if (tagCandidates.length) {
+                const tagScored = tagCandidates
+                  .map(p => {
+                    const tags = Array.isArray(p.tags) ? p.tags : [];
+                    const overlap = tags.filter(t => currentTags.includes(t)).length;
+                    return { ...p, overlap };
+                  })
+                  .filter(p => p.overlap > 0)
+                  .sort(
+                    (a, b) =>
+                      (b.overlap - a.overlap) ||
+                      (new Date(b.date) - new Date(a.date))
+                  );
+
+                tagPicks = tagScored.slice(0, 6);
+              }
+
+              // Fallback: if no tag matches left, just use latest posts
+              // that aren't already in the first carousel.
+              if (!tagPicks.length) {
+                const fallback = baseList
+                  .filter(p => !usedSlugs.has(p.slug))
+                  .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                tagPicks = fallback.slice(0, 6);
+              }
 
               if (!tagPicks.length) {
-                // nothing meaningful by tags → hide the section
+                // truly nothing left to show
                 if (tagsBlock) tagsBlock.classList.add('hidden');
                 else if (emptyTags) emptyTags.classList.remove('hidden');
               } else {
@@ -1326,15 +1340,9 @@
                 setupButtons('moreTagsPrev', 'moreTagsNext', scrollerTags);
               }
             } else if (tagsBlock && !currentTags.length) {
-              // current article has no tags → hide tag carousel
+              // current article has no tags at all → hide tag carousel
               tagsBlock.classList.add('hidden');
             }
-          } catch (e) {
-            console.warn('Related articles unavailable:', e);
-            if (sectionBlock) sectionBlock.classList.add('hidden');
-            if (tagsBlock) tagsBlock.classList.add('hidden');
-          }
-        }
 
         // kick it off
         if (document.readyState !== 'loading') loadRelated();
