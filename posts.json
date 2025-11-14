@@ -1,5 +1,18 @@
 [
   {
+    "slug": "yessirski",
+    "title": "Yessirski",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Well Well Well",
+    "date": "2025-11-14T23:36",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/yessirski/cover.png",
+    "url": "yessirski.html"
+  },
+  {
     "slug": "here-we-go-again",
     "title": "Here we go again",
     "section": "Essay",
