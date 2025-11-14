@@ -823,7 +823,6 @@
         .socialContainer:active{ transform:scale(.97); }
         .xSvg{ width:16px; height:16px; color:inherit; }
         .socialSvg{ width:18px; height:18px; color:inherit; }
-        /* make SVGs inherit color */
         .fill-icon path{ fill: currentColor; }
         .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
       </style>
@@ -936,7 +935,7 @@
 
         <section id="more" class="mt-12 border-t border-black/10 pt-8">
           <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="font-serif text-2xl">More from ${escapeHtml(data.section)}</h2>
+            <h2 class="font-serif text-2xl">More ${escapeHtml(data.section)}s</h2>
             <div class="hidden sm:flex items-center gap-2">
               <button
                 id="morePrev"
@@ -1343,6 +1342,12 @@
               // current article has no tags at all → hide tag carousel
               tagsBlock.classList.add('hidden');
             }
+          } catch (e) {
+            console.warn('Related articles unavailable:', e);
+            if (sectionBlock) sectionBlock.classList.add('hidden');
+            if (tagsBlock)   tagsBlock.classList.add('hidden');
+          }
+        }
 
         // kick it off
         if (document.readyState !== 'loading') loadRelated();
