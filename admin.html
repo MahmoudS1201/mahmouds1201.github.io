@@ -913,9 +913,36 @@
     </section>
 
     <section id="more" class="mt-12 border-t border-black/10 pt-8">
-      <h2 class="font-serif text-2xl mb-5">More from ${escapeHtml(data.section)}</h2>
-      <div id="moreGrid" class="grid gap-6 sm:grid-cols-2"></div>
-      <p id="moreEmpty" class="hidden text-sm text-ink-300">No related articles yet.</p>
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 class="font-serif text-2xl">More from ${escapeHtml(data.section)}</h2>
+        <div class="hidden sm:flex items-center gap-2">
+          <button
+            id="morePrev"
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+            aria-label="Previous articles"
+          >
+            ←
+          </button>
+          <button
+            id="moreNext"
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+            aria-label="Next articles"
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      <div class="-mx-4 sm:mx-0">
+        <div
+          id="moreScroller"
+          class="flex gap-5 overflow-x-auto pb-3 pl-4 sm:pl-0 snap-x snap-mandatory scroll-smooth"
+        ></div>
+      </div>
+
+      <p id="moreEmpty" class="hidden text-sm text-ink-300 mt-4">No related articles yet.</p>
     </section>
   </main>
 
@@ -1049,10 +1076,10 @@
     })();
 
     async function loadRelated () {
-      const grid = document.getElementById('moreGrid');
-      const empty = document.getElementById('moreEmpty');
+      const scroller  = document.getElementById('moreScroller');
+      const empty     = document.getElementById('moreEmpty');
       const container = document.getElementById('more');
-      if (!grid || !container) return;
+      if (!scroller || !container) return;
 
       try {
         const res = await fetch('posts.json', { cache: 'no-store' });
@@ -1071,8 +1098,9 @@
 
         const pool = scored.some(p => p.score > 0)
           ? scored.filter(p => p.score > 0)
-          : list.filter(p => p.slug !== (window.CURRENT?.slug || ''))
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
+          : list
+              .filter(p => p.slug !== (window.CURRENT?.slug || ''))
+              .sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const picks = pool.slice(0, 6);
         if (!picks.length) {
@@ -1080,22 +1108,24 @@
           return;
         }
 
-        grid.replaceChildren(); // clear existing
+        scroller.replaceChildren(); // clear existing
 
         picks.forEach(p => {
           const card = document.createElement('a');
           card.href = p.url || (p.slug + '.html');
-          card.className = 'group block rounded-2xl border border-black/10 bg-white p-3 hover:shadow-soft transition';
+          card.className =
+            'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
 
           if (p.cover) {
             const wrap = document.createElement('div');
-            wrap.className = 'aspect-[16/9] w-full overflow-hidden rounded-xl bg-ink-900/5';
+            wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
             const img = document.createElement('img');
             img.src = p.cover;
             img.alt = '';
             img.loading = 'lazy';
-            img.className = 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]';
+            img.className =
+              'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
 
             wrap.appendChild(img);
             card.appendChild(wrap);
@@ -1105,24 +1135,49 @@
           info.className = 'p-3';
 
           const sec = document.createElement('div');
-          sec.className = 'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
+          sec.className =
+            'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
           sec.textContent = p.section || '';
           info.appendChild(sec);
 
           const h3 = document.createElement('h3');
-          h3.className = 'font-serif text-lg leading-snug text-ink-900';
+          h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
           h3.textContent = p.title || '';
           info.appendChild(h3);
 
           const meta = document.createElement('div');
           meta.className = 'mt-1 text-xs text-ink-300';
-          const dateStr = p.date ? new Date(p.date).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' }) : '';
-          meta.textContent = (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
+          const dateStr = p.date
+            ? new Date(p.date).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              })
+            : '';
+          meta.textContent =
+            (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
           info.appendChild(meta);
 
           card.appendChild(info);
-          grid.appendChild(card);
+          scroller.appendChild(card);
         });
+
+        // hook up buttons
+        const prevBtn = document.getElementById('morePrev');
+        const nextBtn = document.getElementById('moreNext');
+
+        const amount = () => Math.max(scroller.clientWidth * 0.7, 260);
+
+        if (prevBtn) {
+          prevBtn.onclick = () => {
+            scroller.scrollBy({ left: -amount(), behavior: 'smooth' });
+          };
+        }
+        if (nextBtn) {
+          nextBtn.onclick = () => {
+            scroller.scrollBy({ left: amount(), behavior: 'smooth' });
+          };
+        }
       } catch (e) {
         if (container) container.classList.add('hidden');
         console.warn('Related articles unavailable:', e);
