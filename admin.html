@@ -885,6 +885,39 @@
       </figure>` : ``}
 
       <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Jump to section menu -->
+        <div id="jumpMenu" class="not-prose mb-6 mt-2">
+          <!-- Mobile: collapsible -->
+          <div class="lg:hidden">
+            <button
+              id="jumpToggleBtn"
+              type="button"
+              class="w-full flex items-center justify-between rounded-full border border-black/10 bg-white/80 px-3 py-2 text-xs text-ink-500 shadow-soft"
+            >
+              <span class="tracking-[0.18em] uppercase text-[10px] text-ink-300 font-semibold">
+                Jump to
+              </span>
+              <span class="flex items-center gap-1">
+                <span class="text-[11px] text-ink-500" data-jump-current>Sections</span>
+                <span class="text-xs text-ink-300">▾</span>
+              </span>
+            </button>
+
+            <div
+              id="jumpMobileList"
+              class="mt-2 hidden rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm space-y-1"
+            ></div>
+          </div>
+
+          <!-- Desktop: sidebar-style list -->
+          <div class="hidden lg:block border-l border-black/5 pl-4 mt-4">
+            <p class="text-[10px] tracking-[0.14em] uppercase text-ink-300 font-semibold">
+              Jump to
+            </p>
+            <nav id="jumpDesktopList" class="mt-2 space-y-1 text-sm"></nav>
+          </div>
+        </div>
+
         <article class="prose prose-neutral max-w-none">${data.bodyHtml}</article>
 
         <div class="mt-10 not-prose flex justify-center">
@@ -1152,6 +1185,80 @@
             });
           }
         })();
+
+                // Jump-to-section menu (auto from <h2> headings)
+        (function setupJumpMenu(){
+          const article     = document.querySelector('article.prose');
+          const menu        = document.getElementById('jumpMenu');
+          const desktopList = document.getElementById('jumpDesktopList');
+          const mobileList  = document.getElementById('jumpMobileList');
+          const toggleBtn   = document.getElementById('jumpToggleBtn');
+
+          if (!article || !menu || !desktopList || !mobileList || !toggleBtn) return;
+
+          const headings = Array.from(article.querySelectorAll('h2'));
+          // Only show if there are multiple sections
+          if (headings.length < 2) {
+            menu.classList.add('hidden');
+            return;
+          }
+
+          function makeSlug(base, index) {
+            let slug = base
+              .toLowerCase()
+              .replace(/[^\w]+/g, '-')
+              .replace(/^-+|-+$/g, '');
+            if (!slug) slug = 'section-' + (index + 1);
+            // If an element with this id already exists, just use that id.
+            if (document.getElementById(slug)) return slug;
+            return slug;
+          }
+
+          function scrollToId(id) {
+            const target = document.getElementById(id);
+            if (!target) return;
+            const offset = 80; // account for sticky header
+            const top = target.getBoundingClientRect().top + window.scrollY - offset;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+
+          const items = headings.map((h, index) => {
+            const text = (h.textContent || '').trim() || ('Section ' + (index + 1));
+            const id   = h.id || makeSlug(text, index);
+            if (!h.id) h.id = id;
+            return { title: text, id };
+          });
+
+          // Build desktop + mobile lists
+          items.forEach((item) => {
+            // Desktop link
+            const d = document.createElement('button');
+            d.type = 'button';
+            d.textContent = item.title;
+            d.className =
+              'block text-left text-xs text-ink-300 hover:text-ink-900 transition-colors';
+            d.addEventListener('click', () => scrollToId(item.id));
+            desktopList.appendChild(d);
+
+            // Mobile link
+            const m = document.createElement('button');
+            m.type = 'button';
+            m.textContent = item.title;
+            m.className =
+              'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
+            m.addEventListener('click', () => {
+              scrollToId(item.id);
+              mobileList.classList.add('hidden');
+            });
+            mobileList.appendChild(m);
+          });
+
+          // Toggle mobile menu
+          toggleBtn.addEventListener('click', () => {
+            mobileList.classList.toggle('hidden');
+          });
+        })();
+
 
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
