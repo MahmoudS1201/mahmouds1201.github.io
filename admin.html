@@ -878,6 +878,28 @@
           </div>` : ``}
       </section>
 
+      <!-- Explore by Topic pill bar -->
+      <div class="mt-5 flex justify-center overflow-x-auto gap-2 pb-1"
+           id="exploreTopicBar">
+        <a href="search.html?tag=cuba" 
+           class="tag whitespace-nowrap">Cuba</a>
+
+        <a href="search.html?tag=nyc" 
+           class="tag whitespace-nowrap">NYC</a>
+
+        <a href="search.html?tag=culture" 
+           class="tag whitespace-nowrap">Culture</a>
+
+        <a href="search.html?tag=gender" 
+           class="tag whitespace-nowrap">Gender</a>
+
+        <a href="search.html?tag=music" 
+           class="tag whitespace-nowrap">Music</a>
+
+        <a href="search.html?tag=language" 
+           class="tag whitespace-nowrap">Language</a>
+      </div>
+
       ${data.cover ? `
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <img class="hero-img" src="${data.cover.src}" alt="${escapeHtml(data.cover.alt||'')}"/>
