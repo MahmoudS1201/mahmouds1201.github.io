@@ -835,29 +835,33 @@
           z-index: 30;
         }
 
+        /* Card container */
         #jumpFloatingDesktop .jump-card-inner {
-          background: rgba(250, 247, 242, 0.96); /* close to cream */
+          background: rgba(250, 247, 242, 0.78); /* soft, slightly see-through cream */
           border-radius: 16px;
-          border: 1px solid rgba(0, 0, 0, 0.04);
-          box-shadow: 0 14px 35px rgba(15, 23, 42, 0.10);
+          border: 1px solid rgba(0, 0, 0, 0.03);
+          box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
           padding: 10px 12px 8px;
           font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
+        /* "JUMP TO" label */
         #jumpFloatingDesktop .jump-label {
           font-size: 10px;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #D1D5DB; /* lighter gray */
+          color: #E5E7EB; /* very light gray */
           margin-bottom: 2px;
         }
 
+        /* List container */
         #jumpFloatingDesktop .jump-list {
           list-style: none;
           margin: 0;
           padding: 0;
         }
 
+        /* Each button */
         #jumpFloatingDesktop .jump-list button {
           width: 100%;
           border-radius: 9999px;
@@ -867,7 +871,7 @@
           font-size: 12px;
           text-align: left;
           background: transparent;
-          color: #6B7280;
+          color: #6B7280; /* muted gray */
           cursor: pointer;
           transition:
             background-color 0.16s ease,
@@ -883,7 +887,7 @@
 
         /* Active = soft accent pill */
         #jumpFloatingDesktop .jump-list button[data-active="true"] {
-          background: rgba(197, 61, 47, 0.10);
+          background: rgba(197, 61, 47, 0.12); /* soft accent */
           color: #C53D2F;
           font-weight: 500;
         }
@@ -893,17 +897,6 @@
           #jumpFloatingDesktop {
             display: none;
           }
-        }
-
-        #jumpFloatingDesktop .jump-card-inner {
-          background: rgba(250, 247, 242, 0.9);   /* a touch more see-through */
-          box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
-        }
-
-        #jumpFloatingDesktop .jump-list button[data-active="true"] {
-          background: rgba(197, 61, 47, 0.06);   /* softer accent */
-          color: #C53D2F;
-          font-weight: 500;
         }
 
       </style>
