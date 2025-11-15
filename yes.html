@@ -4,7 +4,7 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Yes — Camila Tiburcio Rubio</title>
-      <meta name="description" content="Yes" />
+      <meta name="description" content="Test" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -247,7 +247,7 @@
           cursor: pointer;
 
           /* THIS controls vertical alignment */
-          margin-top: -5px; /* Adjust between -4 and -8 until perfect */
+          margin-top: 0px; /* Adjust between -4 and -8 until perfect */
         }
 
         /* Firefox thumb */
@@ -262,12 +262,37 @@
         }
 
         #ttsProgressRange::-webkit-slider-thumb {
-          margin-top: -10px !important;
+          margin-top: 0px !important;
 
         }
         #ttsProgressRange::-moz-range-thumb {
           margin-top: -3px !important;
         }
+
+        /* Sticky TTS mini-player container */
+        #ttsStickyBar {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 1rem;
+          z-index: 60;
+          display: none;       /* shown when listening starts */
+          pointer-events: none; /* inner card handles clicks */
+        }
+
+        /* Inner card gets actual pointer events */
+        #ttsStickyInner {
+          pointer-events: auto;
+        }
+
+        /* Highlight for the sentence currently being read */
+        .tts-sentence--active {
+          background: rgba(197, 61, 47, 0.14);
+          border-radius: 4px;
+          padding: 0 1px;
+          transition: background 0.08s ease-out;
+        }
+
 
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
@@ -387,7 +412,7 @@
           Yes
         </h1>
 
-        <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Yes</p>
+        <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Test</p>
 
 
         <div class="mt-4 flex items-center justify-center gap-3 text-sm">
@@ -404,6 +429,13 @@
         </div>
 
         
+          <div class="mt-3 flex justify-center flex-wrap gap-2">
+            
+                <a class="tag" href="search.html?q=Cuba">
+                  Cuba
+                </a>
+              
+          </div>
 
         <div class="mt-3 flex justify-center">
           <button
@@ -424,7 +456,7 @@
           <!-- Slider & Time -->
           <div class="flex items-center gap-2">
             <input
-              id="ttsProgressRange"
+              id="ttsProgressRangeInLine"
               type="range"
               min="0"
               max="100"
@@ -433,7 +465,7 @@
               style="width:260px;max-width:100%;"
             />
             <div
-              id="ttsProgressLabel"
+              id="ttsProgressLabelInLine"
               class="text-[11px] text-ink-400 font-medium tabular-nums"
             >
               00:00
@@ -442,7 +474,7 @@
 
           <!-- Play / Pause button (now aligned vertically) -->
           <button
-            id="ttsPlayPause"
+            id="ttsPlayPauseInLine"
             type="button"
             data-state="paused"
             class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
@@ -621,6 +653,67 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
         </section>
       </main>
 
+      <!-- Sticky TTS mini-player -->
+      <div
+        id="ttsStickyBar"
+        class="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        style="display:none;"
+      >
+        <div
+          id="ttsStickyInner"
+          class="max-w-2xl w-full rounded-full border border-black/10 bg-white/95 shadow-soft backdrop-blur flex items-center gap-3 px-3 py-2"
+        >
+          <!-- Optional stop button on the left (desktop only) -->
+          <button
+            id="ttsStickyStop"
+            type="button"
+            class="hidden sm:inline-flex text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white text-ink-400 hover:text-ink-900"
+          >
+            Stop
+          </button>
+
+          <!-- Progress bar -->
+          <input
+            id="ttsProgressRange"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="flex-1 mx-2"
+          />
+
+          <!-- Time label -->
+          <span
+            id="ttsProgressLabel"
+            class="text-[11px] text-ink-400 font-medium tabular-nums whitespace-nowrap"
+          >
+            00:00 / 00:00
+          </span>
+
+          <!-- Play / Pause circle on the right -->
+          <button
+            id="ttsPlayPause"
+            type="button"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition ml-1"
+            aria-label="Play or pause article audio"
+          >
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <polygon points="8,5 19,12 8,19"></polygon>
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
       <!-- Back to top -->
       <button id="backTop"
               class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
@@ -681,8 +774,8 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
         window.CURRENT = {
           slug: "yes",
           section: "Essay",
-          tags: [],
-          date: "2025-11-15T02:50",
+          tags: ["Cuba"],
+          date: "2025-11-15T04:16",
           title: "Yes"
         };
       </script>
@@ -897,83 +990,197 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
         var TTS_TOTAL_SECONDS = 540;
 
                 // Read-aloud / text-to-speech for article with progress + scrubbing
-                // Read-aloud / text-to-speech with "Stop listening" + play/pause + scrubbing
+                // Read-aloud / text-to-speech with sticky bar + word highlight
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
-            const btn = document.getElementById('ttsToggle');
-            const controls = document.getElementById('ttsControls');
+            var btn = document.getElementById('ttsToggle');
+            var bar = document.getElementById('ttsStickyBar');
             if (btn) btn.style.display = 'none';
-            if (controls) controls.style.display = 'none';
+            if (bar) bar.style.display = 'none';
             return;
           }
 
-          const synth       = window.speechSynthesis;
-          const article     = document.querySelector('article.prose');
-          const listenBtn   = document.getElementById('ttsToggle');
-          const controls    = document.getElementById('ttsControls');
-          const playPause   = document.getElementById('ttsPlayPause');
-          const range       = document.getElementById('ttsProgressRange');
-          const label       = document.getElementById('ttsProgressLabel');
+          var synth      = window.speechSynthesis;
+          var article    = document.querySelector('article.prose');
+          var listenBtn  = document.getElementById('ttsToggle');
+          var stickyBar  = document.getElementById('ttsStickyBar');
+          var playPause  = document.getElementById('ttsPlayPause');
+          var range      = document.getElementById('ttsProgressRange');
+          var label      = document.getElementById('ttsProgressLabel');
+          var stopBtn    = document.getElementById('ttsStickyStop');
 
-          if (!article || !listenBtn || !controls || !playPause || !range || !label) return;
+          if (!article || !listenBtn || !stickyBar || !playPause || !range || !label) return;
 
-          // Prepare text once
-          var fullText    = (article.innerText || article.textContent || '').trim();
-          var totalLength = fullText.length;
-          var totalSeconds = (typeof TTS_TOTAL_SECONDS === 'number' && TTS_TOTAL_SECONDS > 0)
-            ? TTS_TOTAL_SECONDS
-            : (data && data.readMinutes ? data.readMinutes * 60 : 0); // fallback if needed
+          /* ===========
+             Sentence-level wrapping for highlight
+          =========== */
+          var sentenceSpans  = [];
+          var sentenceStarts = [];
+          var speechText     = '';
+          var lastSentenceIndex = -1;
 
-          if (!totalLength) {
+          function processTextNode(node) {
+            var text = node.textContent;
+            if (!text || !text.trim()) return;
+
+            var frag = document.createDocumentFragment();
+            var sentenceRegex = /[^.!?]+[.!?]+/g;
+            var match;
+            var lastIndex = 0;
+
+            while ((match = sentenceRegex.exec(text)) !== null) {
+              var sentence  = match[0];
+              var startIdx  = match.index;
+
+              if (startIdx > lastIndex) {
+                var before = text.slice(lastIndex, startIdx);
+                frag.appendChild(document.createTextNode(before));
+                speechText += before;
+              }
+
+              var span = document.createElement('span');
+              span.textContent = sentence;
+              span.className = 'tts-sentence';
+              span.setAttribute('data-sentence-index', String(sentenceSpans.length));
+
+              sentenceSpans.push(span);
+              sentenceStarts.push(speechText.length);
+              speechText += sentence;
+
+              frag.appendChild(span);
+              lastIndex = startIdx + sentence.length;
+            }
+
+            if (lastIndex < text.length) {
+              var tail = text.slice(lastIndex);
+              frag.appendChild(document.createTextNode(tail));
+              speechText += tail;
+            }
+
+            node.parentNode.replaceChild(frag, node);
+          }
+
+          function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              processTextNode(node);
+              return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            if (node.classList && node.classList.contains('tts-sentence')) return;
+
+            var child = node.firstChild;
+            while (child) {
+              var next = child.nextSibling;
+              walk(child);
+              child = next;
+            }
+          }
+
+          walk(article);
+
+          if (!speechText.trim().length || !sentenceSpans.length) {
             listenBtn.style.display = 'none';
-            controls.style.display = 'none';
+            stickyBar.style.display = 'none';
             return;
           }
 
-          var utterance   = null;
-          var isActive    = false;
-          var isPlaying   = false;
-          var isPaused    = false;
-          var baseOffset  = 0;  // start index of current utterance
-          var currentIdx  = 0;  // charIndex within utterance
+          var totalLength = speechText.length;
+
+          /* ===========
+             Time estimate fallback
+          =========== */
+          var wordsCount = speechText.split(/s+/).filter(Boolean).length;
+          var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
+          var totalSeconds =
+            typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
+              ? window.TTS_TOTAL_SECONDS
+              : estimatedSeconds;
 
           function formatTime(sec) {
-            sec = Math.max(0, Math.round(sec || 0));
+            sec = Math.max(0, Math.round(sec));
             var m = Math.floor(sec / 60);
             var s = sec % 60;
             return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
           }
 
-          function updateProgressUI(percent) {
-            var pct = Math.max(0, Math.min(100, percent || 0));
-            range.value = pct;
-
-            if (totalSeconds > 0) {
-              var elapsed = totalSeconds * (pct / 100);
-              label.textContent = formatTime(elapsed) + ' / ' + formatTime(totalSeconds);
-            } else {
-              label.textContent = Math.round(pct) + '%';
+          /* ===========
+             Highlight helpers
+          =========== */
+          function highlightSentence(index) {
+            if (index < 0 || index >= sentenceSpans.length) return;
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
             }
-
-            // Red fill left of thumb, neutral right
-            var fill  = '#C53D2F';
-            var track = 'rgba(15,23,42,0.08)';
-            range.style.background =
-              'linear-gradient(to right, ' +
-                fill + ' 0%, ' +
-                fill + ' ' + pct + '%, ' +
-                track + ' ' + pct + '%, ' +
-                track + ' 100%)';
+            sentenceSpans[index].classList.add('tts-sentence--active');
+            lastSentenceIndex = index;
           }
 
-          function computePercent() {
-            if (!totalLength) return 0;
-            var absolute = baseOffset + currentIdx;
-            return (absolute / totalLength) * 100;
+          function clearHighlight() {
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
+            }
+            lastSentenceIndex = -1;
           }
+
+          function findSentenceIndexFromChar(charIndex) {
+            if (!sentenceStarts.length) return -1;
+            var lo = 0;
+            var hi = sentenceStarts.length - 1;
+            var ans = 0;
+
+            while (lo <= hi) {
+              var mid = (lo + hi) >> 1;
+              if (sentenceStarts[mid] <= charIndex) {
+                ans = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
+              }
+            }
+            return ans;
+          }
+
+          /* ===========
+             Player State
+          =========== */
+          var utterance  = null;
+          var isActive   = false;
+          var isPlaying  = false;
+          var isPaused   = false;
+          var baseOffset = 0;
+          var currentIdx = 0;
 
           function setPlayState(state) {
-            playPause.dataset.state = state;  // "playing" or "paused"
+            playPause.setAttribute('data-state', state);
+
+            var playIcon  = playPause.querySelector('[data-icon="play"]');
+            var pauseIcon = playPause.querySelector('[data-icon="pause"]');
+
+            if (state === 'playing') {
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+            } else {
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+            }
+          }
+
+          function updateProgressUI(percent) {
+            var pct = Math.max(0, Math.min(100, percent));
+            range.value = pct;
+
+            var currentSeconds = (totalSeconds * pct) / 100;
+            label.textContent = formatTime(currentSeconds) + ' / ' + formatTime(totalSeconds);
+
+            var fill  = '#C53D2F';
+            var track = 'rgba(15,23,42,0.08)';
+
+            range.style.background =
+              'linear-gradient(to right, '
+              + fill  + ' 0%, '
+              + fill  + ' ' + pct + '%, '
+              + track + ' ' + pct + '%, '
+              + track + ' 100%)';
           }
 
           function resetPlayback(keepProgress) {
@@ -981,24 +1188,34 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             utterance  = null;
             isPlaying  = false;
             isPaused   = false;
-            currentIdx = 0;
             baseOffset = 0;
+            currentIdx = 0;
             setPlayState('paused');
-            if (!keepProgress) updateProgressUI(0);
+            if (!keepProgress) {
+              updateProgressUI(0);
+              clearHighlight();
+            }
           }
+
+          function hideStickyBar() { stickyBar.style.display = 'none'; }
+          function showStickyBar() { stickyBar.style.display = 'flex'; }
 
           function stopListeningMode() {
             resetPlayback(false);
             isActive = false;
-            controls.style.display = 'none';
+            hideStickyBar();
+            clearHighlight();
             listenBtn.textContent = 'Listen to article';
           }
 
+          /* ===========
+             Create utterance from offset
+          =========== */
           function createUtteranceFromOffset(offset) {
             if (!totalLength) return;
 
-            var clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
-            var slice   = fullText.slice(clamped);
+            var clamped = Math.max(0, Math.min(totalLength - 1, offset));
+            var slice   = speechText.slice(clamped);
             if (!slice.trim()) {
               resetPlayback(false);
               updateProgressUI(100);
@@ -1016,13 +1233,18 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             utterance.onboundary = function (e) {
               if (typeof e.charIndex === 'number') {
                 currentIdx = e.charIndex;
-                updateProgressUI(computePercent());
+                var absolute = baseOffset + currentIdx;
+                var pct = (absolute / totalLength) * 100;
+                updateProgressUI(pct);
+
+                var sentenceIndex = findSentenceIndexFromChar(absolute);
+                if (sentenceIndex >= 0) highlightSentence(sentenceIndex);
               }
             };
 
             utterance.onend = function () {
               isPlaying = false;
-              isPaused  = false;
+              isPaused = false;
               updateProgressUI(100);
               setPlayState('paused');
             };
@@ -1037,20 +1259,23 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             synth.speak(utterance);
           }
 
-          // Main button: enter/exit listening mode
+          /* ===========
+             HANDLERS
+          =========== */
+
           listenBtn.addEventListener('click', function () {
             if (!isActive) {
               isActive = true;
-              controls.style.display = 'flex';
+              showStickyBar();
               listenBtn.textContent = 'Stop listening';
               updateProgressUI(0);
+              clearHighlight();
               createUtteranceFromOffset(0);
             } else {
               stopListeningMode();
             }
           });
 
-          // Play/pause button
           playPause.addEventListener('click', function () {
             if (!isActive) return;
 
@@ -1075,28 +1300,34 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             }
           });
 
-          // Scrub
+          if (stopBtn) {
+            stopBtn.addEventListener('click', function () {
+              if (!isActive) return;
+              stopListeningMode();
+            });
+          }
+
           range.addEventListener('input', function () {
             if (!isActive || !totalLength) return;
 
-            var pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
+            var pct = Math.max(0, Math.min(100, parseFloat(range.value)));
             updateProgressUI(pct);
 
+            var absolute = Math.floor((pct / 100) * totalLength);
+            var sIdx = findSentenceIndexFromChar(absolute);
+            if (sIdx >= 0) highlightSentence(sIdx);
+
             if (isPlaying) {
-              var offset = Math.floor((pct / 100) * totalLength);
-              createUtteranceFromOffset(offset);
+              createUtteranceFromOffset(absolute);
             }
           });
 
-          // Stop reading on page unload
           window.addEventListener('beforeunload', function () {
             synth.cancel();
           });
 
-          // Initialize label once
           updateProgressUI(0);
         })();
-
 
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "yes",
+    "title": "Yes",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Test",
+    "date": "2025-11-15T04:16",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": null,
+    "url": "yes.html"
+  },
+  {
     "slug": "testing-once-more",
     "title": "Testing once more",
     "section": "Essay",
@@ -99,19 +114,6 @@
     "featured": false,
     "cover": "images/2025/11/again-and-again/cover.png",
     "url": "again-and-again.html"
-  },
-  {
-    "slug": "yes",
-    "title": "Yes",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Yes",
-    "date": "2025-11-15T02:50",
-    "readMinutes": 9,
-    "featured": false,
-    "cover": null,
-    "url": "yes.html"
   },
   {
     "slug": "test",
