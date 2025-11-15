@@ -1,5 +1,33 @@
 [
   {
+    "slug": "works-cited-test-again",
+    "title": "Works Cited Test Again",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yes",
+    "date": "2025-11-15T05:17",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/works-cited-test-again/cover.png",
+    "url": "works-cited-test-again.html"
+  },
+  {
+    "slug": "works-cited-test",
+    "title": "Works Cited Test",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Woot Woot",
+    "date": "2025-11-15T05:12",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": null,
+    "url": "works-cited-test.html"
+  },
+  {
     "slug": "yes",
     "title": "Yes",
     "section": "Essay",
