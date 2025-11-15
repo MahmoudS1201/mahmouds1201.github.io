@@ -1,5 +1,21 @@
 [
   {
+    "slug": "yessir",
+    "title": "Yessir",
+    "section": "Essay",
+    "tags": [
+      "Tag1",
+      "Tag2"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Hello",
+    "date": "2025-11-15T01:09",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/yessir/cover.png",
+    "url": "yessir.html"
+  },
+  {
     "slug": "cant-believe-im-still-tweaking-this",
     "title": "Cant believe im still tweaking this",
     "section": "Essay",
