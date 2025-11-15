@@ -1,5 +1,18 @@
 [
   {
+    "slug": "hehe",
+    "title": "Hehe",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Haha",
+    "date": "2025-11-15T03:05",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/hehe/cover.png",
+    "url": "hehe.html"
+  },
+  {
     "slug": "go",
     "title": "Go",
     "section": "Essay",
