@@ -840,6 +840,13 @@
           padding-left: 0.85rem;
         }
 
+        #ttsToggle[data-state="playing"] {
+          background: rgba(197, 61, 47, 0.09);
+          color: #C53D2F;
+          border-color: rgba(197, 61, 47, 0.35);
+        }
+
+
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
           position: fixed;
@@ -973,6 +980,16 @@
               • ${data.readMinutes} min read
             </div>
           </div>
+        </div>
+
+        <div class="mt-3 flex justify-center">
+          <button
+            id="ttsToggle"
+            type="button"
+            class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-xs text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+          >
+            <span>Listen to article</span>
+          </button>
         </div>
 
         ${hasTags ? `
@@ -1404,6 +1421,79 @@
 
           updateActive();
           updateVisibility();
+        })();
+
+        // Read-aloud / text-to-speech for article
+        (function setupTTS() {
+          if (!('speechSynthesis' in window)) {
+            // Browser doesn't support it – hide the button if present
+            const btn = document.getElementById('ttsToggle');
+            if (btn) btn.style.display = 'none';
+            return;
+          }
+
+          const synth = window.speechSynthesis;
+          const btn   = document.getElementById('ttsToggle');
+          const article = document.querySelector('article.prose');
+
+          if (!btn || !article) return;
+
+          let utterance = null;
+          let isPlaying = false;
+          let isPaused  = false;
+
+          function resetButton() {
+            isPlaying = false;
+            isPaused  = false;
+            btn.textContent = 'Listen to article';
+            btn.removeAttribute('data-state');
+          }
+
+          btn.addEventListener('click', function () {
+            // If nothing yet, start reading
+            if (!isPlaying) {
+              const text = article.innerText || article.textContent || '';
+              if (!text.trim()) return;
+
+              // Cancel any previous speech
+              synth.cancel();
+
+              utterance = new SpeechSynthesisUtterance(text);
+              utterance.lang = 'en-US';
+              utterance.rate = 1.0;
+              utterance.onend = resetButton;
+              utterance.onerror = resetButton;
+
+              isPlaying = true;
+              isPaused  = false;
+              btn.textContent = 'Pause audio';
+              btn.setAttribute('data-state', 'playing');
+
+              synth.speak(utterance);
+              return;
+            }
+
+            // Already playing and not paused -> pause
+            if (isPlaying && !isPaused) {
+              synth.pause();
+              isPaused = true;
+              btn.textContent = 'Resume audio';
+              return;
+            }
+
+            // Paused -> resume
+            if (isPlaying && isPaused) {
+              synth.resume();
+              isPaused = false;
+              btn.textContent = 'Pause audio';
+              return;
+            }
+          });
+
+          // Optional: stop reading when user navigates away
+          window.addEventListener('beforeunload', function () {
+            synth.cancel();
+          });
         })();
 
 
