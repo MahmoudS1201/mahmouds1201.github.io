@@ -1697,27 +1697,31 @@
           }
 
           function formatTime(seconds) {
-            const s = Math.max(0, Math.round(seconds || 0));
-            const m = Math.floor(s / 60);
-            const r = s % 60;
-            return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+            var s = Math.max(0, Math.round(seconds || 0));
+            var m = Math.floor(s / 60);
+            var r = s % 60;
+            return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
           }
 
+          // Update slider + time label
           function updateProgressUI(percent) {
-            const pct = Math.max(0, Math.min(100, percent || 0));
+            var pct = Math.max(0, Math.min(100, percent || 0));
             range.value = pct;
 
             // Derive current time from percent of estimated total
-            const currentSeconds = (estimatedTotalSeconds * pct) / 100;
+            var currentSeconds = (estimatedTotalSeconds * pct) / 100;
             label.textContent =
               formatTime(currentSeconds) + ' / ' + formatTime(estimatedTotalSeconds);
 
             // Red fill left of thumb, neutral to the right
-            const fill = '#C53D2F';
-            const track = 'rgba(15,23,42,0.08)';
+            var fill  = '#C53D2F';
+            var track = 'rgba(15,23,42,0.08)';
             range.style.background =
-              `linear-gradient(to right, ${fill} 0%, ${fill} ${pct}%, ` +
-              `${track} ${pct}%, ${track} 100%)`;
+              'linear-gradient(to right, ' +
+                fill  + ' 0%, ' +
+                fill  + ' ' + pct + '%, ' +
+                track + ' ' + pct + '%, ' +
+                track + ' 100%)';
           }
 
           function computePercent() {
