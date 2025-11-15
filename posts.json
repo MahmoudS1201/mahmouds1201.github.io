@@ -1,5 +1,18 @@
 [
   {
+    "slug": "again-and-again",
+    "title": "again and again",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "and again and again",
+    "date": "2025-11-15T02:56",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/again-and-again/cover.png",
+    "url": "again-and-again.html"
+  },
+  {
     "slug": "yes",
     "title": "Yes",
     "section": "Essay",
