@@ -153,6 +153,7 @@
         <button id="exportJsonBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark">Export JSON</button>
         <button id="exportHtmlBtn" class="btn">Export HTML</button>
         <button id="clearDraftBtn" class="btn">Clear Draft</button>
+        <button id="logoutBtn" class="btn text-sm">Log out</button>
       </nav>
     </div>
   </header>
@@ -904,6 +905,14 @@
     $("#closeDraftsBtn").addEventListener("click", () => {
       drawer.classList.add("hidden");
     });
+
+    const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          try { localStorage.removeItem('ctr:admin:auth'); } catch {}
+          window.location.href = 'login.html';
+        });
+      }
 
     function renderDraftsList() {
       draftsList.innerHTML = "";
