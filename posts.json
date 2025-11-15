@@ -1,5 +1,18 @@
 [
   {
+    "slug": "works-cited-test",
+    "title": "Works Cited Test",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Woot Woot",
+    "date": "2025-11-15T05:12",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": null,
+    "url": "works-cited-test.html"
+  },
+  {
     "slug": "yes",
     "title": "Yes",
     "section": "Essay",
