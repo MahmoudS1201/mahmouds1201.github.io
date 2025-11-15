@@ -93,6 +93,20 @@
       color: #6B7280;
     }
   </style>
+  <script>
+    (function () {
+      try {
+        const token = localStorage.getItem('ctr:admin:auth');
+        if (token !== 'ok') {
+          // Not authenticated → kick back to login
+          window.location.href = 'login.html';
+        }
+      } catch (e) {
+        // If anything goes wrong reading storage, also kick out
+        window.location.href = 'login.html';
+      }
+    })();
+  </script>
 </head>
 
 <div id="draftsDrawer"
