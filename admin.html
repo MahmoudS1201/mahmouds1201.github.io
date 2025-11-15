@@ -852,42 +852,70 @@
           border-color: rgba(197,61,47,0.35);
         }
 
+        /* Play/pause button states */
+        #ttsPlayPause[data-state="playing"] {
+          background: rgba(197,61,47,0.09);
+          color: #C53D2F;
+          border-color: rgba(197,61,47,0.35);
+        }
+
+        #ttsPlayPause[data-state="paused"] {
+          background: #ffffff;
+        }
+
+        /* Show correct icon for state */
+        #ttsPlayPause [data-icon="play"],
+        #ttsPlayPause [data-icon="pause"] {
+          display: none;
+        }
+
+        #ttsPlayPause[data-state="paused"] [data-icon="play"] {
+          display: block;
+        }
+
+        #ttsPlayPause[data-state="playing"] [data-icon="pause"] {
+          display: block;
+        }
+
         /* TTS progress bar styling */
         #ttsProgressRange {
           -webkit-appearance: none;
           appearance: none;
           height: 4px;
           border-radius: 9999px;
-          background: rgba(15,23,42,0.08);
+          background: transparent; /* we'll draw the track via JS gradient */
           outline: none;
           cursor: pointer;
         }
 
+        /* WebKit thumb */
         #ttsProgressRange::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          width: 12px;
-          height: 12px;
+          width: 14px;
+          height: 14px;
           border-radius: 9999px;
           background: #C53D2F;
           border: 2px solid #F9FAFB;
           box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
-          margin-top: -4px; /* center thumb vertically */
+          margin-top: -5px; /* centers thumb on 4px track */
         }
 
+        /* Firefox thumb */
         #ttsProgressRange::-moz-range-thumb {
-          width: 12px;
-          height: 12px;
+          width: 14px;
+          height: 14px;
           border-radius: 9999px;
           background: #C53D2F;
           border: 2px solid #F9FAFB;
           box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
         }
 
+        /* Firefox track */
         #ttsProgressRange::-moz-range-track {
           height: 4px;
           border-radius: 9999px;
-          background: rgba(15,23,42,0.08);
+          background: transparent;
         }
 
         /* Play/pause button states */
@@ -1093,9 +1121,20 @@
           <button
             id="ttsPlayPause"
             type="button"
-            class="inline-flex items-center gap-1 rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[11px] text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[11px] text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+            aria-label="Play or pause article audio"
           >
-            <span data-tts-play-label>Pause</span>
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <polygon points="8,5 19,12 8,19"></polygon>
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            </svg>
           </button>
 
           <div class="flex flex-col items-center gap-1">
@@ -1111,7 +1150,6 @@
             <div id="ttsProgressLabel">0%</div>
           </div>
         </div>
-
 
         ${hasTags ? `
           <div class="mt-3 flex justify-center flex-wrap gap-2">
@@ -1560,7 +1598,6 @@
           const listenBtn   = document.getElementById('ttsToggle');
           const controls    = document.getElementById('ttsControls');
           const playPause   = document.getElementById('ttsPlayPause');
-          const playLabelEl = playPause && playPause.querySelector('[data-tts-play-label]');
           const range       = document.getElementById('ttsProgressRange');
           const label       = document.getElementById('ttsProgressLabel');
 
@@ -1588,8 +1625,13 @@
             const pct = Math.max(0, Math.min(100, percent || 0));
             range.value = pct;
             label.textContent = Math.round(pct) + '%';
-          }
 
+            // Red fill left of thumb, neutral track to the right
+            const fill = '#C53D2F';
+            const track = 'rgba(15,23,42,0.08)';
+            range.style.background = `linear-gradient(to right, ${fill} 0%, ${fill} ${pct}%, ${track} ${pct}%, ${track} 100%)`;
+          }
+          
           function computePercent() {
             if (!totalLength) return 0;
             const absolute = baseOffset + currentIdx;
@@ -1598,10 +1640,8 @@
 
           function setPlayState(state) {
             if (!playPause) return;
+            // state is "playing" or "paused"
             playPause.dataset.state = state;
-            if (playLabelEl) {
-              playLabelEl.textContent = state === 'playing' ? 'Pause' : 'Play';
-            }
           }
 
           function resetPlayback(keepProgress) {
