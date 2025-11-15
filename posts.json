@@ -1,5 +1,21 @@
 [
   {
+    "slug": "go",
+    "title": "Go",
+    "section": "Essay",
+    "tags": [
+      "Tag1",
+      "Tag2"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Go",
+    "date": "2025-11-15T03:01",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/go/cover.png",
+    "url": "go.html"
+  },
+  {
     "slug": "again-and-again",
     "title": "again and again",
     "section": "Essay",
