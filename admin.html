@@ -1670,6 +1670,12 @@
             ? TTS_TOTAL_SECONDS
             : (data && data.readMinutes ? data.readMinutes * 60 : 0); // fallback if needed
 
+          const words = fullText.split(/\s+/).filter(Boolean);
+          const estimatedTotalSeconds = Math.max(
+            10,                                  // minimum 10s so very short pieces don't look absurd
+            Math.round((words.length / 180) * 60)
+          );
+
           if (!totalLength) {
             listenBtn.style.display = 'none';
             controls.style.display = 'none';
@@ -1690,26 +1696,28 @@
             return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
           }
 
+          function formatTime(seconds) {
+            const s = Math.max(0, Math.round(seconds || 0));
+            const m = Math.floor(s / 60);
+            const r = s % 60;
+            return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+          }
+
           function updateProgressUI(percent) {
-            var pct = Math.max(0, Math.min(100, percent || 0));
+            const pct = Math.max(0, Math.min(100, percent || 0));
             range.value = pct;
 
-            if (totalSeconds > 0) {
-              var elapsed = totalSeconds * (pct / 100);
-              label.textContent = formatTime(elapsed) + ' / ' + formatTime(totalSeconds);
-            } else {
-              label.textContent = Math.round(pct) + '%';
-            }
+            // Derive current time from percent of estimated total
+            const currentSeconds = (estimatedTotalSeconds * pct) / 100;
+            label.textContent =
+              formatTime(currentSeconds) + ' / ' + formatTime(estimatedTotalSeconds);
 
-            // Red fill left of thumb, neutral right
-            var fill  = '#C53D2F';
-            var track = 'rgba(15,23,42,0.08)';
+            // Red fill left of thumb, neutral to the right
+            const fill = '#C53D2F';
+            const track = 'rgba(15,23,42,0.08)';
             range.style.background =
-              'linear-gradient(to right, ' +
-                fill + ' 0%, ' +
-                fill + ' ' + pct + '%, ' +
-                track + ' ' + pct + '%, ' +
-                track + ' 100%)';
+              `linear-gradient(to right, ${fill} 0%, ${fill} ${pct}%, ` +
+              `${track} ${pct}%, ${track} 100%)`;
           }
 
           function computePercent() {
