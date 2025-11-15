@@ -1728,30 +1728,6 @@
           });
         })();
 
-
-          // Scrub: when user moves the slider, jump to that position and keep playing
-          range.addEventListener('input', function () {
-            if (!fullText || !totalLength) return;
-
-            const pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
-            const newOffset = Math.floor((pct / 100) * totalLength);
-            updateProgressUI(pct);
-
-            // If nothing is playing yet, don't auto-start – wait for Listen click
-            if (!isPlaying && !isPaused) return;
-
-            // Otherwise restart from new position
-            createUtteranceFromOffset(newOffset);
-          });
-
-          // Optional: stop reading when user leaves page
-          window.addEventListener('beforeunload', function () {
-            synth.cancel();
-          });
-        })();
-
-
-
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
           const scrollerTags    = document.getElementById('moreTagsScroller');
