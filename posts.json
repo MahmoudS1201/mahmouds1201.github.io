@@ -1,5 +1,18 @@
 [
   {
+    "slug": "test-published",
+    "title": "Test Published",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yessirski",
+    "date": "2025-11-15T18:28",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "images/2025/11/test-published/cover.png",
+    "url": "test-published.html"
+  },
+  {
     "slug": "yuh-again",
     "title": "Yuh again",
     "section": "Essay",
