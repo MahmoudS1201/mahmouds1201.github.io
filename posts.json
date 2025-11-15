@@ -1,5 +1,18 @@
 [
   {
+    "slug": "and-i-do",
+    "title": "And I Do",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yup",
+    "date": "2025-11-15T17:44",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/and-i-do/cover.png",
+    "url": "and-i-do.html"
+  },
+  {
     "slug": "hm",
     "title": "HM",
     "section": "Essay",
@@ -380,19 +393,6 @@
     "featured": false,
     "cover": "images/2025/11/cant-believe-im-still-tweaking-this/cover.png",
     "url": "cant-believe-im-still-tweaking-this.html"
-  },
-  {
-    "slug": "and-i-do",
-    "title": "And I Do",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Yes",
-    "date": "2025-11-15T00:52",
-    "readMinutes": 9,
-    "featured": false,
-    "cover": "images/2025/11/and-i-do/cover.png",
-    "url": "and-i-do.html"
   },
   {
     "slug": "this-shouldnt-be-this-annoying-to-fix-jump-to",
