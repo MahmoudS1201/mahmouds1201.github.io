@@ -1,5 +1,20 @@
 [
   {
+    "slug": "test-tts-with-slider",
+    "title": "TEST TTS WITH SLIDER",
+    "section": "Essay",
+    "tags": [
+      "Art"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yep",
+    "date": "2025-11-15T01:39",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/test-tts-with-slider/cover.png",
+    "url": "test-tts-with-slider.html"
+  },
+  {
     "slug": "test-tts",
     "title": "TEST TTS",
     "section": "Essay",
