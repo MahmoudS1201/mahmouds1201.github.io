@@ -1,5 +1,20 @@
 [
   {
+    "slug": "yuh-again",
+    "title": "Yuh again",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Yuh",
+    "date": "2025-11-15T18:00",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/yuh-again/cover.png",
+    "url": "yuh-again.html"
+  },
+  {
     "slug": "and-i-do",
     "title": "And I Do",
     "section": "Essay",
