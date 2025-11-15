@@ -1,5 +1,20 @@
 [
   {
+    "slug": "hm",
+    "title": "HM",
+    "section": "Essay",
+    "tags": [
+      "Art"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "MHMHMMHMHMH",
+    "date": "2025-11-15T16:05",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/hm/cover.png",
+    "url": "hm.html"
+  },
+  {
     "slug": "ruh-roh",
     "title": "Ruh-Roh",
     "section": "Essay",
