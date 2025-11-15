@@ -78,28 +78,6 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
     }
 
-    /* Rounded corners for Editors’ Picks (and any list cards) */
-    #picks li[data-href] {
-      border-radius: 1rem; /* matches your rounded-2xl cards */
-      overflow: hidden;
-    }
-
-    /* Keep the hover shadow within the rounded edge */
-    #picks li[data-href]:hover {
-      border-radius: 1rem;
-      background-color: white; /* optional – matches card look */
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
-    }
-
-    /* Accessibility focus also rounded */
-    #picks li[data-href]:focus-visible {
-      border-radius: 1rem;
-      outline: 2px solid #C53D2F;
-      outline-offset: 2px;
-    }
-
-    /* Base state: invisible background layer */
     #picks li[data-href] {
       position: relative;
     }
@@ -121,7 +99,6 @@
       transform: scale(1.05);        /* slightly bigger white plate */
       box-shadow: 0 10px 30px rgba(0,0,0,.12), 0 3px 10px rgba(0,0,0,.08);
     }
-
 
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
