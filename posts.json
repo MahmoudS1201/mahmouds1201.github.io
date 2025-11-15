@@ -1,5 +1,18 @@
 [
   {
+    "slug": "whoosh",
+    "title": "Whoosh",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "whoosh",
+    "date": "2025-11-15T02:36",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/whoosh/cover.png",
+    "url": "whoosh.html"
+  },
+  {
     "slug": "here-again",
     "title": "Here again",
     "section": "Essay",
