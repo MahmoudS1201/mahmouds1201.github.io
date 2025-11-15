@@ -871,16 +871,38 @@
       return Object.keys(localStorage).filter(k => k.startsWith("ctr:admin:draft:"));
     }
 
-    function saveMultiDraft() {
+    function saveMultiDraft(isAutosave = false) {
       const data = collect();
-      const slug = data.slug || slugify(data.title || ("draft-" + Date.now()));
-      const key = "ctr:admin:draft:" + slug;
+
+      // 1) Don’t autosave completely empty drafts (stops spam from idle tabs)
+      const hasContent =
+        data.title ||
+        data.excerpt ||
+        data.bodyMarkdown ||
+        (data.cover && data.cover.src);
+
+      if (!hasContent) {
+        // For autosave, just bail quietly.
+        // For manual "Save Draft", this will also do nothing if absolutely nothing is filled in.
+        return null;
+      }
+
+      // 2) Build a stable slug
+      let slug = data.slug || slugify(data.title || '');
+
+      // If there is still no slug (no title yet), use a fixed key for autosave
+      if (!slug) {
+        // Autosave: always overwrite the same "current" draft instead of making new ones
+        slug = isAutosave ? 'current' : ('draft-' + Date.now());
+      }
+
+      const key = 'ctr:admin:draft:' + slug;
 
       data._savedAt = new Date().toISOString();
-
       localStorage.setItem(key, JSON.stringify(data));
       return key;
     }
+
 
     function loadMultiDraft(slug) {
       const key = "ctr:admin:draft:" + slug;
@@ -891,7 +913,8 @@
     }
 
     /* Autosave every 10s */
-    setInterval(saveMultiDraft, 10000);
+    /* Autosave every 10s */
+    setInterval(() => saveMultiDraft(true), 10000);
 
     /* Drawer UI */
     const drawer = $("#draftsDrawer");
