@@ -9,11 +9,11 @@
   "readMinutes": 1,
   "featured": false,
   "cover": {
-    "src": "images/2025/11/test-published/cover.png",
+    "src": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/test-published/cover.png",
     "alt": ""
   },
-  "bodyMarkdown": "Lets see if i can edit this",
-  "bodyHtml": "<p>Lets see if i can edit this</p>",
+  "bodyMarkdown": "Lets see if i can edit this, I added this edit",
+  "bodyHtml": "<p>Lets see if i can edit this, I added this edit</p>",
   "seo": {
     "title": "",
     "description": ""
