@@ -1,5 +1,18 @@
 [
   {
+    "slug": "testing-citations",
+    "title": "Testing Citations",
+    "section": "Essay",
+    "tags": [],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Testing Citations",
+    "date": "2025-11-15T15:31",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/testing-citations/cover.jpg",
+    "url": "testing-citations.html"
+  },
+  {
     "slug": "test-test-tes",
     "title": "Test Test Tes",
     "section": "Essay",
