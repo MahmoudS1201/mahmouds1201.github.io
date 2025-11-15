@@ -1166,11 +1166,17 @@
           margin: 0;
         }
 
+        /* Hanging indent lives on the list item itself */
         .bibliography-item {
           position: relative;
-          padding-left: 2.25rem;
           margin-bottom: 0.75rem;
-          line-height: 1.6;
+          line-height: 1.7;
+
+          /* hanging indent:
+             - first line pulled back to the left
+             - wrapped lines pushed to the right */
+          padding-left: 1.75rem;   /* where wrapped lines start */
+          text-indent: -1.75rem;   /* first line back to the margin */
         }
 
         .bibliography-item::before {
@@ -1179,6 +1185,7 @@
           left: 0;
           top: 0;
           width: 1.75rem;
+          text-align: right;
           font-variant-numeric: tabular-nums;
           color: #6B7280;
         }
