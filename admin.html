@@ -51,6 +51,47 @@
     .xSvg{ width:16px; height:16px; color:inherit; }
     .socialSvg{ width:18px; height:18px; color:inherit; }
     .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+    /* Bibliography / citations block in preview */
+    .bibliography-section {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.95rem;
+    }
+
+    .bibliography-section h2 {
+      font-size: 1.1rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.75rem;
+    }
+
+    .bibliography-section ol,
+    .bibliography-section ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .bibliography-item {
+      position: relative;
+      padding-left: 2.25rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+
+    /* hanging number */
+    .bibliography-item::before {
+      content: attr(data-bib-index) ".";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1.75rem;
+      font-variant-numeric: tabular-nums;
+      color: #6B7280;
+    }
   </style>
 </head>
 <body class="bg-cream text-ink-900 antialiased">
@@ -575,6 +616,65 @@
     authorEl.addEventListener('input', updateDerived);
     dateEl.addEventListener('input', updateDerived);
 
+    function enhanceBibliographyIn(root) {
+      if (!root) return;
+
+      var article = root;
+      // if root is a wrapper, find the article element inside
+      if (root.matches && !root.matches('article.prose')) {
+        var inside = root.querySelector('article.prose');
+        if (inside) article = inside;
+      }
+
+      if (!article) return;
+
+      var headings = Array.prototype.filter.call(
+        article.querySelectorAll('h2'),
+        function (h) {
+          var text = (h.textContent || '').trim().toLowerCase();
+          return (
+            text === 'bibliography' ||
+            text === 'references' ||
+            text === 'works cited'
+          );
+        }
+      );
+
+      if (!headings.length) return;
+
+      var h = headings[0];
+      var parent = h.parentNode;
+      if (!parent) return;
+
+      var wrapper = document.createElement('section');
+      wrapper.className = 'bibliography-section';
+      parent.insertBefore(wrapper, h);
+
+      var node = h;
+      while (node) {
+        var next = node.nextSibling;
+        wrapper.appendChild(node);
+
+        if (next && next.nodeType === 1) {
+          var tag = next.tagName;
+          if (tag === 'H1' || tag === 'H2') {
+            break;
+          }
+        }
+        node = next;
+      }
+
+      var index = 1;
+      Array.prototype.forEach.call(
+        wrapper.querySelectorAll('ol li, ul li'),
+        function (li) {
+          li.classList.add('bibliography-item');
+          li.setAttribute('data-bib-index', String(index++));
+        }
+      );
+    }
+
+
     function updateDerived(){
       readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
       previewSection.textContent = sectionEl.value;
@@ -587,6 +687,7 @@
         : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
       previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
       addDropcap();
+      enhanceBibliographyIn(previewBody);
     }
 
     function addDropcap() {
@@ -1032,6 +1133,47 @@
           border-radius: 4px;
           padding: 0 1px;
           transition: background 0.08s ease-out;
+        }
+
+        /* Bibliography / citations block on article page */
+        .bibliography-section {
+          margin-top: 2.5rem;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(0,0,0,0.08);
+          font-size: 0.95rem;
+        }
+
+        .bibliography-section h2 {
+          font-size: 1.1rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 0.75rem;
+        }
+
+        .bibliography-section ol,
+        .bibliography-section ul {
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+        }
+
+        .bibliography-item {
+          position: relative;
+          padding-left: 2.25rem;
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
+        }
+
+        .bibliography-item::before {
+          content: attr(data-bib-index) ".";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1.75rem;
+          font-variant-numeric: tabular-nums;
+          color: #6B7280;
         }
 
 
@@ -1576,6 +1718,57 @@
           const firstP = document.querySelector('article.prose p');
           if(firstP) firstP.classList.add('dropcap');
         })();
+
+        (function enhanceBibliographyOnPage() {
+          var article = document.querySelector('article.prose');
+          if (!article) return;
+
+          var headings = Array.prototype.filter.call(
+            article.querySelectorAll('h2'),
+            function (h) {
+              var text = (h.textContent || '').trim().toLowerCase();
+              return (
+                text === 'bibliography' ||
+                text === 'references' ||
+                text === 'works cited'
+              );
+            }
+          );
+
+          if (!headings.length) return;
+
+          var h = headings[0];
+          var parent = h.parentNode;
+          if (!parent) return;
+
+          var wrapper = document.createElement('section');
+          wrapper.className = 'bibliography-section';
+          parent.insertBefore(wrapper, h);
+
+          var node = h;
+          while (node) {
+            var next = node.nextSibling;
+            wrapper.appendChild(node);
+
+            if (next && next.nodeType === 1) {
+              var tag = next.tagName;
+              if (tag === 'H1' || tag === 'H2') {
+                break;
+              }
+            }
+            node = next;
+          }
+
+          var index = 1;
+          Array.prototype.forEach.call(
+            wrapper.querySelectorAll('ol li, ul li'),
+            function (li) {
+              li.classList.add('bibliography-item');
+              li.setAttribute('data-bib-index', String(index++));
+            }
+          );
+        })();
+
 
         // Share links
         (function(){
