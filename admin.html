@@ -378,7 +378,7 @@
       // paragraphs
       const BLOCK_RE = /^<(?:h[1-6]|ul|ol|li|pre|code|blockquote|img|figure|p)(\s|>)/i;
       s = s
-        .split(/\n{2,}/)
+        .split(/\n\s*\n/)
         .map(chunk => chunk.trim())
         .filter(Boolean)
         .map(chunk => BLOCK_RE.test(chunk) ? chunk : `<p>${chunk.replace(/\n/g,'<br/>')}</p>`)
