@@ -846,6 +846,49 @@
           border-color: rgba(197, 61, 47, 0.35);
         }
 
+        #ttsToggle[data-state="playing"] {
+          background: rgba(197,61,47,0.09);
+          color: #C53D2F;
+          border-color: rgba(197,61,47,0.35);
+        }
+
+        /* TTS progress bar styling */
+        #ttsProgressRange {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 4px;
+          border-radius: 9999px;
+          background: rgba(15,23,42,0.08);
+          outline: none;
+          cursor: pointer;
+        }
+
+        #ttsProgressRange::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+          margin-top: -4px; /* center thumb vertically */
+        }
+
+        #ttsProgressRange::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+        }
+
+        #ttsProgressRange::-moz-range-track {
+          height: 4px;
+          border-radius: 9999px;
+          background: rgba(15,23,42,0.08);
+        }
 
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
@@ -990,6 +1033,30 @@
           >
             <span>Listen to article</span>
           </button>
+        </div>
+
+         <div class="mt-3 flex justify-center">
+          <button
+            id="ttsToggle"
+            type="button"
+            class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-xs text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+          >
+            <span>Listen to article</span>
+          </button>
+        </div>
+
+        <!-- TTS controls (hidden until listening starts) -->
+        <div id="ttsControls" class="mt-2 flex flex-col items-center gap-1 text-[10px] text-ink-300" style="display:none;">
+          <input
+            id="ttsProgressRange"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            style="width:260px;max-width:100%;"
+          />
+          <div id="ttsProgressLabel">0%</div>
         </div>
 
         ${hasTags ? `
@@ -1423,24 +1490,45 @@
           updateVisibility();
         })();
 
-        // Read-aloud / text-to-speech for article
+                // Read-aloud / text-to-speech for article with progress + scrubbing
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
-            // Browser doesn't support it – hide the button if present
             const btn = document.getElementById('ttsToggle');
+            const controls = document.getElementById('ttsControls');
             if (btn) btn.style.display = 'none';
+            if (controls) controls.style.display = 'none';
             return;
           }
 
-          const synth = window.speechSynthesis;
-          const btn   = document.getElementById('ttsToggle');
-          const article = document.querySelector('article.prose');
+          const synth    = window.speechSynthesis;
+          const btn      = document.getElementById('ttsToggle');
+          const article  = document.querySelector('article.prose');
+          const controls = document.getElementById('ttsControls');
+          const range    = document.getElementById('ttsProgressRange');
+          const label    = document.getElementById('ttsProgressLabel');
 
-          if (!btn || !article) return;
+          if (!btn || !article || !controls || !range || !label) return;
 
-          let utterance = null;
-          let isPlaying = false;
-          let isPaused  = false;
+          let utterance   = null;
+          let isPlaying   = false;
+          let isPaused    = false;
+
+          let fullText    = '';
+          let totalLength = 0;
+          let baseOffset  = 0;   // where current utterance started in fullText
+          let currentIdx  = 0;   // charIndex within current utterance
+
+          function updateProgressUI(percent) {
+            const pct = Math.max(0, Math.min(100, percent || 0));
+            range.value = pct;
+            label.textContent = Math.round(pct) + '%';
+          }
+
+          function computePercent() {
+            if (!totalLength) return 0;
+            const absolute = baseOffset + currentIdx;
+            return (absolute / totalLength) * 100;
+          }
 
           function resetButton() {
             isPlaying = false;
@@ -1449,31 +1537,76 @@
             btn.removeAttribute('data-state');
           }
 
-          btn.addEventListener('click', function () {
-            // If nothing yet, start reading
-            if (!isPlaying) {
-              const text = article.innerText || article.textContent || '';
-              if (!text.trim()) return;
+          function stopSpeech() {
+            synth.cancel();
+            utterance = null;
+            resetButton();
+          }
 
-              // Cancel any previous speech
-              synth.cancel();
+          function createUtteranceFromOffset(offset) {
+            if (!fullText) return;
 
-              utterance = new SpeechSynthesisUtterance(text);
-              utterance.lang = 'en-US';
-              utterance.rate = 1.0;
-              utterance.onend = resetButton;
-              utterance.onerror = resetButton;
+            const clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
+            const slice = fullText.slice(clamped);
 
-              isPlaying = true;
-              isPaused  = false;
-              btn.textContent = 'Pause audio';
-              btn.setAttribute('data-state', 'playing');
-
-              synth.speak(utterance);
+            if (!slice.trim()) {
+              stopSpeech();
+              updateProgressUI(100);
               return;
             }
 
-            // Already playing and not paused -> pause
+            synth.cancel();
+            utterance = new SpeechSynthesisUtterance(slice);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+
+            baseOffset = clamped;
+            currentIdx = 0;
+
+            utterance.onboundary = function (e) {
+              if (typeof e.charIndex === 'number') {
+                currentIdx = e.charIndex;
+                updateProgressUI(computePercent());
+              }
+            };
+
+            utterance.onend = function () {
+              // Finished normally
+              updateProgressUI(100);
+              resetButton();
+            };
+
+            utterance.onerror = function () {
+              resetButton();
+            };
+
+            isPlaying = true;
+            isPaused  = false;
+            btn.textContent = 'Pause audio';
+            btn.setAttribute('data-state', 'playing');
+
+            synth.speak(utterance);
+          }
+
+          btn.addEventListener('click', function () {
+            // First time: initialize text + controls
+            if (!fullText) {
+              fullText = article.innerText || article.textContent || '';
+              totalLength = fullText.length;
+              if (!totalLength) return;
+            }
+
+            controls.style.display = 'flex';
+
+            // Not playing -> start from current slider position or beginning
+            if (!isPlaying) {
+              const startingPercent = parseFloat(range.value) || 0;
+              const offset = Math.floor((startingPercent / 100) * totalLength);
+              createUtteranceFromOffset(offset);
+              return;
+            }
+
+            // Playing and not paused -> pause
             if (isPlaying && !isPaused) {
               synth.pause();
               isPaused = true;
@@ -1490,11 +1623,27 @@
             }
           });
 
-          // Optional: stop reading when user navigates away
+          // Scrub: when user moves the slider, jump to that position and keep playing
+          range.addEventListener('input', function () {
+            if (!fullText || !totalLength) return;
+
+            const pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
+            const newOffset = Math.floor((pct / 100) * totalLength);
+            updateProgressUI(pct);
+
+            // If nothing is playing yet, don't auto-start – wait for Listen click
+            if (!isPlaying && !isPaused) return;
+
+            // Otherwise restart from new position
+            createUtteranceFromOffset(newOffset);
+          });
+
+          // Optional: stop reading when user leaves page
           window.addEventListener('beforeunload', function () {
             synth.cancel();
           });
         })();
+
 
 
         async function loadRelated () {
