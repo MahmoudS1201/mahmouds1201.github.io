@@ -1143,13 +1143,6 @@
           font-size: 0.95rem;
         }
 
-        /* Hanging indent for bibliography paragraphs */
-        .bibliography-section p {
-          margin: 0 0 0.75rem 1.5rem;   /* space between entries + left offset */
-          text-indent: -1.5rem;         /* hanging indent: 1st line flush, rest indented */
-          line-height: 1.7;
-        }
-
         .bibliography-section h2 {
           font-size: 1.1rem;
           letter-spacing: 0.16em;
@@ -1159,6 +1152,7 @@
           margin-bottom: 0.75rem;
         }
 
+        /* Remove default bullets / numbers – we'll draw our own */
         .bibliography-section ol,
         .bibliography-section ul {
           list-style: none;
@@ -1166,19 +1160,15 @@
           margin: 0;
         }
 
-        /* Hanging indent lives on the list item itself */
+        /* One “item” per reference (works for <li> or <p>) */
         .bibliography-item {
           position: relative;
           margin-bottom: 0.75rem;
           line-height: 1.7;
-
-          /* hanging indent:
-             - first line pulled back to the left
-             - wrapped lines pushed to the right */
-          padding-left: 1.75rem;   /* where wrapped lines start */
-          text-indent: -1.75rem;   /* first line back to the margin */
+          padding-left: 2.25rem;   /* where the text block starts */
         }
 
+        /* Number column */
         .bibliography-item::before {
           content: attr(data-bib-index) ".";
           position: absolute;
@@ -1737,6 +1727,7 @@
           var article = document.querySelector('article.prose');
           if (!article) return;
 
+          // 1) Find the “Bibliography / References / Works Cited” heading
           var headings = Array.prototype.filter.call(
             article.querySelectorAll('h2'),
             function (h) {
@@ -1755,6 +1746,7 @@
           var parent = h.parentNode;
           if (!parent) return;
 
+          // 2) Wrap the heading + following content until next H1/H2
           var wrapper = document.createElement('section');
           wrapper.className = 'bibliography-section';
           parent.insertBefore(wrapper, h);
@@ -1773,12 +1765,25 @@
             node = next;
           }
 
+          // 3) Turn either <li> OR <p> references into `.bibliography-item`s
           var index = 1;
           Array.prototype.forEach.call(
-            wrapper.querySelectorAll('ol li, ul li'),
-            function (li) {
-              li.classList.add('bibliography-item');
-              li.setAttribute('data-bib-index', String(index++));
+            wrapper.querySelectorAll('ol li, ul li, p'),
+            function (item) {
+              var raw = (item.textContent || '').trim();
+
+              // If the text already starts with "1. ...", strip that out
+              // and keep the number as data-bib-index.
+              var m = raw.match(/^(\d+)\.\s*(.*)$/);
+              if (m) {
+                item.textContent = m[2];          // drop the "1." in the visible text
+                item.setAttribute('data-bib-index', m[1]);
+              } else {
+                item.setAttribute('data-bib-index', String(index));
+              }
+
+              item.classList.add('bibliography-item');
+              index++;
             }
           );
         })();
