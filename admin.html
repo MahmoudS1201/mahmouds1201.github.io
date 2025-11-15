@@ -106,6 +106,21 @@
   </div>
 </div>
 
+<!-- PUBLISHED ARTICLES DRAWER -->
+<div id="publishedDrawer"
+     class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden z-50">
+  <div class="absolute right-0 top-0 h-full w-[420px] bg-white shadow-xl p-6 overflow-y-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-serif text-xl">Published Articles</h2>
+      <button id="closePublishedBtn" class="text-ink-300 hover:text-ink-900 text-2xl">×</button>
+    </div>
+    <p class="text-xs text-ink-300 mb-3">
+      These are live posts from <code>posts.json</code>. Click “Edit” to load one into the editor.
+    </p>
+    <div id="publishedList" class="space-y-4 text-sm"></div>
+  </div>
+</div>
+
 <body class="bg-cream text-ink-900 antialiased">
   <!-- Top bar -->
   <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
@@ -119,6 +134,7 @@
       <nav class="hidden md:flex items-center gap-3 text-sm">
         <a class="u-underline" href="index.html" title="Back to site">↩ Back to site</a>
         <button id="openDraftsBtn" class="btn">Drafts</button>
+        <button id="openPublishedBtn" class="btn">Published</button>
         <button id="importJsonBtn" class="btn">Import JSON</button>
         <button id="exportJsonBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark">Export JSON</button>
         <button id="exportHtmlBtn" class="btn">Export HTML</button>
@@ -926,6 +942,133 @@
           renderDraftsList();
         };
       });
+    }
+
+    /* ============================================
+       PUBLISHED ARTICLES BROWSER + EDITOR
+       - Reads posts.json via GitHub API
+       - Loads data/posts/{slug}.json into editor
+    ============================================ */
+
+    const publishedDrawer = $("#publishedDrawer");
+    const publishedList   = $("#publishedList");
+    const openPublishedBtn  = $("#openPublishedBtn");
+    const closePublishedBtn = $("#closePublishedBtn");
+
+    if (openPublishedBtn && publishedDrawer && publishedList) {
+      openPublishedBtn.addEventListener("click", async () => {
+        publishedDrawer.classList.remove("hidden");
+        await renderPublishedList();
+      });
+    }
+
+    if (closePublishedBtn && publishedDrawer) {
+      closePublishedBtn.addEventListener("click", () => {
+        publishedDrawer.classList.add("hidden");
+      });
+    }
+
+    async function fetchPostsList() {
+      try {
+        // Use GitHub API helper to read posts.json from the repo
+        const file = await getRepoFile("posts.json");
+        if (!file || !file.content) return [];
+        const json = atob(file.content.replace(/\n/g, ""));
+        const list = JSON.parse(json);
+        return Array.isArray(list) ? list : [];
+      } catch (e) {
+        console.warn("Failed to fetch posts.json", e);
+        return [];
+      }
+    }
+
+    async function renderPublishedList() {
+      publishedList.innerHTML = `<p class="text-ink-300 text-sm">Loading…</p>`;
+
+      const posts = await fetchPostsList();
+      if (!posts.length) {
+        publishedList.innerHTML = `<p class="text-ink-300 text-sm">No published articles yet.</p>`;
+        return;
+      }
+
+      publishedList.innerHTML = "";
+      posts.forEach(post => {
+        const item = document.createElement("div");
+        item.className = "border border-black/10 rounded-xl p-3";
+
+        const dateStr = post.date
+          ? new Date(post.date).toLocaleDateString(undefined, {
+              year: "numeric", month: "short", day: "numeric"
+            })
+          : "";
+
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <div class="font-medium line-clamp-2">${escapeHtml(post.title || "(Untitled)")}</div>
+              <div class="mt-1 text-xs text-ink-300">
+                ${(post.section || "").toUpperCase()}${dateStr ? " • " + dateStr : ""}
+              </div>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-accent/10 text-accent text-[10px] px-2 py-0.5 uppercase tracking-[0.16em]">
+              Live
+            </span>
+          </div>
+
+          <div class="flex gap-2 mt-3">
+            <button data-edit-published="${post.slug}"
+              class="px-3 py-1 rounded bg-accent text-white text-xs">
+              Edit
+            </button>
+
+            <a href="${post.url || (post.slug + ".html")}"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="px-3 py-1 rounded border border-black/10 text-xs text-ink-500 hover:text-ink-900">
+              View
+            </a>
+          </div>
+        `;
+
+        publishedList.appendChild(item);
+      });
+
+      // wire up Edit buttons
+      publishedList.querySelectorAll("[data-edit-published]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const slug = btn.getAttribute("data-edit-published");
+          await editPublishedArticle(slug);
+          publishedDrawer.classList.add("hidden");
+        });
+      });
+    }
+
+    async function editPublishedArticle(slug) {
+      try {
+        const path = `data/posts/${slug}.json`;
+        const file = await getRepoFile(path);
+        if (!file || !file.content) {
+          alert("No editable JSON found for this article yet.\nTry re-publishing it once with this updated admin.");
+          return;
+        }
+
+        const jsonText = atob(file.content.replace(/\n/g, ""));
+        const data = JSON.parse(jsonText);
+
+        // Load into the form using your existing helper
+        populateFromJSON(data);
+
+        // Optionally stash it as a draft for safety
+        if (typeof saveMultiDraft === "function") {
+          saveMultiDraft();
+        }
+
+        statusMsg.textContent = `Loaded "${data.title || slug}" for editing.`;
+        setTimeout(() => { statusMsg.textContent = ""; }, 2500);
+      } catch (e) {
+        console.error(e);
+        alert("Unable to load published article for editing: " + e.message);
+      }
     }
 
 
@@ -2815,10 +2958,23 @@
         });
         await pushPostsJson(entry);
 
-        // 2) Commit the standalone article page
-        const html = buildArticleHtml(data);
-        const htmlRes = await putRepoFile(`${entry.url}`, b64utf8(html), `page: ${entry.slug}.html`);
+        // 2) Commit full JSON source for future editing
+        const jsonForRepo = { ...data };
+        delete jsonForRepo.images; // images are now file paths in bodyMarkdown/bodyHtml
+        const jsonContentB64 = b64utf8(JSON.stringify(jsonForRepo, null, 2));
+        await putRepoFile(
+          `data/posts/${data.slug}.json`,
+          jsonContentB64,
+          `data: ${data.slug}.json`
+        );
 
+        // 3) Commit the standalone article page
+        const html = buildArticleHtml(data);
+        const htmlRes = await putRepoFile(
+          `${entry.url}`,
+          b64utf8(html),
+          `page: ${entry.slug}.html`
+        );
         console.log('HTML commit response:', {
           path: htmlRes.content?.path,
           sha: htmlRes.content?.sha,
