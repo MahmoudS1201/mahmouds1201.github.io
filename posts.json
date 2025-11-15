@@ -1,5 +1,35 @@
 [
   {
+    "slug": "hm",
+    "title": "HM",
+    "section": "Essay",
+    "tags": [
+      "Art"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "MHMHMMHMHMH",
+    "date": "2025-11-15T16:05",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/hm/cover.png",
+    "url": "hm.html"
+  },
+  {
+    "slug": "ruh-roh",
+    "title": "Ruh-Roh",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "yuh",
+    "date": "2025-11-15T16:03",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2025/11/ruh-roh/cover.png",
+    "url": "ruh-roh.html"
+  },
+  {
     "slug": "works-cited-again",
     "title": "Works Cited again",
     "section": "Essay",
