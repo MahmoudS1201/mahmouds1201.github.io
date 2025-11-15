@@ -1915,11 +1915,11 @@
             var track = 'rgba(15,23,42,0.08)';
 
             range.style.background =
-              `linear-gradient(to right,
-                 ${fill} 0%,
-                 ${fill} ${pct}%,
-                 ${track} ${pct}%,
-                 ${track} 100%)`;
+              'linear-gradient(to right, '
+              + fill  + ' 0%, '
+              + fill  + ' ' + pct + '%, '
+              + track + ' ' + pct + '%, '
+              + track + ' 100%)';
           }
 
           function resetPlayback(keepProgress) {
