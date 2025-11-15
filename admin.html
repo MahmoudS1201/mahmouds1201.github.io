@@ -1005,6 +1005,43 @@
       }
     }
 
+    (function () {
+      // === CONFIG ===
+      const MAX_IDLE_MINUTES = 30;  // change to 10, 15, 45, etc.
+
+      function logout() {
+        localStorage.removeItem("ctr:admin:auth");
+        localStorage.removeItem("ctr:admin:lastActive");
+        window.location.href = "login.html";
+      }
+
+      // Check if logged in
+      const token = localStorage.getItem("ctr:admin:auth");
+      if (token !== "ok") logout();
+
+      // Check idle timeout
+      const last = parseInt(localStorage.getItem("ctr:admin:lastActive") || "0", 10);
+      const now = Date.now();
+      const diffMinutes = (now - last) / 1000 / 60;
+
+      if (diffMinutes > MAX_IDLE_MINUTES) {
+        logout();
+      }
+
+      // Update "last active" on any interaction
+      function refreshActive() {
+        localStorage.setItem("ctr:admin:lastActive", Date.now());
+      }
+
+      window.addEventListener("mousemove", refreshActive, { passive: true });
+      window.addEventListener("keydown", refreshActive);
+      window.addEventListener("click", refreshActive, { passive: true });
+      window.addEventListener("scroll", refreshActive, { passive: true });
+      window.addEventListener("touchstart", refreshActive, { passive: true });
+
+    })();
+
+
     async function renderPublishedList() {
       publishedList.innerHTML = `<p class="text-ink-300 text-sm">Loading…</p>`;
 

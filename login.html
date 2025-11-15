@@ -282,6 +282,7 @@
         if (hash === HASHED_SECRET) {
           // success → set localStorage flag and redirect
           localStorage.setItem("ctr:admin:auth", "ok");
+          localStorage.setItem("ctr:admin:lastActive", Date.now());
           statusMsg.textContent = "Welcome back, Camila. Redirecting…";
           errorMsg.textContent = "";
           setTimeout(() => {
