@@ -941,6 +941,27 @@
           padding-left: 0.85rem;
         }
 
+        /* Top / bottom reading fades */
+        .fade-top,
+        .fade-bottom {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 80px;
+          pointer-events: none;
+          z-index: 5;
+        }
+
+        .fade-top {
+          top: 0;
+          background: linear-gradient(to bottom, #FAF7F2 0%, rgba(250,247,242,0) 100%);
+        }
+
+        .fade-bottom {
+          bottom: 0;
+          background: linear-gradient(to top, #FAF7F2 0%, rgba(250,247,242,0) 100%);
+        }
+
         #ttsToggle[data-state="playing"] {
           background: rgba(197, 61, 47, 0.09);
           color: #C53D2F;
@@ -1418,7 +1439,13 @@
           </div>
         </div>
 
-        <article class="prose prose-neutral max-w-none">${data.bodyHtml}</article>
+        <div class="relative">
+          <div class="fade-top"></div>
+          <div class="fade-bottom"></div>
+          <article class="prose prose-neutral max-w-none">
+            ${data.bodyHtml}
+          </article>
+        </div>
 
         <div class="mt-10 not-prose flex justify-center">
           <div class="shareCard" role="group" aria-label="Share">
