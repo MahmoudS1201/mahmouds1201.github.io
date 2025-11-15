@@ -1,0 +1,23 @@
+{
+  "title": "Test Published",
+  "slug": "test-published",
+  "section": "Essay",
+  "tags": [],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Yessirski",
+  "date": "2025-11-15T18:28",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "images/2025/11/test-published/cover.png",
+    "alt": ""
+  },
+  "bodyMarkdown": "Lets see if i can edit this",
+  "bodyHtml": "<p>Lets see if i can edit this</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
