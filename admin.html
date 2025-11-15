@@ -94,6 +94,18 @@
     }
   </style>
 </head>
+
+<div id="draftsDrawer"
+     class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden z-50">
+  <div class="absolute right-0 top-0 h-full w-[360px] bg-white shadow-xl p-6 overflow-y-auto">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-serif text-xl">Drafts</h2>
+      <button id="closeDraftsBtn" class="text-ink-300 hover:text-ink-900 text-2xl">×</button>
+    </div>
+    <div id="draftsList" class="space-y-4 text-sm"></div>
+  </div>
+</div>
+
 <body class="bg-cream text-ink-900 antialiased">
   <!-- Top bar -->
   <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
@@ -106,6 +118,7 @@
       </div>
       <nav class="hidden md:flex items-center gap-3 text-sm">
         <a class="u-underline" href="index.html" title="Back to site">↩ Back to site</a>
+        <button id="openDraftsBtn" class="btn">Drafts</button>
         <button id="importJsonBtn" class="btn">Import JSON</button>
         <button id="exportJsonBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark">Export JSON</button>
         <button id="exportHtmlBtn" class="btn">Export HTML</button>
@@ -765,7 +778,11 @@
       }catch(e){ console.warn('Failed to load draft', e); }
     }
 
-    $('#saveDraftBtn').addEventListener('click', saveDraft);
+    $('#saveDraftBtn').addEventListener('click', () => {
+      saveMultiDraft();
+      statusMsg.textContent = "Draft saved ✓";
+      setTimeout(()=> statusMsg.textContent="", 1500);
+    });
     $('#previewBtn').addEventListener('click', updateDerived);
 
     /* =========================
@@ -813,6 +830,104 @@
       a.download = `article-${data.slug}.json`;
       a.click();
     });
+
+    /* ============================================
+       MULTI-DRAFT SYSTEM (non-destructive upgrade)
+       keys: ctr:admin:draft:{slug}
+    ============================================ */
+
+    function allDraftKeys() {
+      return Object.keys(localStorage).filter(k => k.startsWith("ctr:admin:draft:"));
+    }
+
+    function saveMultiDraft() {
+      const data = collect();
+      const slug = data.slug || slugify(data.title || ("draft-" + Date.now()));
+      const key = "ctr:admin:draft:" + slug;
+
+      data._savedAt = new Date().toISOString();
+
+      localStorage.setItem(key, JSON.stringify(data));
+      return key;
+    }
+
+    function loadMultiDraft(slug) {
+      const key = "ctr:admin:draft:" + slug;
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      populateFromJSON(d);
+    }
+
+    /* Autosave every 10s */
+    setInterval(saveMultiDraft, 10000);
+
+    /* Drawer UI */
+    const drawer = $("#draftsDrawer");
+    const draftsList = $("#draftsList");
+
+    $("#openDraftsBtn").addEventListener("click", () => {
+      drawer.classList.remove("hidden");
+      renderDraftsList();
+    });
+
+    $("#closeDraftsBtn").addEventListener("click", () => {
+      drawer.classList.add("hidden");
+    });
+
+    function renderDraftsList() {
+      draftsList.innerHTML = "";
+
+      const keys = allDraftKeys();
+      if (keys.length === 0) {
+        draftsList.innerHTML = `<p class="text-ink-300">No drafts yet.</p>`;
+        return;
+      }
+
+      keys.forEach(k => {
+        const d = JSON.parse(localStorage.getItem(k));
+        const slug = k.replace("ctr:admin:draft:", "");
+        const title = d.title || "(Untitled)";
+        const section = d.section || "";
+        const time = new Date(d._savedAt).toLocaleString();
+
+        const item = document.createElement("div");
+        item.className = "border border-black/10 rounded-xl p-3";
+
+        item.innerHTML = `
+          <div class="font-medium">${title}</div>
+          <div class="text-xs text-ink-300">${section} • ${time}</div>
+
+          <div class="flex gap-2 mt-3">
+            <button data-open="${slug}"
+              class="px-3 py-1 rounded bg-accent text-white text-xs">Open</button>
+
+            <button data-del="${slug}"
+              class="px-3 py-1 rounded border border-black/10 text-xs">Delete</button>
+          </div>
+        `;
+
+        draftsList.appendChild(item);
+      });
+
+      // attach handlers
+      draftsList.querySelectorAll("[data-open]").forEach(btn => {
+        btn.onclick = () => {
+          const slug = btn.dataset.open;
+          loadMultiDraft(slug);
+          drawer.classList.add("hidden");
+        };
+      });
+
+      draftsList.querySelectorAll("[data-del]").forEach(btn => {
+        btn.onclick = () => {
+          const slug = btn.dataset.del;
+          localStorage.removeItem("ctr:admin:draft:" + slug);
+          renderDraftsList();
+        };
+      });
+    }
+
 
     /* =========================
        Export Standalone HTML
@@ -941,7 +1056,7 @@
           padding-left: 0.85rem;
         }
 
-        
+
 
         #ttsToggle[data-state="playing"] {
           background: rgba(197, 61, 47, 0.09);
