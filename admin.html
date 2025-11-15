@@ -1010,6 +1010,30 @@
           margin-top: -3px !important;
         }
 
+        /* Sticky TTS mini-player container */
+        #ttsStickyBar {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 1rem;
+          z-index: 60;
+          display: none;       /* shown when listening starts */
+          pointer-events: none; /* inner card handles clicks */
+        }
+
+        /* Inner card gets actual pointer events */
+        #ttsStickyInner {
+          pointer-events: auto;
+        }
+
+        /* Highlight for the word currently being read */
+        .tts-word--active {
+          background: rgba(197, 61, 47, 0.18);
+          border-radius: 3px;
+          transition: background 0.08s ease-out;
+        }
+
+
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
           position: fixed;
@@ -1367,6 +1391,67 @@
         </section>
       </main>
 
+      <!-- Sticky TTS mini-player -->
+      <div
+        id="ttsStickyBar"
+        class="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        style="display:none;"
+      >
+        <div
+          id="ttsStickyInner"
+          class="max-w-2xl w-full rounded-full border border-black/10 bg-white/95 shadow-soft backdrop-blur flex items-center gap-3 px-3 py-2"
+        >
+          <!-- Optional stop button on the left (desktop only) -->
+          <button
+            id="ttsStickyStop"
+            type="button"
+            class="hidden sm:inline-flex text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white text-ink-400 hover:text-ink-900"
+          >
+            Stop
+          </button>
+
+          <!-- Progress bar -->
+          <input
+            id="ttsProgressRange"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="flex-1 mx-2"
+          />
+
+          <!-- Time label -->
+          <span
+            id="ttsProgressLabel"
+            class="text-[11px] text-ink-400 font-medium tabular-nums whitespace-nowrap"
+          >
+            00:00 / 00:00
+          </span>
+
+          <!-- Play / Pause circle on the right -->
+          <button
+            id="ttsPlayPause"
+            type="button"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition ml-1"
+            aria-label="Play or pause article audio"
+          >
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <polygon points="8,5 19,12 8,19"></polygon>
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
       <!-- Back to top -->
       <button id="backTop"
               class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
@@ -1643,51 +1728,101 @@
         var TTS_TOTAL_SECONDS = ${JSON.stringify((data.readMinutes || 1) * 60)};
 
                 // Read-aloud / text-to-speech for article with progress + scrubbing
-                // Read-aloud / text-to-speech with "Stop listening" + play/pause + scrubbing
+                // Read-aloud / text-to-speech with sticky bar + word highlight
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
-            const btn = document.getElementById('ttsToggle');
-            const controls = document.getElementById('ttsControls');
+            var btn = document.getElementById('ttsToggle');
+            var bar = document.getElementById('ttsStickyBar');
             if (btn) btn.style.display = 'none';
-            if (controls) controls.style.display = 'none';
+            if (bar) bar.style.display = 'none';
             return;
           }
 
-          const synth       = window.speechSynthesis;
-          const article     = document.querySelector('article.prose');
-          const listenBtn   = document.getElementById('ttsToggle');
-          const controls    = document.getElementById('ttsControls');
-          const playPause   = document.getElementById('ttsPlayPause');
-          const range       = document.getElementById('ttsProgressRange');
-          const label       = document.getElementById('ttsProgressLabel');
+          var synth      = window.speechSynthesis;
+          var article    = document.querySelector('article.prose');
+          var listenBtn  = document.getElementById('ttsToggle');
+          var stickyBar  = document.getElementById('ttsStickyBar');
+          var playPause  = document.getElementById('ttsPlayPause');
+          var range      = document.getElementById('ttsProgressRange');
+          var label      = document.getElementById('ttsProgressLabel');
+          var stopBtn    = document.getElementById('ttsStickyStop');
 
-          if (!article || !listenBtn || !controls || !playPause || !range || !label) return;
+          if (!article || !listenBtn || !stickyBar || !playPause || !range || !label) return;
 
-          // Prepare text once
-          var fullText    = (article.innerText || article.textContent || '').trim();
-          var totalLength = fullText.length;
-          var totalSeconds = (typeof TTS_TOTAL_SECONDS === 'number' && TTS_TOTAL_SECONDS > 0)
-            ? TTS_TOTAL_SECONDS
-            : (data && data.readMinutes ? data.readMinutes * 60 : 0); // fallback if needed
+          /* ===========
+             Word wrapping for highlight
+          =========== */
+          var wordSpans  = [];
+          var wordStarts = [];
+          var speechText = '';
+          var lastWordIndex = -1;
 
-          const words = fullText.split(/\s+/).filter(Boolean);
-          const estimatedTotalSeconds = Math.max(
-            10,                                  // minimum 10s so very short pieces don't look absurd
-            Math.round((words.length / 180) * 60)
-          );
+          function processTextNode(node) {
+            var text = node.textContent;
+            if (!text || !text.trim()) return;
 
-          if (!totalLength) {
+            var parts = text.split(/(\s+)/);
+            var frag  = document.createDocumentFragment();
+
+            for (var i = 0; i < parts.length; i++) {
+              var part = parts[i];
+              if (!part) continue;
+
+              if (/^\s+$/.test(part)) {
+                // whitespace: keep as-is
+                frag.appendChild(document.createTextNode(part));
+                speechText += part;
+              } else {
+                // word-ish token: wrap + track start index
+                var span = document.createElement('span');
+                span.textContent = part;
+                span.className = 'tts-word';
+                span.setAttribute('data-word-index', String(wordSpans.length));
+
+                wordSpans.push(span);
+                wordStarts.push(speechText.length);
+                speechText += part;
+
+                frag.appendChild(span);
+              }
+            }
+
+            node.parentNode.replaceChild(frag, node);
+          }
+
+          function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              processTextNode(node);
+              return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            if (node.classList && node.classList.contains('tts-word')) return;
+
+            var child = node.firstChild;
+            while (child) {
+              var next = child.nextSibling;
+              walk(child);
+              child = next;
+            }
+          }
+
+          walk(article);
+
+          if (!speechText.trim().length || !wordSpans.length) {
             listenBtn.style.display = 'none';
-            controls.style.display = 'none';
+            stickyBar.style.display = 'none';
             return;
           }
 
-          var utterance   = null;
-          var isActive    = false;
-          var isPlaying   = false;
-          var isPaused    = false;
-          var baseOffset  = 0;  // start index of current utterance
-          var currentIdx  = 0;  // charIndex within utterance
+          var totalLength = speechText.length;
+
+          // Estimate total seconds (fallback if TTS_TOTAL_SECONDS not set)
+          var wordsCount = speechText.split(/\s+/).filter(Boolean).length;
+          var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60)); // ~180 wpm
+          var totalSeconds =
+            typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
+              ? window.TTS_TOTAL_SECONDS
+              : estimatedSeconds;
 
           function formatTime(sec) {
             sec = Math.max(0, Math.round(sec || 0));
@@ -1696,42 +1831,81 @@
             return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
           }
 
-          function formatTime(seconds) {
-            var s = Math.max(0, Math.round(seconds || 0));
-            var m = Math.floor(s / 60);
-            var r = s % 60;
-            return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+          function highlightWord(index) {
+            if (index < 0 || index >= wordSpans.length) return;
+            if (lastWordIndex >= 0 && wordSpans[lastWordIndex]) {
+              wordSpans[lastWordIndex].classList.remove('tts-word--active');
+            }
+            wordSpans[index].classList.add('tts-word--active');
+            lastWordIndex = index;
           }
 
-          // Update slider + time label
+          function clearHighlight() {
+            if (lastWordIndex >= 0 && wordSpans[lastWordIndex]) {
+              wordSpans[lastWordIndex].classList.remove('tts-word--active');
+            }
+            lastWordIndex = -1;
+          }
+
+          function findWordIndexFromChar(charIndex) {
+            if (!wordStarts.length) return -1;
+            var lo = 0;
+            var hi = wordStarts.length - 1;
+            var ans = 0;
+
+            while (lo <= hi) {
+              var mid = (lo + hi) >> 1;
+              if (wordStarts[mid] <= charIndex) {
+                ans = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
+              }
+            }
+            return ans;
+          }
+
+          /* ===========
+             Player state
+          =========== */
+          var utterance  = null;
+          var isActive   = false;
+          var isPlaying  = false;
+          var isPaused   = false;
+          var baseOffset = 0;  // where current utterance slice starts in speechText
+          var currentIdx = 0;  // charIndex within that slice
+
+          function setPlayState(state) {
+            playPause.setAttribute('data-state', state); // "playing" or "paused"
+
+            var playIcon  = playPause.querySelector('[data-icon="play"]');
+            var pauseIcon = playPause.querySelector('[data-icon="pause"]');
+
+            if (playIcon && pauseIcon) {
+              if (state === 'playing') {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+              } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+              }
+            }
+          }
+
           function updateProgressUI(percent) {
             var pct = Math.max(0, Math.min(100, percent || 0));
             range.value = pct;
 
-            // Derive current time from percent of estimated total
-            var currentSeconds = (estimatedTotalSeconds * pct) / 100;
-            label.textContent =
-              formatTime(currentSeconds) + ' / ' + formatTime(estimatedTotalSeconds);
+            var currentSeconds = (totalSeconds * pct) / 100;
+            label.textContent = formatTime(currentSeconds) + ' / ' + formatTime(totalSeconds);
 
-            // Red fill left of thumb, neutral to the right
+            // Fill left of thumb
             var fill  = '#C53D2F';
             var track = 'rgba(15,23,42,0.08)';
             range.style.background =
-              'linear-gradient(to right, ' +
-                fill  + ' 0%, ' +
-                fill  + ' ' + pct + '%, ' +
-                track + ' ' + pct + '%, ' +
-                track + ' 100%)';
-          }
-
-          function computePercent() {
-            if (!totalLength) return 0;
-            var absolute = baseOffset + currentIdx;
-            return (absolute / totalLength) * 100;
-          }
-
-          function setPlayState(state) {
-            playPause.dataset.state = state;  // "playing" or "paused"
+              'linear-gradient(to right,' +
+              fill + ' 0%,' + fill + ' ' + pct + '%,' +
+              track + ' ' + pct + '%,' + track + ' 100%)';
           }
 
           function resetPlayback(keepProgress) {
@@ -1739,16 +1913,28 @@
             utterance  = null;
             isPlaying  = false;
             isPaused   = false;
-            currentIdx = 0;
             baseOffset = 0;
+            currentIdx = 0;
             setPlayState('paused');
-            if (!keepProgress) updateProgressUI(0);
+            if (!keepProgress) {
+              updateProgressUI(0);
+              clearHighlight();
+            }
+          }
+
+          function hideStickyBar() {
+            stickyBar.style.display = 'none';
+          }
+
+          function showStickyBar() {
+            stickyBar.style.display = 'flex';
           }
 
           function stopListeningMode() {
             resetPlayback(false);
             isActive = false;
-            controls.style.display = 'none';
+            hideStickyBar();
+            clearHighlight();
             listenBtn.textContent = 'Listen to article';
           }
 
@@ -1756,7 +1942,7 @@
             if (!totalLength) return;
 
             var clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
-            var slice   = fullText.slice(clamped);
+            var slice   = speechText.slice(clamped);
             if (!slice.trim()) {
               resetPlayback(false);
               updateProgressUI(100);
@@ -1765,8 +1951,8 @@
 
             synth.cancel();
             utterance = new SpeechSynthesisUtterance(slice);
-            utterance.lang = 'en-US';
-            utterance.rate = 1.0;
+            utterance.lang  = 'en-US';
+            utterance.rate  = 1.0;
 
             baseOffset = clamped;
             currentIdx = 0;
@@ -1774,7 +1960,14 @@
             utterance.onboundary = function (e) {
               if (typeof e.charIndex === 'number') {
                 currentIdx = e.charIndex;
-                updateProgressUI(computePercent());
+                var absolute = baseOffset + currentIdx;
+                var pct = totalLength ? (absolute / totalLength) * 100 : 0;
+                updateProgressUI(pct);
+
+                var wordIndex = findWordIndexFromChar(absolute);
+                if (wordIndex >= 0) {
+                  highlightWord(wordIndex);
+                }
               }
             };
 
@@ -1795,20 +1988,25 @@
             synth.speak(utterance);
           }
 
-          // Main button: enter/exit listening mode
+          /* ===========
+             Event wiring
+          =========== */
+
+          // Main button at top: enter/exit listening mode
           listenBtn.addEventListener('click', function () {
             if (!isActive) {
               isActive = true;
-              controls.style.display = 'flex';
+              showStickyBar();
               listenBtn.textContent = 'Stop listening';
               updateProgressUI(0);
+              clearHighlight();
               createUtteranceFromOffset(0);
             } else {
               stopListeningMode();
             }
           });
 
-          // Play/pause button
+          // Play / pause in sticky bar
           playPause.addEventListener('click', function () {
             if (!isActive) return;
 
@@ -1833,27 +2031,41 @@
             }
           });
 
-          // Scrub
+          // "Stop" button inside sticky bar
+          if (stopBtn) {
+            stopBtn.addEventListener('click', function () {
+              if (!isActive) return;
+              stopListeningMode();
+            });
+          }
+
+          // Scrub slider
           range.addEventListener('input', function () {
             if (!isActive || !totalLength) return;
 
             var pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
             updateProgressUI(pct);
 
+            // Move highlight immediately even if paused
+            var absolute = Math.floor((pct / 100) * totalLength);
+            var wIdx = findWordIndexFromChar(absolute);
+            if (wIdx >= 0) highlightWord(wIdx);
+
+            // If playing, restart from new position
             if (isPlaying) {
-              var offset = Math.floor((pct / 100) * totalLength);
-              createUtteranceFromOffset(offset);
+              createUtteranceFromOffset(absolute);
             }
           });
 
-          // Stop reading on page unload
+          // Kill speech on unload
           window.addEventListener('beforeunload', function () {
             synth.cancel();
           });
 
-          // Initialize label once
+          // Initialize label + bar
           updateProgressUI(0);
         })();
+
 
 
         async function loadRelated () {
