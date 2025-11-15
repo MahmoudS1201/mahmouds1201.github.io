@@ -1087,6 +1087,7 @@
 
         ${data.excerpt ? `<p class="text-ink-500 mt-3 max-w-2xl mx-auto">${escapeHtml(data.excerpt)}</p>` : ''}
 
+
         <div class="mt-4 flex items-center justify-center gap-3 text-sm">
           <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
             ${data.author === 'Camila Tiburcio Rubio'
@@ -1102,6 +1103,11 @@
           </div>
         </div>
 
+        ${hasTags ? `
+          <div class="mt-3 flex justify-center flex-wrap gap-2">
+            ${data.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+          </div>` : ``}
+
         <div class="mt-3 flex justify-center">
           <button
             id="ttsToggle"
@@ -1115,14 +1121,34 @@
         <!-- TTS controls: play/pause + progress (hidden until listening starts) -->
         <div
           id="ttsControls"
-          class="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 text-[10px] text-ink-300"
+          class="mt-2 flex items-center justify-center gap-3 text-[10px] text-ink-300"
           style="display:none;"
         >
+          <!-- Slider & Time -->
+          <div class="flex items-center gap-2">
+            <input
+              id="ttsProgressRange"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="0"
+              style="width:260px;max-width:100%;"
+            />
+            <div
+              id="ttsProgressLabel"
+              class="text-[11px] text-ink-400 font-medium tabular-nums"
+            >
+              00:00
+            </div>
+          </div>
+
+          <!-- Play / Pause button (now aligned vertically) -->
           <button
             id="ttsPlayPause"
             type="button"
             data-state="paused"
-            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 px-2.5 py-1 text-[11px] text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
             aria-label="Play or pause article audio"
           >
             <!-- Play icon -->
@@ -1136,25 +1162,8 @@
               <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
             </svg>
           </button>
-
-          <div class="flex flex-col items-center gap-1">
-            <input
-              id="ttsProgressRange"
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value="0"
-              style="width:260px;max-width:100%;"
-            />
-            <div id="ttsProgressLabel">0%</div>
-          </div>
         </div>
 
-        ${hasTags ? `
-          <div class="mt-3 flex justify-center flex-wrap gap-2">
-            ${data.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
-          </div>` : ``}
       </section>
 
       ${data.cover ? `
@@ -1582,6 +1591,8 @@
           updateVisibility();
         })();
 
+        var TTS_TOTAL_SECONDS = ${JSON.stringify((data.readMinutes || 1) * 60)};
+
                 // Read-aloud / text-to-speech for article with progress + scrubbing
                 // Read-aloud / text-to-speech with "Stop listening" + play/pause + scrubbing
         (function setupTTS() {
@@ -1604,31 +1615,46 @@
           if (!article || !listenBtn || !controls || !playPause || !range || !label) return;
 
           // Prepare text once
-          let fullText = (article.innerText || article.textContent || '').trim();
-          let totalLength = fullText.length;
+          var fullText    = (article.innerText || article.textContent || '').trim();
+          var totalLength = fullText.length;
+          var totalSeconds = (typeof TTS_TOTAL_SECONDS === 'number' && TTS_TOTAL_SECONDS > 0)
+            ? TTS_TOTAL_SECONDS
+            : (data && data.readMinutes ? data.readMinutes * 60 : 0); // fallback if needed
 
           if (!totalLength) {
-            // No text => hide controls
             listenBtn.style.display = 'none';
             controls.style.display = 'none';
             return;
           }
 
-          let utterance   = null;
-          let isActive    = false; // listening mode on/off
-          let isPlaying   = false;
-          let isPaused    = false;
-          let baseOffset  = 0;     // start index of current utterance in fullText
-          let currentIdx  = 0;     // charIndex inside current utterance
+          var utterance   = null;
+          var isActive    = false;
+          var isPlaying   = false;
+          var isPaused    = false;
+          var baseOffset  = 0;  // start index of current utterance
+          var currentIdx  = 0;  // charIndex within utterance
+
+          function formatTime(sec) {
+            sec = Math.max(0, Math.round(sec || 0));
+            var m = Math.floor(sec / 60);
+            var s = sec % 60;
+            return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+          }
 
           function updateProgressUI(percent) {
-            const pct = Math.max(0, Math.min(100, percent || 0));
+            var pct = Math.max(0, Math.min(100, percent || 0));
             range.value = pct;
-            label.textContent = Math.round(pct) + '%';
 
-            // Red fill left of thumb, neutral track to the right
-            const fill = '#C53D2F';
-            const track = 'rgba(15,23,42,0.08)';
+            if (totalSeconds > 0) {
+              var elapsed = totalSeconds * (pct / 100);
+              label.textContent = formatTime(elapsed) + ' / ' + formatTime(totalSeconds);
+            } else {
+              label.textContent = Math.round(pct) + '%';
+            }
+
+            // Red fill left of thumb, neutral right
+            var fill  = '#C53D2F';
+            var track = 'rgba(15,23,42,0.08)';
             range.style.background =
               'linear-gradient(to right, ' +
                 fill + ' 0%, ' +
@@ -1636,17 +1662,15 @@
                 track + ' ' + pct + '%, ' +
                 track + ' 100%)';
           }
-          
+
           function computePercent() {
             if (!totalLength) return 0;
-            const absolute = baseOffset + currentIdx;
+            var absolute = baseOffset + currentIdx;
             return (absolute / totalLength) * 100;
           }
 
           function setPlayState(state) {
-            if (!playPause) return;
-            // state is "playing" or "paused"
-            playPause.dataset.state = state;
+            playPause.dataset.state = state;  // "playing" or "paused"
           }
 
           function resetPlayback(keepProgress) {
@@ -1670,8 +1694,8 @@
           function createUtteranceFromOffset(offset) {
             if (!totalLength) return;
 
-            const clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
-            const slice = fullText.slice(clamped);
+            var clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
+            var slice   = fullText.slice(clamped);
             if (!slice.trim()) {
               resetPlayback(false);
               updateProgressUI(100);
@@ -1698,7 +1722,6 @@
               isPaused  = false;
               updateProgressUI(100);
               setPlayState('paused');
-              // we stay in "listening mode" – user can scrub or hit Stop listening
             };
 
             utterance.onerror = function () {
@@ -1714,31 +1737,27 @@
           // Main button: enter/exit listening mode
           listenBtn.addEventListener('click', function () {
             if (!isActive) {
-              // Enter listening mode: show controls, reset progress, start reading from beginning
               isActive = true;
               controls.style.display = 'flex';
               listenBtn.textContent = 'Stop listening';
               updateProgressUI(0);
               createUtteranceFromOffset(0);
             } else {
-              // Exit listening mode entirely
               stopListeningMode();
             }
           });
 
-          // Play/pause button: control start/pause/resume while listening mode is active
+          // Play/pause button
           playPause.addEventListener('click', function () {
             if (!isActive) return;
 
-            // If nothing is playing (e.g. after end), start from slider position
             if (!isPlaying && !isPaused) {
-              const pct = parseFloat(range.value) || 0;
-              const offset = Math.floor((pct / 100) * totalLength);
+              var pct = parseFloat(range.value) || 0;
+              var offset = Math.floor((pct / 100) * totalLength);
               createUtteranceFromOffset(offset);
               return;
             }
 
-            // Playing -> pause
             if (isPlaying && !isPaused) {
               synth.pause();
               isPaused = true;
@@ -1746,7 +1765,6 @@
               return;
             }
 
-            // Paused -> resume
             if (isPlaying && isPaused) {
               synth.resume();
               isPaused = false;
@@ -1754,24 +1772,28 @@
             }
           });
 
-          // Scrub: when user moves the slider, jump there if we're currently playing
+          // Scrub
           range.addEventListener('input', function () {
             if (!isActive || !totalLength) return;
 
-            const pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
+            var pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
             updateProgressUI(pct);
 
             if (isPlaying) {
-              const offset = Math.floor((pct / 100) * totalLength);
+              var offset = Math.floor((pct / 100) * totalLength);
               createUtteranceFromOffset(offset);
             }
           });
 
-          // Optional: stop reading if user leaves the page
+          // Stop reading on page unload
           window.addEventListener('beforeunload', function () {
             synth.cancel();
           });
+
+          // Initialize label once
+          updateProgressUI(0);
         })();
+
 
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
