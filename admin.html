@@ -232,7 +232,7 @@
               </div>
             </div>
           </div>
-          
+
               <div>
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-sm font-medium">Body Editor</span>
@@ -253,7 +253,10 @@
                     id="body"
                     rows="14"
                     class="w-full px-3 py-3 pr-16 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40"
-                    placeholder="Write or paste your text here..."></textarea>
+                    placeholder="Write or paste your text here..."
+                    spellcheck="true"
+                    autocapitalize="sentences"
+                    autocomplete="off"></textarea>
 
                   <!-- Undo / Redo visually inside top-right of the textarea -->
                   <div class="absolute top-2 right-2 flex gap-1 pointer-events-none">
@@ -272,6 +275,22 @@
                       ⟳
                     </button>
                   </div>
+                </div>
+
+                <!-- (optional) grammar button + stats + panel go here -->
+                <div class="flex items-center justify-between mt-2">
+                  <button
+                    type="button"
+                    id="checkTextBtn"
+                    class="btn px-3 py-1 text-xs">
+                    Check spelling &amp; grammar
+                  </button>
+                  <span id="bodyStats" class="text-[11px] text-ink-300"></span>
+                </div>
+
+                <div
+                  id="grammarPanel"
+                  class="mt-2 text-xs text-ink-500 space-y-1 hidden bg-cream/60 border border-dashed border-black/10 rounded-xl p-3">
                 </div>
 
                 <input id="inlineImageInput" type="file" accept="image/*" class="hidden" />
@@ -509,6 +528,112 @@
     const previewBody = $('#previewBody');
 
     const statusMsg = $('#statusMsg');
+
+        /* =========================
+       Spellcheck + grammar assist
+    ========================= */
+    const checkTextBtn  = $('#checkTextBtn');
+    const grammarPanel  = $('#grammarPanel');
+    const bodyStatsSpan = $('#bodyStats');
+
+    function updateBodyStats() {
+      const text  = bodyEl.value || '';
+      const words = (text.trim().match(/\S+/g) || []).length;
+      const chars = text.length;
+      const mins  = estimateReadMinutes(text);
+      if (bodyStatsSpan) {
+        bodyStatsSpan.textContent = `${words} words • ${chars} chars • ~${mins} min read`;
+      }
+    }
+
+    function runGrammarAssist() {
+      const text = bodyEl.value || '';
+      const issues = [];
+
+      // 1) Very long sentences (over ~40 words)
+      const sentences = text
+        .split(/([.!?]+)\s+/)
+        .reduce((acc, cur, i, arr) => {
+          if (i % 2 === 0) {
+            const ending = arr[i + 1] || '';
+            acc.push((cur + ending).trim());
+          }
+          return acc;
+        }, [])
+        .filter(Boolean);
+
+      sentences.forEach((s, idx) => {
+        const count = (s.trim().match(/\S+/g) || []).length;
+        if (count > 40) {
+          issues.push({
+            type: 'Long sentence',
+            detail: `Sentence ${idx + 1} is ${count} words. Consider splitting it.`,
+            snippet: s.slice(0, 140) + (s.length > 140 ? '…' : '')
+          });
+        }
+      });
+
+      // 2) Repeated words: "the the", "and and"
+      const repeatRegex = /\b(\w+)\s+\1\b/gi;
+      let m;
+      while ((m = repeatRegex.exec(text)) !== null) {
+        issues.push({
+          type: 'Repeated word',
+          detail: `The word “${m[1]}” appears twice in a row.`,
+          snippet: text.slice(Math.max(0, m.index - 40), m.index + m[0].length + 40).trim()
+        });
+      }
+
+      // 3) Double spaces
+      const doubleSpaceRegex = / {2,}/g;
+      while ((m = doubleSpaceRegex.exec(text)) !== null) {
+        issues.push({
+          type: 'Extra spaces',
+          detail: 'Found multiple spaces together.',
+          snippet: text.slice(Math.max(0, m.index - 30), m.index + m[0].length + 30).trim()
+        });
+      }
+
+      // 4) Punctuation followed by no space (",word", ".word")
+      const punctNoSpaceRegex = /([.,;:!?])([^\s\d])/g;
+      while ((m = punctNoSpaceRegex.exec(text)) !== null) {
+        issues.push({
+          type: 'Missing space',
+          detail: `There may be a missing space after “${m[1]}”.`,
+          snippet: text.slice(Math.max(0, m.index - 30), m.index + 10).trim()
+        });
+      }
+
+      if (!grammarPanel) return;
+
+      if (!issues.length) {
+        grammarPanel.innerHTML =
+          `<p class="text-ink-400">No obvious grammar issues found. Spelling is still handled by your browser — look for red underlines.</p>`;
+        grammarPanel.classList.remove('hidden');
+        return;
+      }
+
+      grammarPanel.innerHTML = issues.map(issue => `
+        <div class="border border-black/10 rounded-lg bg-white px-3 py-2">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-semibold text-[11px] uppercase tracking-[0.14em] text-accent">
+              ${issue.type}
+            </span>
+          </div>
+          <p class="text-[11px] text-ink-500 mb-1">${issue.detail}</p>
+          <p class="text-[11px] text-ink-400 italic">“${issue.snippet.replace(/"/g, '&quot;')}”</p>
+        </div>
+      `).join('');
+
+      grammarPanel.classList.remove('hidden');
+    }
+
+    if (checkTextBtn) {
+      checkTextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        runGrammarAssist();
+      });
+    }
 
         /* =========================
        Undo / Redo for Body Editor
