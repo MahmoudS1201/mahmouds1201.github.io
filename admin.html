@@ -754,8 +754,9 @@
         });
       }
 
-      // 4) Punctuation followed by no space (",word", ".word")
-      const punctNoSpaceRegex = /([.,;:!?])([^\s\d])/g;
+      // 4) Punctuation followed by no space (",word", ".word"),
+      // but allow a quote right after punctuation like ,"
+      const punctNoSpaceRegex = /([.,;:!?])(?!["'’“”])([^\s\d])/g;
       while ((match = punctNoSpaceRegex.exec(text)) !== null) {
         const start = match.index;
         const end = start + match[0].length;
