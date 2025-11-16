@@ -301,6 +301,26 @@
                   </div>
                 </div>
 
+                <!-- Outline panel (Body Editor Outline) -->
+                <div class="mt-4">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-sm font-medium text-ink-700">Outline</span>
+                    <button
+                      type="button"
+                      id="outlineToggle"
+                      class="text-[11px] text-ink-300 hover:text-ink-500">
+                      Hide outline
+                    </button>
+                  </div>
+                  <div
+                    id="outlinePanel"
+                    class="max-h-52 overflow-y-auto rounded-xl border border-black/5 bg-white px-3 py-2 text-xs">
+                    <p class="text-[11px] text-ink-300">
+                      Add headings (#, ##, ###) in the body to see an outline.
+                    </p>
+                  </div>
+                </div>
+
                 <!-- Wrapper makes it possible to “float” buttons inside the box -->
                 <div class="relative">
                   <textarea
@@ -1129,9 +1149,105 @@
       lastValue = bodyEl.value;
     }
 
+    /* =========================
+       Outline mode
+    ========================= */
+
+    const outlinePanel  = $('#outlinePanel');
+    const outlineToggle = $('#outlineToggle');
+
+    function buildOutline(markdown = '') {
+      const lines = markdown.split('\n');
+      const outline = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const m = /^(#{1,3})\s+(.+)$/.exec(line); // #, ##, ### headings only
+        if (!m) continue;
+
+        outline.push({
+          level: m[1].length,     // 1, 2, 3
+          text: m[2].trim(),
+          lineIndex: i
+        });
+      }
+
+      return outline;
+    }
+
+    // Move cursor to the start of a given line in the textarea
+    function jumpToLine(lineIndex) {
+      if (!bodyEl) return;
+
+      const text  = bodyEl.value || '';
+      const lines = text.split('\n');
+
+      let pos = 0;
+      for (let i = 0; i < lineIndex && i < lines.length; i++) {
+        pos += lines[i].length + 1; // +1 for the newline
+      }
+
+      bodyEl.focus({ preventScroll: true });
+      bodyEl.setSelectionRange(pos, pos);
+
+      // Rough scroll into view: scroll based on position ratio
+      const ratio = text.length ? pos / text.length : 0;
+      bodyEl.scrollTop = ratio * (bodyEl.scrollHeight - bodyEl.clientHeight);
+    }
+
+    function renderOutline() {
+      if (!outlinePanel || !bodyEl) return;
+
+      const outline = buildOutline(bodyEl.value || '');
+
+      if (!outline.length) {
+        outlinePanel.innerHTML = `
+          <p class="text-[11px] text-ink-300">
+            Add headings (#, ##, ###) in the body to see an outline.
+          </p>
+        `;
+        return;
+      }
+
+      outlinePanel.innerHTML = outline.map(item => {
+        const indent =
+          item.level === 1 ? '' :
+          item.level === 2 ? 'ml-3' :
+                             'ml-6';
+        const size = item.level === 1 ? 'text-[13px]' : 'text-[11px]';
+
+        return `
+          <button
+            type="button"
+            class="outline-item block w-full truncate ${indent} ${size} py-1 text-left
+                   text-ink-600 hover:text-accent"
+            data-line="${item.lineIndex}">
+            ${item.text.replace(/"/g, '&quot;')}
+          </button>
+        `;
+      }).join('');
+
+      // hook up click → jump to that heading
+      outlinePanel.querySelectorAll('.outline-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.line, 10);
+          if (!Number.isNaN(idx)) jumpToLine(idx);
+        });
+      });
+    }
+
+    // Toggle show/hide
+    if (outlineToggle && outlinePanel) {
+      outlineToggle.addEventListener('click', () => {
+        const isHidden = outlinePanel.classList.toggle('hidden');
+        outlineToggle.textContent = isHidden ? 'Show outline' : 'Hide outline';
+      });
+    }
+
     bodyEl.addEventListener('input', (e) => {
       // always update preview + stats on input
       updateDerived();
+      renderOutline();
 
       const key = e.data;
 
@@ -1304,6 +1420,7 @@
         metaTitleEl.value = d.seo?.title || '';
         metaDescEl.value = d.seo?.description || '';
         updateDerived();
+        renderOutline();
         markClean();
       }catch(e){ console.warn('Failed to load draft', e); }
     }
@@ -1347,6 +1464,7 @@
       metaTitleEl.value = d.seo?.title || '';
       metaDescEl.value = d.seo?.description || '';
       updateDerived();
+      renderOutline();
       markClean();
     }
 
@@ -3673,6 +3791,7 @@
       dateEl.value = new Date().toISOString().slice(0,16);
       loadDraft();
       updateDerived();
+      renderOutline();
       markClean();
 
       // Seed undo history with the loaded/initial state
