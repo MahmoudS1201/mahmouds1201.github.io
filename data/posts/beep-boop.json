@@ -1,0 +1,25 @@
+{
+  "title": "Beep Boop",
+  "slug": "beep-boop",
+  "section": "Essay",
+  "tags": [
+    "Cuba"
+  ],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Hello my name is Mahmoud",
+  "date": "2025-11-15T22:06",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/test-published/cover.png",
+    "alt": ""
+  },
+  "bodyMarkdown": "This is the start of my essay? Allow me to show you all the beautiful progress i've made! Woot Woot Woot Woot Woot!",
+  "bodyHtml": "<p>This is the start of my essay? Allow me to show you all the beautiful progress i've made! Woot Woot Woot Woot Woot!</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
