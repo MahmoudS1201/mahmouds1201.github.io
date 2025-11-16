@@ -1172,6 +1172,22 @@
       );
     }
 
+    // =========== Body stats line under the editor ===========
+    const bodyStatsSpan = $('#bodyStats'); 
+    // make sure you have an element like:
+    // <p id="bodyStats" class="mt-1 text-xs text-ink-300"></p> in your HTML
+
+    function updateBodyStats() {
+      if (!bodyStatsSpan) return;
+
+      const text  = bodyEl.value || '';
+      const words = (text.trim().match(/\S+/g) || []).length;
+      const chars = text.length;
+      const mins  = estimateReadMinutes(text);
+
+      bodyStatsSpan.textContent = `${words} words • ${chars} chars • ~${mins} min read`;
+    }
+
 
     function updateDerived(){
       readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
@@ -1321,6 +1337,36 @@
       a.download = `article-${data.slug}.json`;
       a.click();
     });
+
+        /* =========================
+       Preview in New Tab
+    ========================= */
+    const previewTabBtn = $('#previewTabBtn');
+
+    if (previewTabBtn) {
+      previewTabBtn.addEventListener('click', () => {
+        const data = collect();
+
+        // Minimal guard: don't open an empty page
+        if (!data.title && !data.bodyMarkdown) {
+          alert('Please add at least a title or some body text before previewing.');
+          return;
+        }
+
+        const html = buildArticleHtml(data); // uses the same template as exportHtmlBtn
+
+        const win = window.open('', '_blank');
+        if (!win) {
+          alert('Popup blocked. Please allow pop-ups for this site to use "Preview in New Tab".');
+          return;
+        }
+
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+      });
+    }
+
 
     /* ============================================
        MULTI-DRAFT SYSTEM (non-destructive upgrade)
