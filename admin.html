@@ -498,6 +498,10 @@
       if (!publishModal) return;
       publishModal.classList.add('hidden');
       publishModal.classList.remove('flex');
+
+      setTimeout(() => {
+        location.reload();
+      }, 50);
     }
 
     if (publishModalClose) {
@@ -3147,9 +3151,6 @@
         console.error(e);
         alert('Publish failed: ' + e.message);
       }
-      setTimeout(() => {
-          location.reload();
-        }, 200);
     });
 
     /* ===============================
