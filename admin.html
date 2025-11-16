@@ -1225,6 +1225,21 @@
     const outlinePanel  = $('#outlinePanel');
     const outlineToggle = $('#outlineToggle');
 
+    if (outlineToggle && outlinePanel) {
+      outlineToggle.addEventListener('click', () => {
+        const isHidden = outlinePanel.classList.contains('hidden');
+
+        if (isHidden) {
+          // Only build when opening
+          buildOutline();
+          outlinePanel.classList.remove('hidden');
+        } else {
+          // Close
+          outlinePanel.classList.add('hidden');
+        }
+      });
+    }
+
     function buildOutline(markdown = '') {
       const lines = markdown.split('\n');
       const outline = [];
