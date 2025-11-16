@@ -1,0 +1,25 @@
+{
+  "title": "Testing Refresh Again",
+  "slug": "testing-refresh-again",
+  "section": "Essay",
+  "tags": [
+    "Diaspora"
+  ],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Yessir",
+  "date": "2025-11-16T02:59",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "images/2025/11/testing-refresh-again/cover.jpg",
+    "alt": ""
+  },
+  "bodyMarkdown": "Lord please",
+  "bodyHtml": "<p>Lord please</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
