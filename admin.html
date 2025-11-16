@@ -104,7 +104,6 @@
       background: #fdf7f4;
     }
 
-
   </style>
   <script>
     (function () {
@@ -686,6 +685,12 @@
       });
     }
 
+    if (checkTextBtn) {
+      checkTextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        runGrammarAssist();
+      });
+    }
 
         /* =========================
        Undo / Redo for Body Editor
@@ -1000,35 +1005,35 @@
     ========================= */
     titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
     slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
-    bodyEl.addEventListener('input', updateDerived);
-    /* === Word-based undo batching === */
+    /* === Word-based undo batching + live preview === */
     let typingTimer;
     let lastValue = "";
 
     function scheduleSnapshot() {
-      // If value hasn't changed, don't snapshot
       if (bodyEl.value === lastValue) return;
-
       pushSnapshot();
       lastValue = bodyEl.value;
     }
 
     bodyEl.addEventListener('input', (e) => {
+      // always update preview + stats on input
+      updateDerived();
+
       const key = e.data;
 
-      // If pressing space or Enter → break word immediately
+      // If pressing space, Enter, or performing an action that yields no char (deletes, paste etc.)
       if (key === " " || key === null) {
-        // key === null = Enter or pasted content
         scheduleSnapshot();
         return;
       }
 
-      // Otherwise: wait for typing burst pause
+      // Otherwise: wait for a short pause to batch the word
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
         scheduleSnapshot();
-      }, 400); // 400ms = natural pause
+      }, 400);
     });
+
 
     excerptEl.addEventListener('input', updateDerived);
     sectionEl.addEventListener('change', updateDerived);
@@ -1107,6 +1112,9 @@
       previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
       addDropcap();
       enhanceBibliographyIn(previewBody);
+
+      // keep body stats in sync
+      updateBodyStats();
     }
 
     function addDropcap() {
