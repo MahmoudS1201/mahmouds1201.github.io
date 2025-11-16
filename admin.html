@@ -93,8 +93,17 @@
       color: #6B7280;
     }
 
+    /* Accent-colored “flash” for grammar focus */
     .body-highlight {
-      box-shadow: 0 0 0 2px rgba(197, 61, 47, 0.45);
+      border-color: #C53D2F !important; /* accent */
+      box-shadow:
+        0 0 0 1px rgba(197, 61, 47, 0.7),   /* sharp inner ring */
+        0 0 0 4px rgba(197, 61, 47, 0.22);  /* soft outer glow */
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    #body::selection {
+      background: rgba(197, 61, 47, 0.16); /* soft accent highlight */
     }
 
     .grammar-issue {
