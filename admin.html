@@ -238,6 +238,9 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-medium">Body Editor</span>
               <div class="flex gap-2 text-sm">
+                <button type="button" id="undoBtn" class="btn" title="Undo">⟲ Undo</button>
+                <button type="button" id="redoBtn" class="btn" title="Redo">⟳ Redo</button>
+
                 <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
                 <button type="button" data-md="**bold**" class="btn">B</button>
                 <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
@@ -484,6 +487,100 @@
 
     const statusMsg = $('#statusMsg');
 
+        /* =========================
+       Undo / Redo for Body Editor
+    ========================= */
+    let undoStack = [];
+    let redoStack = [];
+    let isApplyingHistory = false;
+
+    function getBodySnapshot() {
+      return {
+        value: bodyEl.value,
+        selectionStart: bodyEl.selectionStart ?? 0,
+        selectionEnd: bodyEl.selectionEnd ?? 0,
+      };
+    }
+
+    function pushSnapshot() {
+      if (isApplyingHistory) return;
+      const snap = getBodySnapshot();
+      const last = undoStack[undoStack.length - 1];
+
+      // Avoid duplicates
+      if (
+        last &&
+        last.value === snap.value &&
+        last.selectionStart === snap.selectionStart &&
+        last.selectionEnd === snap.selectionEnd
+      ) {
+        return;
+      }
+
+      undoStack.push(snap);
+      if (undoStack.length > 100) undoStack.shift(); // cap history
+      redoStack.length = 0; // clear redo on new edits
+    }
+
+    function applySnapshot(snap) {
+      if (!snap) return;
+      isApplyingHistory = true;
+      bodyEl.value = snap.value;
+
+      requestAnimationFrame(() => {
+        bodyEl.focus({ preventScroll: true });
+        bodyEl.setSelectionRange(snap.selectionStart, snap.selectionEnd);
+        isApplyingHistory = false;
+        updateDerived();
+      });
+    }
+
+    function undoBody() {
+      if (undoStack.length < 2) return;
+      // Current state → redo
+      const current = undoStack.pop();
+      redoStack.push(current);
+      const prev = undoStack[undoStack.length - 1];
+      applySnapshot(prev);
+    }
+
+    function redoBody() {
+      if (!redoStack.length) return;
+      const snap = redoStack.pop();
+      undoStack.push(snap);
+      applySnapshot(snap);
+    }
+
+    const undoBtn = $('#undoBtn');
+    const redoBtn = $('#redoBtn');
+
+    if (undoBtn) {
+      undoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        undoBody();
+      });
+    }
+    if (redoBtn) {
+      redoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        redoBody();
+      });
+    }
+
+    // Keyboard shortcuts: Cmd/Ctrl+Z and Cmd/Ctrl+Shift+Z
+    bodyEl.addEventListener('keydown', (e) => {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+
+      if (e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undoBody();
+      } else if ((e.key.toLowerCase() === 'z' && e.shiftKey) || e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        redoBody();
+      }
+    });
+
 
     const publishModal = $('#publishModal');
     const publishModalClose = $('#publishModalClose');
@@ -704,6 +801,9 @@
     titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
     slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
     bodyEl.addEventListener('input', updateDerived);
+    bodyEl.addEventListener('input', () => {
+      pushSnapshot();
+    });
     excerptEl.addEventListener('input', updateDerived);
     sectionEl.addEventListener('change', updateDerived);
     authorEl.addEventListener('input', updateDerived);
@@ -3171,6 +3271,11 @@
       dateEl.value = new Date().toISOString().slice(0,16);
       updateDerived();
       loadDraft();
+
+      // Seed undo history with the loaded/initial state
+      undoStack = [];
+      redoStack = [];
+      pushSnapshot();
     })();
   </script>
 </body>
