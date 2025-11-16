@@ -1,0 +1,25 @@
+{
+  "title": "Indeed",
+  "slug": "indeed",
+  "section": "Essay",
+  "tags": [
+    "Yuh"
+  ],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Here we go again",
+  "date": "2025-11-16T02:41",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "images/2025/11/indeed/cover.png",
+    "alt": ""
+  },
+  "bodyMarkdown": "Whoopty Dooo",
+  "bodyHtml": "<p>Whoopty Dooo</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
