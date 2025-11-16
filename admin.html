@@ -1527,6 +1527,15 @@
       });
     }
 
+    if (drawer) {
+      drawer.addEventListener("click", (e) => {
+        // Only close if clicking the backdrop, not the inner panel
+        if (e.target === drawer) {
+          drawer.classList.add("hidden");
+        }
+      });
+    }
+
     /* ============================================
        PUBLISHED ARTICLES BROWSER + EDITOR
        - Reads posts.json via GitHub API
@@ -1551,6 +1560,7 @@
       });
     }
 
+
     async function fetchPostsList() {
       try {
         // Use GitHub API helper to read posts.json from the repo
@@ -1563,6 +1573,15 @@
         console.warn("Failed to fetch posts.json", e);
         return [];
       }
+    }
+
+    // Close published drawer when clicking the dark backdrop
+    if (publishedDrawer) {
+      publishedDrawer.addEventListener("click", (e) => {
+        if (e.target === publishedDrawer) {
+          publishedDrawer.classList.add("hidden");
+        }
+      });
     }
 
     (function () {
