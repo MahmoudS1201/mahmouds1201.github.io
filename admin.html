@@ -351,16 +351,39 @@
             </div>
           </details>
 
-          <div class="flex flex-wrap gap-3 pt-2">
-            <button id="saveDraftBtn" class="btn" type="button">Save Draft (local)</button>
-            <button id="previewBtn" class="btn" type="button">Refresh Preview</button>
+          <!-- Actions row -->
+          <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <!-- Left cluster: secondary actions -->
+            <div class="flex flex-wrap gap-2">
+              <button
+                type="button"
+                id="saveDraftBtn"
+                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+                Save Draft (local)
+              </button>
+
+              <button
+                type="button"
+                id="previewBtn"
+                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+                Refresh Preview
+              </button>
+
+              <button
+                type="button"
+                id="previewTabBtn"
+                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+                Preview in New Tab
+              </button>
+            </div>
+
+            <!-- Right: primary action -->
             <button
               type="button"
-              id="previewTabBtn"
-              class="px-3 py-2 rounded-xl border border-black/10 text-sm text-ink-700 hover:bg-cream/60">
-              Preview in New Tab
+              id="publishBtn"
+              class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold shadow-sm hover:bg-accent/90 transition">
+              Mark as Published
             </button>
-            <button id="publishBtn" class="btn bg-accent text-white border-transparent hover:bg-accent-dark" type="button">Mark as Published</button>
           </div>
           <p id="statusMsg" class="text-sm text-ink-300"></p>
         </form>
