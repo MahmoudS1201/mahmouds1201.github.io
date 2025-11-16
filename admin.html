@@ -776,30 +776,88 @@
       if (!grammarPanel) return;
 
       if (!issues.length) {
-        grammarPanel.innerHTML =
-          `<p class="text-ink-400">No obvious grammar issues found. Spelling is still handled by your browser — look for red underlines.</p>`;
+        grammarPanel.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-ink-400 text-xs">
+              No obvious grammar issues found. Spelling is still handled by your browser — look for red underlines.
+            </p>
+            <button
+              type="button"
+              id="grammarCloseBtn"
+              class="text-[11px] px-2 py-1 rounded-full border border-black/10 hover:bg-ink-50">
+              Close
+            </button>
+          </div>
+        `;
         grammarPanel.classList.remove('hidden');
+
+        const closeBtn = document.getElementById('grammarCloseBtn');
+        if (closeBtn) {
+          closeBtn.addEventListener('click', () => {
+            grammarPanel.classList.add('hidden');
+          });
+        }
         return;
       }
 
+
       // Render clickable issue blocks with data-start/end
-      grammarPanel.innerHTML = issues.map(issue => `
-        <button
-          type="button"
-          class="grammar-issue w-full text-left border border-black/10 rounded-lg bg-white px-3 py-2 mb-1"
-          data-start="${issue.start}"
-          data-end="${issue.end}">
-          <div class="flex items-center justify-between mb-1">
-            <span class="font-semibold text-[11px] uppercase tracking-[0.14em] text-accent">
-              ${issue.type}
-            </span>
-          </div>
-          <p class="text-[11px] text-ink-500 mb-1">${issue.detail}</p>
-          <p class="text-[11px] text-ink-400 italic">“${issue.snippet.replace(/"/g, '&quot;')}”</p>
-        </button>
-      `).join('');
+      // Render clickable issue blocks with data-start/end + Close button
+      grammarPanel.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400">
+            Grammar check
+          </span>
+          <button
+            type="button"
+            id="grammarCloseBtn"
+            class="text-[11px] px-2 py-1 rounded-full border border-black/10 hover:bg-ink-50">
+            Close
+          </button>
+        </div>
+        ${issues.map(issue => `
+          <button
+            type="button"
+            class="grammar-issue w-full text-left border border-black/10 rounded-lg bg-white px-3 py-2 mb-1"
+            data-start="${issue.start}"
+            data-end="${issue.end}">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-semibold text-[11px] uppercase tracking-[0.14em] text-accent">
+                ${issue.type}
+              </span>
+            </div>
+            <p class="text-[11px] text-ink-500 mb-1">${issue.detail}</p>
+            <p class="text-[11px] text-ink-400 italic">“${issue.snippet.replace(/"/g, '&quot;')}”</p>
+          </button>
+        `).join('')}
+      `;
 
       grammarPanel.classList.remove('hidden');
+
+      // Wire click handlers to highlight/select text in the editor
+      grammarPanel.querySelectorAll('.grammar-issue').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const start = parseInt(btn.getAttribute('data-start'), 10) || 0;
+          const end = parseInt(btn.getAttribute('data-end'), 10) || start;
+
+          bodyEl.focus();
+          bodyEl.setSelectionRange(start, end);
+
+          bodyEl.classList.add('body-highlight');
+          setTimeout(() => {
+            bodyEl.classList.remove('body-highlight');
+          }, 400);
+        });
+      });
+
+      // Wire close button
+      const closeBtn = document.getElementById('grammarCloseBtn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          grammarPanel.classList.add('hidden');
+        });
+      }
+
 
       // Wire click handlers to highlight/select text in the editor
       grammarPanel.querySelectorAll('.grammar-issue').forEach(btn => {
