@@ -202,7 +202,20 @@
       <!-- Form -->
       <section class="bg-white shadow-soft rounded-2xl p-6 lg:p-8">
         <h2 class="font-serif text-2xl mb-4">Write Article</h2>
-
+          <div class="flex gap-2">
+            <button
+              id="openDraftsBtn"
+              type="button"
+              class="px-3 py-1.5 rounded-full border border-black/10 text-xs font-medium text-ink-500 hover:border-ink-300 hover:bg-ink-50 transition">
+              Drafts
+            </button>
+            <button
+              id="openPublishedBtn"
+              type="button"
+              class="px-3 py-1.5 rounded-full border border-black/10 text-xs font-medium text-ink-500 hover:border-ink-300 hover:bg-ink-50 transition">
+              Published
+            </button>
+          </div>
         <form id="articleForm" class="space-y-6" onsubmit="return false;">
           <div class="grid sm:grid-cols-2 gap-4">
             <label class="block">
