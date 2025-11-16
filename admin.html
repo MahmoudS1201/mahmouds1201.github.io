@@ -236,11 +236,27 @@
           <!-- Body editor -->
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-medium">Body Editor</span>
-              <div class="flex gap-2 text-sm">
-                <button type="button" id="undoBtn" class="btn" title="Undo">⟲ Undo</button>
-                <button type="button" id="redoBtn" class="btn" title="Redo">⟳ Redo</button>
+              <!-- Left: label + undo/redo (smaller, subtle) -->
+              <div class="flex items-center gap-2 text-sm">
+                <span class="text-sm font-medium">Body Editor</span>
+                <div class="flex items-center gap-1">
+                  <button type="button"
+                          id="undoBtn"
+                          class="btn px-2 py-1 text-xs"
+                          title="Undo">
+                    ⟲
+                  </button>
+                  <button type="button"
+                          id="redoBtn"
+                          class="btn px-2 py-1 text-xs"
+                          title="Redo">
+                    ⟳
+                  </button>
+                </div>
+              </div>
 
+              <!-- Right: formatting tools, same as before -->
+              <div class="flex gap-2 text-sm">
                 <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
                 <button type="button" data-md="**bold**" class="btn">B</button>
                 <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
