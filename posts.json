@@ -1,5 +1,20 @@
 [
   {
+    "slug": "testing-draft",
+    "title": "Testing Draft",
+    "section": "Essay",
+    "tags": [
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Hello my name is Mahmoud",
+    "date": "2025-11-15T22:06",
+    "readMinutes": 1,
+    "featured": false,
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/test-published/cover.png",
+    "url": "testing-draft.html"
+  },
+  {
     "slug": "test-published",
     "title": "Test Published",
     "section": "Essay",
