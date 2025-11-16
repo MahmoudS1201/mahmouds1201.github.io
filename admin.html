@@ -185,6 +185,15 @@
         <button id="exportHtmlBtn" class="btn">Export HTML</button>
         <button id="clearDraftBtn" class="btn">Clear Draft</button>
         <button id="logoutBtn" class="btn text-sm">Log out</button>
+
+        <span
+        id="changeIndicator"
+        class="ml-4 inline-flex items-center gap-2 text-xs text-ink-300">
+        <span
+          id="changeDot"
+          class="h-2 w-2 rounded-full bg-emerald-500"></span>
+        <span id="changeText">All changes saved</span>
+      </span>
       </nav>
     </div>
   </header>
@@ -559,6 +568,49 @@
     const previewBody = $('#previewBody');
 
     const statusMsg = $('#statusMsg');
+
+        // Track changes indicator
+    const changeIndicator = $('#changeIndicator');
+    const changeDot       = $('#changeDot');
+    const changeText      = $('#changeText');
+    let isDirty = false;
+
+    function setDirtyState(dirty) {
+      isDirty = dirty;
+      if (!changeIndicator || !changeDot || !changeText) return;
+
+      changeIndicator.classList.remove('hidden');
+
+      if (dirty) {
+        changeDot.classList.remove('bg-emerald-500', 'bg-ink-300');
+        changeDot.classList.add('bg-accent'); // accent when unsaved
+        changeText.textContent = 'Unsaved changes';
+        changeIndicator.classList.remove('text-ink-300');
+        changeIndicator.classList.add('text-accent');
+      } else {
+        changeDot.classList.remove('bg-accent');
+        changeDot.classList.add('bg-emerald-500'); // green when saved
+        changeText.textContent = 'All changes saved';
+        changeIndicator.classList.remove('text-accent');
+        changeIndicator.classList.add('text-ink-300');
+      }
+    }
+
+    function markDirty() {
+      if (!isDirty) setDirtyState(true);
+    }
+
+    function markClean() {
+      setDirtyState(false);
+    }
+
+    const articleForm = $('#articleForm');
+    if (articleForm) {
+      // Any user edit marks the form as dirty
+      articleForm.addEventListener('input', markDirty);
+      articleForm.addEventListener('change', markDirty);
+    }
+
 
         /* =========================
        Spellcheck + grammar assist
@@ -1179,6 +1231,7 @@
     function saveDraft(){
       const data = collect();
       localStorage.setItem('ctr:admin:draft', JSON.stringify(data));
+      markClean();
       statusMsg.textContent = 'Draft saved locally ✓';
       setTimeout(()=> statusMsg.textContent = '', 2000);
     }
@@ -1208,6 +1261,7 @@
         metaTitleEl.value = d.seo?.title || '';
         metaDescEl.value = d.seo?.description || '';
         updateDerived();
+        markClean();
       }catch(e){ console.warn('Failed to load draft', e); }
     }
 
@@ -1250,6 +1304,7 @@
       metaTitleEl.value = d.seo?.title || '';
       metaDescEl.value = d.seo?.description || '';
       updateDerived();
+      markClean();
     }
 
     const exportJsonBtn = $('#exportJsonBtn');
@@ -1302,6 +1357,7 @@
 
       data._savedAt = new Date().toISOString();
       localStorage.setItem(key, JSON.stringify(data));
+      markClean();
       return key;
     }
 
@@ -3488,6 +3544,7 @@
         if (!htmlRes.content?.path) throw new Error('HTML commit returned no content.path');
 
         statusMsg.textContent = 'Published ✓ — page and posts.json committed';
+        markClean();
         setTimeout(()=> statusMsg.textContent = '', 2500);
         openPublishModal();
         removeDraftForSlug(data.slug);
@@ -3522,8 +3579,9 @@
     (function init(){
       authorEl.value = 'Camila Tiburcio Rubio';
       dateEl.value = new Date().toISOString().slice(0,16);
-      updateDerived();
       loadDraft();
+      updateDerived();
+      markClean();
 
       // Seed undo history with the loaded/initial state
       undoStack = [];
