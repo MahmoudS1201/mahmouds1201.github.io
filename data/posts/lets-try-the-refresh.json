@@ -1,0 +1,23 @@
+{
+  "title": "Lets try the refresh",
+  "slug": "lets-try-the-refresh",
+  "section": "Essay",
+  "tags": [],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Refresh",
+  "date": "2025-11-16T02:51",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "images/2025/11/lets-try-the-refresh/cover.png",
+    "alt": ""
+  },
+  "bodyMarkdown": "should refresh",
+  "bodyHtml": "<p>should refresh</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
