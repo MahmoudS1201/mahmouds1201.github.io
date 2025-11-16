@@ -351,39 +351,39 @@
             </div>
           </details>
 
-          <!-- Actions row -->
-          <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <!-- Left cluster: secondary actions -->
-            <div class="flex flex-wrap gap-2">
-              <button
-                type="button"
-                id="saveDraftBtn"
-                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
-                Save Draft (local)
-              </button>
+          <!-- Actions Row (Full Width Buttons) -->
+          <div class="mt-6 flex flex-col gap-3">
 
-              <button
-                type="button"
-                id="previewBtn"
-                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
-                Refresh Preview
-              </button>
+            <!-- Full-width secondary actions -->
+            <button
+              type="button"
+              id="saveDraftBtn"
+              class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+              Save Draft (local)
+            </button>
 
-              <button
-                type="button"
-                id="previewTabBtn"
-                class="px-3 py-2 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
-                Preview in New Tab
-              </button>
-            </div>
+            <button
+              type="button"
+              id="previewBtn"
+              class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+              Refresh Preview
+            </button>
 
-            <!-- Right: primary action -->
+            <button
+              type="button"
+              id="previewTabBtn"
+              class="w-full px-4 py-3 rounded-xl border border-black/10 bg-white text-sm text-ink-700 hover:bg-cream/60 transition">
+              Preview in New Tab
+            </button>
+
+            <!-- Primary action: full-width accent button -->
             <button
               type="button"
               id="publishBtn"
-              class="px-4 py-2 rounded-xl bg-accent text-white text-sm font-semibold shadow-sm hover:bg-accent/90 transition">
+              class="w-full px-4 py-3 rounded-xl bg-accent text-white text-sm font-semibold shadow-sm hover:bg-accent/90 transition">
               Mark as Published
             </button>
+
           </div>
           <p id="statusMsg" class="text-sm text-ink-300"></p>
         </form>
