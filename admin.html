@@ -805,10 +805,22 @@
       grammarPanel.querySelectorAll('.grammar-issue').forEach(btn => {
         btn.addEventListener('click', () => {
           const start = parseInt(btn.getAttribute('data-start'), 10) || 0;
-          const end = parseInt(btn.getAttribute('data-end'), 10) || start;
+          const end   = parseInt(btn.getAttribute('data-end'), 10) || start;
 
-          bodyEl.focus();
+          bodyEl.focus({ preventScroll: true });
           bodyEl.setSelectionRange(start, end);
+
+          // --- force scroll so the selection is actually visible ---
+          const text = bodyEl.value || '';
+          const ratio = text.length ? start / text.length : 0;
+          const maxScroll = bodyEl.scrollHeight - bodyEl.clientHeight;
+          const targetScroll = Math.max(0, Math.min(maxScroll, ratio * maxScroll));
+
+          bodyEl.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+          });
+          // ---------------------------------------------------------
 
           // Briefly highlight the textarea so it's obvious
           bodyEl.classList.add('body-highlight');
@@ -817,7 +829,6 @@
           }, 400);
         });
       });
-    }
 
     if (checkTextBtn) {
       checkTextBtn.addEventListener('click', (e) => {
