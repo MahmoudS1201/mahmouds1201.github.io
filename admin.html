@@ -957,6 +957,27 @@
       populateFromJSON(d);
     }
 
+      function removeDraftForSlug(slug) {
+      if (!slug) return;
+      const prefix = "ctr:admin:draft:";
+      const keys = allDraftKeys();
+      keys.forEach(k => {
+        const s = k.startsWith(prefix) ? k.slice(prefix.length) : null;
+        if (s === slug) {
+          localStorage.removeItem(k);
+        }
+      });
+
+      // also clean up the legacy single-draft + “current” autosave, just in case
+      try {
+        localStorage.removeItem('ctr:admin:draft');          // old single draft key
+        localStorage.removeItem('ctr:admin:draft:current');  // untitled autosave
+      } catch (e) {
+        console.warn('Failed to clear old draft keys', e);
+      }
+    }
+
+
     /* Autosave every 10s */
     /* Autosave every 10s */
     setInterval(() => saveMultiDraft(true), 10000);
@@ -3113,6 +3134,15 @@
         statusMsg.textContent = 'Published ✓ — page and posts.json committed';
         setTimeout(()=> statusMsg.textContent = '', 2500);
         openPublishModal();
+        removeDraftForSlug(data.slug);
+
+        try {
+          if (!document.getElementById('draftsDrawer').classList.contains('hidden')) {
+            renderDraftsList();
+          }
+        } catch (e) {
+          console.warn('Could not refresh drafts list after publish', e);
+        }
 
       } catch (e) {
         console.error(e);
