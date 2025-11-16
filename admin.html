@@ -309,11 +309,11 @@
                       type="button"
                       id="outlineToggle"
                       class="text-[11px] text-ink-300 hover:text-ink-500">
-                      Hide outline
+                      Show outline
                     </button>
                   </div>
                   <div
-                    id="outlinePanel"
+                    id="outlinePanel" class="hidden"
                     class="max-h-52 overflow-y-auto rounded-xl border border-black/5 bg-white px-3 py-2 text-xs">
                     <p class="text-[11px] text-ink-300">
                       Add headings (#, ##, ###) in the body to see an outline.
@@ -1224,6 +1224,24 @@
 
     const outlinePanel  = $('#outlinePanel');
     const outlineToggle = $('#outlineToggle');
+
+    if (outlineToggle && outlinePanel) {
+      outlineToggle.addEventListener('click', () => {
+        const isHidden = outlinePanel.classList.contains('hidden');
+
+        if (isHidden) {
+          // Opening → build outline
+          buildOutline();
+          outlinePanel.classList.remove('hidden');
+          outlineToggle.textContent = "Hide outline";
+        } else {
+          // Closing
+          outlinePanel.classList.add('hidden');
+          outlineToggle.textContent = "Show outline";
+        }
+      });
+    }
+
 
     if (outlineToggle && outlinePanel) {
       outlineToggle.addEventListener('click', () => {
