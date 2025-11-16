@@ -1172,22 +1172,6 @@
       );
     }
 
-    // =========== Body stats line under the editor ===========
-    const bodyStatsSpan = $('#bodyStats'); 
-    // make sure you have an element like:
-    // <p id="bodyStats" class="mt-1 text-xs text-ink-300"></p> in your HTML
-
-    function updateBodyStats() {
-      if (!bodyStatsSpan) return;
-
-      const text  = bodyEl.value || '';
-      const words = (text.trim().match(/\S+/g) || []).length;
-      const chars = text.length;
-      const mins  = estimateReadMinutes(text);
-
-      bodyStatsSpan.textContent = `${words} words • ${chars} chars • ~${mins} min read`;
-    }
-
 
     function updateDerived(){
       readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
