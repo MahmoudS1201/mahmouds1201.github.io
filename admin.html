@@ -92,6 +92,19 @@
       font-variant-numeric: tabular-nums;
       color: #6B7280;
     }
+
+    .body-highlight {
+      box-shadow: 0 0 0 2px rgba(197, 61, 47, 0.45);
+    }
+
+    .grammar-issue {
+      cursor: pointer;
+    }
+    .grammar-issue:hover {
+      background: #fdf7f4;
+    }
+
+
   </style>
   <script>
     (function () {
@@ -551,56 +564,79 @@
       const issues = [];
 
       // 1) Very long sentences (over ~40 words)
-      const sentences = text
-        .split(/([.!?]+)\s+/)
-        .reduce((acc, cur, i, arr) => {
-          if (i % 2 === 0) {
-            const ending = arr[i + 1] || '';
-            acc.push((cur + ending).trim());
-          }
-          return acc;
-        }, [])
-        .filter(Boolean);
+      const sentenceRegex = /[^.!?]+[.!?]+/g;
+      let match;
+      while ((match = sentenceRegex.exec(text)) !== null) {
+        const sentence = match[0];
+        const start = match.index;
+        const end = start + sentence.length;
+        const words = (sentence.trim().match(/\S+/g) || []).length;
 
-      sentences.forEach((s, idx) => {
-        const count = (s.trim().match(/\S+/g) || []).length;
-        if (count > 40) {
+        if (words > 40) {
           issues.push({
             type: 'Long sentence',
-            detail: `Sentence ${idx + 1} is ${count} words. Consider splitting it.`,
-            snippet: s.slice(0, 140) + (s.length > 140 ? '…' : '')
+            detail: `This sentence is ${words} words. Consider splitting it.`,
+            snippet: sentence.slice(0, 140) + (sentence.length > 140 ? '…' : ''),
+            start,
+            end
           });
         }
-      });
+      }
 
-      // 2) Repeated words: "the the", "and and"
+      // 2) Repeated words: "the the"
       const repeatRegex = /\b(\w+)\s+\1\b/gi;
-      let m;
-      while ((m = repeatRegex.exec(text)) !== null) {
+      while ((match = repeatRegex.exec(text)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        const snippet = text.slice(
+          Math.max(0, start - 40),
+          Math.min(text.length, end + 40)
+        ).trim();
+
         issues.push({
           type: 'Repeated word',
-          detail: `The word “${m[1]}” appears twice in a row.`,
-          snippet: text.slice(Math.max(0, m.index - 40), m.index + m[0].length + 40).trim()
+          detail: `The word “${match[1]}” appears twice in a row.`,
+          snippet,
+          start,
+          end
         });
       }
 
       // 3) Double spaces
       const doubleSpaceRegex = / {2,}/g;
-      while ((m = doubleSpaceRegex.exec(text)) !== null) {
+      while ((match = doubleSpaceRegex.exec(text)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        const snippet = text.slice(
+          Math.max(0, start - 30),
+          Math.min(text.length, end + 30)
+        ).trim();
+
         issues.push({
           type: 'Extra spaces',
           detail: 'Found multiple spaces together.',
-          snippet: text.slice(Math.max(0, m.index - 30), m.index + m[0].length + 30).trim()
+          snippet,
+          start,
+          end
         });
       }
 
       // 4) Punctuation followed by no space (",word", ".word")
       const punctNoSpaceRegex = /([.,;:!?])([^\s\d])/g;
-      while ((m = punctNoSpaceRegex.exec(text)) !== null) {
+      while ((match = punctNoSpaceRegex.exec(text)) !== null) {
+        const start = match.index;
+        const end = start + match[0].length;
+        const snippet = text.slice(
+          Math.max(0, start - 30),
+          Math.min(text.length, end + 30)
+        ).trim();
+
         issues.push({
           type: 'Missing space',
-          detail: `There may be a missing space after “${m[1]}”.`,
-          snippet: text.slice(Math.max(0, m.index - 30), m.index + 10).trim()
+          detail: `There may be a missing space after “${match[1]}”.`,
+          snippet,
+          start,
+          end
         });
       }
 
@@ -613,8 +649,13 @@
         return;
       }
 
+      // Render clickable issue blocks with data-start/end
       grammarPanel.innerHTML = issues.map(issue => `
-        <div class="border border-black/10 rounded-lg bg-white px-3 py-2">
+        <button
+          type="button"
+          class="grammar-issue w-full text-left border border-black/10 rounded-lg bg-white px-3 py-2 mb-1"
+          data-start="${issue.start}"
+          data-end="${issue.end}">
           <div class="flex items-center justify-between mb-1">
             <span class="font-semibold text-[11px] uppercase tracking-[0.14em] text-accent">
               ${issue.type}
@@ -622,18 +663,29 @@
           </div>
           <p class="text-[11px] text-ink-500 mb-1">${issue.detail}</p>
           <p class="text-[11px] text-ink-400 italic">“${issue.snippet.replace(/"/g, '&quot;')}”</p>
-        </div>
+        </button>
       `).join('');
 
       grammarPanel.classList.remove('hidden');
-    }
 
-    if (checkTextBtn) {
-      checkTextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        runGrammarAssist();
+      // Wire click handlers to highlight/select text in the editor
+      grammarPanel.querySelectorAll('.grammar-issue').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const start = parseInt(btn.getAttribute('data-start'), 10) || 0;
+          const end = parseInt(btn.getAttribute('data-end'), 10) || start;
+
+          bodyEl.focus();
+          bodyEl.setSelectionRange(start, end);
+
+          // Briefly highlight the textarea so it's obvious
+          bodyEl.classList.add('body-highlight');
+          setTimeout(() => {
+            bodyEl.classList.remove('body-highlight');
+          }, 400);
+        });
       });
     }
+
 
         /* =========================
        Undo / Redo for Body Editor
