@@ -3147,6 +3147,9 @@
         console.error(e);
         alert('Publish failed: ' + e.message);
       }
+      setTimeout(() => {
+          location.reload();
+        }, 200);
     });
 
     /* ===============================
