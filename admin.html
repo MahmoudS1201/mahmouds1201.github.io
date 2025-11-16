@@ -255,20 +255,49 @@
                 </div>
               </div>
 
-              <!-- Right: formatting tools, same as before -->
-              <div class="flex gap-2 text-sm">
-                <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
-                <button type="button" data-md="**bold**" class="btn">B</button>
-                <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
-                <button type="button" data-md="> " class="btn">Quote</button>
-                <button type="button" data-md="- list item" class="btn">List</button>
-                <button type="button" data-md="1. " class="btn">OL</button>
-                <button type="button" id="insertImageBtn" class="btn">Insert img</button>
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium">Body Editor</span>
+                  <div class="flex gap-2 text-sm">
+                    <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
+                    <button type="button" data-md="**bold**" class="btn">B</button>
+                    <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
+                    <button type="button" data-md="> " class="btn">Quote</button>
+                    <button type="button" data-md="- list item" class="btn">List</button>
+                    <button type="button" data-md="1. " class="btn">OL</button>
+                    <button type="button" id="insertImageBtn" class="btn">Insert img</button>
+                  </div>
+                </div>
+
+                <!-- Wrapper makes it possible to “float” buttons inside the box -->
+                <div class="relative">
+                  <textarea
+                    id="body"
+                    rows="14"
+                    class="w-full px-3 py-3 pr-16 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40"
+                    placeholder="Write or paste your text here..."></textarea>
+
+                  <!-- Undo / Redo visually inside top-right of the textarea -->
+                  <div class="absolute top-2 right-2 flex gap-1 pointer-events-none">
+                    <button
+                      type="button"
+                      id="undoBtn"
+                      class="btn px-2 py-1 text-xs pointer-events-auto"
+                      title="Undo">
+                      ⟲
+                    </button>
+                    <button
+                      type="button"
+                      id="redoBtn"
+                      class="btn px-2 py-1 text-xs pointer-events-auto"
+                      title="Redo">
+                      ⟳
+                    </button>
+                  </div>
+                </div>
+
+                <input id="inlineImageInput" type="file" accept="image/*" class="hidden" />
               </div>
-            </div>
-            <textarea id="body" rows="14" class="w-full px-3 py-3 rounded-xl border border-black/10 outline-none focus:ring-2 focus:ring-accent/40" placeholder="Write or paste your text here..."></textarea>
-            <input id="inlineImageInput" type="file" accept="image/*" class="hidden" />
-          </div>
 
           <!-- SEO -->
           <details class="rounded-xl border border-black/10 p-4 bg-cream/60">
