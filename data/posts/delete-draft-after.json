@@ -1,0 +1,23 @@
+{
+  "title": "Delete Draft After",
+  "slug": "delete-draft-after",
+  "section": "Essay",
+  "tags": [],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Yes",
+  "date": "2025-11-16T02:43",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": {
+    "src": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/test-published/cover.png",
+    "alt": ""
+  },
+  "bodyMarkdown": "Sir",
+  "bodyHtml": "<p>Sir</p>",
+  "seo": {
+    "title": "",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
