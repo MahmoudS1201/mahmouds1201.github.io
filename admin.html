@@ -817,9 +817,35 @@
     titleEl.addEventListener('input', () => { if(!slugEl.dataset.touched){ slugEl.value = slugify(titleEl.value); } updateDerived(); });
     slugEl.addEventListener('input', () => { slugEl.dataset.touched = '1'; });
     bodyEl.addEventListener('input', updateDerived);
-    bodyEl.addEventListener('input', () => {
+    /* === Word-based undo batching === */
+    let typingTimer;
+    let lastValue = "";
+
+    function scheduleSnapshot() {
+      // If value hasn't changed, don't snapshot
+      if (bodyEl.value === lastValue) return;
+
       pushSnapshot();
+      lastValue = bodyEl.value;
+    }
+
+    bodyEl.addEventListener('input', (e) => {
+      const key = e.data;
+
+      // If pressing space or Enter → break word immediately
+      if (key === " " || key === null) {
+        // key === null = Enter or pasted content
+        scheduleSnapshot();
+        return;
+      }
+
+      // Otherwise: wait for typing burst pause
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        scheduleSnapshot();
+      }, 400); // 400ms = natural pause
     });
+
     excerptEl.addEventListener('input', updateDerived);
     sectionEl.addEventListener('change', updateDerived);
     authorEl.addEventListener('input', updateDerived);
@@ -3292,6 +3318,7 @@
       undoStack = [];
       redoStack = [];
       pushSnapshot();
+      lastValue = bodyEl.value;
     })();
   </script>
 </body>
