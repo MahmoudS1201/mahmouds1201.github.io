@@ -1904,6 +1904,11 @@
                class="px-3 py-1 rounded border border-black/10 text-xs text-ink-500 hover:text-ink-900">
               View
             </a>
+
+            <button data-delete-published="${post.slug}"
+              class="px-3 py-1 rounded border border-red-100 text-xs text-red-600 hover:bg-red-50">
+              Delete
+            </button>
           </div>
         `;
 
@@ -1916,6 +1921,43 @@
           const slug = btn.getAttribute("data-edit-published");
           await editPublishedArticle(slug);
           publishedDrawer.classList.add("hidden");
+        });
+      });
+
+      // wire up Delete buttons
+      publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const slug = btn.getAttribute("data-delete-published");
+          const card = btn.closest(".border");
+          const title =
+            card?.querySelector(".font-medium")?.textContent?.trim() || slug;
+
+          const ok = confirm(
+            `Delete "${title}"?\n\n` +
+            `This will remove it from posts.json and delete its JSON + HTML files in the repo.`
+          );
+          if (!ok) return;
+
+          try {
+            // 1) Remove from posts.json
+            await removeFromPostsJson(slug);
+
+            // 2) Delete JSON source and HTML page
+            await deleteRepoFile(`data/posts/${slug}.json`, `delete data/posts/${slug}.json`);
+            await deleteRepoFile(`${slug}.html`, `delete page ${slug}.html`);
+
+            // 3) Best-effort local cache cleanup
+            try { localStorage.removeItem(`ctr:admin:published:${slug}`); } catch {}
+
+            // 4) Status + refresh list
+            statusMsg.textContent = `Deleted "${title}".`;
+            setTimeout(() => { statusMsg.textContent = ""; }, 2500);
+
+            await renderPublishedList();
+          } catch (e) {
+            console.error(e);
+            alert("Failed to delete article: " + e.message);
+          }
         });
       });
     }
@@ -3687,6 +3729,25 @@
       return res;
     }
 
+    // Delete a file in the repo (needs current SHA)
+    async function deleteRepoFile(path, message) {
+      const existing = await getRepoFile(path);
+      if (!existing || !existing.sha) {
+        // nothing to delete
+        return;
+      }
+      const enc = apiPath(path);
+
+      await gh(`/repos/${GH_OWNER}/${GH_REPO}/contents/${enc}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          message,
+          sha: existing.sha,
+          branch: GH_BRANCH
+        })
+      });
+    }
+
     function dataUrlInfo(dataUrl){
       const m = /^data:([^;]+);base64,(.*)$/i.exec(dataUrl || "");
       if (!m) return null;
@@ -3784,6 +3845,31 @@
       list.sort((a,b) => new Date(b.date) - new Date(a.date));
       const contentB64 = b64utf8(JSON.stringify(list, null, 2));
       await putRepoFile(path, contentB64, `posts.json: ${entry.slug}`);
+    }
+
+    // Remove a post from posts.json by slug
+    async function removeFromPostsJson(slug) {
+      const path = 'posts.json';
+      const existing = await getRepoFile(path);
+      if (!existing || !existing.content) return;
+
+      let list = [];
+      try {
+        const json = atob(existing.content.replace(/\n/g, ''));
+        list = JSON.parse(json);
+        if (!Array.isArray(list)) list = [];
+      } catch {
+        list = [];
+      }
+
+      const next = list.filter(p => p.slug !== slug);
+      if (next.length === list.length) {
+        // nothing removed
+        return;
+      }
+
+      const contentB64 = b64utf8(JSON.stringify(next, null, 2));
+      await putRepoFile(path, contentB64, `posts.json: delete ${slug}`);
     }
 
     /* ===============================
