@@ -277,6 +277,8 @@
       return basePath + u;                                  // plain relative
     }
 
+    const HEADER_OFFSET = 120;
+
     // Data
     const POSTS_JSON_URL = toBase('posts.json');
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
@@ -658,7 +660,12 @@
           if (toggle && toggle.getAttribute('aria-expanded') === 'false') {
             toggle.click();
           }
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          const rectTop = el.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: rectTop - HEADER_OFFSET,  // leave some space under the sticky header
+            behavior: 'smooth'
+          });
         }
       });
     }
