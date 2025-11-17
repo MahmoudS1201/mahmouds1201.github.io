@@ -505,6 +505,10 @@
       }
     }
 
+    function b64ToUtf8(b64) {
+      return decodeURIComponent(escape(atob(b64)));
+    }
+
     function slugify(str) {
       return (str || '')
         .toLowerCase()
@@ -1800,7 +1804,7 @@
         // Use GitHub API helper to read posts.json from the repo
         const file = await getRepoFile("posts.json");
         if (!file || !file.content) return [];
-        const json = atob(file.content.replace(/\n/g, ""));
+        const json = b64ToUtf8(file.content.replace(/\n/g, ""));
         const list = JSON.parse(json);
         return Array.isArray(list) ? list : [];
       } catch (e) {
@@ -1925,7 +1929,7 @@
           return;
         }
 
-        const jsonText = atob(file.content.replace(/\n/g, ""));
+        const json = b64ToUtf8(file.content.replace(/\n/g, ""));
         const data = JSON.parse(jsonText);
 
         // Load into the form using your existing helper
