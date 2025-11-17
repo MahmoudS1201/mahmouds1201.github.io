@@ -40,6 +40,22 @@
     .pill{display:inline-block;border:1px solid rgba(0,0,0,.08);background:rgba(197,61,47,.08);color:#C53D2F;padding:.4rem .7rem;border-radius:9999px;font-weight:600;font-size:.8rem}
     .anchor { opacity:.0; transition:opacity .2s ease; }
     .anchorable:hover .anchor { opacity:.6; }
+
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     .toc a[aria-current="true"] { color:#C53D2F; font-weight:600; }
     ::selection{background:rgba(197,61,47,0.15)}
   </style>
@@ -65,7 +81,7 @@
   </script>
 </head>
 
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">

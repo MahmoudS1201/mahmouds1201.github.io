@@ -37,6 +37,21 @@
     .u-underline:hover::after{transform:scaleX(1)}
     .resume-card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
 
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     /* Print styles */
     @media print{
       :root{color-scheme: light;}
@@ -67,7 +82,7 @@
   }
   </script>
 </head>
-<body class="antialiased">
+<body class="antialiased fade-in-page">
 
   <!-- Minimal header (keeps the page clean and print-friendly) -->
   <header class="sticky top-0 z-40 bg-cream border-b border-black/5">

@@ -41,6 +41,21 @@
     ::selection{background:rgba(197,61,47,.15)}
     .result-title mark,.result-excerpt mark{background:rgba(197,61,47,.15);padding:0 .125rem;border-radius:.2rem}
 
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     /* full-card click affordance (same as other pages) */
     [data-href]{
       transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
@@ -84,7 +99,7 @@
   }
   </script>
 </head>
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">

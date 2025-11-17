@@ -46,6 +46,21 @@
     .tile { transition: transform .2s ease, box-shadow .2s ease; }
     .tile:hover { transform: translateY(-2px); box-shadow: 0 12px 38px rgba(0,0,0,.08); }
 
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     input[type="search"]::-webkit-search-cancel-button,
     input[type="search"]::-webkit-search-decoration,
     input[type="search"]::-webkit-search-results-button,
@@ -83,7 +98,7 @@
   <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
 
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">

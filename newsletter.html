@@ -33,6 +33,22 @@
     .card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
     .pill{display:inline-block;border:1px solid rgba(0,0,0,.08);background:rgba(197,61,47,.08);color:#C53D2F;padding:.35rem .7rem;border-radius:9999px;font-weight:600;font-size:.8rem}
     .sr-help{font-size:.85rem;color:#9CA3AF}
+
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     .toast{position:fixed;inset-inline:0;top:14px;display:flex;justify-content:center;z-index:60}
     .toast > div{background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 10px 30px rgba(0,0,0,.1);padding:.6rem 1rem;border-radius:.75rem}
     ::selection{background:rgba(197,61,47,.15)}
@@ -57,7 +73,7 @@
   </script>
 </head>
 
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">

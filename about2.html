@@ -49,6 +49,20 @@
       font-family:'Source Serif 4', Georgia, serif;
       float:left; font-size:5rem; line-height:.9; margin-right:.15rem; margin-top:-.15rem; color:#C53D2F;
     }
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); }
     .pill { border:1px solid rgba(0,0,0,.08); background:rgba(197,61,47,.08); color:#C53D2F; padding:.4rem .7rem; border-radius:9999px; font-weight:600; font-size:.8rem; }
     .section-head { display:flex; align-items:center; gap:.75rem; }
@@ -58,7 +72,7 @@
     ::selection { background: rgba(197,61,47,.15); }
   </style>
 </head>
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
   <!-- Top strip -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
