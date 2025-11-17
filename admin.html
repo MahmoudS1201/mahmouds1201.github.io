@@ -1929,7 +1929,7 @@
           return;
         }
 
-        const json = b64ToUtf8(file.content.replace(/\n/g, ""));
+        const jsonText = b64ToUtf8(file.content.replace(/\n/g, ""));
         const data = JSON.parse(jsonText);
 
         // Load into the form using your existing helper
