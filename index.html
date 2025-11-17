@@ -59,6 +59,10 @@
     .u-underline:hover::after { transform: scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
+    .author-link:hover .u-underline::after {
+      transform: scaleX(1);
+    }
+
     /* Hover cue for any clickable card/list-row we marked with data-href */
     [data-href]{
       transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
@@ -218,7 +222,7 @@
           <p id="leadExcerpt" class="text-ink-500 mt-3 max-w-2xl"></p>
           <div class="mt-6">
             <a href="about2.html"
-               class="flex items-center gap-4 group"
+               class="authur-link flex items-center gap-4 group"
                aria-label="About Camila Tiburcio Rubio">
               <img
                 id="leadAvatar"
