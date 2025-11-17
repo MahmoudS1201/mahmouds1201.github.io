@@ -38,6 +38,10 @@
     .u-underline:hover::after { transform:scaleX(1); }
     ::selection { background: rgba(197,61,47,0.15); }
 
+    .author-link:hover .u-underline::after {
+      transform: scaleX(1);
+    }
+
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
     .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
@@ -183,7 +187,7 @@
 
         <div class="mt-auto pt-5">
           <a href="about2.html"
-             class="flex items-center gap-4 group"
+             class="author-link flex items-center gap-4 group"
              aria-label="About Camila Tiburcio Rubio">
             <img id="heroAvatar"
                  class="h-10 w-10 rounded-full object-cover group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
