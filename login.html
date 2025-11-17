@@ -48,6 +48,22 @@
       transform-origin:left;
       transition:transform .22s ease;
     }
+
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
     .u-underline:hover::after {
       transform:scaleX(1);
     }
@@ -67,7 +83,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen bg-cream text-ink-900 flex flex-col">
+<body class="min-h-screen bg-cream text-ink-900 flex flex-col fade-in-page">
 
   <!-- Header / back link -->
   <header class="border-b border-black/5 bg-cream/80 backdrop-blur sticky top-0 z-20">
