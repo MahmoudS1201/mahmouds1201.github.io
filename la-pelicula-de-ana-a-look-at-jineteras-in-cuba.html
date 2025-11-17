@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>La Pelicula de Ana: A Look At Jineteras in Cuba — Camila Tiburcio Rubio</title>
+      <meta name="description" content="Sex Work and the City: New York-Buenos Aires" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Inter','system-ui','sans-serif'],
+                serif: ['Source Serif 4','Georgia','serif']
+              },
+              colors: {
+                ink: { 900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF' },
+                cream: '#FAF7F2',
+                accent: { DEFAULT:'#C53D2F', dark:'#9E2F24', light:'#E95A49' }
+              },
+              boxShadow: { soft:'0 10px 30px rgba(0,0,0,0.06)' }
+            }
+          }
+        }
+      </script>
+      <style>
+        .u-underline{position:relative}
+        .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
+        .u-underline:hover:after{transform:scaleX(1)}
+        .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
+        .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
+        .prose p{margin:1.05em 0;line-height:1.8}
+        .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
+        .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+        blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+        #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
+        #progress-label{
+          position:fixed;
+          top:6px;
+          right:16px;
+          padding:2px 9px;
+          border-radius:9999px;
+          background:rgba(14,14,14,0.78);
+          color:#F9FAFB;
+          font-size:10px;
+          letter-spacing:.16em;
+          text-transform:uppercase;
+          z-index:70;
+          display:none;
+          pointer-events:none;
+        }
+        #progress-label span{
+          font-variant-numeric:tabular-nums;
+          white-space:nowrap;
+        }
+        blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
+        .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
+        .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
+        article.prose { animation: fadeIn 0.35s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        ::selection { background: rgba(197,61,47,0.15); }
+        /* Keep share bar horizontal on standalone page too */
+        .shareCard{ display:inline-flex; flex-direction:row; }
+        /* Share bar styles */
+        .shareCard{
+          display:inline-flex; flex-direction:row; align-items:center; gap:14px;
+          width:fit-content; padding:16px 18px; border-radius:9999px; background:#fff;
+          border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto;
+        }
+        .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
+        .socialContainer{
+          width:40px; height:40px; border-radius:12px; background:transparent;
+          border:1px solid rgba(0,0,0,.10); color:#3A3A3A; display:flex; align-items:center; justify-content:center;
+          transition:transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease;
+          text-decoration:none; cursor:pointer;
+        }
+        .socialContainer:hover{ background:rgba(197,61,47,.08); border-color:rgba(197,61,47,.35); color:#C53D2F; transform:translateY(-1px); }
+        .socialContainer:active{ transform:scale(.97); }
+        .xSvg{ width:16px; height:16px; color:inherit; }
+        .socialSvg{ width:18px; height:18px; color:inherit; }
+        .fill-icon path{ fill: currentColor; }
+        .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+                /* Stronger section headers inside article */
+        article.prose h2 {
+          font-family: 'Source Serif 4', Georgia, serif;
+          font-size: 1.9rem;              /* bigger — feels like a true section */
+          line-height: 1.25;
+          color: #0E0E0E;                 /* darker than body text */
+          font-weight: 600;
+          margin-top: 3.5rem;             /* big spacing above */
+          margin-bottom: 1.5rem;          /* spacing below */
+          scroll-margin-top: 110px;       /* fixes jump-to offset nicely */
+          border-left: 4px solid #C53D2F; /* subtle accent mark */
+          padding-left: 0.85rem;
+        }
+
+
+
+        #ttsToggle[data-state="playing"] {
+          background: rgba(197, 61, 47, 0.09);
+          color: #C53D2F;
+          border-color: rgba(197, 61, 47, 0.35);
+        }
+
+        #ttsToggle[data-state="playing"] {
+          background: rgba(197,61,47,0.09);
+          color: #C53D2F;
+          border-color: rgba(197,61,47,0.35);
+        }
+
+        /* Play/pause button states */
+        #ttsPlayPause[data-state="playing"] {
+          background: rgba(197,61,47,0.09);
+          color: #C53D2F;
+          border-color: rgba(197,61,47,0.35);
+        }
+
+        #ttsPlayPause[data-state="paused"] {
+          background: #ffffff;
+        }
+
+        /* Show correct icon for state */
+        #ttsPlayPause [data-icon="play"],
+        #ttsPlayPause [data-icon="pause"] {
+          display: none;
+        }
+
+        #ttsPlayPause[data-state="paused"] [data-icon="play"] {
+          display: block;
+        }
+
+        #ttsPlayPause[data-state="playing"] [data-icon="pause"] {
+          display: block;
+        }
+
+        /* TTS progress bar styling */
+        #ttsProgressRange {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 4px;
+          border-radius: 9999px;
+          background: transparent; /* we'll draw the track via JS gradient */
+          outline: none;
+          cursor: pointer;
+        }
+
+        /* WebKit thumb */
+        #ttsProgressRange::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+          margin-top: -5px; /* centers thumb on 4px track */
+        }
+
+        /* Firefox thumb */
+        #ttsProgressRange::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+        }
+
+        /* Firefox track */
+        #ttsProgressRange::-moz-range-track {
+          height: 4px;
+          border-radius: 9999px;
+          background: transparent;
+        }
+
+        /* Play/pause button states */
+        #ttsPlayPause[data-state="playing"] {
+          background: rgba(197,61,47,0.09);
+          color: #C53D2F;
+          border-color: rgba(197,61,47,0.35);
+        }
+
+        #ttsPlayPause[data-state="paused"] {
+          background: #ffffff;
+        }
+
+        /* TTS progress bar styling */
+        #ttsProgressRange {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 4px;
+          border-radius: 9999px;
+          background: rgba(15,23,42,0.08);
+          outline: none;
+          cursor: pointer;
+        }
+
+        #ttsProgressRange::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+          margin-top: -4px;
+        }
+
+        #ttsProgressRange::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: #C53D2F;
+          border: 2px solid #F9FAFB;
+          box-shadow: 0 0 0 1px rgba(0,0,0,0.10);
+        }
+
+        #ttsProgressRange::-moz-range-track {
+          height: 4px;
+          border-radius: 9999px;
+          background: rgba(15,23,42,0.08);
+        }
+
+        /* Base track */
+        #ttsProgressRange {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 4px;
+          background: rgba(0,0,0,0.1);
+          border-radius: 999px;
+          outline: none;
+        }
+
+        /* WebKit thumb (Safari + Chrome) */
+        #ttsProgressRange::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          background: #C53D2F;
+          border-radius: 50%;
+          cursor: pointer;
+
+          /* THIS controls vertical alignment */
+          margin-top: 0px; /* Adjust between -4 and -8 until perfect */
+        }
+
+        /* Firefox thumb */
+        #ttsProgressRange::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          background: #C53D2F;
+          border-radius: 50%;
+          cursor: pointer;
+
+          margin-top: 0; /* Firefox centers by default */
+        }
+
+        #ttsProgressRange::-webkit-slider-thumb {
+          margin-top: 0px !important;
+
+        }
+        #ttsProgressRange::-moz-range-thumb {
+          margin-top: -3px !important;
+        }
+
+        /* Sticky TTS mini-player container */
+        #ttsStickyBar {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 1rem;
+          z-index: 60;
+          display: none;       /* shown when listening starts */
+          pointer-events: none; /* inner card handles clicks */
+        }
+
+        /* Inner card gets actual pointer events */
+        #ttsStickyInner {
+          pointer-events: auto;
+        }
+
+        /* Highlight for the sentence currently being read */
+        .tts-sentence--active {
+          background: rgba(197, 61, 47, 0.14);
+          border-radius: 4px;
+          padding: 0 1px;
+          transition: background 0.08s ease-out;
+        }
+
+        /* Bibliography / citations block on article page */
+        .bibliography-section {
+          margin-top: 2.5rem;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(0,0,0,0.08);
+          font-size: 0.95rem;
+        }
+
+        .bibliography-section h2 {
+          font-size: 1.1rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 0.75rem;
+        }
+
+        /* Remove default bullets / numbers – we'll draw our own */
+        .bibliography-section ol,
+        .bibliography-section ul {
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+        }
+
+        /* One “item” per reference (works for <li> or <p>) */
+        .bibliography-item {
+          position: relative;
+          margin-bottom: 0.75rem;
+          line-height: 1.7;
+          padding-left: 2.25rem;   /* where the text block starts */
+        }
+
+        /* Number column */
+        .bibliography-item::before {
+          content: attr(data-bib-index) ".";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1.75rem;
+          text-align: right;
+          font-variant-numeric: tabular-nums;
+          color: #6B7280;
+        }
+
+
+        /* --- Jump-to-section: desktop floating card (softer) --- */
+        #jumpFloatingDesktop {
+          position: fixed;
+          top: 190px; /* a bit lower so it's aligned with content */
+          right: max(1.25rem, (100vw - 1120px) / 2 - 80px);
+          width: 200px;
+          z-index: 30;
+
+          /* fade-in behavior */
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(4px);
+          transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+        }
+
+        #jumpFloatingDesktop.jump-visible {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
+        }
+
+        /* Card container */
+        #jumpFloatingDesktop .jump-card-inner {
+          background: rgba(250, 247, 242, 0.78); /* soft, slightly translucent cream */
+          border-radius: 16px;
+          border: 1px solid rgba(0, 0, 0, 0.03);
+          box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+          padding: 10px 12px 8px;
+          font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* "JUMP TO" label as a real header */
+        #jumpFloatingDesktop .jump-label {
+          font-size: 10px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #374151;              /* darker than section items */
+          font-weight: 700;
+          margin-bottom: 6px;
+          border-bottom: 1px solid rgba(0,0,0,0.10);
+          padding-bottom: 3px;
+        }
+
+        /* List container */
+        #jumpFloatingDesktop .jump-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* Each button */
+        #jumpFloatingDesktop .jump-list button {
+          width: 100%;
+          border-radius: 9999px;
+          border: none;
+          padding: 4px 8px;
+          margin-top: 3px;
+          font-size: 12px;
+          text-align: left;
+          background: transparent;
+          color: #6B7280; /* muted gray */
+          cursor: pointer;
+          transition:
+            background-color 0.16s ease,
+            color 0.16s ease,
+            transform 0.10s ease;
+        }
+
+        #jumpFloatingDesktop .jump-list button:hover {
+          background: rgba(15, 23, 42, 0.03);
+          color: #111827;
+          transform: translateX(0.5px);
+        }
+
+        /* Active = soft accent pill */
+        #jumpFloatingDesktop .jump-list button[data-active="true"] {
+          background: rgba(197, 61, 47, 0.12); /* soft accent */
+          color: #C53D2F;
+          font-weight: 500;
+        }
+
+        /* Hide desktop jump card on smaller screens */
+        @media (max-width: 1023px) {
+          #jumpFloatingDesktop {
+            display: none;
+          }
+        }
+
+      </style>
+    </head>
+
+    <body class="bg-cream text-ink-900 antialiased">
+      <div id="progress-bar"></div>
+      <div id="progress-label" aria-hidden="true">
+        <span data-progress-text>0% read</span>
+      </div>
+
+      <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div class="flex items-center gap-1">
+            <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+              <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+              <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+            </a>
+          </div>
+          <a id="backBtn" class="u-underline text-sm" href="index.html" title="Go back">← Go back</a>
+        </div>
+      </header>
+
+      <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
+        <div class="text-[10px] sm:text-xs tracking-[0.14em] font-semibold text-accent uppercase">
+          Essay
+        </div>
+
+        <h1 class="font-serif text-4xl sm:text-5xl mt-3 leading-tight">
+          La Pelicula de Ana: A Look At Jineteras in Cuba
+        </h1>
+
+        <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Sex Work and the City: New York-Buenos Aires</p>
+
+
+        <div class="mt-4 flex items-center justify-center gap-3 text-sm">
+          <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+            <img src="assets/camila.jpg" alt="Camila Tiburcio Rubio" class="w-full h-full object-cover"/>
+          </div>
+          <div class="text-left">
+            <div class="font-medium">By Camila Tiburcio Rubio</div>
+            <div class="text-ink-300">
+              November 16, 2025
+              • 20 min read
+            </div>
+          </div>
+        </div>
+
+        
+          <div class="mt-3 flex justify-center flex-wrap gap-2">
+            
+                <a class="tag" href="search.html?q=Cuba">
+                  Cuba
+                </a>
+              
+                <a class="tag" href="search.html?q=Castro">
+                  Castro
+                </a>
+              
+                <a class="tag" href="search.html?q=Movies">
+                  Movies
+                </a>
+              
+          </div>
+
+        <div class="mt-3 flex justify-center">
+          <button
+            id="ttsToggle"
+            type="button"
+            class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 py-1.5 text-xs text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+          >
+            <span>Listen to article</span>
+          </button>
+        </div>
+
+        <!-- TTS controls: play/pause + progress (hidden until listening starts) -->
+        <div
+          id="ttsControls"
+          class="mt-2 flex items-center justify-center gap-3 text-[10px] text-ink-300"
+          style="display:none;"
+        >
+          <!-- Slider & Time -->
+          <div class="flex items-center gap-2">
+            <input
+              id="ttsProgressRangeInLine"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="0"
+              style="width:260px;max-width:100%;"
+            />
+            <div
+              id="ttsProgressLabelInLine"
+              class="text-[11px] text-ink-400 font-medium tabular-nums"
+            >
+              00:00
+            </div>
+          </div>
+
+          <!-- Play / Pause button (now aligned vertically) -->
+          <button
+            id="ttsPlayPauseInLine"
+            type="button"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
+            aria-label="Play or pause article audio"
+          >
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <polygon points="8,5 19,12 8,19"></polygon>
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            </svg>
+          </button>
+        </div>
+
+      </section>
+
+      
+      <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <img class="hero-img" src="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg" alt="Photo of cast and directors of La Pelicula de Ana"/>
+        
+      </figure>
+
+      <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Jump to section menu -->
+        <div id="jumpMenu" class="not-prose mb-6 mt-2 lg:mb-4">
+          <!-- Mobile: collapsible -->
+          <div class="lg:hidden">
+            <button
+              id="jumpToggleBtn"
+              type="button"
+              class="w-full flex items-center justify-between rounded-full border border-black/10 bg-white/80 px-3 py-2 text-xs text-ink-500 shadow-soft"
+            >
+              <span class="tracking-[0.18em] uppercase text-[10px] text-ink-300 font-semibold">
+                Jump to
+              </span>
+              <span class="flex items-center gap-1">
+                <span class="text-[11px] text-ink-500" data-jump-current>Sections</span>
+                <span class="text-xs text-ink-300">▾</span>
+              </span>
+            </button>
+
+            <div
+              id="jumpMobileList"
+              class="mt-2 hidden rounded-2xl border border-black/10 bg-white px-3 py-2 text-sm space-y-1"
+            ></div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="fade-top"></div>
+          <div class="fade-bottom"></div>
+          <article class="prose prose-neutral max-w-none">
+            <p>In 1959, Fidel Castro and his followers successfully defeated the U.S.-backed regime of Fulgencio Batista. After centuries of the commodification of Cuba for the well-being of tourists, the success of the Cuban Revolution signified a turn into a new chapter of autonomy for the island. There were promises of a better future for all Cubans on the island. There were promises of a united Cuba that thrived under communism. The sentiment around the island, overall, became filled with dreams and hopes of autonomy from imperial powers -such as the United States. Castro made many speeches and discussed the role of the âonceâ oppressed in the new nation. Focusing on his comments on women, Castro boasted about the role and importance that the Cuban woman had in the success of the Revolution. Not only that but, he celebrated their newfound political power while rejecting the exploitative attitudes that the culture held towards women (GarcÃ­a, 2018).</p>
+<p>Previous to the Revolution, Cuba was the playground of foreigners. Lavish hotels accompanied the luxurious casinos owned by the mafia, and the island and its resources became a source of investment and profit for people who probably set foot on the island twice out of the entire year. Prostitution was a staple of the playground and a very attractive business for the foreigners who sought to experience a night of passion with the âexoticâ Cubana. It is estimated that in the 1950s, La Habana had around 270 brothels and around 11,500 women engaged in sex work (Farber, 2015). This is not to say that prostitution was venerated on the island, nor that the women engaged in it free of prosecution; however, the island of sin maintained the worldâs oldest profession when it was convenient for their pockets. When the Revolution triumphed, a campaign to rehabilitate and offer alternative employment to sex workers was created. The campaign began to view women engaged in the trade as victims of the systems of colonialism and imperialism set forth by the past and sought to offer the necessary tools for these women to become ârespectedâ members of the new Cuban state (Hynson, 2015). As the campaign ended in 1964, efforts to end prostitution shifted to the criminalization and the persecution of women who failed to adhere to the moral codes that the Federation of Cuban Women (FCW) and the Committee of Defense of the Revolution (CDR) set forth. These codes were utilized to police the behavior of not just sex workers but of any woman on the island. Through this, certain behaviors that were looked at as being âinappropriateâ brought the marginalization of women, but more specifically contributed to the perpetuation of the overtly sexual mulata (a woman of mixed Black and White ancestry). The behaviors that the FCW and the CDR sought to eradicate were attitudes that were common among lower-class mulata and Black women (Hynson, 2015). Thus, the fight against prostitution on the island that sought to elevate the oppressed became about further oppressing the already oppressed.</p>
+<p>Nonetheless, the focus on prostitution in the social and cultural aspects increased after the economic fall of the 1990s. After decades of financial support from the Soviet Union, the island suffered a disastrous economic recession when the Berlin Wall fell. The fall of the Soviet Union meant that its main supplier of food, machinery, and other goods was gone and with this fall Cubaâs biggest enemy -the U.S.- tightened the conditions of its economic embargo virtually suffocating the island and prohibiting other countries from trading with Cuba without facing repercussions in their relations with Uncle Sam (CubaPlatform, n.a.). The fall ultimately undid over thirty years of economic and social progress. At the same time, people on the island needed a way to survive, the rations were bringing stale bread and spoilt milk. Children who grew up during the prosperity of the island were entering their adult years in a job market that was non-existent and yielded no results. Proper jobs brought mere crumbs to the table. This is where jineteras were born.</p>
+<p>Amid the Periodo Especial, women needed to provide for their children, their families, or themselves. They found themselves in a position in which the job market was not a reliable place, and their âtechnicalâ skills were not worth enough, thus, they began to engage in sex work to survive. What makes a jinetera different than a prostitute is the construction of the relationships they develop with their clients. A jinetera is a woman who forms a relationship with one or various foreign men for the exchange of economic goods or security. A jinetera is not just a âone-time fuck.â Senior research fellow for the Overseas Development Institute, Meagan Daigle, in her book From Cuba with Love: Sex and Money in the Twenty-First Century, writes that jineterismo has created a âtourist-oriented, sexual-affective economy, an economy that is not purely economic but deals also in affect, love, solidarityâ (2015). In traditional prostitution, women engage in sex acts with men of the area or more affluent men who reside in the city/country they are in, however, the difference is that jineterismo is not about working with men on the island, the whole premise is that men in the island are unable to provide financially, thus, women must seek out foreign men who will be able to provide. The phenomenon has expanded and it reached a point in which any woman who marries a foreigner (this is more common discourse placed upon Cuban women of color) can be labeled a jinetera. The economic need in Cuba has erased the idea that people from different nationalities can truly fall in love, rather love comes secondary to a loaded wallet.</p>
+<p>In the present day, Cuban culture has incorporated the jineteras as muses for their art. Numerous songs by artists like KolaLoka, Orishas, Gente de Zona, and El Chulo talk about the experience of jineteras whether it is hearing the jineteraâs stories or positioning themselves as protectors of the women. Not only that but, the phenomenon has also been the subject of admiration by filmmakers. In 2012, filmmakers Daniel DÃ­az Torres from Cuba and Esther Rauch from Germany produced the film La PelÃ­cula de Ana. The film focuses on the journey of a mediocre Cuban actress who needs money to buy a new fridge for her house that she shares with her mom, her sister, her nephew, and her husband. After refusing the help of her sisterâs ex-husband, Ana decides to enlist the help of Flavia -a jinetera- and work with her to fool two German filmmakers who are coming to Cuba to produce a documentary about sex work on the island. The story gets more complicated as Anaâs one-time role is all of a sudden turned into a feature film. Tasked with recording her experiences as a jinetera, for the price of USD 3,000, Ana must work with her husband and Flavia to satisfy the idea of the life of a jinetera that the filmmakers want to see and that Ana invented. Through this film, the complex relations of the Cuban people towards jineteras are developed. In this essay, I will analyze three main areas of focus that tell us about the perception and the role of jineteras in Cuban life: family, men, and jineteras themselves.</p>
+<h2>âÂ¿No Anita? Â¿Y quien lo va a comprar, tÃº?â</h2>
+<p>As the film begins to develop, we are quickly drawn into the family dynamic of Ana. We see the struggle and ache that living conditions in Cuba have placed upon her and the rest of her household. One of the opening sequences is that of her mother complaining over the lack of air conditioner, lack of cold water, and lack of help from Ana. Then, we also met Anaâs sister, Dulce. We learn quickly that Dulce is a single mom to a little boy and that the childâs father is coming to visit them from Miami. Dulce has a hostile attitude towards Ana and shames her for her lack of financial contribution to the household. Upon seeing the lack of a functional fridge and being in a better position financially, Richard, Dulceâs ex-partner, offers to buy the family a new fridge. Ana -for undisclosed reasons- does not want to accept the handout from Dulceâs ex-partner. She refuses to let the Miami-Cuban utilize his money to improve the conditions of the family. In turn, we see Ana jump into the opportunity to be part of the documentary about jineteras, even if it means deceiving the directors, to aid her family in purchasing a new fridge.</p>
+<p>As her mom hears the news, she is ecstatic but Anaâs sister is more reluctant to believe the casting of Ana. However, as the movie progresses, we begin to see the dynamics of a jinetera and their family come through. Ana completes the first portion of the documentary -and believes her job is done- she quickly purchases the fridge that her family needs. Upon the arrival of the fridge, her mom and her sister are over the moon, and Ana even buys Dulce apple juice as it is her favorite. This is a dynamic that is reproduced by jineteras on the island. We see women becoming the main carriers of the financial burdens in their homes as they gain access to cash from their clients. An article from the Journal of International Womenâs Studies writes that at times, jineteras feel as though they must âwork, earn money, and thus increase their familyâs buying powerâ (Pope, 2005). Ana reproduces this sentiment as well, she not only enters the role of jinetera, for her family but decides to take on the role of jinetera to continue to elevate her familyâs status. Even selfishly, it can be said that Ana decided to continue to play a jinetera because she wanted the money for her and her husband, Vergara. It still is a self-sacrifice that she engages in. The possibility of the directors discovering she was lying about being a jinetera and the risk of entering the world of jineterismo continues to be a form of self-sacrifice of not just her time but of her body. A sacrifice done to bring a fantasy to life that will improve the conditions of her familyâs life.</p>
+<p>We see the materialization of capital in Cuba, in the fact that Anaâs family (minus her husband), does not ask further questions as to where the money is coming from. They do not ask to see the film, nor do they ask Ana for details about the role she is playing. Similarly, to the jineteras that Daigle interviews in her book, there is -at times- a silent agreement between the 5 families and the jineteras: they benefit from the money, but they never ask or never know where it comes from (2015). A silent benefactor to the family are the men who fund the jineteras, and in Anaâs case, it is jineterismo itself that is the silent benefactor for her home.</p>
+<blockquote>La Puta Esa Es La Que Te Esta Haciendo A Tiâ</blockquote>
+<p>The men in the movie can be broken down into three categories: el chulo, el yuma, and el monstruo. The movie, while mostly focusing on Ana, allows for a critical look at the men who fund the documentary as well as the man in Anaâs life. Despite their differences, the men share one common attribute: Anaâs body is for their benefit.</p>
+<h2>El Monstruo</h2>
+<p>As Ana, under the pseudonym Ginette, secures the interview and decides to move forward with the documentary offer from the German filmmakers, she sees herself interacting more and more with el monstruo known as Dieter. He is the lead director in the documentary. While it was not his job to meet Ginette (Anaâs jinetera alter ego), he was quick to withdraw money and flaunt it in her face to persuade Ginette to accept the documentary proposal. His character does not seem too eager to get to know Ginette, he simply cares about the production of the documentary and the minimalized spending of funds. Dieter had been the most vigilant of Ginette. To the point in which Ginette escalated an encounter with the police -who stopped Ginette and another woman for alleged solicitation- to prove to Dieter that her persona was real and was used to harassment by the police. He eventually discovers that Ginette is not real, but rather a persona created by âmediocreâ actress Ana. He discovers this as he is sitting at a bar, watching television, and glances over at the television to watch Ana performing in her recurring role as a Native American princess in Las Aventuras. He asks the bartender who the actress is and the truth comes out. Upon learning this information, Dieter decides to set up a 1-on-1 meeting with Ginette.</p>
+<p>In their meeting, which occurs in Anaâs confidant and partner in crime Flaviaâs apartment, Deiter quickly confronts Ginette with his discovery and threatens to expose her fraudulent lies to the rest of the team and the police. However, he offers her an out -in an interesting turn of character- and after threatening to tell on her for being a âputa falsaâ (fake whore) he asks her if she aspired to become âÂ¿una puta real?â(a real whore). He grabs her hair and the camera pans to another shot of Flavia and the other German directors in a meeting room. Towards the end of the movie, it is exposed by Ana that Dieter attempted to rape Ana in Flaviaâs apartment, however, after hearing Anaâs screams the neighbors intervened. A hidden camera set in the apartment recorded the incident and Ana showed this footage to the room. What is interesting and very telling of Cuba culture is that in the footage of the attempted rape, we can overhear the wife of Flaviaâs neighbor yell âDo not hurt him, he is a foreigner!â</p>
+<p>This character felt entitled to the body of Ana for the money he had invested in her character Ginette and for Anaâs deceiving of himself and his team. This is something that occurs at times in relationships that the jineteras engage in. The men in these scenarios feel entitled to the performance of a certain role of femininity and exoticism for the money they âinvestâ in the women. This is something that anthropologist Nicole Constable discusses in her text The Commodification of Intimacy: Marriage, Sex, and Reproductive Labor; she talks about the commodification of the âgirlfriend experienceâ by men and how men search in sex workers the behaviors they can not ask from a wife (2009). Dieterâs usage of the word puta separates Ana from an acceptable woman to a woman who can be taken advantage of without repercussion.<br/>only that but, it demonstrates Dieterâs security in his power and his money on the island. He does not fear repercussions, not even after being exposed to his crew. He gets to walk away.</p>
+<h2>El Yuma</h2>
+<p>The term âyumaâ is utilized in Cuba to refer to a foreigner. In this case, I categorize the second German director, Helmut, as el yuma. Helmut is introduced to us as the recruiter, he is shy and easy to persuade. Moreover, the presence of Flavia and Ana is enough to intimidate him. Ana introduces herself in a flirtatious and outspoken manner to him from the beginning. He is captivated by Anaâs character and when she comes with a demand, he is quick to try to make it happen. I categorize him as el yuma as opposed to Dieterâs stronger categorization because Helmut is a gullible man, who means no harm, rather he buys into the performative femininity that Ana has given him. Towards the end of the movie, after Dieter and the rest of the producers storm out, Helmut confesses his love for Ginette (that is the jinetera Ana created). Ana in return asks him âAnd who am I? How am I?â Helmut responds and says that she is an honest woman, a woman with dignity. Ana walks away and that is the last we see of Helmut. Jineteras are forced to form a part of fantasy, they need to portray the dream woman that the foreigner wants to be with. One could even argue that the job is slightly harder than that of a streetwalker in the sense that these women must form emotional connections with the men to drive them to become financially responsible for them. The women must be feminine and exotic at the same time. Helmut praised Ginette for not âblaming the Revolution nor foreignersâ for her messed up life. He praised Ginette for being self-sufficient and courageous despite her situation. Helmut fell in love with a person that is not real. This is something that Constable discusses as well when talking about the marriage of Dominican women to foreign men, she discusses the relationship these women forge as a âperformanceâ of love to mask the economic exchange and benefits the women receive (2009). For Helmut, his love for Ginette is love for a person that is not real. It is a persona created by Ana who sought to exaggerate her life to please the foreign man into believing that he has found the only âputa Santaâ (that is the one who does not complain, who remains content with her country, and who does not feel disgusted towards the foreigners) in all of Cuba.</p>
+<h2>El Chulo</h2>
+<p>At the beginning of the movie, we learn of Anaâs marriage to Vergara. It appears that the couple is in the entertainment industry as Vergara is a director and editor. However, just like Ana, his career has been stagnant for quite some time. Vergara is driven by self-interest. Upon hearing of Anaâs casting in the movie (at first, Ana lies and says it is a movie, not a documentary), he asks Ana to hand the director a copy of one of Vergaraâs best jobs in the odd chance he might need a production assistant. Ana makes clear the limited influence that she has in the business multiple times throughout the movie; nonetheless, Vergara insists that Ana share the tape.</p>
+<p>Upon learning that Ana lied about the project and is now required to record footage of her life as a jinetera for the documentary, Vergara enlists himself to be Anaâs personal director. However, very quickly we see Vergaraâs repressed dreams try to be achieved through the exploitation of Ana. Vergara demands that Ana ask the German producers for more money, more equipment, and more time. He refuses to let Flavia (the actual jinetera) record footage for the movie, out of fear of her destroying his craft and refuses to listen to Anaâs input as to what the film has to look like. Eventually, Ana discovers that Vergara has been taking the extra equipment and money to produce his âsecond comingâ film. After a fight ensues, Vergara accuses Ana of having the natural qualities of a jinetera. Completely ignoring the fact that it was at his request that Ana needed to flirt with the producers to secure more time, equipment, and money.</p>
+<p>Vergara is categorized as el chulo based on Cynthia Popeâs The Political Economy of Desire: Geographies of Female Sex Work in Havana, Cuba. Pope provides us with a description of the new pimps who have entered the jinetera scene. The pimps -known as chulos- have entered the scene as policing of jineteras has increased beginning in the early 1990s; these men act as the primary point of contact between the foreign man and the jinetera, they strip the autonomy from the woman and place the business and profit in their hands (2005). This is similar to Vergaraâs behavior in the movie. While he is not the point of contact for the directors, he ultimately is the one who is benefiting the most from Anaâs performance. He simply sits back, works on his project, and lets Ana face the scrutiny of the directors and the possibility of arrest for visiting the whorehouses of La Habana. Like a chulo, it is Anaâs body that is the source of capitalization for Vergara and he pushes its exploitation for the benefit of his failed producer career.</p>
+<blockquote>âActuar es como putear un poco, Â¿no?â</blockquote>
+<p>Despite the film being focused on Anaâs experience, a critical analysis of both Flavia, the actual jinetera, and Ana, the actress, provides us with an interesting insight as to what it means to be a jinetera.</p>
+<h2>Flavia</h2>
+<p>The character of Flavia is introduced to us in Anaâs neighborhood salon. Flavia discusses how in Las Aventuras in which Ana stars, the Spanish conquistadores will always win due to the betrayal of âuna india jinetera, la Malinche.â Flaviaâs character in the movie represents the social disdain and rejection of jineteras on the island. By framing La Malinche as a jinetera, Flavia connects to the Revolutionary discourse over the victimhood of the jineteras; the trap of selling their bodies due to the robbed landscape that colonialism and imperialism left Cubans to deal with (Pope, 2005; Daigle, 2015; Hynson, 2015). Throughout the movie, Flaviaâs character is constantly given an arc of redemption or rather an excuse for her jiniterismo. At first, she tells Ana that nothing went wrong in her life for her to become a jinetera, however, a couple of scenes later we learn that her aunt is in a vegetable state in the hospital and Flavia is her sole caretaker. Not only that but, early on we learn that Flavia suffered domestic violence at the hands of a German man whom she married to escape the island. The movie does not allow Flavia to own her job, rather she must have been driven there with reason. She is not a whore because she wants to be, rather she has to be. That is similar discourse that the state in Cuba seeks to give, women are victims of the past.</p>
+<h2>Ana</h2>
+<p>Ana seems to be the âgood girlâ at the beginning. Unlike Flavia, her character matters. She ducks her head as she walks with Flavia, and shivers at the thought of Cuban people watching her perform as a jinetera. She lacks the confidence to speak up to her boss and her family. But, she is also arrogant. After seeking Flavia's help in entering the project, Flavia asks Ana to secure her a small television role. Ana tells Flavia that acting takes craft and education, something that Flavia does not have. At that moment, Flavia tells her âActing is just like whoring around, no? You do it to please others, and have them tell you how good you are?â This specific scene is crucial to the movie, as it is a moment in which Ana realizes that the difference between Flavia and her is only one: penetration. Ana puts on the performances of her life, she crafts a back story for her alter ego, Ginette, so heartwrenching, that the producers decide to give her a feature film. Ginette was raped by a foreigner, her dad committed suicide, her mom too, and has a son by her rapist. Her story seems very far-fetched and if anyone had stopped to think it through, the flaws in her words would have been noticed as she becomes careless with the attention she gets and contradicts herself by saying her dead mother is now alive and suffering from bone aches. Ana becomes a performer for the men. She is selling them the fantasy of the exotic vixen, who will submit herself to you, but who is also a daughter of the Revolution and will -in all her Cuban glory- be dominant over her man at times. Ana goes from distancing herself from the jineteras to becoming entrenched in the same systems and people that are key in the jinetera ecosystem. Ana becomes dependent on the foreign men for money, she must perform the role they believe her to be, and she must give that money to Vergara, her mother, and her sister (Pope, 2005; Diagre, 2015). She is a jinetera through and through; the only thing that is missing is sex.</p>
+<p>Ana held judgment over the jineteras, at one point asking Flavia âWhat happened that made you this way?â But towards the end of the movie, as she storms away from her home after Vergara tells her that he agreed to edit the footage of Anaâs attempted rape to avoid being reported by Dieter for fraud, we see Ana disillusioned with everything. She rejects the man in her home, she rejects her family, but she also flips off a group of foreign men who begin to catcall her. However, she puts her middle finger down and puts both of her hands up, as if to imitate the lenses of cameras, and follows the foreign men as they drive away. This is the ending shot of the movie and it ends up framing the phenomena of jiniterismo as a problem of the foreigners. By âswitching the focusâ of the camera (that is by holding her hands up), Ana rejects the deep-dive into the life of the jineteras and rather turns the camera around as if asking the foreigners: why do you not have a look at yourself?</p>
+<h2>Final</h2>
+<p>La Pelicula de Ana offers a rich insight into the role of jineteras in Cuban life. They are breadwinners and they are fantasies, they are exploited and they are victims, they lack autonomy and they lack support. That is the life that directors Daniel DÃ­az Torres and Esther Rauch assign to them. More interestingly, the directors return the film to a point of focus, not on the jineteras but on the foreigners. As mentioned before, Ana rejects the foreign men who harass her as they drive off in their shiny, red car. The main issue for the directors is the men who come to the island seeking these exploitative relations, not only do they never truly know the women they pursue (Helmut), but they are aggressive and possessive over them (Dieter), and to them, the island is a pick-up ground for girls (the men in the last scene). The film fails to deeply interrogate the economic problems in Cuba and further examine the real POV of the jineteras. This story was not about Ana, it was about the foreigners and their claim to the women of the island.</p>
+<h2>References</h2>
+<p>Constable, N. (2009). The Commodification of Intimacy: Marriage, Sex, and Reproductive Labor. Annual Review of Anthropology, (38), 49-64.</p>
+<p>Cuba Platform. (n.d.). The Special Period â Cuba Platform. Cuba Platform. Retrieved December 15, 2023, from https://cubaplatform.org/special-period</p>
+<p>Daigle, M. (2015). From Cuba with Love: Sex and Money in the Twenty-First Century. University of California Press.<br/>DÃ­az Torres, D., &amp; Rauch, E. (2012). La PelÃ­cula de Ana [Movie].</p>
+<p>Farber, S. (2015, September 7). Cuba Before the Revolution. Havana Times. Retrieved December 15, 2023, from https://havanatimes.org/features/cuba-before-the-revolution/</p>
+<p>GarcÃ­a, Y. (2018, March 8). Fidel Castro: "Sin la mujer, la obra ingente de la RevoluciÃ³n no habrÃ­a sido posible.â Fidel soldado de las ideas. Retrieved December 15, 2023, from http://www.fidelcastro.cu/es/articulos/fidel-castro-sin-la-mujer-la-obra-ingente-de-la-revolucion-no-habria-sido-posible</p>
+<p>Hynson, R. (2015, January). "Count, Capture, and Reeducate": The Campaign to Rehabilitate Cuba's Female Sex Workers, 1959-1966. Journal of the History of Sexuality, 24(1), 125-153.</p>
+<p>Pope, C. (2005, June). The Political Economy of Desire: Geographies of Female Sex Work in Havana, Cuba. Journal of International Women's Studies, 6(2), 1-21.</p>
+          </article>
+        </div>
+
+        <div class="mt-10 not-prose flex justify-center">
+          <div class="shareCard" role="group" aria-label="Share">
+            <span class="shareLabel">Share</span>
+
+            <a id="share-x" class="socialContainer containerX" aria-label="Share on X" target="_blank" rel="noopener noreferrer">
+              <svg class="xSvg fill-icon" viewBox="0 0 1200 1227" aria-hidden="true">
+                <path d="M714.2 519.9 1161.5 0H1055L671.7 442.2 356.1 0H0l468.9 684.1L0 1226.6h106.5l407.4-467.9 336.7 467.9h356.1L714.2 519.9Zm-144 165.6-47.2-65.3L180.4 80h162.7l228.6 316.8 47.2 65.3L1021 1146.6H858.3L570.2 685.5Z"/>
+              </svg>
+            </a>
+
+            <a id="share-fb" class="socialContainer containerFB" aria-label="Share on Facebook" target="_blank" rel="noopener noreferrer">
+              <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 12.073C22 6.486 17.523 2 12 2S2 6.486 2 12.073C2 17.09 5.657 21.127 10.438 22v-6.999H7.898v-2.928h2.54V9.845c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.47h-1.26c-1.243 0-1.63.772-1.63 1.562v1.874h2.773l-.443 2.928h-2.33V22C18.343 21.127 22 17.09 22 12.073"/>
+              </svg>
+            </a>
+
+            <a id="share-mail" class="socialContainer containerMail" aria-label="Share via Email">
+              <svg class="socialSvg fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/>
+              </svg>
+            </a>
+
+            <button id="share-copy" class="socialContainer containerCopy" aria-label="Copy link" type="button">
+              <svg class="clipboard-svg" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                <path d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <section class="mt-12 border-t border-black/10 pt-6">
+          <div class="flex items-start gap-4">
+            <img src="assets/camila.jpg" alt="Photo of Camila Tiburcio Rubio" class="w-14 h-14 rounded-full object-cover" />
+            <div>
+              <p class="font-semibold">Camila Tiburcio Rubio</p>
+              <p class="text-sm text-ink-300 mt-1">
+                Writer and cultural researcher focusing on Cuba and the Caribbean,
+                Masters Candidate in Latin America and Caribbean Studies at NYU.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="more" class="mt-12 border-t border-black/10 pt-8">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h2 class="font-serif text-2xl">More Essays</h2>
+            <div class="hidden sm:flex items-center gap-2">
+              <button
+                id="morePrev"
+                type="button"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+                aria-label="Previous articles"
+              >
+                ←
+              </button>
+              <button
+                id="moreNext"
+                type="button"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+                aria-label="Next articles"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div class="-mx-4 sm:mx-0">
+            <div
+              id="moreScroller"
+              class="flex gap-5 overflow-x-auto pb-3 pl-4 sm:pl-0 snap-x snap-mandatory scroll-smooth"
+            ></div>
+          </div>
+
+          <p id="moreSectionEmpty" class="hidden text-sm text-ink-300 mt-4">
+            No related articles yet.
+          </p>
+        </section>
+
+        <!-- Tag-based cross-section carousel -->
+        <section id="moreTags" class="mt-10">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h2 class="font-serif text-2xl">You may also like</h2>
+            <div class="hidden sm:flex items-center gap-2">
+              <button
+                id="moreTagsPrev"
+                type="button"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+                aria-label="Previous tagged articles"
+              >
+                ←
+              </button>
+              <button
+                id="moreTagsNext"
+                type="button"
+                class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-black/10 bg-white text-xs text-ink-500 hover:text-ink-900 hover:border-black/20 shadow-soft transition"
+                aria-label="Next tagged articles"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div class="-mx-4 sm:mx-0">
+            <div
+              id="moreTagsScroller"
+              class="flex gap-5 overflow-x-auto pb-3 pl-4 sm:pl-0 snap-x snap-mandatory scroll-smooth"
+            ></div>
+          </div>
+
+          <p id="moreTagsEmpty" class="hidden text-sm text-ink-300 mt-4">
+            No tag-related articles yet.
+          </p>
+        </section>
+      </main>
+
+      <!-- Sticky TTS mini-player -->
+      <div
+        id="ttsStickyBar"
+        class="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        style="display:none;"
+      >
+        <div
+          id="ttsStickyInner"
+          class="max-w-2xl w-full rounded-full border border-black/10 bg-white/95 shadow-soft backdrop-blur flex items-center gap-3 px-3 py-2"
+        >
+          <!-- Optional stop button on the left (desktop only) -->
+          <button
+            id="ttsStickyStop"
+            type="button"
+            class="hidden sm:inline-flex text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white text-ink-400 hover:text-ink-900"
+          >
+            Stop
+          </button>
+
+          <!-- Progress bar -->
+          <input
+            id="ttsProgressRange"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="flex-1 mx-2"
+          />
+
+          <!-- Time label -->
+          <span
+            id="ttsProgressLabel"
+            class="text-[11px] text-ink-400 font-medium tabular-nums whitespace-nowrap"
+          >
+            00:00 / 00:00
+          </span>
+
+          <!-- Play / Pause circle on the right -->
+          <button
+            id="ttsPlayPause"
+            type="button"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition ml-1"
+            aria-label="Play or pause article audio"
+          >
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <polygon points="8,5 19,12 8,19"></polygon>
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
+              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Back to top -->
+      <button id="backTop"
+              class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
+              aria-label="Back to top">↑ Top</button>
+
+      <!-- Footer -->
+      <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+          <div>
+            <div class="-ml-1.5">
+              <div class="flex items-center gap-1">
+                <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+              </div>
+            </div>
+            <p class="mt-2 text-ink-400 text-sm max-w-xs">
+              Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+            <ul class="space-y-2">
+              <li><a href="features.html" class="u-underline">Features</a></li>
+              <li><a href="latest.html" class="u-underline">Latest</a></li>
+              <li><a href="sections.html" class="u-underline">Sections</a></li>
+              <li><a href="archive.html" class="u-underline">Archive</a></li>
+              <li><a href="search.html" class="u-underline">Search</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+            <ul class="space-y-2">
+              <li><a href="about2.html" class="u-underline">About</a></li>
+              <li><a href="contact.html" class="u-underline">Contact</a></li>
+              <li><a href="mission.html" class="u-underline">Mission</a></li>
+              <li><a href="resume.html" class="u-underline">Résumé</a></li>
+              <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+            <ul class="space-y-2">
+              <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+              <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+              <li><a href="https://facebook.com" class="u-underline">Facebook</a></li>
+              <li><a href="https://linkedin.com" class="u-underline">Linkedin</a></li>
+              <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+          © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+        </div>
+      </footer>
+
+      <!-- Define CURRENT so related-posts JS works -->
+      <script>
+        window.CURRENT = {
+          slug: "la-pelicula-de-ana-a-look-at-jineteras-in-cuba",
+          section: "Essay",
+          tags: ["Cuba","Castro","Movies"],
+          date: "2025-11-16T23:51",
+          title: "La Pelicula de Ana: A Look At Jineteras in Cuba"
+        };
+      </script>
+
+      <script>
+        (function(){
+          const bar   = document.getElementById('progress-bar');
+          const label = document.getElementById('progress-label');
+          const textSpan = label ? label.querySelector('[data-progress-text]') : null;
+          if (!bar) return;
+
+          function onScroll(){
+            const max = document.body.scrollHeight - innerHeight;
+            const raw = max > 0 ? (scrollY / max) * 100 : 0;
+            const pct = Math.max(0, Math.min(100, raw));
+
+            bar.style.width = pct + '%';
+
+            if (label && textSpan){
+              if (pct < 5){
+                label.style.display = 'none';
+              } else if (pct >= 99){
+                label.style.display = 'inline-flex';
+                textSpan.textContent = 'Done';
+              } else {
+                label.style.display = 'inline-flex';
+                textSpan.textContent = Math.round(pct) + '% read';
+              }
+            }
+          }
+
+          window.addEventListener('scroll', onScroll, { passive:true });
+          onScroll();
+        })();
+
+        // Back/Top buttons
+        (function () {
+          const link = document.getElementById('backBtn');
+          if (!link) return;
+          const fallbackHref = link.getAttribute('href') || '/';
+          link.addEventListener('click', (e) => {
+            const ref = document.referrer;
+            const sameOrigin = ref && new URL(ref, location.href).origin === location.origin;
+            if (sameOrigin) { e.preventDefault(); history.back(); }
+            else if (!ref)  { link.setAttribute('href', fallbackHref); }
+            else            { link.setAttribute('href', fallbackHref); }
+          });
+        })();
+
+        const backTop = document.getElementById('backTop');
+        const toggleTop = () => {
+          if (window.scrollY > 600) backTop.classList.remove('hidden');
+          else backTop.classList.add('hidden');
+        };
+        window.addEventListener('scroll', toggleTop, { passive:true });
+        backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+        (function addDropcap(){
+          const firstP = document.querySelector('article.prose p');
+          if(firstP) firstP.classList.add('dropcap');
+        })();
+
+        (function enhanceBibliographyOnPage() {
+          var article = document.querySelector('article.prose');
+          if (!article) return;
+
+          // 1) Find the “Bibliography / References / Works Cited” heading
+          var headings = Array.prototype.filter.call(
+            article.querySelectorAll('h2'),
+            function (h) {
+              var text = (h.textContent || '').trim().toLowerCase();
+              return (
+                text === 'bibliography' ||
+                text === 'references' ||
+                text === 'works cited'
+              );
+            }
+          );
+
+          if (!headings.length) return;
+
+          var h = headings[0];
+          var parent = h.parentNode;
+          if (!parent) return;
+
+          // 2) Wrap the heading + following content until next H1/H2
+          var wrapper = document.createElement('section');
+          wrapper.className = 'bibliography-section';
+          parent.insertBefore(wrapper, h);
+
+          var node = h;
+          while (node) {
+            var next = node.nextSibling;
+            wrapper.appendChild(node);
+
+            if (next && next.nodeType === 1) {
+              var tag = next.tagName;
+              if (tag === 'H1' || tag === 'H2') {
+                break;
+              }
+            }
+            node = next;
+          }
+
+          // 3) Turn either <li> OR <p> references into .bibliography-items
+          var index = 1;
+          Array.prototype.forEach.call(
+            wrapper.querySelectorAll('ol li, ul li, p'),
+            function (item) {
+              var raw = (item.textContent || '').trim();
+
+              // If the text already starts with "1. ...", strip that out
+              // and keep the number as data-bib-index.
+              var m = raw.match(/^(d+).s*(.*)$/);
+              if (m) {
+                item.textContent = m[2];          // drop the "1." in the visible text
+                item.setAttribute('data-bib-index', m[1]);
+              } else {
+                item.setAttribute('data-bib-index', String(index));
+              }
+
+              item.classList.add('bibliography-item');
+              index++;
+            }
+          );
+        })();
+
+
+        // Share links
+        (function(){
+          const url  = encodeURIComponent(location.href);
+          const text = encodeURIComponent(document.title || 'Check this out');
+          const x    = document.getElementById('share-x');
+          const fb   = document.getElementById('share-fb');
+          const mail = document.getElementById('share-mail');
+          const copy = document.getElementById('share-copy');
+          if (x)  x.href  = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
+          if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+          if (mail){
+            mail.href = 'mailto:?subject=' + text + '&body=' + url;
+            mail.addEventListener('click', async (e) => {
+              if (navigator.share) { e.preventDefault(); try { await navigator.share({ title: document.title, url: location.href }); } catch {} }
+            });
+          }
+          if (copy){
+            copy.addEventListener('click', async () => {
+              try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(function(){ copy.style.transform = ''; }, 120); }
+              catch { alert("Couldn't copy the link."); }
+            });
+          }
+        })();
+
+        // Jump-to-section menu (auto from <h2> headings)
+        // Jump-to-section menu (auto from <h2> headings)
+        (function setupJumpMenu(){
+          const article    = document.querySelector('article.prose');
+          const mobileBox  = document.getElementById('jumpMenu');
+          const mobileList = document.getElementById('jumpMobileList');
+          const toggleBtn  = document.getElementById('jumpToggleBtn');
+
+          if (!article) return;
+
+          const headings = Array.from(article.querySelectorAll('h2'));
+          if (headings.length < 2) {
+            if (mobileBox) mobileBox.classList.add('hidden');
+            return;
+          }
+
+          function makeId(text, index){
+            var slug = (text || '')
+              .toLowerCase()
+              .replace(/[^w]+/g, '-')
+              .replace(/^-+|-+$/g, '');
+            if (!slug) slug = 'section-' + (index + 1);
+            if (!document.getElementById(slug)) return slug;
+            return slug;
+          }
+
+          const items = headings.map(function(h, index){
+            const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
+            const id    = h.id || makeId(label, index);
+            if (!h.id) h.id = id;
+            return { id: id, label: label, el: h };
+          });
+
+          const headerOffset = 90;
+
+          function scrollToId(id){
+            const target = document.getElementById(id);
+            if (!target) return;
+            const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+            window.scrollTo({ top: top, behavior: 'smooth' });
+          }
+
+          // Mobile dropdown
+          if (mobileBox && mobileList && toggleBtn){
+            mobileBox.classList.remove('hidden');
+            mobileList.innerHTML = '';
+
+            items.forEach(function(item){
+              const b = document.createElement('button');
+              b.type = 'button';
+              b.textContent = item.label;
+              b.className =
+                'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
+              b.addEventListener('click', function () {
+                scrollToId(item.id);
+                mobileList.classList.add('hidden');
+              });
+              mobileList.appendChild(b);
+            });
+
+            toggleBtn.addEventListener('click', function () {
+              mobileList.classList.toggle('hidden');
+            });
+          }
+
+          // Desktop floating pill
+          let desktopCard = document.getElementById('jumpFloatingDesktop');
+          if (!desktopCard){
+            desktopCard = document.createElement('aside');
+            desktopCard.id = 'jumpFloatingDesktop';
+            desktopCard.innerHTML =
+              '<div class="jump-card-inner">' +
+                '<p class="jump-label">Jump to</p>' +
+                '<ul class="jump-list"></ul>' +
+              '</div>';
+            document.body.appendChild(desktopCard);
+          }
+
+          const ul = desktopCard.querySelector('ul');
+          ul.innerHTML = '';
+
+          items.forEach(function(item, idx){
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = item.label;
+            btn.dataset.id = item.id;
+            if (idx === 0) btn.dataset.active = 'true';
+            btn.addEventListener('click', function () { scrollToId(item.id); });
+
+            const li = document.createElement('li');
+            li.appendChild(btn);
+            ul.appendChild(li);
+          });
+
+          function updateActive(){
+            const scrollPos = window.scrollY + headerOffset + 10;
+            let currentIndex = 0;
+
+            items.forEach(function(item, idx){
+              const top = item.el.getBoundingClientRect().top + window.scrollY;
+              if (top <= scrollPos) currentIndex = idx;
+            });
+
+            const buttons = desktopCard.querySelectorAll('button');
+            buttons.forEach(function(btn, idx){
+              btn.dataset.active = idx === currentIndex ? 'true' : 'false';
+            });
+          }
+
+          // NEW: fade-in behavior when scrolling down a bit
+          function updateVisibility() {
+            if (window.scrollY > 320) {
+              desktopCard.classList.add('jump-visible');
+            } else {
+              desktopCard.classList.remove('jump-visible');
+            }
+          }
+
+          window.addEventListener('scroll', updateActive, { passive:true });
+          window.addEventListener('scroll', updateVisibility, { passive:true });
+
+          updateActive();
+          updateVisibility();
+        })();
+
+        var TTS_TOTAL_SECONDS = 1200;
+
+                // Read-aloud / text-to-speech for article with progress + scrubbing
+                // Read-aloud / text-to-speech with sticky bar + word highlight
+        (function setupTTS() {
+          if (!('speechSynthesis' in window)) {
+            var btn = document.getElementById('ttsToggle');
+            var bar = document.getElementById('ttsStickyBar');
+            if (btn) btn.style.display = 'none';
+            if (bar) bar.style.display = 'none';
+            return;
+          }
+
+          var synth      = window.speechSynthesis;
+          var article    = document.querySelector('article.prose');
+          var listenBtn  = document.getElementById('ttsToggle');
+          var stickyBar  = document.getElementById('ttsStickyBar');
+          var playPause  = document.getElementById('ttsPlayPause');
+          var range      = document.getElementById('ttsProgressRange');
+          var label      = document.getElementById('ttsProgressLabel');
+          var stopBtn    = document.getElementById('ttsStickyStop');
+
+          if (!article || !listenBtn || !stickyBar || !playPause || !range || !label) return;
+
+          /* ===========
+             Sentence-level wrapping for highlight
+          =========== */
+          var sentenceSpans  = [];
+          var sentenceStarts = [];
+          var speechText     = '';
+          var lastSentenceIndex = -1;
+
+          function processTextNode(node) {
+            var text = node.textContent;
+            if (!text || !text.trim()) return;
+
+            var frag = document.createDocumentFragment();
+            var sentenceRegex = /[^.!?]+[.!?]+/g;
+            var match;
+            var lastIndex = 0;
+
+            while ((match = sentenceRegex.exec(text)) !== null) {
+              var sentence  = match[0];
+              var startIdx  = match.index;
+
+              if (startIdx > lastIndex) {
+                var before = text.slice(lastIndex, startIdx);
+                frag.appendChild(document.createTextNode(before));
+                speechText += before;
+              }
+
+              var span = document.createElement('span');
+              span.textContent = sentence;
+              span.className = 'tts-sentence';
+              span.setAttribute('data-sentence-index', String(sentenceSpans.length));
+
+              sentenceSpans.push(span);
+              sentenceStarts.push(speechText.length);
+              speechText += sentence;
+
+              frag.appendChild(span);
+              lastIndex = startIdx + sentence.length;
+            }
+
+            if (lastIndex < text.length) {
+              var tail = text.slice(lastIndex);
+              frag.appendChild(document.createTextNode(tail));
+              speechText += tail;
+            }
+
+            node.parentNode.replaceChild(frag, node);
+          }
+
+          function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              processTextNode(node);
+              return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            if (node.classList && node.classList.contains('tts-sentence')) return;
+
+            var child = node.firstChild;
+            while (child) {
+              var next = child.nextSibling;
+              walk(child);
+              child = next;
+            }
+          }
+
+          walk(article);
+
+          if (!speechText.trim().length || !sentenceSpans.length) {
+            listenBtn.style.display = 'none';
+            stickyBar.style.display = 'none';
+            return;
+          }
+
+          var totalLength = speechText.length;
+
+          /* ===========
+             Time estimate fallback
+          =========== */
+          var wordsCount = speechText.split(/s+/).filter(Boolean).length;
+          var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
+          var totalSeconds =
+            typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
+              ? window.TTS_TOTAL_SECONDS
+              : estimatedSeconds;
+
+          function formatTime(sec) {
+            sec = Math.max(0, Math.round(sec));
+            var m = Math.floor(sec / 60);
+            var s = sec % 60;
+            return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+          }
+
+          /* ===========
+             Highlight helpers
+          =========== */
+          function highlightSentence(index) {
+            if (index < 0 || index >= sentenceSpans.length) return;
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
+            }
+            sentenceSpans[index].classList.add('tts-sentence--active');
+            lastSentenceIndex = index;
+          }
+
+          function clearHighlight() {
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
+            }
+            lastSentenceIndex = -1;
+          }
+
+          function findSentenceIndexFromChar(charIndex) {
+            if (!sentenceStarts.length) return -1;
+            var lo = 0;
+            var hi = sentenceStarts.length - 1;
+            var ans = 0;
+
+            while (lo <= hi) {
+              var mid = (lo + hi) >> 1;
+              if (sentenceStarts[mid] <= charIndex) {
+                ans = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
+              }
+            }
+            return ans;
+          }
+
+          /* ===========
+             Player State
+          =========== */
+          var utterance  = null;
+          var isActive   = false;
+          var isPlaying  = false;
+          var isPaused   = false;
+          var baseOffset = 0;
+          var currentIdx = 0;
+
+          function setPlayState(state) {
+            playPause.setAttribute('data-state', state);
+
+            var playIcon  = playPause.querySelector('[data-icon="play"]');
+            var pauseIcon = playPause.querySelector('[data-icon="pause"]');
+
+            if (state === 'playing') {
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+            } else {
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+            }
+          }
+
+          function updateProgressUI(percent) {
+            var pct = Math.max(0, Math.min(100, percent));
+            range.value = pct;
+
+            var currentSeconds = (totalSeconds * pct) / 100;
+            label.textContent = formatTime(currentSeconds) + ' / ' + formatTime(totalSeconds);
+
+            var fill  = '#C53D2F';
+            var track = 'rgba(15,23,42,0.08)';
+
+            range.style.background =
+              'linear-gradient(to right, '
+              + fill  + ' 0%, '
+              + fill  + ' ' + pct + '%, '
+              + track + ' ' + pct + '%, '
+              + track + ' 100%)';
+          }
+
+          function resetPlayback(keepProgress) {
+            synth.cancel();
+            utterance  = null;
+            isPlaying  = false;
+            isPaused   = false;
+            baseOffset = 0;
+            currentIdx = 0;
+            setPlayState('paused');
+            if (!keepProgress) {
+              updateProgressUI(0);
+              clearHighlight();
+            }
+          }
+
+          function hideStickyBar() { stickyBar.style.display = 'none'; }
+          function showStickyBar() { stickyBar.style.display = 'flex'; }
+
+          function stopListeningMode() {
+            resetPlayback(false);
+            isActive = false;
+            hideStickyBar();
+            clearHighlight();
+            listenBtn.textContent = 'Listen to article';
+          }
+
+          /* ===========
+             Create utterance from offset
+          =========== */
+          function createUtteranceFromOffset(offset) {
+            if (!totalLength) return;
+
+            var clamped = Math.max(0, Math.min(totalLength - 1, offset));
+            var slice   = speechText.slice(clamped);
+            if (!slice.trim()) {
+              resetPlayback(false);
+              updateProgressUI(100);
+              return;
+            }
+
+            synth.cancel();
+            utterance = new SpeechSynthesisUtterance(slice);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+
+            baseOffset = clamped;
+            currentIdx = 0;
+
+            utterance.onboundary = function (e) {
+              if (typeof e.charIndex === 'number') {
+                currentIdx = e.charIndex;
+                var absolute = baseOffset + currentIdx;
+                var pct = (absolute / totalLength) * 100;
+                updateProgressUI(pct);
+
+                var sentenceIndex = findSentenceIndexFromChar(absolute);
+                if (sentenceIndex >= 0) highlightSentence(sentenceIndex);
+              }
+            };
+
+            utterance.onend = function () {
+              isPlaying = false;
+              isPaused = false;
+              updateProgressUI(100);
+              setPlayState('paused');
+            };
+
+            utterance.onerror = function () {
+              resetPlayback(false);
+            };
+
+            isPlaying = true;
+            isPaused  = false;
+            setPlayState('playing');
+            synth.speak(utterance);
+          }
+
+          /* ===========
+             HANDLERS
+          =========== */
+
+          listenBtn.addEventListener('click', function () {
+            if (!isActive) {
+              isActive = true;
+              showStickyBar();
+              listenBtn.textContent = 'Stop listening';
+              updateProgressUI(0);
+              clearHighlight();
+              createUtteranceFromOffset(0);
+            } else {
+              stopListeningMode();
+            }
+          });
+
+          playPause.addEventListener('click', function () {
+            if (!isActive) return;
+
+            if (!isPlaying && !isPaused) {
+              var pct = parseFloat(range.value) || 0;
+              var offset = Math.floor((pct / 100) * totalLength);
+              createUtteranceFromOffset(offset);
+              return;
+            }
+
+            if (isPlaying && !isPaused) {
+              synth.pause();
+              isPaused = true;
+              setPlayState('paused');
+              return;
+            }
+
+            if (isPlaying && isPaused) {
+              synth.resume();
+              isPaused = false;
+              setPlayState('playing');
+            }
+          });
+
+          if (stopBtn) {
+            stopBtn.addEventListener('click', function () {
+              if (!isActive) return;
+              stopListeningMode();
+            });
+          }
+
+          range.addEventListener('input', function () {
+            if (!isActive || !totalLength) return;
+
+            var pct = Math.max(0, Math.min(100, parseFloat(range.value)));
+            updateProgressUI(pct);
+
+            var absolute = Math.floor((pct / 100) * totalLength);
+            var sIdx = findSentenceIndexFromChar(absolute);
+            if (sIdx >= 0) highlightSentence(sIdx);
+
+            if (isPlaying) {
+              createUtteranceFromOffset(absolute);
+            }
+          });
+
+          window.addEventListener('beforeunload', function () {
+            synth.cancel();
+          });
+
+          updateProgressUI(0);
+        })();
+
+        async function loadRelated () {
+          const scrollerSection = document.getElementById('moreScroller');
+          const scrollerTags    = document.getElementById('moreTagsScroller');
+          const emptySection    = document.getElementById('moreSectionEmpty');
+          const emptyTags       = document.getElementById('moreTagsEmpty');
+          const sectionBlock    = document.getElementById('more');
+          const tagsBlock       = document.getElementById('moreTags');
+
+          if (!scrollerSection && !scrollerTags) return;
+
+          function makeCard(p) {
+            const card = document.createElement('a');
+            card.href = p.url || (p.slug + '.html');
+            card.className =
+              'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
+
+            if (p.cover) {
+              const wrap = document.createElement('div');
+              wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
+
+              const img = document.createElement('img');
+              img.src = p.cover;
+              img.alt = '';
+              img.loading = 'lazy';
+              img.className =
+                'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
+
+              wrap.appendChild(img);
+              card.appendChild(wrap);
+            }
+
+            const info = document.createElement('div');
+            info.className = 'p-3';
+
+            const sec = document.createElement('div');
+            sec.className =
+              'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
+            sec.textContent = p.section || '';
+            info.appendChild(sec);
+
+            const h3 = document.createElement('h3');
+            h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
+            h3.textContent = p.title || '';
+            info.appendChild(h3);
+
+            const meta = document.createElement('div');
+            meta.className = 'mt-1 text-xs text-ink-300';
+            const dateStr = p.date
+              ? new Date(p.date).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })
+              : '';
+            meta.textContent =
+              (dateStr ? dateStr + ' • ' : '') + (p.readMinutes || 1) + ' min read';
+            info.appendChild(meta);
+
+            card.appendChild(info);
+            return card;
+          }
+
+          function setupButtons(prevId, nextId, scroller) {
+            const prevBtn = document.getElementById(prevId);
+            const nextBtn = document.getElementById(nextId);
+            if (!scroller) return;
+
+            const amount = function () { return Math.max(scroller.clientWidth * 0.7, 260); };
+
+            if (prevBtn) {
+              prevBtn.onclick = function () {
+                scroller.scrollBy({ left: -amount(), behavior: 'smooth' });
+              };
+            }
+            if (nextBtn) {
+              nextBtn.onclick = function () {
+                scroller.scrollBy({ left: amount(), behavior: 'smooth' });
+              };
+            }
+          }
+
+          try {
+            const res = await fetch('posts.json', { cache: 'no-store' });
+            if (!res.ok) throw new Error('posts.json not found');
+            const list = await res.json();
+
+            const currentSlug   = window.CURRENT && window.CURRENT.slug || '';
+            const currentTags   = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
+            const currentSection= window.CURRENT && window.CURRENT.section || '';
+
+            const baseList = list.filter(function(p){ return p.slug !== currentSlug; });
+
+            const usedSlugs = new Set();
+
+            let sectionPicks = [];
+            if (scrollerSection) {
+              const scored = baseList
+                .map(function(p){
+                  const tags = Array.isArray(p.tags) ? p.tags : [];
+                  const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
+                  const sameSection = p.section === currentSection ? 1 : 0;
+                  return Object.assign({}, p, { score: sameSection * 3 + overlap });
+                })
+                .sort(function(a, b){
+                  return (b.score - a.score) || (new Date(b.date) - new Date(a.date));
+                });
+
+              let pool = scored.filter(function(p){ return p.score > 0; });
+              if (!pool.length) {
+                pool = baseList
+                  .filter(function(p){ return p.section === currentSection; })
+                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
+
+                if (!pool.length) {
+                  pool = baseList.slice().sort(function(a, b){
+                    return new Date(b.date) - new Date(a.date);
+                  });
+                }
+              }
+
+              sectionPicks = pool.slice(0, 6);
+
+              if (!sectionPicks.length) {
+                if (emptySection) emptySection.classList.remove('hidden');
+              } else {
+                scrollerSection.replaceChildren();
+                sectionPicks.forEach(function(p){
+                  usedSlugs.add(p.slug);
+                  scrollerSection.appendChild(makeCard(p));
+                });
+                setupButtons('morePrev', 'moreNext', scrollerSection);
+              }
+            }
+
+            if (scrollerTags && currentTags.length) {
+              const tagCandidates = baseList.filter(function(p){ return !usedSlugs.has(p.slug); });
+
+              let tagPicks = [];
+
+              if (tagCandidates.length) {
+                const tagScored = tagCandidates
+                  .map(function(p){
+                    const tags = Array.isArray(p.tags) ? p.tags : [];
+                    const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
+                    return Object.assign({}, p, { overlap: overlap });
+                  })
+                  .filter(function(p){ return p.overlap > 0; })
+                  .sort(function(a, b){
+                    return (b.overlap - a.overlap) || (new Date(b.date) - new Date(a.date));
+                  });
+
+                tagPicks = tagScored.slice(0, 6);
+              }
+
+              if (!tagPicks.length) {
+                const fallback = baseList
+                  .filter(function(p){ return !usedSlugs.has(p.slug); })
+                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
+
+                tagPicks = fallback.slice(0, 6);
+              }
+
+              if (!tagPicks.length) {
+                if (tagsBlock) tagsBlock.classList.add('hidden');
+                else if (emptyTags) emptyTags.classList.remove('hidden');
+              } else {
+                scrollerTags.replaceChildren();
+                tagPicks.forEach(function(p){
+                  usedSlugs.add(p.slug);
+                  scrollerTags.appendChild(makeCard(p));
+                });
+                setupButtons('moreTagsPrev', 'moreTagsNext', scrollerTags);
+              }
+            } else if (tagsBlock && !currentTags.length) {
+              tagsBlock.classList.add('hidden');
+            }
+          } catch (e) {
+            console.warn('Related articles unavailable:', e);
+            if (sectionBlock) sectionBlock.classList.add('hidden');
+            if (tagsBlock)   tagsBlock.classList.add('hidden');
+          }
+        }
+
+        if (document.readyState !== 'loading') loadRelated();
+        else document.addEventListener('DOMContentLoaded', loadRelated);
+      </script>
+
+    </body>
+    </html>
