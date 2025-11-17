@@ -64,6 +64,22 @@
       transition: box-shadow .2s ease, transform .2s ease, background-color .2s ease;
     }
 
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
+
     /* Soft lift + stronger shadow on hover (matches “Sections” vibe) */
     [data-href]:hover{
       transform: translateY(-2px);
@@ -121,7 +137,7 @@
 
   </style>
 </head>
-<body class="bg-cream text-ink-900 antialiased">
+<body class="bg-cream text-ink-900 antialiased fade-in-page">
   <!-- Top announcement bar -->
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
