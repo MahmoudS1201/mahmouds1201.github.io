@@ -28,11 +28,30 @@
         }
       </script>
       <style>
-        .u-underline{position:relative}
-        .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
-        .u-underline:hover:after{transform:scaleX(1)}
+        .u-underline{
+          position:relative;
+        }
+        .u-underline::after{
+          content:'';
+          position:absolute;
+          left:0;
+          bottom:-2px;
+          height:2px;
+          width:100%;
+          background:currentColor;
+          transform:scaleX(0);
+          transform-origin:left;
+          transition:transform .25s;
+        }
+        .u-underline:hover::after{
+          transform:scaleX(1);
+        }
+
+        /* Keep underline when hovering the whole author link */
         .author-link:hover .u-underline::after {
           transform: scaleX(1);
+        }
+
         .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
         .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
         .prose p{margin:1.05em 0;line-height:1.8}
@@ -470,11 +489,13 @@
             class="author-link flex items-center gap-3 group"
             aria-label="About Camila Tiburcio Rubio"
           >
-            <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+            <div
+              class="w-9 h-9 rounded-full bg-ink-300 group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+            >
               <img
                      src="assets/camila.jpg"
                      alt="Camila Tiburcio Rubio"
-                     class="w-full h-full object-cover group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+                     class="w-full h-full rounded-full object-cover"
                    />
             </div>
             <div class="text-left">
