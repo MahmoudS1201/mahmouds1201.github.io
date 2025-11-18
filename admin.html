@@ -339,30 +339,38 @@
       background: #fdf7f4;
     }
 
-    /* =========================
+        /* =========================
        Outline styling (Body Editor)
     ========================== */
 
-    /* Turn the outline list itself into a soft card */
-    #outlineList {
-      margin: 0;
-      padding: 8px 6px 6px;
-      list-style: none;
+    /* Card container */
+    #outlinePanel {
       background: #FBF7F1;                       /* soft cream */
-      border-radius: 14px;
+      border-radius: 16px;
       border: 1px solid rgba(148, 116, 80, 0.28);
-      max-height: 210px;                         /* scroll if very long */
+      padding: 8px 8px 6px;
+      max-height: 210px;
       overflow-y: auto;
       font-size: 0.82rem;
     }
 
-    /* Remove default li spacing if any */
-    #outlineList li {
-      margin: 0;
-      padding: 0;
+    /* Placeholder helper text */
+    #outlinePanel .text-ink-300 {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    /* Each outline entry as a pill button */
+    /* Outline list itself */
+    #outlineList {
+      margin: 4px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* Each outline entry as a pill button.
+       Works whether JS uses <li> or adds .outline-item. */
+    #outlineList li,
     #outlineList .outline-item {
       display: flex;
       align-items: center;
@@ -385,6 +393,7 @@
     }
 
     /* Small accent bullet */
+    #outlineList li::before,
     #outlineList .outline-item::before {
       content: "•";
       font-size: 0.8rem;
@@ -392,6 +401,7 @@
     }
 
     /* Hover state */
+    #outlineList li:hover,
     #outlineList .outline-item:hover {
       background: rgba(197, 61, 47, 0.07);
       color: #111827;
@@ -399,6 +409,7 @@
     }
 
     /* Active / current section (JS can set data-active="true") */
+    #outlineList li[data-active="true"],
     #outlineList .outline-item[data-active="true"] {
       background: rgba(197, 61, 47, 0.14);
       color: #C53D2F;
@@ -406,17 +417,17 @@
     }
 
     /* Slightly nicer scrollbar just for the outline (WebKit) */
-    #outlineList::-webkit-scrollbar {
+    #outlinePanel::-webkit-scrollbar {
       width: 6px;
     }
-    #outlineList::-webkit-scrollbar-track {
+    #outlinePanel::-webkit-scrollbar-track {
       background: transparent;
     }
-    #outlineList::-webkit-scrollbar-thumb {
+    #outlinePanel::-webkit-scrollbar-thumb {
       background: rgba(148, 116, 80, 0.35);
       border-radius: 9999px;
     }
-    
+
   </style>
   <script>
     (function () {
@@ -606,12 +617,15 @@
                       Show outline
                     </button>
                   </div>
+
                   <div
-                    id="outlinePanel" class="hidden"
-                    class="max-h-52 overflow-y-auto rounded-xl border border-black/5 bg-white px-3 py-2 text-xs">
-                    <p class="text-[11px] text-ink-300">
+                    id="outlinePanel"
+                    class="hidden max-h-52 overflow-y-auto text-xs">
+                    <p class="text-[11px] text-ink-300 mb-1">
                       Add headings (#, ##, ###) in the body to see an outline.
                     </p>
+                    <!-- JS will fill this with <li> items -->
+                    <ul id="outlineList"></ul>
                   </div>
                 </div>
 
