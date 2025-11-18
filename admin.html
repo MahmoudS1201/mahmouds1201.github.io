@@ -338,6 +338,85 @@
     .grammar-issue:hover {
       background: #fdf7f4;
     }
+
+    /* =========================
+       Outline styling (Body Editor)
+    ========================== */
+
+    /* Turn the outline list itself into a soft card */
+    #outlineList {
+      margin: 0;
+      padding: 8px 6px 6px;
+      list-style: none;
+      background: #FBF7F1;                       /* soft cream */
+      border-radius: 14px;
+      border: 1px solid rgba(148, 116, 80, 0.28);
+      max-height: 210px;                         /* scroll if very long */
+      overflow-y: auto;
+      font-size: 0.82rem;
+    }
+
+    /* Remove default li spacing if any */
+    #outlineList li {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Each outline entry as a pill button */
+    #outlineList .outline-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding: 4px 8px;
+      margin-bottom: 2px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      font-size: 0.82rem;
+      color: #4B5563;
+      text-align: left;
+      cursor: pointer;
+
+      transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.08s ease;
+    }
+
+    /* Small accent bullet */
+    #outlineList .outline-item::before {
+      content: "•";
+      font-size: 0.8rem;
+      color: #C53D2F;
+    }
+
+    /* Hover state */
+    #outlineList .outline-item:hover {
+      background: rgba(197, 61, 47, 0.07);
+      color: #111827;
+      transform: translateX(0.5px);
+    }
+
+    /* Active / current section (JS can set data-active="true") */
+    #outlineList .outline-item[data-active="true"] {
+      background: rgba(197, 61, 47, 0.14);
+      color: #C53D2F;
+      font-weight: 500;
+    }
+
+    /* Slightly nicer scrollbar just for the outline (WebKit) */
+    #outlineList::-webkit-scrollbar {
+      width: 6px;
+    }
+    #outlineList::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #outlineList::-webkit-scrollbar-thumb {
+      background: rgba(148, 116, 80, 0.35);
+      border-radius: 9999px;
+    }
+    
   </style>
   <script>
     (function () {
