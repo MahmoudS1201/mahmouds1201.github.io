@@ -957,23 +957,6 @@
     "url": "testtest.html"
   },
   {
-    "slug": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba",
-    "title": "La Pelicula de Ana: A Look At Jineteras in Cuba",
-    "section": "Essay",
-    "tags": [
-      "Cuba",
-      "Castro",
-      "Movies"
-    ],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Sex Work and the City: New York-Buenos Aires",
-    "date": "2024-03-14T01:44",
-    "readMinutes": 20,
-    "featured": false,
-    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg",
-    "url": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba.html"
-  },
-  {
     "slug": "letter-to-profe-vasquez",
     "title": "Letter to Profe. Vasquez",
     "section": "Memoirs",
@@ -988,5 +971,22 @@
     "featured": true,
     "cover": "images/2024/01/letter-to-profe-vasquez/cover.jpg",
     "url": "letter-to-profe-vasquez.html"
+  },
+  {
+    "slug": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba",
+    "title": "La Pelicula de Ana: A Look At Jineteras in Cuba",
+    "section": "Essay",
+    "tags": [
+      "Cuba",
+      "Castro",
+      "Movies"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Sex Work and the City: New York-Buenos Aires",
+    "date": "2023-12-10T17:48",
+    "readMinutes": 20,
+    "featured": false,
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg",
+    "url": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba.html"
   }
 ]
