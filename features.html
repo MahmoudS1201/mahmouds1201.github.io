@@ -92,7 +92,7 @@
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
       <p>New: Fall features now live — interviews, essays & visual art</p>
-      <a href="Home.html#newsletter" class="u-underline">Subscribe</a>
+      <a href="newsletter.html" class="u-underline">Subscribe</a>
     </div>
   </div>
 
@@ -167,6 +167,7 @@
           <option value="new">Newest</option>
           <option value="old">Oldest</option>
           <option value="title">Title (A–Z)</option>
+          <option value="read">Read Time</option>
         </select>
       </div>
     </div>
@@ -227,7 +228,7 @@
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
       <div class="flex items-center gap-3">
-        <label class="sr-only" for="q-inline">Search title or tags</label>
+        <label class="sr-only" for="q-inline">Search titles, tags...</label>
         <input id="q-inline" type="search" placeholder="Search title or tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
         <label class="text-sm text-ink-500" for="pageSize">Per page</label>
         <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
@@ -596,6 +597,7 @@
       out.sort((a,b) => {
         if (state.sort === 'title') return (a.title||'').localeCompare(b.title||'');
         if (state.sort === 'old')   return new Date(a.date||0) - new Date(b.date||0);
+        if (state.sort === 'read')  return (a.read||0) - (b.read||0);
         return new Date(b.date||0) - new Date(a.date||0); // 'new'
       });
 
