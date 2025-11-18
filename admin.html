@@ -339,50 +339,53 @@
       background: #fdf7f4;
     }
 
-        /* =========================
+    /* =========================
        Outline styling (Body Editor)
     ========================== */
 
     /* Card container */
     #outlinePanel {
-      background: #FBF7F1;                       /* soft cream */
+      background: #ffffff;                       /* match other cards */
       border-radius: 16px;
-      border: 1px solid rgba(148, 116, 80, 0.28);
-      padding: 8px 8px 6px;
-      max-height: 210px;
+      border: 1px solid rgba(15, 23, 42, 0.06);  /* subtle border */
+      padding: 6px 8px 4px;
+      max-height: 190px;
       overflow-y: auto;
       font-size: 0.82rem;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
     }
 
-    /* Placeholder helper text */
-    #outlinePanel .text-ink-300 {
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+    /* Helper text at top */
+    #outlinePanel .outline-help {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      color: #9CA3AF;
+      margin-bottom: 4px;
     }
 
-    /* Outline list itself */
+    /* Outline list container */
     #outlineList {
-      margin: 4px 0 0;
+      margin: 0;
       padding: 0;
       list-style: none;
     }
 
-    /* Each outline entry as a pill button.
-       Works whether JS uses <li> or adds .outline-item. */
+    /* Each outline entry as a soft pill row
+       Works if JS uses <li> or .outline-item */
     #outlineList li,
     #outlineList .outline-item {
       display: flex;
       align-items: center;
       gap: 6px;
       width: 100%;
-      padding: 4px 8px;
-      margin-bottom: 2px;
+      padding: 3px 8px;
+      margin-bottom: 1px;
       border-radius: 9999px;
       border: none;
       background: transparent;
-      font-size: 0.82rem;
-      color: #4B5563;
+      font-size: 0.78rem;
+      color: #6B7280;
       text-align: left;
       cursor: pointer;
 
@@ -396,27 +399,27 @@
     #outlineList li::before,
     #outlineList .outline-item::before {
       content: "•";
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #C53D2F;
     }
 
     /* Hover state */
     #outlineList li:hover,
     #outlineList .outline-item:hover {
-      background: rgba(197, 61, 47, 0.07);
+      background: #F3F4F6;                       /* light gray */
       color: #111827;
       transform: translateX(0.5px);
     }
 
-    /* Active / current section (JS can set data-active="true") */
+    /* Active / current section */
     #outlineList li[data-active="true"],
     #outlineList .outline-item[data-active="true"] {
-      background: rgba(197, 61, 47, 0.14);
+      background: rgba(197, 61, 47, 0.11);       /* soft accent pill */
       color: #C53D2F;
       font-weight: 500;
     }
 
-    /* Slightly nicer scrollbar just for the outline (WebKit) */
+    /* Subtle scrollbar just for the outline (WebKit) */
     #outlinePanel::-webkit-scrollbar {
       width: 6px;
     }
@@ -424,7 +427,7 @@
       background: transparent;
     }
     #outlinePanel::-webkit-scrollbar-thumb {
-      background: rgba(148, 116, 80, 0.35);
+      background: rgba(148, 163, 184, 0.6);
       border-radius: 9999px;
     }
 
@@ -621,10 +624,9 @@
                   <div
                     id="outlinePanel"
                     class="hidden max-h-52 overflow-y-auto text-xs">
-                    <p class="text-[11px] text-ink-300 mb-1">
+                    <p class="outline-help">
                       Add headings (#, ##, ###) in the body to see an outline.
                     </p>
-                    <!-- JS will fill this with <li> items -->
                     <ul id="outlineList"></ul>
                   </div>
                 </div>
