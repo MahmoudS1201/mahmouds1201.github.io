@@ -98,7 +98,7 @@
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
       <p>New: Fall features now live — interviews, essays & visual art</p>
-      <a href="newsletter.html" class="u-underline">Subscribe</a>
+      <a href="../newsletter/" class="u-underline">Subscribe</a>
     </div>
   </div>
 
@@ -106,16 +106,16 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
-          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+        <a href="../" class="flex items-center gap-2" aria-label="Home">
+          <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
         <nav class="hidden md:flex items-center gap-8">
-          <a class="u-underline" href="features.html">Features</a>
-          <a class="u-underline" href="latest.html">Latest</a>
-          <a class="u-underline" href="sections.html">Sections</a>
-          <a class="u-underline" href="about2.html">About</a>
-          <a class="u-underline text-accent font-semibold" href="archive.html" aria-current="page">Archive</a>
+          <a class="u-underline" href="../features/">Features</a>
+          <a class="u-underline" href="../latest/">Latest</a>
+          <a class="u-underline" href="../sections/">Sections</a>
+          <a class="u-underline" href="../about/">About</a>
+          <a class="u-underline text-accent font-semibold" href="../archive/" aria-current="page">Archive</a>
         </nav>
         <a href="/" class="md:hidden u-underline text-sm">Home</a>
       </div>
@@ -234,7 +234,7 @@
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
-            <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+            <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
             <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
           </div>
         </div>
@@ -246,22 +246,22 @@
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
-          <li><a href="features.html" class="u-underline">Features</a></li>
-          <li><a href="latest.html" class="u-underline">Latest</a></li>
-          <li><a href="sections.html" class="u-underline">Sections</a></li>
-          <li><a href="archive.html" class="u-underline font-semibold text-accent">Archive</a></li>
-          <li><a href="search.html" class="u-underline">Search</a></li>
+          <li><a href="../features/" class="u-underline">Features</a></li>
+          <li><a href="../latest/" class="u-underline">Latest</a></li>
+          <li><a href="../sections/" class="u-underline">Sections</a></li>
+          <li><a href="../archive/" class="u-underline font-semibold text-accent">Archive</a></li>
+          <li><a href="../search/" class="u-underline">Search</a></li>
         </ul>
       </div>
       <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
-          <li><a href="about2.html" class="u-underline">About</a></li>
-          <li><a href="contact.html" class="u-underline">Contact</a></li>
-          <li><a href="mission.html" class="u-underline">Mission</a></li>
-          <li><a href="resume.html" class="u-underline">Résumé</a></li>
-          <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+          <li><a href="../about/" class="u-underline">About</a></li>
+          <li><a href="../contact/" class="u-underline">Contact</a></li>
+          <li><a href="../mission/" class="u-underline">Mission</a></li>
+          <li><a href="../resume/" class="u-underline">Résumé</a></li>
+          <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
       <!-- Follow -->
@@ -282,6 +282,18 @@
   </footer>
 
   <script>
+     // ---------- Subpath helper (GitHub Pages safe) ----------
+  function toRoot(path) {
+    if (!path) return '';
+    if (/^https?:\/\//i.test(path)) return path;        // leave absolute URLs alone
+    path = path.replace(/^\.?\//, '');                  // strip leading "./" or "/"
+    return '../' + path;                                // go up one level from /archive/
+  }
+
+  // Alias so we can reuse the same name as on other pages if needed
+  function toBase(path) {
+    return toRoot(path);
+  }
     // ---------- Utilities ----------
     const $ = (s, r=document)=>r.querySelector(s);
     const WORDS_RE = /[a-z0-9\u00C0-\u017F]+/gi;
@@ -301,13 +313,17 @@
     // ---------- Data loading ----------
     async function fetchPostsJson() {
       try {
-        const res = await fetch('posts.json', { cache: 'no-store' });
+        const url = toRoot('posts.json');
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) throw new Error('posts.json fetch failed');
         const data = await res.json();
         if (!Array.isArray(data)) throw new Error('posts.json not an array');
         return data;
-      } catch { return null; }
+      } catch {
+        return null;
+      }
     }
+
     function loadPublishedLocal() {
       const out = [];
       for (let i=0;i<localStorage.length;i++){
@@ -322,12 +338,14 @@
       return out;
     }
     function normalizePost(item){
-      const href =
-        (item && typeof item.url === 'string' && item.url.trim()) ? item.url.trim()
-        : (item && item.slug ? `${item.slug}.html` : '#');
+      const rawHref =
+        (item && typeof item.url === 'string' && item.url.trim())
+          ? item.url.trim()
+          : (item && item.slug ? `${item.slug}.html` : '#');
+
       return {
         title: item.title || '',
-        href,
+        href: toBase(rawHref),  // ← key change
         section: item.section || '',
         description: item.excerpt || item.description || '',
         date: item.date || item.publishedAt || ''
