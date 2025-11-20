@@ -1965,17 +1965,17 @@
       }
 
       // Meta description: smarter SEO snippet
-    if (metaDescEl && !metaDescEl.dataset.touched) {
-      const desc = generateSeoDescription({
-        title,
-        section: sectionEl.value,
-        author: authorEl.value || 'Camila Tiburcio Rubio',
-        excerpt,
-        body
-      });
+      if (metaDescEl && !metaDescEl.dataset.touched) {
+        const desc = generateSeoDescription({
+          title,
+          section: sectionEl.value,
+          author: authorEl.value || 'Camila Tiburcio Rubio',
+          excerpt,
+          body
+        });
 
-      metaDescEl.value = desc || '';
-    }
+        metaDescEl.value = desc || '';
+      }
 
     function addDropcap() {
       const firstP = document.querySelector('#previewBody p');
