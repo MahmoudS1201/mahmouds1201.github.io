@@ -1786,6 +1786,18 @@
     authorEl.addEventListener('input', updateDerived);
     dateEl.addEventListener('input', updateDerived);
 
+    if (metaTitleEl) {
+      metaTitleEl.addEventListener('input', () => {
+        metaTitleEl.dataset.touched = '1';
+      });
+    }
+
+    if (metaDescEl) {
+      metaDescEl.addEventListener('input', () => {
+        metaDescEl.dataset.touched = '1';
+      });
+    }
+
     function enhanceBibliographyIn(root) {
       if (!root) return;
 
@@ -1845,22 +1857,78 @@
     }
 
 
-    function updateDerived(){
-      readEl.value = estimateReadMinutes(bodyEl.value) + ' min';
+    function updateDerived() {
+      const body    = bodyEl.value || '';
+      const title   = (titleEl.value || '').trim();
+      const excerpt = (excerptEl.value || '').trim();
+
+      // ==== existing preview bits ====
+      readEl.value = estimateReadMinutes(body) + ' min';
+
       previewSection.textContent = sectionEl.value;
-      previewTitle.textContent = titleEl.value || 'Title…';
-      previewExcerpt.textContent = excerptEl.value || 'Excerpt…';
-      previewAuthor.textContent = authorEl.value || 'Camila Tiburcio Rubio';
-      previewRead.textContent = estimateReadMinutes(bodyEl.value);
+      previewTitle.textContent   = title || 'Title…';
+      previewExcerpt.textContent = excerpt || 'Excerpt…';
+      previewAuthor.textContent  = authorEl.value || 'Camila Tiburcio Rubio';
+      previewRead.textContent    = estimateReadMinutes(body);
+
       previewDate.textContent = dateEl.value
-        ? new Date(dateEl.value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})
-        : new Date().toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
-      previewBody.innerHTML = md(expandInlineImages(bodyEl.value));
+        ? new Date(dateEl.value).toLocaleDateString(
+            undefined,
+            { year: 'numeric', month: 'short', day: 'numeric' }
+          )
+        : new Date().toLocaleDateString(
+            undefined,
+            { year: 'numeric', month: 'short', day: 'numeric' }
+          );
+
+      previewBody.innerHTML = md(expandInlineImages(body));
       addDropcap();
       enhanceBibliographyIn(previewBody);
 
       // keep body stats in sync
       updateBodyStats();
+
+      // ==== SEO auto-fill ====
+
+      // Meta title: from title, plus suffix, truncated ~60 chars
+      if (metaTitleEl && !metaTitleEl.dataset.touched) {
+        if (title) {
+          const suffix = ' — Camila Tiburcio Rubio';
+          let full = title;
+
+          if (!title.toLowerCase().includes('camila tiburcio rubio')) {
+            full = title + suffix;
+          }
+
+          if (full.length > 60) {
+            full = full.slice(0, 57) + '…';
+          }
+
+          metaTitleEl.value = full;
+        } else {
+          // clear if no title
+          metaTitleEl.value = '';
+        }
+      }
+
+      // Meta description: from excerpt (fallback body), truncated ~155 chars
+      if (metaDescEl && !metaDescEl.dataset.touched) {
+        let source = excerpt;
+
+        if (!source) {
+          source = body.replace(/\s+/g, ' ').trim();
+        }
+
+        if (source) {
+          let desc = source;
+          if (desc.length > 155) {
+            desc = desc.slice(0, 152) + '…';
+          }
+          metaDescEl.value = desc;
+        } else {
+          metaDescEl.value = '';
+        }
+      }
     }
 
     function addDropcap() {
