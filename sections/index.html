@@ -278,7 +278,7 @@
     const HEADER_OFFSET = 120;
 
     // Data
-    const POSTS_JSON_URL = toBase('posts.json');
+    const POSTS_JSON_URL = toRoot('posts.json');
     const FALLBACK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
     // Elements
@@ -635,12 +635,11 @@
 
     // Header search -> search page
     function goToSearch(){
-      const q = (qDesktop?.value || '').trim();
-      const url = toRoot(term
-        ? `search/?q=${encodeURIComponent(term)}`
-        : `search/`
+      const term = (qDesktop?.value || '').trim();
+      const url = toRoot(
+        term ? `search/?q=${encodeURIComponent(term)}` : 'search/'
       );
-      location.href = toBase(url);
+      location.href = url;
     }
     qHeaderBtn?.addEventListener('click', (e) => { e.preventDefault(); goToSearch(); });
     qDesktop?.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); goToSearch(); }});
