@@ -1859,50 +1859,57 @@
     function generateSeoDescription({ title, section, author, excerpt, body }) {
       const clean = (str) => (str || '').replace(/\s+/g, ' ').trim();
 
-      const t  = clean(title);
-      const e  = clean(excerpt);
-      const b  = clean(body);
-      const sec = clean(section);
+      const t    = clean(title);
+      const sec  = clean(section);
       const auth = clean(author) || 'Camila Tiburcio Rubio';
+      const ex   = clean(excerpt);
+      const b    = clean(body);
 
-      // Base content: excerpt if present, otherwise body text
-      let base = e || b;
-      if (!base) return '';
-
-      // Prefer a sentence-ish chunk, not a hard cutoff
-      let sentenceEnd = base.search(/([.!?])\s/);
-      if (sentenceEnd !== -1 && sentenceEnd < 130) {
-        base = base.slice(0, sentenceEnd + 1);
-      } else if (base.length > 130) {
-        base = base.slice(0, 127) + '…';
+      // 1) Pick a “base” sentence from excerpt, or fall back to body
+      function pickSentence(text) {
+        if (!text) return '';
+        // Split on sentence boundaries but keep things simple
+        const parts = text
+          .split(/(?<=[.!?])\s+/)
+          .map(clean)
+          .filter(s => s.length > 25); // avoid super short fragments
+        return parts[0] || '';
       }
 
-      // Build a prefix that carries title + author + section
+      let baseSentence = pickSentence(ex) || pickSentence(b);
+      if (!baseSentence) return '';
+
+      // Soft limit the base to ~120 chars so we have room for prefix/CTA
+      if (baseSentence.length > 120) {
+        baseSentence = baseSentence.slice(0, 117).replace(/\s+\S*$/, '') + '…';
+      }
+
+      // 2) Build a keyword-rich prefix using title/author/section
       let prefix = '';
       if (t) {
-        prefix = t;
+        // Use the full title for keywords but keep it compact
+        let topic = t;
+        if (topic.length > 70) {
+          topic = topic.slice(0, 67).replace(/\s+\S*$/, '') + '…';
+        }
 
-        if (!prefix.toLowerCase().includes(auth.toLowerCase())) {
-          prefix += ' — ' + auth;
-        }
-        if (sec) {
-          // e.g. “Essay”, “Interview”
-          prefix += ' · ' + sec.toLowerCase();
-        }
-        prefix += ': ';
+        const secWord = sec ? sec.toLowerCase() : 'piece';
+
+        prefix = `In this ${secWord} by ${auth}, “${topic},” `;
       }
 
-      let meta = prefix + base;
+      let meta = prefix + baseSentence;
 
-      // Hard cap at ~155 chars (standard meta description length)
-      if (meta.length > 155) {
-        meta = meta.slice(0, 152) + '…';
+      // 3) Hard cap at ~155 chars
+      const MAX_LEN = 155;
+      if (meta.length > MAX_LEN) {
+        meta = meta.slice(0, MAX_LEN - 1).replace(/\s+\S*$/, '') + '…';
       }
 
-      // Optional: if it’s very short, add a tiny CTA
+      // 4) If still quite short and we have a title, add a small CTA
       if (meta.length < 110 && t) {
-        const extra = ' Read the full piece on Camila Tiburcio Rubio.';
-        if (meta.length + extra.length <= 155) {
+        const extra = ' Read the full article on Camila Tiburcio Rubio.';
+        if (meta.length + extra.length <= MAX_LEN) {
           meta += extra;
         }
       }
