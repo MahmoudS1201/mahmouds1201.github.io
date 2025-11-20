@@ -482,11 +482,11 @@
         const token = localStorage.getItem('ctr:admin:auth');
         if (token !== 'ok') {
           // Not authenticated → kick back to login
-          window.location.href = 'login.html';
+          window.location.href = '/login/';
         }
       } catch (e) {
         // If anything goes wrong reading storage, also kick out
-        window.location.href = 'login.html';
+        window.location.href = '/login/';
       }
     })();
   </script>
@@ -2240,7 +2240,7 @@
       if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
           try { localStorage.removeItem('ctr:admin:auth'); } catch {}
-          window.location.href = 'login.html';
+          window.location.href = '/login/';
         });
       }
 
@@ -2361,7 +2361,7 @@
       function logout() {
         localStorage.removeItem("ctr:admin:auth");
         localStorage.removeItem("ctr:admin:lastActive");
-        window.location.href = "login.html";
+        window.location.href = "/login/";
       }
 
       // Check if logged in
