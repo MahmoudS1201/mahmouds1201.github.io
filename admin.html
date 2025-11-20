@@ -644,6 +644,7 @@
                   <span class="text-sm font-medium">Body Editor</span>
                   <div class="flex gap-2 text-sm">
                     <button type="button" data-md="HEADER_SECTION" class="btn">Header</button>
+                    <button type="button" data-md="HEADER_SUB" class="btn">Subheader</button>
                     <button type="button" data-md="**bold**" class="btn">B</button>
                     <button type="button" data-md="*italic*" class="btn"><em>I</em></button>
                     <button type="button" data-md="> " class="btn">Quote</button>
@@ -1431,6 +1432,46 @@
             });
           }
         }
+        else if (token === 'HEADER_SUB') {
+          const start = bodyEl.selectionStart ?? 0;
+          const end   = bodyEl.selectionEnd ?? start;
+          const hadSel = start !== end;
+          const prevScroll = bodyEl.scrollTop;
+
+          if (hadSel) {
+            // Turn selected text into an H3 line
+            const selected = bodyEl.value.slice(start, end).replace(/\n+/g, ' ').trim();
+            const v     = bodyEl.value;
+            const atBOL = start === 0 || v[start - 1] === '\n';
+            const prefix = (atBOL ? '' : '\n') + '### ';
+            const insert = `${prefix}${selected}\n\n`;
+            bodyEl.setRangeText(insert, start, end, 'end');
+
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const caretPos = start + insert.length;
+              bodyEl.setSelectionRange(caretPos, caretPos);
+            });
+          } else {
+            // Insert a template H3 line, select the title text
+            const v     = bodyEl.value;
+            const pos   = bodyEl.selectionStart ?? 0;
+            const atBOL = pos === 0 || v[pos - 1] === '\n';
+            const line  = '### Subheader title';
+            const tmpl  = (atBOL ? '' : '\n') + line + '\n\n';
+
+            insertAtCursor(bodyEl, tmpl);
+            requestAnimationFrame(() => {
+              bodyEl.focus({ preventScroll: true });
+              bodyEl.scrollTop = prevScroll;
+              const base = pos + (atBOL ? 0 : 1);
+              const selStart = base + 4; // after '### '
+              const selEnd   = selStart + 'Subheader title'.length;
+              bodyEl.setSelectionRange(selStart, selEnd);
+            });
+          }
+        }
         else if (token === '> ') {
           const start = bodyEl.selectionStart ?? 0;
           const end   = bodyEl.selectionEnd ?? start;
@@ -1650,9 +1691,13 @@
       bodyEl.focus({ preventScroll: true });
       bodyEl.setSelectionRange(pos, pos);
 
-      // Rough scroll into view: scroll based on position ratio
+      // Rough scroll into view: scroll based on position ratio,
+      // then shift up by ~120px so the heading isn't jammed at the very top.
       const ratio = text.length ? pos / text.length : 0;
-      bodyEl.scrollTop = ratio * (bodyEl.scrollHeight - bodyEl.clientHeight);
+      const rawScroll = ratio * (bodyEl.scrollHeight - bodyEl.clientHeight);
+      const OFFSET_PX = 120; // tweak if you want more/less space
+
+      bodyEl.scrollTop = Math.max(rawScroll - OFFSET_PX, 0);
     }
 
     function renderOutline() {
