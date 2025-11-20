@@ -1856,6 +1856,59 @@
       );
     }
 
+    function generateSeoDescription({ title, section, author, excerpt, body }) {
+      const clean = (str) => (str || '').replace(/\s+/g, ' ').trim();
+
+      const t  = clean(title);
+      const e  = clean(excerpt);
+      const b  = clean(body);
+      const sec = clean(section);
+      const auth = clean(author) || 'Camila Tiburcio Rubio';
+
+      // Base content: excerpt if present, otherwise body text
+      let base = e || b;
+      if (!base) return '';
+
+      // Prefer a sentence-ish chunk, not a hard cutoff
+      let sentenceEnd = base.search(/([.!?])\s/);
+      if (sentenceEnd !== -1 && sentenceEnd < 130) {
+        base = base.slice(0, sentenceEnd + 1);
+      } else if (base.length > 130) {
+        base = base.slice(0, 127) + '…';
+      }
+
+      // Build a prefix that carries title + author + section
+      let prefix = '';
+      if (t) {
+        prefix = t;
+
+        if (!prefix.toLowerCase().includes(auth.toLowerCase())) {
+          prefix += ' — ' + auth;
+        }
+        if (sec) {
+          // e.g. “Essay”, “Interview”
+          prefix += ' · ' + sec.toLowerCase();
+        }
+        prefix += ': ';
+      }
+
+      let meta = prefix + base;
+
+      // Hard cap at ~155 chars (standard meta description length)
+      if (meta.length > 155) {
+        meta = meta.slice(0, 152) + '…';
+      }
+
+      // Optional: if it’s very short, add a tiny CTA
+      if (meta.length < 110 && t) {
+        const extra = ' Read the full piece on Camila Tiburcio Rubio.';
+        if (meta.length + extra.length <= 155) {
+          meta += extra;
+        }
+      }
+
+      return meta;
+    }
 
     function updateDerived() {
       const body    = bodyEl.value || '';
@@ -1900,8 +1953,8 @@
             full = title + suffix;
           }
 
-          if (full.length > 60) {
-            full = full.slice(0, 57) + '…';
+          if (full.length > 100) {
+            full = full.slice(0, 97) + '…';
           }
 
           metaTitleEl.value = full;
@@ -1911,24 +1964,17 @@
         }
       }
 
-      // Meta description: from excerpt (fallback body), truncated ~155 chars
-      if (metaDescEl && !metaDescEl.dataset.touched) {
-        let source = excerpt;
+      // Meta description: smarter SEO snippet
+    if (metaDescEl && !metaDescEl.dataset.touched) {
+      const desc = generateSeoDescription({
+        title,
+        section: sectionEl.value,
+        author: authorEl.value || 'Camila Tiburcio Rubio',
+        excerpt,
+        body
+      });
 
-        if (!source) {
-          source = body.replace(/\s+/g, ' ').trim();
-        }
-
-        if (source) {
-          let desc = source;
-          if (desc.length > 155) {
-            desc = desc.slice(0, 152) + '…';
-          }
-          metaDescEl.value = desc;
-        } else {
-          metaDescEl.value = '';
-        }
-      }
+      metaDescEl.value = desc || '';
     }
 
     function addDropcap() {
