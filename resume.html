@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Résumé — Camila Tiburcio Rubio</title>
+
+  <!-- Fonts & Tailwind -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter','system-ui','sans-serif'],
+            serif: ['Source Serif 4','Georgia','serif']
+          },
+          colors: {
+            ink: {900:'#0E0E0E',700:'#1F1F1F',500:'#3A3A3A',300:'#9CA3AF'},
+            cream:'#FAF7F2',
+            accent:{DEFAULT:'#C53D2F',dark:'#9E2F24',light:'#E95A49'}
+          },
+          boxShadow:{soft:'0 10px 30px rgba(0,0,0,0.06)'}
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base + brand helpers */
+    body{background:#FAF7F2;color:#0E0E0E}
+    .u-underline{position:relative}
+    .u-underline::after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+    .u-underline:hover::after{transform:scaleX(1)}
+    .resume-card{background:#fff;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+
+    @keyframes fadeInPage {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body.fade-in-page {
+      animation: fadeInPage 0.35s ease-out;
+    }
+
+    /* Print styles */
+    @media print{
+      :root{color-scheme: light;}
+      body{background:#fff}
+      .no-print{display:none!important}
+      .resume-card{box-shadow:none;background:#fff;padding:0}
+      header.sticky{position:static!important;border:none!important}
+      a{color:#000;text-decoration:none}
+      a[href^="http"]:after{content:" (" attr(href) ")"; font-weight:400}
+      /* Denser vertical rhythm & two-column content on wide pages */
+      .print-flow{column-count:2; column-gap:2rem}
+      .print-avoid-break{break-inside:avoid}
+      h2,h3{break-after:avoid}
+      /* Remove colored chips/underlines */
+      .u-underline::after{display:none!important}
+    }
+  </style>
+
+  <!-- JSON-LD (optional but nice for SEO/semantics) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"Camila Tiburcio Rubio",
+    "url":"https://CamilaTiburcioRubio.com",
+    "email":"mailto:ct2798@nyu.edu",
+    "sameAs":["https://instagram.com","https://twitter.com","https://youtube.com"]
+  }
+  </script>
+</head>
+<body class="antialiased fade-in-page">
+
+  <!-- Minimal header (keeps the page clean and print-friendly) -->
+  <header class="sticky top-0 z-40 bg-cream border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        <a href="about2.html" class="u-underline text-medium">← Back to About</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex justify-center py-10 px-4">
+    <div class="resume-card w-full max-w-4xl p-8 sm:p-10">
+      <!-- NAME + CONTACT -->
+      <section class="text-center mb-8 print-avoid-break">
+        <h2 class="font-serif text-4xl sm:text-5xl mb-2">Camila Tiburcio Rubio</h2>
+        <p class="text-ink-500">
+          (786) 865-3947 •
+          <a href="mailto:ct2798@nyu.edu" class="u-underline">ct2798@nyu.edu</a> •
+          <a href="https://CamilaTiburcioRubio.com" class="u-underline">CamilaTiburcioRubio.com</a>
+        </p>
+      </section>
+
+      <!-- CONTENT (two columns on print) -->
+      <div class="space-y-10 print-flow">
+        <!-- Education -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Education</h3>
+          <div class="space-y-2 text-[0.98rem]">
+            <p><strong>New York University, College of Arts and Science</strong> — New York, NY</p>
+            <p><strong>Accelerated Master’s Program</strong>, Latin American and Caribbean Studies — <em>May 2026</em><br>
+              Expected <em>Summa Cum Laude</em> • GPA: 4.0
+            </p>
+            <p><strong>B.A. Social and Cultural Analysis</strong>, Minor in Latin American and Caribbean Studies — <em>May 2025</em><br>
+              Graduated <em>Summa Cum Laude</em> • GPA: 4.0
+            </p>
+            <p class="italic text-sm text-ink-500">
+              Honors Thesis: “Tú Cinco-Nueve, Yo Doble Dos: Understanding Cubanidad in Gen-Z Little Havana”<br>
+              – Best Thesis Award, Department of Social & Cultural Analysis.<br>
+              – Dean’s Undergraduate Research Fund Recipient.
+            </p>
+          </div>
+        </section>
+
+        <!-- Awards & Grants -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Awards & Grants</h3>
+          <ul class="list-disc pl-6 text-sm space-y-1">
+            <li>Best Thesis Award, Department of Social and Cultural Analysis, NYU (2025)</li>
+            <li>Tinker Foundation Grant for Fieldwork (2025)</li>
+            <li>GSAS Academic Scholarship (2025)</li>
+            <li>May and Samuel Rudin Memorial Scholarship (2025)</li>
+            <li>Dean’s Undergraduate Research Fund Grant (2024)</li>
+            <li>Gilman Scholarship, U.S. Department of State (2022)</li>
+            <li>Michael L. Probst Scholarship, NYU (2025)</li>
+            <li>Liberal Studies Academic Scholarship, NYU (2021)</li>
+          </ul>
+        </section>
+
+        <!-- Publications -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Publications</h3>
+          <ul class="text-sm space-y-2">
+            <li><strong>“Tú Cinco-Nueve, Yo Doble Dos: Understanding Cubanidad in Gen-Z Little Havana.”</strong> <em>NYU Graduate Research Journal</em>, May 2025</li>
+            <li><strong>“Diary of an Advocate.”</strong> <em>Esferas Journal</em>, Issue 16, April 2025</li>
+          </ul>
+        </section>
+
+        <!-- Research & Academic Experience -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Research & Academic Experience</h3>
+          <div class="text-sm space-y-4">
+            <div>
+              <p><strong>Hemispheric Institute of Performance and Politics, NYU</strong> — <em>July 2025–Present</em></p>
+              <p class="ml-3">Digital Video Library Archivist · Social Media Management Associate</p>
+              <ul class="list-disc pl-8">
+                <li>Organized and preserved performance-based media from across the hemisphere.</li>
+                <li>Developed engagement strategies across social media to highlight performance scholarship.</li>
+              </ul>
+            </div>
+
+            <div>
+              <p><strong>Research Assistant to Professor María Saldaña, NYU</strong> — <em>Jun 2024–Aug 2024</em></p>
+              <ul class="list-disc pl-8">
+                <li>Supported expert witness report on violence against women and children in El Salvador.</li>
+                <li>Managed qualitative and quantitative research; synthesized socio-political data for publication.</li>
+              </ul>
+            </div>
+
+            <div>
+              <p><strong>Research Assistant to Professor Leo Douglas, NYU</strong> — <em>Jul 2025–Aug 2025</em></p>
+              <ul class="list-disc pl-8">
+                <li>Primary liaison with El Callejón de Hamel (Havana) for field collaboration and archival access.</li>
+                <li>Provided bilingual (EN/ES) translation for correspondence and primary sources.</li>
+              </ul>
+            </div>
+
+            <div>
+              <p><strong>Freelance Correspondence Archivist, The Estate of Jean Franco</strong> — <em>Oct 2025–Present</em></p>
+              <ul class="list-disc pl-8">
+                <li>Cataloged and digitized correspondence and works of cultural theorist Jean Franco.</li>
+                <li>Annotated letters and essays with context and metadata for academic researchers.</li>
+              </ul>
+            </div>
+
+            <div>
+              <p><strong>Freelance Research Consultant, ERM Research</strong> — <em>Aug 2022–Present</em></p>
+              <ul class="list-disc pl-8">
+                <li>Conducted audience analysis and research for mainstream film projects.</li>
+                <li>Produced data-informed reports to influence production and marketing strategy.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Campus Engagement & Leadership -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Campus Engagement & Leadership</h3>
+          <ul class="text-sm space-y-3">
+            <li><strong>Host & Organizer</strong>, <em>Ustedes No Son Repartero Na’ Conference Series</em> — <em>Oct 2025–Present</em><br>
+              Curated conference series exploring Cuban diaspora politics of sound and culture, centering reparto.</li>
+            <li><strong>Resident Assistant</strong>, Broome Hall & 181 Mercer — <em>Aug 2024–Present</em><br>
+              Fostered inclusion and development via programming and mentorship of 80+ students.</li>
+            <li><strong>President</strong>, Cuban American Student Association (CASA) — <em>May 2024–May 2025</em><br>
+              Led initiatives on Cuban identity and performance art within NYU’s Latinx community.</li>
+            <li><strong>Coordinating Intern</strong>, Espacio de Culturas; Fridays on the Patio — <em>Aug 2024–May 2025</em><br>
+              Coordinated programming focused on Latinx and Caribbean performance practices.</li>
+            <li><strong>Editor</strong>, West 4th Literary Magazine — <em>Jan 2023–Jan 2024</em><br>
+              Edited creative and academic works emphasizing cultural and creative voice.</li>
+            <li><strong>General Assembly</strong>, Resident Assistant Council — <em>Aug 2025–Present</em><br>
+              Liaison between RAs, Residential Life, and residents.</li>
+          </ul>
+        </section>
+
+        <!-- Professional Experience -->
+        <section class="print-avoid-break">
+          <h3 class="font-serif text-2xl border-b border-black/10 pb-2 mb-4">Professional Experience</h3>
+          <ul class="text-sm space-y-3">
+            <li><strong>NYU School of Law — Office Assistant</strong> — <em>Jan 2022–Jun 2025</em><br>
+              Supported administrative logistics, events, and departmental communications in a large academic unit.</li>
+            <li><strong>R.O.S.E.S — Paraprofessional Advocate</strong> — <em>Dec 2021–Feb 2024</em><br>
+              Provided advocacy and mentorship for at-risk women and LGBTQ+ youth; supported case management and outreach.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- Footer Actions -->
+      <section class="text-center pt-6 border-t border-black/10 mt-8 print-avoid-break">
+        <p class="text-ink-300 text-sm mb-4">Updated October 2025</p>
+        <div class="flex justify-center gap-3 flex-wrap no-print">
+          <a href="assets/Camila_Tiburcio_Rubio_Resume.pdf"
+             class="px-5 py-3 rounded-xl bg-accent text-white hover:bg-accent-dark"
+             download>Download PDF</a>
+          <a href="about2.html" class="px-5 py-3 rounded-xl border border-black/10 hover:bg-white">Back to About</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Print helpers + keyboard shortcut (press "p" to print)
+    const doPrint = () => window.print();
+    document.getElementById('printBtn')?.addEventListener('click', doPrint);
+    document.getElementById('printBtn2')?.addEventListener('click', doPrint);
+    document.addEventListener('keydown', (e) => {
+      // Avoid triggering while typing in inputs if you ever add them
+      if (e.key.toLowerCase() === 'p' && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        doPrint();
+      }
+    });
+  </script>
+</body>
+</html>
