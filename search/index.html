@@ -104,7 +104,7 @@
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
       <p>New: Fall features now live — interviews, essays & visual art</p>
-      <a href="newsletter.html" class="u-underline">Subscribe</a>
+      <a href="../newsletter/" class="u-underline">Subscribe</a>
     </div>
   </div>
 
@@ -112,17 +112,17 @@
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
-          <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+        <a href="../" class="flex items-center gap-2" aria-label="Home">
+          <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
-          <a class="u-underline" href="features.html">Features</a>
-          <a class="u-underline" href="latest.html">Latest</a>
-          <a class="u-underline" href="sections.html">Sections</a>
-          <a class="u-underline" href="about2.html">About</a>
+          <a class="u-underline" href="../features/">Features</a>
+          <a class="u-underline" href="../latest/">Latest</a>
+          <a class="u-underline" href="../sections/">Sections</a>
+          <a class="u-underline" href="../about/">About</a>
         </nav>
-        <a href="Home.html" class="md:hidden u-underline text-sm">Home</a>
+        <a href="../" class="md:hidden u-underline text-sm">Home</a>
       </div>
     </div>
   </header>
@@ -172,9 +172,9 @@
       <p class="text-lg">No matches yet.</p>
       <p class="text-ink-500 mt-1">Try different keywords or browse these:</p>
       <div class="mt-4 flex flex-wrap gap-3 justify-center">
-        <a href="features.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Features</a>
-        <a href="latest.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Latest</a>
-        <a href="sections.html" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Sections</a>
+        <a href="../features/" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Features</a>
+        <a href="../latest/" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Latest</a>
+        <a href="../sections/" class="px-4 py-2 rounded-xl border border-black/10 hover:shadow-soft bg-white">Sections</a>
       </div>
     </div>
   </main>
@@ -191,7 +191,7 @@
       <div>
         <div class="-ml-1.5">
           <div class="flex items-center gap-1">
-            <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+            <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
             <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
           </div>
         </div>
@@ -203,22 +203,22 @@
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
-          <li><a href="features.html" class="u-underline">Features</a></li>
-          <li><a href="latest.html" class="u-underline">Latest</a></li>
-          <li><a href="sections.html" class="u-underline">Sections</a></li>
-          <li><a href="archive.html" class="u-underline">Archive</a></li>
-          <li><a href="search.html" class="u-underline font-semibold text-accent">Search</a></li>
+          <li><a href="../features/" class="u-underline">Features</a></li>
+          <li><a href="../latest/" class="u-underline">Latest</a></li>
+          <li><a href="../sections/" class="u-underline">Sections</a></li>
+          <li><a href="../archive/" class="u-underline">Archive</a></li>
+          <li><a href="../search/" class="u-underline font-semibold text-accent">Search</a></li>
         </ul>
       </div>
       <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
-          <li><a href="about2.html" class="u-underline">About</a></li>
-          <li><a href="contact.html" class="u-underline">Contact</a></li>
-          <li><a href="mission.html" class="u-underline">Mission</a></li>
-          <li><a href="resume.html" class="u-underline">Résumé</a></li>
-          <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+          <li><a href="../about/" class="u-underline">About</a></li>
+          <li><a href="../contact/" class="u-underline">Contact</a></li>
+          <li><a href="../mission/" class="u-underline">Mission</a></li>
+          <li><a href="../resume/" class="u-underline">Résumé</a></li>
+          <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
       <!-- Follow -->
@@ -240,13 +240,11 @@
 
   <script>
     /* ===== Subpath helper (same as index.html) ===== */
-    const basePath = location.pathname.replace(/[^/]*$/, '');
-    function toBase(u){
-      if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;
-      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
-      if (u.startsWith('/')) return basePath + u.slice(1);
-      return basePath + u;
+    function toRoot(path) {
+      if (!path) return '';
+      if (/^https?:\/\//i.test(path)) return path;        // leave absolute URLs alone
+      path = path.replace(/^\.?\//, '');                  // strip leading "./" or "/"
+      return '../' + path;                                // go up one level
     }
 
     // Back to top
@@ -260,8 +258,8 @@
 
     /* ===== Data loader (same as index) ===== */
     async function loadPosts(){
-      const url = toBase('posts.json');
-      const res = await fetch(url, { cache: 'no-store' });
+      const url = toRoot('posts.json');
+      const res = await fetch(toRoot('posts.json'), { cache: 'no-store' });
       if (!res.ok) throw new Error(`Failed to load ${url} (${res.status})`);
       const arr = await res.json();
       return arr.map(normalize).sort(byNewest);
@@ -273,12 +271,12 @@
                     (typeof item.tags === 'string' ? item.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
       return {
         title: item.title || '',
-        href: toBase(href),
+        href: toRoot(href),
         section: item.section || 'Article',
         excerpt: item.excerpt || item.description || '',
         date: item.date || '',
         readMinutes: item.readMinutes || '',
-        cover: cover ? toBase(cover) : '',
+        cover: cover ? toRoot(cover) : '',
         tags,
         bodyText: String(item.bodyMarkdown || item.bodyHtml || '').replace(/<[^>]+>/g,' ')
       };
