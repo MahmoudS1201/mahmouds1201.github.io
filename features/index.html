@@ -1,3 +1,5 @@
+  <!-- FEATURES -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +94,7 @@
   <div class="bg-ink-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
       <p>New: Fall features now live — interviews, essays & visual art</p>
-      <a href="newsletter.html" class="u-underline">Subscribe</a>
+      <a href="../newsletter/" class="u-underline">Subscribe</a>
     </div>
   </div>
 
@@ -101,17 +103,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         <!-- Brand -->
-        <a href="index.html" class="flex items-center gap-2" aria-label="Home">
+        <a href="../" class="flex items-center gap-2" aria-label="Home">
           <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
 
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
-          <a class="u-underline font-semibold text-accent" href="features.html" aria-current="page">Features</a>
-          <a class="u-underline" href="latest.html">Latest</a>
-          <a class="u-underline" href="sections.html">Sections</a>
-          <a class="u-underline" href="about2.html">About</a>
+          <a class="u-underline font-semibold text-accent" href="../features/" aria-current="page">Features</a>
+          <a class="u-underline" href="../latest/">Latest</a>
+          <a class="u-underline" href="../sections/">Sections</a>
+          <a class="u-underline" href="../about/">About</a>
         </nav>
 
         <!-- Desktop search (IDENTICAL to Latest) -->
@@ -140,10 +142,10 @@
     <!-- Mobile dropdown menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
-        <a class="block u-underline font-semibold text-accent" href="features.html">Features</a>
-        <a class="block u-underline" href="latest.html">Latest</a>
-        <a class="block u-underline" href="sections.html">Sections</a>
-        <a class="block u-underline" href="about2.html">About</a>
+        <a class="block u-underline font-semibold text-accent" href="../features/">Features</a>
+        <a class="block u-underline" href="../latest/">Latest</a>
+        <a class="block u-underline" href="../sections/">Sections</a>
+        <a class="block u-underline" href="../about/">About</a>
         <!-- Mobile HEADER search — routes to /search -->
         <label class="relative block mt-3" aria-label="Search site">
           <input id="q-mobile" type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
@@ -193,7 +195,7 @@
         <div id="heroTags" class="hidden mt-3 flex flex-wrap gap-2"></div>
 
         <div class="mt-auto pt-5">
-          <a href="about2.html"
+          <a href="../about/"
              class="author-link flex items-center gap-4 group"
              aria-label="About Camila Tiburcio Rubio">
             <img
@@ -314,22 +316,22 @@
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
         <ul class="space-y-2">
-          <li><a href="features.html" class="u-underline font-semibold text-accent" aria-current="page">Features</a></li>
-          <li><a href="latest.html" class="u-underline">Latest</a></li>
-          <li><a href="sections.html" class="u-underline">Sections</a></li>
-          <li><a href="archive.html" class="u-underline">Archive</a></li>
-          <li><a href="search.html" class="u-underline">Search</a></li>
+          <li><a href="../features/" class="u-underline font-semibold text-accent" aria-current="page">Features</a></li>
+          <li><a href="../latest/" class="u-underline">Latest</a></li>
+          <li><a href="../sections/" class="u-underline">Sections</a></li>
+          <li><a href="../archive/" class="u-underline">Archive</a></li>
+          <li><a href="../search/" class="u-underline">Search</a></li>
         </ul>
       </div>
       <!-- About -->
       <div>
         <h3 class="font-semibold text-ink-900 mb-3">About</h3>
         <ul class="space-y-2">
-          <li><a href="about2.html" class="u-underline">About</a></li>
-          <li><a href="contact.html" class="u-underline">Contact</a></li>
-          <li><a href="mission.html" class="u-underline">Mission</a></li>
-          <li><a href="resume.html" class="u-underline">Résumé</a></li>
-          <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+          <li><a href="../about/" class="u-underline">About</a></li>
+          <li><a href="../contact/" class="u-underline">Contact</a></li>
+          <li><a href="../mission/" class="u-underline">Mission</a></li>
+          <li><a href="../resume/" class="u-underline">Résumé</a></li>
+          <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
         </ul>
       </div>
       <!-- Follow -->
@@ -369,15 +371,12 @@
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
     /* ---------- Path helper (GitHub Pages–safe) ---------- */
-    const basePath = location.pathname.replace(/[^/]*$/, '');
-    const toBase = (u) => {
-      if (!u) return '';
-      if (/^https?:\/\//i.test(u)) return u;
-      if (u.startsWith('./') || u.startsWith('../')) return new URL(u, location.origin + basePath).pathname;
-      if (u.startsWith('/')) return basePath + u.slice(1);
-      return basePath + u;
-    };
-
+    function toRoot(path) {
+      if (!path) return '';
+      if (/^https?:\/\//i.test(path)) return path;        // leave absolute URLs alone
+      path = path.replace(/^\.?\//, '');                  // strip leading "./" or "/"
+      return '../' + path;                                // go up one level
+    }
     /* ---------- DOM refs ---------- */
     const gridEl = document.getElementById('grid');
     const pageNumEl = document.getElementById('pageNum');
@@ -449,7 +448,7 @@
     let LOAD_ERROR = false;
     async function fetchPostsJson(){
       try{
-        const res = await fetch(toBase('posts.json'), { cache: 'no-store' });
+        const res = await fetch(toRoot('posts.json'), { cache: 'no-store' });
         if (!res.ok) throw new Error('bad status');
         const data = await res.json();
         LOAD_ERROR = false;
@@ -479,18 +478,27 @@
 
     function normalize(p){
       const href = p.url || (p.slug ? `${p.slug}.html` : '#');
-      const coverSrc = typeof p.cover === 'string' ? p.cover : (p.cover && p.cover.src ? p.cover.src : '');
-      const tagsArr = Array.isArray(p.tags) ? p.tags : (typeof p.tags==='string' ? p.tags.split(',').map(s=>s.trim()).filter(Boolean) : []);
+      const coverSrc =
+        typeof p.cover === 'string'
+          ? p.cover
+          : (p.cover && p.cover.src ? p.cover.src : '');
+
+      const tagsArr = Array.isArray(p.tags)
+        ? p.tags
+        : (typeof p.tags === 'string'
+            ? p.tags.split(',').map(s => s.trim()).filter(Boolean)
+            : []);
+
       return {
         title:   p.title || '',
-        href:    toBase(href),
+        href:    toRoot(href),                              // ← up one level
         section: p.section || '',
         excerpt: p.excerpt || p.description || '',
         date:    p.date || p.publishedAt || '',
         read:    p.readMinutes || '',
         tags:    tagsArr,
         featured: !!p.featured,
-        cover:   toBase(coverSrc || 'https://picsum.photos/600/375?features'),
+        cover:   toRoot(coverSrc || 'images/default-cover.jpg'),
         author:  p.author || 'Camila Tiburcio Rubio'
       };
     }
@@ -717,7 +725,10 @@
     /* ---------- Header search → /search (IDENTICAL binding to Latest) ---------- */
     function goSearch(q){
       const term = (q || '').trim();
-      const url = basePath + (term ? `search.html?q=${encodeURIComponent(term)}` : `search.html`);
+      const url = toRoot(term
+        ? `search/?q=${encodeURIComponent(term)}`
+        : `search/`
+      );
       window.location.href = url;
     }
 
