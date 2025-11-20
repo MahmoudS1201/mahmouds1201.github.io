@@ -2382,13 +2382,40 @@
       const hasTags   = Array.isArray(data.tags) && data.tags.length;
       const coverCredit = data.cover?.credit || "";
 
+      const seoTitle = escapeHtml(data.seo?.title || data.title);
+      const seoDescription = escapeHtml(data.seo?.description || data.excerpt || "");
+
+      // canonical URL for this article
+      const canonicalUrl = `https://mahmouds1201.github.io/${encodeURIComponent(data.slug)}.html`;
+
+      // make og:image absolute
+      const rawCover = data.cover?.src || "";
+      const ogImage = rawCover
+        ? (rawCover.startsWith('http')
+            ? rawCover
+            : `https://mahmouds1201.github.io/${rawCover.replace(/^\.?\//, '')}`)
+        : 'https://mahmouds1201.github.io/assets/default-share.jpg'; // optional fallback
+
       return `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>${escapeHtml(data.seo?.title || data.title)} — Camila Tiburcio Rubio</title>
-      <meta name="description" content="${escapeHtml(data.seo?.description || data.excerpt)}" />
+      <title>${seoTitle} — Camila Tiburcio Rubio</title>
+      <meta name="description" content="${seoDescription}" />
+
+      <!-- OpenGraph for iMessage / FB / etc -->
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="${seoTitle}" />
+      <meta property="og:description" content="${seoDescription}" />
+      <meta property="og:url" content="${canonicalUrl}" />
+      <meta property="og:image" content="${ogImage}" />
+
+      <!-- Twitter card (also used by some preview engines) -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="${seoTitle}" />
+      <meta name="twitter:description" content="${seoDescription}" />
+      <meta name="twitter:image" content="${ogImage}" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
