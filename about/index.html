@@ -398,7 +398,7 @@
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-    // Mobile menu toggle
+    // Mobile menu toggle (hamburger)
     const menuToggle = document.getElementById('menuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     menuToggle?.addEventListener('click', () => {
@@ -406,42 +406,31 @@
       menuToggle.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    // -------- Footer accordion (same behavior as other pages) --------
+    // -------- Footer accordion (match other pages visually) --------
     (function setupFooterAccordion(){
       const footer = document.querySelector('footer');
       if (!footer) return;
 
-      const columns = footer.querySelectorAll('.max-w-6xl > div');
+      const headings = footer.querySelectorAll('h3');
       const mq = window.matchMedia('(max-width: 639px)');
 
-      function applyMode(){
-        columns.forEach(col => {
-          const heading = col.querySelector('h3');
-          const list = col.querySelector('ul');
-          if (!heading || !list) return;
+      function applyMode() {
+        headings.forEach(h => {
+          const list = h.nextElementSibling;
+          if (!list || list.tagName !== 'UL') return;
 
           if (mq.matches) {
-            // mobile: collapse by default
+            // Mobile: make headings tappable, lists collapsed by default
             list.classList.add('hidden');
-            heading.classList.add('cursor-pointer', 'flex', 'items-center', 'justify-between');
-            heading.setAttribute('tabindex', '0');
-            heading.setAttribute('data-footer-accordion', 'true');
-            if (!heading.querySelector('[data-footer-icon]')) {
-              const icon = document.createElement('span');
-              icon.textContent = '+';
-              icon.className = 'ml-2 text-xs text-ink-300';
-              icon.setAttribute('data-footer-icon', 'true');
-              heading.appendChild(icon);
-            }
+            h.classList.add('cursor-pointer');
+            h.setAttribute('data-footer-accordion', 'true');
+            h.setAttribute('tabindex', '0');
           } else {
-            // desktop: always open
+            // Desktop: always show lists, no accordion affordance
             list.classList.remove('hidden');
-            heading.classList.remove('cursor-pointer', 'flex', 'items-center', 'justify-between');
-            heading.removeAttribute('tabindex');
-            heading.removeAttribute('data-footer-accordion');
-            heading.removeAttribute('aria-expanded');
-            const icon = heading.querySelector('[data-footer-icon]');
-            if (icon) icon.remove();
+            h.classList.remove('cursor-pointer');
+            h.removeAttribute('data-footer-accordion');
+            h.removeAttribute('tabindex');
           }
         });
       }
@@ -449,13 +438,10 @@
       applyMode();
       mq.addEventListener('change', applyMode);
 
-      function toggleFromHeading(h){
+      function toggleFromHeading(h) {
         const list = h.nextElementSibling;
-        if (!list) return;
-        const isHidden = list.classList.toggle('hidden');
-        h.setAttribute('aria-expanded', String(!isHidden));
-        const icon = h.querySelector('[data-footer-icon]');
-        if (icon) icon.textContent = isHidden ? '+' : '−';
+        if (!list || list.tagName !== 'UL') return;
+        list.classList.toggle('hidden');
       }
 
       footer.addEventListener('click', (e) => {
@@ -473,5 +459,6 @@
       });
     })();
   </script>
+
 </body>
 </html>
