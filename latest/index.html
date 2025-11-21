@@ -42,6 +42,16 @@
       transform: scaleX(1);
     }
 
+    /* Hide horizontal scrollbars but keep scroll behavior */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE & Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;             /* Chrome, Safari, Opera */
+    }
+
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,.06); overflow:hidden; }
     .chip { border:1px solid rgba(0,0,0,.10); border-radius:9999px; padding:.45rem .8rem; font-weight:600; font-size:.85rem; }
     .chip[data-active="true"] { background:rgba(197,61,47,.10); color:#C53D2F; border-color:rgba(197,61,47,.35); }
@@ -207,7 +217,7 @@
   <!-- Controls -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
-      <div class="flex gap-2 overflow-x-auto -mx-4 px-4 pb-1
+      <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1
             sm:flex-wrap sm:overflow-visible sm:mx-0 sm:px-0">
         <button class="chip" data-filter="all" data-active="true" aria-pressed="true">All</button>
         <button class="chip" data-filter="Essay">Essay</button>
