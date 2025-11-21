@@ -95,8 +95,27 @@
           <a class="u-underline" href="../sections/">Sections</a>
           <a class="u-underline font-semibold text-accent" href="../about/" aria-current="page">About</a>
         </nav>
-        <a href="../" class="md:hidden u-underline text-sm">Home</a>
+        <div class="md:hidden">
+          <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none"
+                  aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
+      <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
+        <a class="block u-underline" href="../features/">Features</a>
+        <a class="block u-underline" href="../latest/">Latest</a>
+        <a class="block u-underline" href="../sections/">Sections</a>
+        <a class="block u-underline font-semibold text-accent" href="../about/" aria-current="page">About</a>
+      </nav>
     </div>
   </header>
 
@@ -127,7 +146,8 @@
           scholarship accessible to wide audiences.
         </p>
 
-        <div class="mt-5 flex flex-wrap gap-2">
+        <!-- pills now centered on mobile, left-aligned on larger screens -->
+        <div class="mt-5 flex flex-wrap gap-2 justify-center md:justify-start">
           <span class="pill">Cuba & Caribbean</span>
           <span class="pill">Performance & Archives</span>
           <span class="pill">Public Humanities</span>
@@ -305,12 +325,12 @@
     </div>
   </section>
 
-    <!-- Back to top -->
+  <!-- Back to top -->
   <button id="backTop"
           class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
           aria-label="Back to top">↑ Top</button>
 
-<!-- Footer -->
+  <!-- Footer -->
   <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
       <!-- Brand -->
@@ -365,7 +385,9 @@
   </footer>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    // Footer year
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // Back to top visibility + behavior
     const backTop = document.getElementById('backTop');
@@ -375,6 +397,81 @@
     };
     window.addEventListener('scroll', toggleTop, { passive:true });
     backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      menuToggle.setAttribute('aria-expanded', String(!isHidden));
+    });
+
+    // -------- Footer accordion (same behavior as other pages) --------
+    (function setupFooterAccordion(){
+      const footer = document.querySelector('footer');
+      if (!footer) return;
+
+      const columns = footer.querySelectorAll('.max-w-6xl > div');
+      const mq = window.matchMedia('(max-width: 639px)');
+
+      function applyMode(){
+        columns.forEach(col => {
+          const heading = col.querySelector('h3');
+          const list = col.querySelector('ul');
+          if (!heading || !list) return;
+
+          if (mq.matches) {
+            // mobile: collapse by default
+            list.classList.add('hidden');
+            heading.classList.add('cursor-pointer', 'flex', 'items-center', 'justify-between');
+            heading.setAttribute('tabindex', '0');
+            heading.setAttribute('data-footer-accordion', 'true');
+            if (!heading.querySelector('[data-footer-icon]')) {
+              const icon = document.createElement('span');
+              icon.textContent = '+';
+              icon.className = 'ml-2 text-xs text-ink-300';
+              icon.setAttribute('data-footer-icon', 'true');
+              heading.appendChild(icon);
+            }
+          } else {
+            // desktop: always open
+            list.classList.remove('hidden');
+            heading.classList.remove('cursor-pointer', 'flex', 'items-center', 'justify-between');
+            heading.removeAttribute('tabindex');
+            heading.removeAttribute('data-footer-accordion');
+            heading.removeAttribute('aria-expanded');
+            const icon = heading.querySelector('[data-footer-icon]');
+            if (icon) icon.remove();
+          }
+        });
+      }
+
+      applyMode();
+      mq.addEventListener('change', applyMode);
+
+      function toggleFromHeading(h){
+        const list = h.nextElementSibling;
+        if (!list) return;
+        const isHidden = list.classList.toggle('hidden');
+        h.setAttribute('aria-expanded', String(!isHidden));
+        const icon = h.querySelector('[data-footer-icon]');
+        if (icon) icon.textContent = isHidden ? '+' : '−';
+      }
+
+      footer.addEventListener('click', (e) => {
+        const h = e.target.closest('h3[data-footer-accordion]');
+        if (!h) return;
+        toggleFromHeading(h);
+      });
+
+      footer.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const h = e.target.closest('h3[data-footer-accordion]');
+        if (!h) return;
+        e.preventDefault();
+        toggleFromHeading(h);
+      });
+    })();
   </script>
 </body>
 </html>
