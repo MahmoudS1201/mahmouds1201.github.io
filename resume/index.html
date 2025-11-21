@@ -70,7 +70,7 @@
     }
   </style>
 
-  <!-- JSON-LD (optional but nice for SEO/semantics) -->
+  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -84,16 +84,49 @@
 </head>
 <body class="antialiased fade-in-page">
 
-  <!-- Minimal header (keeps the page clean and print-friendly) -->
-  <header class="sticky top-0 z-40 bg-cream border-b border-black/5">
+  <!-- Header with hamburger -->
+  <header class="sticky top-0 z-50 bg-cream border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         <a href="../" class="flex items-center gap-2" aria-label="Home">
           <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
           <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
         </a>
-        <a href="../about/" class="u-underline text-medium">← Back to About</a>
+        <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
+          <a class="u-underline" href="../features/">Features</a>
+          <a class="u-underline" href="../latest/">Latest</a>
+          <a class="u-underline" href="../sections/">Sections</a>
+          <a class="u-underline font-semibold text-accent" href="../about/">About</a>
+          <a class="u-underline" href="../newsletter/">Newsletter</a>
+        </nav>
+        <!-- Mobile hamburger -->
+        <div class="md:hidden">
+          <button
+            id="menuToggle"
+            class="p-2 rounded-md border border-black/10 focus:outline-none"
+            aria-expanded="false"
+            aria-controls="mobileMenu"
+            aria-label="Open menu"
+          >
+            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Mobile dropdown menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
+      <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
+        <a class="block u-underline" href="../features/">Features</a>
+        <a class="block u-underline" href="../latest/">Latest</a>
+        <a class="block u-underline" href="../sections/">Sections</a>
+        <a class="block u-underline font-semibold text-accent" href="../about/">About</a>
+        <a class="block u-underline" href="../newsletter/">Newsletter</a>
+      </nav>
     </div>
   </header>
 
@@ -245,6 +278,167 @@
     </div>
   </main>
 
+  <!-- Footer -->
+  <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
+    <!-- Desktop/tablet footer -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+      <!-- Brand -->
+      <div>
+        <div class="-ml-1.5">
+          <div class="flex items-center gap-1">
+            <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+            <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+          </div>
+        </div>
+        <p class="mt-2 text-ink-400 text-sm max-w-xs">
+          Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+        </p>
+      </div>
+      <!-- Explore -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
+        <ul class="space-y-2">
+          <li><a href="../features/" class="u-underline">Features</a></li>
+          <li><a href="../latest/" class="u-underline">Latest</a></li>
+          <li><a href="../sections/" class="u-underline">Sections</a></li>
+          <li><a href="../archive/" class="u-underline">Archive</a></li>
+          <li><a href="../search/" class="u-underline">Search</a></li>
+        </ul>
+      </div>
+      <!-- About -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">About</h3>
+        <ul class="space-y-2">
+          <li><a href="../about/" class="u-underline">About</a></li>
+          <li><a href="../contact/" class="u-underline">Contact</a></li>
+          <li><a href="../mission/" class="u-underline">Mission</a></li>
+          <li><a href="../resume/" class="u-underline font-semibold text-accent">Résumé</a></li>
+          <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
+        </ul>
+      </div>
+      <!-- Follow -->
+      <div>
+        <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
+        <ul class="space-y-2">
+          <li><a href="https://instagram.com" class="u-underline">Instagram</a></li>
+          <li><a href="https://twitter.com" class="u-underline">X / Twitter</a></li>
+          <li><a href="https://facebook.com" class="u-underline">Facebook</a></li>
+          <li><a href="https://linkedin.com" class="u-underline">Linkedin</a></li>
+          <li><a href="https://youtube.com" class="u-underline">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Mobile accordion footer -->
+    <div class="sm:hidden border-t border-black/10">
+      <div class="max-w-6xl mx-auto px-4 py-6">
+        <!-- Brand -->
+        <div class="mb-6">
+          <div class="-ml-1.5">
+            <div class="flex items-center gap-1">
+              <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+              <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+            </div>
+          </div>
+          <p class="mt-2 text-ink-400 text-sm max-w-xs">
+            Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+          </p>
+        </div>
+
+        <!-- Explore -->
+        <div class="border-t border-black/10">
+          <button
+            class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+            data-acc-btn="explore"
+            aria-expanded="false"
+          >
+            <span>Explore</span>
+            <svg
+              class="w-4 h-4 transform transition-transform"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              data-acc-chevron="explore"
+              aria-hidden="true"
+            >
+              <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="explore">
+            <a href="../features/" class="block u-underline">Features</a>
+            <a href="../latest/" class="block u-underline">Latest</a>
+            <a href="../sections/" class="block u-underline">Sections</a>
+            <a href="../archive/" class="block u-underline">Archive</a>
+            <a href="../search/" class="block u-underline">Search</a>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="border-t border-black/10">
+          <button
+            class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+            data-acc-btn="about"
+            aria-expanded="false"
+          >
+            <span>About</span>
+            <svg
+              class="w-4 h-4 transform transition-transform"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              data-acc-chevron="about"
+              aria-hidden="true"
+            >
+              <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="about">
+            <a href="../about/" class="block u-underline">About</a>
+            <a href="../contact/" class="block u-underline">Contact</a>
+            <a href="../mission/" class="block u-underline">Mission</a>
+            <a href="../resume/" class="block u-underline font-semibold text-accent">Résumé</a>
+            <a href="../newsletter/" class="block u-underline">Newsletter</a>
+          </div>
+        </div>
+
+        <!-- Follow -->
+        <div class="border-t border-black/10 border-b border-black/10">
+          <button
+            class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+            data-acc-btn="follow"
+            aria-expanded="false"
+          >
+            <span>Follow</span>
+            <svg
+              class="w-4 h-4 transform transition-transform"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              data-acc-chevron="follow"
+              aria-hidden="true"
+            >
+              <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="follow">
+            <a href="https://instagram.com" class="block u-underline">Instagram</a>
+            <a href="https://twitter.com" class="block u-underline">X / Twitter</a>
+            <a href="https://facebook.com" class="block u-underline">Facebook</a>
+            <a href="https://linkedin.com" class="block u-underline">Linkedin</a>
+            <a href="https://youtube.com" class="block u-underline">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
+      © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
+    </div>
+  </footer>
+
   <script>
     // Print helpers + keyboard shortcut (press "p" to print)
     const doPrint = () => window.print();
@@ -256,6 +450,37 @@
         e.preventDefault();
         doPrint();
       }
+    });
+
+    // Footer year
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Mobile menu toggle (hamburger)
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      menuToggle.setAttribute('aria-expanded', String(!isHidden));
+    });
+
+    // Mobile footer accordion
+    document.querySelectorAll('[data-acc-btn]').forEach(btn => {
+      const name = btn.getAttribute('data-acc-btn');
+      const panel = document.querySelector(`[data-acc-panel="${name}"]`);
+      const chevron = document.querySelector(`[data-acc-chevron="${name}"]`);
+
+      if (!panel) return;
+
+      btn.addEventListener('click', () => {
+        const isOpen = !panel.classList.contains('hidden');
+        panel.classList.toggle('hidden');
+        btn.setAttribute('aria-expanded', String(!isOpen));
+
+        if (chevron) {
+          chevron.classList.toggle('rotate-180', !isOpen);
+        }
+      });
     });
   </script>
 </body>
