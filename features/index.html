@@ -1,4 +1,4 @@
-  <!-- FEATURES -->
+<!-- FEATURES -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,6 +77,15 @@
 
     @media (prefers-reduced-motion: reduce){
       [data-href]{ transition: none !important; }
+    }
+
+    /* Hide horizontal scrollbars while keeping scroll */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE & Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;             /* Chrome, Safari, Opera */
     }
   </style>
 
@@ -220,7 +229,8 @@
   <!-- Controls (chips + inline search + per-page) -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
     <div class="flex flex-col lg:flex-row lg:items-center gap-3 justify-between">
-      <div class="flex flex-wrap gap-2">
+      <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 pb-1
+                  sm:flex-wrap sm:overflow-visible sm:mx-0 sm:px-0">
         <button class="chip" data-filter="all" data-active="true" aria-pressed="true">All</button>
         <button class="chip" data-filter="Essay">Essay</button>
         <button class="chip" data-filter="Interview">Interview</button>
@@ -229,16 +239,25 @@
         <button class="chip" data-filter="Community">Community</button>
         <button class="chip" data-filter="Memoirs">Memoirs</button>
       </div>
-      <div class="flex items-center gap-3">
-        <label class="sr-only" for="q-inline">Search titles, tags...</label>
-        <input id="q-inline" type="search" placeholder="Search titles, tags…" class="px-3 py-2 rounded-xl border border-black/10 bg-white w-64 max-w-full focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
-        <label class="text-sm text-ink-500" for="pageSize">Per page</label>
-        <select id="pageSize" class="px-3 py-2 rounded-xl border border-black/10 bg-white">
-          <option>6</option>
-          <option selected>9</option>
-          <option>12</option>
-          <option>18</option>
-        </select>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div class="w-full sm:w-auto">
+          <label class="sr-only" for="q-inline">Search titles, tags...</label>
+          <input
+            id="q-inline"
+            type="search"
+            placeholder="Search titles, tags…"
+            class="w-full sm:w-64 px-3 py-2 rounded-xl border border-black/10 bg-white focus:bg-white outline-none focus:ring-2 focus:ring-accent/40"
+          />
+        </div>
+        <div class="flex items-center justify-end gap-2 text-xs sm:text-sm">
+          <label class="text-ink-500" for="pageSize">Per page</label>
+          <select id="pageSize" class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-black/10 bg-white">
+            <option>6</option>
+            <option selected>9</option>
+            <option>12</option>
+            <option>18</option>
+          </select>
+        </div>
       </div>
     </div>
   </section>
@@ -854,7 +873,7 @@
       }
     });
 
-            /* ---------- Mobile footer accordion ---------- */
+    /* ---------- Mobile footer accordion ---------- */
     document.querySelectorAll('[data-acc-btn]').forEach(btn => {
       const name = btn.getAttribute('data-acc-btn');
       const panel = document.querySelector(`[data-acc-panel="${name}"]`);
