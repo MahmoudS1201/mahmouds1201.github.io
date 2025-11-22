@@ -2430,7 +2430,7 @@
               Edit
             </button>
 
-            <a href="${post.url || (post.slug + ".html")}"
+            <a href="${post.url || (post.slug + "/")}"
                target="_blank"
                rel="noopener noreferrer"
                class="px-3 py-1 rounded border border-black/10 text-xs text-ink-500 hover:text-ink-900">
@@ -2553,7 +2553,7 @@
       const seoDescription = escapeHtml(data.seo?.description || data.excerpt || "");
 
       // canonical URL for this article
-      const canonicalUrl = `https://mahmouds1201.github.io/${encodeURIComponent(data.slug)}.html`;
+      const canonicalUrl = `https://mahmouds1201.github.io/${encodeURIComponent(data.slug)}/`;
 
       // make og:image absolute
       const rawCover = data.cover?.src || "";
@@ -4144,7 +4144,7 @@
 
           function makeCard(p) {
             const card = document.createElement('a');
-            card.href = p.url || (p.slug + '.html');
+            card.href = p.url || (p.slug + '/');
             card.className =
               'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
 
@@ -4489,7 +4489,7 @@
         readMinutes: entry.readMinutes || 1,
         featured: !!entry.featured,
         cover: entry.cover?.src ? stripLeadingSlash(entry.cover.src) : null,
-        url: `${entry.slug}.html`
+        url: `${entry.slug}/`
       };
     }
 
@@ -4598,13 +4598,15 @@
           `data: ${data.slug}.json`
         );
 
-        // 3) Commit the standalone article page
+        // 3) Commit the standalone article page at /slug/index.html
         const html = buildArticleHtml(data);
+        const htmlPath = `${data.slug}/index.html`;
         const htmlRes = await putRepoFile(
-          `${entry.url}`,
+          htmlPath,
           b64utf8(html),
-          `page: ${entry.slug}.html`
+          `page: ${data.slug}/index.html`
         );
+
         console.log('HTML commit response:', {
           path: htmlRes.content?.path,
           sha: htmlRes.content?.sha,
