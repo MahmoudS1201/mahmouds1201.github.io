@@ -2456,6 +2456,10 @@
         });
       });
 
+      function articleHtmlPath(slug) {
+        // adjust this if your folder name is different
+        return `articles/${slug}/index.html`;
+      }
       // wire up Delete buttons
       publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
         btn.addEventListener("click", async () => {
@@ -2471,17 +2475,30 @@
           if (!ok) return;
 
           try {
-            // 1) Remove from posts.json
+            // 1) Remove entry from posts.json
             await removeFromPostsJson(slug);
 
-            // 2) Delete JSON source and HTML page
-            await deleteRepoFile(`data/posts/${slug}.json`, `delete data/posts/${slug}.json`);
-            await deleteRepoFile(`${slug}.html`, `delete page ${slug}.html`);
+            // 2) Delete JSON source
+            const jsonPath = `data/posts/${slug}.json`;
+            await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
 
-            // 3) Best-effort local cache cleanup
-            try { localStorage.removeItem(`ctr:admin:published:${slug}`); } catch {}
+            // 3) Delete NEW HTML article location
+            const htmlPath = articleHtmlPath(slug);
+            await deleteRepoFile(htmlPath, `delete ${htmlPath}`);
 
-            // 4) Status + refresh list
+            // 4) Clean up OLD legacy root-level HTML (ignore if not present)
+            try {
+              await deleteRepoFile(`${slug}.html`, `delete legacy ${slug}.html`);
+            } catch (err) {
+              // ignore missing legacy file
+            }
+
+            // 5) Best-effort local cache cleanup
+            try {
+              localStorage.removeItem(`ctr:admin:published:${slug}`);
+            } catch {}
+
+            // 6) Status + refresh list
             statusMsg.textContent = `Deleted "${title}".`;
             setTimeout(() => { statusMsg.textContent = ""; }, 2500);
 
@@ -2492,8 +2509,7 @@
           }
         });
       });
-    }
-
+      
     async function editPublishedArticle(slug) {
       try {
         const path = `data/posts/${slug}.json`;
