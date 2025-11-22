@@ -1,18 +1,5 @@
 [
   {
-    "slug": "test-test-test-test-test",
-    "title": "Test test test test test",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "yest",
-    "date": "2025-11-17T23:58",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": null,
-    "url": "test-test-test-test-test.html"
-  },
-  {
     "slug": "test-again-again-again",
     "title": "Test Again Again Again",
     "section": "Essay",

@@ -3,8 +3,21 @@
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Test test test test test — Camila Tiburcio Rubio</title>
-      <meta name="description" content="yest" />
+      <title>Test This RQ — Camila Tiburcio Rubio — Camila Tiburcio Rubio</title>
+      <meta name="description" content="Yuh" />
+
+      <!-- OpenGraph for iMessage / FB / etc -->
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Test This RQ — Camila Tiburcio Rubio" />
+      <meta property="og:description" content="Yuh" />
+      <meta property="og:url" content="https://mahmouds1201.github.io/test-this-rq/" />
+      <meta property="og:image" content="https://mahmouds1201.github.io/assets/default-share.jpg" />
+
+      <!-- Twitter card (also used by some preview engines) -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Test This RQ — Camila Tiburcio Rubio" />
+      <meta name="twitter:description" content="Yuh" />
+      <meta name="twitter:image" content="https://mahmouds1201.github.io/assets/default-share.jpg" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -28,11 +41,30 @@
         }
       </script>
       <style>
-        .u-underline{position:relative}
-        .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
-        .u-underline:hover:after{transform:scaleX(1)}
+        .u-underline{
+          position:relative;
+        }
+        .u-underline::after{
+          content:'';
+          position:absolute;
+          left:0;
+          bottom:-2px;
+          height:2px;
+          width:100%;
+          background:currentColor;
+          transform:scaleX(0);
+          transform-origin:left;
+          transition:transform .25s;
+        }
+        .u-underline:hover::after{
+          transform:scaleX(1);
+        }
+
+        /* Keep underline when hovering the whole author link */
         .author-link:hover .u-underline::after {
           transform: scaleX(1);
+        }
+
         .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
         .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
         .prose p{margin:1.05em 0;line-height:1.8}
@@ -101,7 +133,23 @@
           padding-left: 0.85rem;
         }
 
+        /* Subheaders inside article */
+        article.prose h3 {
+          font-family: 'Source Serif 4', Georgia, serif;
+          font-size: 1.45rem;
+          line-height: 1.3;
+          color: #3A3A3A;
+          font-weight: 600;
 
+          margin-top: 2.2rem;
+          margin-bottom: 1rem;
+
+          scroll-margin-top: 110px;
+
+          /* soft accent guide bar */
+          border-left: 3px solid rgba(197, 61, 47, 0.35);
+          padding-left: 0.6rem;
+        }
 
         #ttsToggle[data-state="playing"] {
           background: rgba(197, 61, 47, 0.09);
@@ -386,6 +434,19 @@
           padding-bottom: 3px;
         }
 
+        /* Indented H3 in Jump-To menu */
+        #jumpFloatingDesktop .jump-list button[data-level="3"] {
+          padding-left: 18px !important;
+          font-size: 11px;
+          color: #6B7280;
+        }
+
+        #jumpFloatingDesktop .jump-list button[data-level="3"][data-active="true"] {
+          background: rgba(197, 61, 47, 0.12);
+          color: #C53D2F;
+          font-weight: 500;
+        }
+
         /* List container */
         #jumpFloatingDesktop .jump-list {
           list-style: none;
@@ -443,12 +504,12 @@
       <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div class="flex items-center gap-1">
-            <a href="index.html" class="flex items-center gap-2" aria-label="Home">
-              <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+            <a href="../" class="flex items-center gap-2" aria-label="Home">
+              <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
               <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
             </a>
           </div>
-          <a id="backBtn" class="u-underline text-sm" href="index.html" title="Go back">← Go back</a>
+          <a id="backBtn" class="u-underline text-sm" href="../" title="Go back">← Go back</a>
         </div>
       </header>
 
@@ -458,23 +519,25 @@
         </div>
 
         <h1 class="font-serif text-4xl sm:text-5xl mt-3 leading-tight">
-          Test test test test test
+          Test This RQ
         </h1>
 
-        <p class="text-ink-500 mt-3 max-w-2xl mx-auto">yest</p>
+        <p class="text-ink-500 mt-3 max-w-2xl mx-auto">Yuh</p>
 
 
         <div class="mt-4 flex items-center justify-center gap-3 text-sm">
           <a
-            href="about2.html"
+            href="../about/"
             class="author-link flex items-center gap-3 group"
             aria-label="About Camila Tiburcio Rubio"
           >
-            <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
+            <div
+              class="w-9 h-9 rounded-full bg-ink-300 group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+            >
               <img
-                     src="assets/camila.jpg"
+                     src="../assets/camila.jpg"
                      alt="Camila Tiburcio Rubio"
-                     class="w-full h-full object-cover group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+                     class="w-full h-full rounded-full object-cover"
                    />
             </div>
             <div class="text-left">
@@ -482,7 +545,7 @@
                 By <span class="u-underline">Camila Tiburcio Rubio</span>
               </div>
               <div class="text-ink-300">
-                November 17, 2025
+                November 22, 2025
                 • 1 min read
               </div>
             </div>
@@ -582,7 +645,7 @@
           <div class="fade-top"></div>
           <div class="fade-bottom"></div>
           <article class="prose prose-neutral max-w-none">
-            <p>best <br/>rest<br/>guest lesst</p>
+            <p>Yuh</p>
           </article>
         </div>
 
@@ -620,12 +683,12 @@
         <section class="mt-12 border-t border-black/10 pt-6">
           
           <a
-            href="about2.html"
+            href="../about/"
             class="author-link flex items-start gap-4 group"
             aria-label="About Camila Tiburcio Rubio"
           >
             <img
-              src="assets/camila.jpg"
+              src="../assets/camila.jpg"
               alt="Photo of Camila Tiburcio Rubio"
               class="w-14 h-14 rounded-full object-cover group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
             />
@@ -786,7 +849,7 @@
           <div>
             <div class="-ml-1.5">
               <div class="flex items-center gap-1">
-                <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
                 <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
               </div>
             </div>
@@ -797,21 +860,21 @@
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
             <ul class="space-y-2">
-              <li><a href="features.html" class="u-underline">Features</a></li>
-              <li><a href="latest.html" class="u-underline">Latest</a></li>
-              <li><a href="sections.html" class="u-underline">Sections</a></li>
-              <li><a href="archive.html" class="u-underline">Archive</a></li>
-              <li><a href="search.html" class="u-underline">Search</a></li>
+              <li><a href="../features/" class="u-underline">Features</a></li>
+              <li><a href="../latest/" class="u-underline">Latest</a></li>
+              <li><a href="../sections/" class="u-underline">Sections</a></li>
+              <li><a href="../archive/" class="u-underline">Archive</a></li>
+              <li><a href="../search/" class="u-underline">Search</a></li>
             </ul>
           </div>
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">About</h3>
             <ul class="space-y-2">
-              <li><a href="about2.html" class="u-underline">About</a></li>
-              <li><a href="contact.html" class="u-underline">Contact</a></li>
-              <li><a href="mission.html" class="u-underline">Mission</a></li>
-              <li><a href="resume.html" class="u-underline">Résumé</a></li>
-              <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+              <li><a href="../about/" class="u-underline">About</a></li>
+              <li><a href="../contact/" class="u-underline">Contact</a></li>
+              <li><a href="../mission/" class="u-underline">Mission</a></li>
+              <li><a href="../resume/" class="u-underline">Résumé</a></li>
+              <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
             </ul>
           </div>
           <div>
@@ -833,11 +896,11 @@
       <!-- Define CURRENT so related-posts JS works -->
       <script>
         window.CURRENT = {
-          slug: "test-test-test-test-test",
+          slug: "test-this-rq",
           section: "Essay",
           tags: [],
-          date: "2025-11-17T23:58",
-          title: "Test test test test test"
+          date: "2025-11-22T23:45",
+          title: "Test This RQ"
         };
       </script>
 
@@ -999,8 +1062,12 @@
 
           if (!article) return;
 
-          const headings = Array.from(article.querySelectorAll('h2'));
-          if (headings.length < 2) {
+          // 🔹 1) Look at BOTH h2 and h3
+          const headings = Array.from(article.querySelectorAll('h2, h3'));
+
+          // Option: only show jump menu if there are at least 2 H2s
+          const h2Count = headings.filter(h => h.tagName === 'H2').length;
+          if (h2Count < 2) {
             if (mobileBox) mobileBox.classList.add('hidden');
             return;
           }
@@ -1015,11 +1082,14 @@
             return slug;
           }
 
+          // 🔹 2) Store level (2 for H2, 3 for H3)
           const items = headings.map(function(h, index){
             const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
             const id    = h.id || makeId(label, index);
+            const level = h.tagName === 'H2' ? 2 : 3;   // 👈 key line
+
             if (!h.id) h.id = id;
-            return { id: id, label: label, el: h };
+            return { id: id, label: label, el: h, level: level };
           });
 
           const headerOffset = 90;
@@ -1040,8 +1110,17 @@
               const b = document.createElement('button');
               b.type = 'button';
               b.textContent = item.label;
+
+              // base mobile classes
               b.className =
-                'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
+                'block w-full text-left text-sm py-1 ' +
+                (item.level === 3
+                  ? 'pl-5 text-ink-400'           // 👈 indented + softer for H3
+                  : 'pl-2 text-ink-500 hover:text-ink-900');
+
+              // 🔹 3) expose level for CSS if you want
+              b.dataset.level = String(item.level);
+
               b.addEventListener('click', function () {
                 scrollToId(item.id);
                 mobileList.classList.add('hidden');
@@ -1075,6 +1154,11 @@
             btn.type = 'button';
             btn.textContent = item.label;
             btn.dataset.id = item.id;
+
+            // 🔹 THIS is the line you were asking about
+            //     (not hard-coded 3; we use the real level)
+            btn.dataset.level = String(item.level);   // 👈 here
+
             if (idx === 0) btn.dataset.active = 'true';
             btn.addEventListener('click', function () { scrollToId(item.id); });
 
@@ -1098,7 +1182,6 @@
             });
           }
 
-          // NEW: fade-in behavior when scrolling down a bit
           function updateVisibility() {
             if (window.scrollY > 320) {
               desktopCard.classList.add('jump-visible');
@@ -1468,7 +1551,7 @@
 
           function makeCard(p) {
             const card = document.createElement('a');
-            card.href = p.url || (p.slug + '.html');
+            card.href = p.url || (p.slug + '/');
             card.className =
               'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
 
