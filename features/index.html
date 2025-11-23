@@ -899,8 +899,8 @@
     function goSearch(q){
       const term = (q || '').trim();
       const url = toRoot(term
-        ? `../search/?q=${encodeURIComponent(term)}`
-        : `../search/`
+        ? `search/?q=${encodeURIComponent(term)}`
+        : `search/`
       );
       window.location.href = url;
     }
