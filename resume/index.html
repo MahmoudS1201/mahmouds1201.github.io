@@ -84,14 +84,28 @@
 </head>
 <body class="antialiased fade-in-page">
 
-  <!-- Header with hamburger -->
+   <!-- Header with hamburger -->
   <header class="sticky top-0 z-50 bg-cream border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <a href="../" class="flex items-center gap-2" aria-label="Home">
-          <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
-          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+
+        <!-- Brand: Lot K8 + subtitle -->
+        <a href="../" class="flex items-center gap-3 group" aria-label="Home">
+          <img
+            src="../assets/logo.png"
+            alt="Lot K8 logo"
+            class="h-12 w-12 object-contain transition group-hover:opacity-90"
+          />
+          <div class="flex flex-col leading-tight">
+            <span class="font-serif text-2xl tracking-[0.015em]">
+              Lot K8
+            </span>
+            <span class="text-xs text-ink-300 tracking-wide -mt-0.5">
+              Essays, interviews & visual culture
+            </span>
+          </div>
         </a>
+
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline" href="../features/">Features</a>
           <a class="u-underline" href="../latest/">Latest</a>
@@ -99,6 +113,7 @@
           <a class="u-underline" href="../about/">About</a>
           <a class="u-underline font-semibold text-accent" href="../resume/">Résumé</a>
         </nav>
+
         <!-- Mobile hamburger -->
         <div class="md:hidden">
           <button
@@ -125,10 +140,11 @@
         <a class="block u-underline" href="../latest/">Latest</a>
         <a class="block u-underline" href="../sections/">Sections</a>
         <a class="block u-underline" href="../about/">About</a>
-        <a class="block u-underline font-semibold text-accent" href="../newsletter/">Résumé</a>
+        <a class="block u-underline font-semibold text-accent" href="../resume/" aria-current="page">Résumé</a>
       </nav>
     </div>
   </header>
+
 
   <main class="flex justify-center py-10 px-4">
     <div class="resume-card w-full max-w-4xl p-8 sm:p-10">
