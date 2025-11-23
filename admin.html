@@ -2482,23 +2482,31 @@
             const jsonPath = `data/posts/${slug}.json`;
             await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
 
-            // 3) Delete the folder-based HTML page at slug/index.html
-            const htmlPath = articleHtmlPath(slug); // now `${slug}/index.html`
-            await deleteRepoFile(htmlPath, `delete ${htmlPath}`);
+            // 3) Try all plausible HTML locations:
+            //    - old flat style: slug.html
+            //    - new folder style: slug/index.html
+            //    - older "articles/slug/index.html" if it ever existed
+            const htmlCandidates = [
+              `${slug}.html`,
+              `${slug}/index.html`,
+              `articles/${slug}/index.html`,
+            ];
 
-            // 4) Best-effort cleanup of any OLD legacy root-level HTML (slug.html)
-            try {
-              await deleteRepoFile(`${slug}.html`, `delete legacy ${slug}.html`);
-            } catch (err) {
-              // ignore if it doesn't exist
+            for (const path of htmlCandidates) {
+              try {
+                await deleteRepoFile(path, `delete ${path}`);
+              } catch (err) {
+                // Most of these will 404 if they don't exist; that's fine.
+                console.warn("Could not delete", path, err?.message || err);
+              }
             }
 
-            // 5) Local cache cleanup
+            // 4) Local cache cleanup (best effort)
             try {
               localStorage.removeItem(`ctr:admin:published:${slug}`);
             } catch {}
 
-            // 6) Status + refresh list
+            // 5) Status + refresh list
             statusMsg.textContent = `Deleted "${title}".`;
             setTimeout(() => { statusMsg.textContent = ""; }, 2500);
 
