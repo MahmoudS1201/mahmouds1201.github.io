@@ -131,6 +131,21 @@
           <a class="u-underline text-accent font-semibold" href="../archive/" aria-current="page">Archive</a>
         </nav>
 
+            <!-- Mobile hamburger -->
+            <div class="md:hidden">
+              <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none"
+                      aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+                <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
         <!-- Mobile dropdown menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
           <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
@@ -552,6 +567,14 @@
       arr.sort(state.sort==='oldest' ? byOldest : byNewest);
       return arr;
     }
+
+    // Mobile menu toggle (hamburger)
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle?.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      menuToggle.setAttribute('aria-expanded', String(!isHidden));
+    });
 
     function groupByYear(list){
       const map = new Map();
