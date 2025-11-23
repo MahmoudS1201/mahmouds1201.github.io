@@ -1,18 +1,5 @@
 [
   {
-    "slug": "test-again-again-again",
-    "title": "Test Again Again Again",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Welp",
-    "date": "2025-11-17T23:53",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": null,
-    "url": "test-again-again-again.html"
-  },
-  {
     "slug": "lets-try-the-refresh",
     "title": "Lets try the refresh",
     "section": "Essay",
