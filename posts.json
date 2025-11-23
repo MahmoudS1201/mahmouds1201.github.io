@@ -1,18 +1,5 @@
 [
   {
-    "slug": "lets-try-the-refresh",
-    "title": "Lets try the refresh",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "Refresh",
-    "date": "2025-11-16T02:51",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": "images/2025/11/lets-try-the-refresh/cover.png",
-    "url": "lets-try-the-refresh.html"
-  },
-  {
     "slug": "delete-draft-after",
     "title": "Delete Draft After",
     "section": "Essay",
