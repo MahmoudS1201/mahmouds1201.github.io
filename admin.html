@@ -822,6 +822,25 @@
     </div>
   </div>
 
+    <!-- Delete confirmation modal -->
+  <div id="deleteModal"
+       class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-soft max-w-sm w-full mx-4 p-6 text-center">
+      <div class="mx-auto mb-3 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+        <span class="text-red-600 text-2xl">✕</span>
+      </div>
+      <h2 class="font-serif text-xl mb-2">Article deleted</h2>
+      <p class="text-sm text-ink-500 mb-4">
+        <span id="deleteModalTitle" class="font-semibold"></span> has been removed.
+        The live site may take a few minutes to update as GitHub Pages rebuilds.
+      </p>
+      <button id="deleteModalClose"
+              class="btn bg-accent text-white border-transparent hover:bg-accent-dark w-full">
+        Got it
+      </button>
+    </div>
+  </div>
+
   <script>
     /* =========================
        Utilities
@@ -1376,6 +1395,34 @@
     if (publishModal) {
       publishModal.addEventListener('click', (e) => {
         if (e.target === publishModal) closePublishModal();
+      });
+    }
+
+    const deleteModal      = $('#deleteModal');
+    const deleteModalClose = $('#deleteModalClose');
+    const deleteModalTitle = $('#deleteModalTitle');
+
+    function openDeleteModal(title) {
+      if (!deleteModal) return;
+      if (deleteModalTitle) deleteModalTitle.textContent = title || 'This article';
+      deleteModal.classList.remove('hidden');
+      deleteModal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      if (!deleteModal) return;
+      deleteModal.classList.add('hidden');
+      deleteModal.classList.remove('flex');
+    }
+
+    if (deleteModalClose) {
+      deleteModalClose.addEventListener('click', closeDeleteModal);
+    }
+
+    // click on the dark backdrop closes it too
+    if (deleteModal) {
+      deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) closeDeleteModal();
       });
     }
 
@@ -2460,7 +2507,7 @@
         // adjust this if your folder name is different
         return `articles/${slug}/index.html`;
       }
-      // wire up Delete buttons
+            // wire up Delete buttons
       publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
         btn.addEventListener("click", async () => {
           const slug = btn.getAttribute("data-delete-published");
@@ -2483,9 +2530,6 @@
             await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
 
             // 3) Try all plausible HTML locations:
-            //    - old flat style: slug.html
-            //    - new folder style: slug/index.html
-            //    - older "articles/slug/index.html" if it ever existed
             const htmlCandidates = [
               `${slug}.html`,
               `${slug}/index.html`,
@@ -2496,20 +2540,17 @@
               try {
                 await deleteRepoFile(path, `delete ${path}`);
               } catch (err) {
-                // Most of these will 404 if they don't exist; that's fine.
                 console.warn("Could not delete", path, err?.message || err);
               }
             }
 
-            // 4) Local cache cleanup (best effort)
+            // 4) Local cache cleanup
             try {
               localStorage.removeItem(`ctr:admin:published:${slug}`);
             } catch {}
 
-            // 5) Status + refresh list
-            statusMsg.textContent = `Deleted "${title}".`;
-            setTimeout(() => { statusMsg.textContent = ""; }, 2500);
-
+            // 5) Show confirmation + refresh list
+            openDeleteModal(title);
             await renderPublishedList();
           } catch (e) {
             console.error(e);
