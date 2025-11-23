@@ -1,0 +1,20 @@
+{
+  "title": "Testing Testing Yuh",
+  "slug": "testing-testing-yuh",
+  "section": "Essay",
+  "tags": [],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Woot WOOR",
+  "date": "2025-11-23T00:18",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": null,
+  "bodyMarkdown": "TOOT TOOT",
+  "bodyHtml": "<p>TOOT TOOT</p>",
+  "seo": {
+    "title": "Testing Testing Yuh — Camila Tiburcio Rubio",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
