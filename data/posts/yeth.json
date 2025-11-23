@@ -1,0 +1,20 @@
+{
+  "title": "Yeth",
+  "slug": "yeth",
+  "section": "Essay",
+  "tags": [],
+  "author": "Camila Tiburcio Rubio",
+  "excerpt": "Yeth",
+  "date": "2025-11-23T04:25",
+  "readMinutes": 1,
+  "featured": false,
+  "cover": null,
+  "bodyMarkdown": "Yeth",
+  "bodyHtml": "<p>Yeth</p>",
+  "seo": {
+    "title": "Yeth — Camila Tiburcio Rubio",
+    "description": ""
+  },
+  "version": 1,
+  "status": "published"
+}
