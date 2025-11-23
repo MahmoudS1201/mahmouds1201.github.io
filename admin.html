@@ -2561,7 +2561,9 @@
 
         const dateStr = post.date
           ? new Date(post.date).toLocaleDateString(undefined, {
-              year: "numeric", month: "short", day: "numeric"
+              year: "numeric",
+              month: "short",
+              day: "numeric",
             })
           : "";
 
@@ -2610,15 +2612,59 @@
         });
       });
 
-      // wire up Delete buttons (OPEN MODAL ONLY)
+      function articleHtmlPath(slug) {
+        return `articles/${slug}/index.html`;
+      }
+
+      // wire up Delete buttons
       publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
           const slug = btn.getAttribute("data-delete-published");
           const card = btn.closest(".border");
           const title =
             card?.querySelector(".font-medium")?.textContent?.trim() || slug;
 
-          openDeleteModal(slug, title);
+          // If your openDeleteModal is a confirm-style modal that returns a Promise<boolean>:
+          const confirmed = await openDeleteModal(slug, title);
+          if (!confirmed) return;
+
+          try {
+            // 1) Remove entry from posts.json
+            await removeFromPostsJson(slug);
+
+            // 2) Delete JSON source
+            const jsonPath = `data/posts/${slug}.json`;
+            await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
+
+            // 3) Try all plausible HTML locations
+            const htmlCandidates = [
+              `${slug}.html`,
+              `${slug}/index.html`,
+              `articles/${slug}/index.html`,
+            ];
+
+            for (const path of htmlCandidates) {
+              try {
+                await deleteRepoFile(path, `delete ${path}`);
+              } catch (err) {
+                console.warn("Could not delete", path, err?.message || err);
+              }
+            }
+
+            // 4) Local cache cleanup
+            try {
+              localStorage.removeItem(`ctr:admin:published:${slug}`);
+            } catch {}
+
+            // 5) Optionally show a “deleted” toast/modal here instead of inside openDeleteModal
+            // e.g. showDeleteSuccess(title);
+
+            // 6) Refresh list
+            await renderPublishedList();
+          } catch (e) {
+            console.error(e);
+            alert("Failed to delete article: " + e.message);
+          }
         });
       });
     }
