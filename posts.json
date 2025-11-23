@@ -1,18 +1,5 @@
 [
   {
-    "slug": "really-really",
-    "title": "Really Really",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "d",
-    "date": "2025-11-23T00:35",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": null,
-    "url": "really-really/"
-  },
-  {
     "slug": "test-again-again-again",
     "title": "Test Again Again Again",
     "section": "Essay",
