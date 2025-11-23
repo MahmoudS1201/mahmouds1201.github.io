@@ -81,20 +81,34 @@
     </div>
   </div>
 
-  <!-- Header -->
+    <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <a href="../" class="flex items-center gap-2" aria-label="Home">
-          <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
-          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+        <!-- Brand: Lot K8 + subtitle -->
+        <a href="../" class="flex items-center gap-3 group" aria-label="Home">
+          <img
+            src="../assets/logo.png"
+            alt="Lot K8 logo"
+            class="h-12 w-12 object-contain transition group-hover:opacity-90"
+          />
+          <div class="flex flex-col leading-tight">
+            <span class="font-serif text-2xl tracking-[0.015em]">
+              Lot K8
+            </span>
+            <span class="text-xs text-ink-300 tracking-wide -mt-0.5">
+              Essays, interviews & visual culture
+            </span>
+          </div>
         </a>
+
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline" href="../features/">Features</a>
           <a class="u-underline" href="../latest/">Latest</a>
           <a class="u-underline" href="../sections/">Sections</a>
           <a class="u-underline font-semibold text-accent" href="../about/" aria-current="page">About</a>
         </nav>
+
         <div class="md:hidden">
           <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none"
                   aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
