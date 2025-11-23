@@ -2482,18 +2482,18 @@
             const jsonPath = `data/posts/${slug}.json`;
             await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
 
-            // 3) Delete NEW HTML article location
-            const htmlPath = articleHtmlPath(slug);
+            // 3) Delete the folder-based HTML page at slug/index.html
+            const htmlPath = articleHtmlPath(slug); // now `${slug}/index.html`
             await deleteRepoFile(htmlPath, `delete ${htmlPath}`);
 
-            // 4) Clean up OLD legacy root-level HTML (ignore if not present)
+            // 4) Best-effort cleanup of any OLD legacy root-level HTML (slug.html)
             try {
               await deleteRepoFile(`${slug}.html`, `delete legacy ${slug}.html`);
             } catch (err) {
-              // ignore missing legacy file
+              // ignore if it doesn't exist
             }
 
-            // 5) Best-effort local cache cleanup
+            // 5) Local cache cleanup
             try {
               localStorage.removeItem(`ctr:admin:published:${slug}`);
             } catch {}
