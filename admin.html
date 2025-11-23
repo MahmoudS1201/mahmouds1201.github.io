@@ -826,6 +826,32 @@
   <div id="deleteModal"
        class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-soft max-w-sm w-full mx-4 p-6 text-center">
+      <div class="mx-auto mb-3 h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center">
+        <span class="text-accent text-2xl">!</span>
+      </div>
+      <h2 class="font-serif text-xl mb-2">Delete article?</h2>
+      <p class="text-sm text-ink-500 mb-4">
+        “<span id="deleteModalTitle"></span>” will be removed from the site,
+        taken out of <code>posts.json</code>, and its JSON + HTML files will be deleted
+        from the repo. The live site may take a few minutes to fully update.
+      </p>
+      <div class="flex gap-3">
+        <button id="deleteModalCancel"
+                class="btn w-full">
+          Cancel
+        </button>
+        <button id="deleteModalConfirm"
+                class="btn bg-accent text-white border-transparent hover:bg-accent-dark w-full">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Delete confirmation modal -->
+  <div id="deleteModal"
+       class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40">
+    <div class="bg-white rounded-2xl shadow-soft max-w-sm w-full mx-4 p-6 text-center">
       <div class="mx-auto mb-3 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
         <span class="text-red-600 text-2xl">✕</span>
       </div>
@@ -1397,6 +1423,87 @@
         if (e.target === publishModal) closePublishModal();
       });
     }
+
+    const deleteModal       = $('#deleteModal');
+    const deleteModalTitle  = $('#deleteModalTitle');
+    const deleteModalCancel = $('#deleteModalCancel');
+    const deleteModalConfirm= $('#deleteModalConfirm');
+
+    let deleteTargetSlug  = null;
+    let deleteTargetTitle = null;
+
+    function openDeleteModal(slug, title) {
+      deleteTargetSlug  = slug;
+      deleteTargetTitle = title || slug;
+
+      if (deleteModalTitle) {
+        deleteModalTitle.textContent = deleteTargetTitle;
+      }
+
+      if (!deleteModal) return;
+      deleteModal.classList.remove('hidden');
+      deleteModal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      deleteTargetSlug  = null;
+      deleteTargetTitle = null;
+
+      if (!deleteModal) return;
+      deleteModal.classList.add('hidden');
+      deleteModal.classList.remove('flex');
+    }
+
+    async function handleDeleteConfirm() {
+      if (!deleteTargetSlug) {
+        closeDeleteModal();
+        return;
+      }
+
+      const slug  = deleteTargetSlug;
+      const title = deleteTargetTitle;
+
+      try {
+        // 1) Remove from posts.json
+        await removeFromPostsJson(slug);
+
+        // 2) Delete JSON + HTML
+        await deleteRepoFile(`data/posts/${slug}.json`, `delete data/posts/${slug}.json`);
+        await deleteRepoFile(`${slug}.html`, `delete page ${slug}.html`);
+
+        // 3) Local cache cleanup (best-effort)
+        try { localStorage.removeItem(`ctr:admin:published:${slug}`); } catch {}
+
+        // 4) Status + refresh list
+        statusMsg.textContent =
+          `Deleted "${title}". The live site will update to reflect this in a few minutes.`;
+        setTimeout(() => { statusMsg.textContent = ''; }, 4000);
+
+        await renderPublishedList();
+      } catch (e) {
+        console.error(e);
+        alert('Failed to delete article: ' + e.message);
+      } finally {
+        closeDeleteModal();
+      }
+    }
+
+    if (deleteModalCancel) {
+      deleteModalCancel.addEventListener('click', closeDeleteModal);
+    }
+    if (deleteModalConfirm) {
+      deleteModalConfirm.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleDeleteConfirm();
+      });
+    }
+    if (deleteModal) {
+      // click backdrop to close
+      deleteModal.addEventListener('click', (e) => {
+        if (e.target === deleteModal) closeDeleteModal();
+      });
+    }
+
 
     const deleteModal      = $('#deleteModal');
     const deleteModalClose = $('#deleteModalClose');
@@ -2509,18 +2616,16 @@
       }
             // wire up Delete buttons
       publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
-        btn.addEventListener("click", async () => {
+        btn.addEventListener("click", () => {
           const slug = btn.getAttribute("data-delete-published");
           const card = btn.closest(".border");
           const title =
             card?.querySelector(".font-medium")?.textContent?.trim() || slug;
 
-          const ok = confirm(
-            `Delete "${title}"?\n\n` +
-            `This will remove it from posts.json and delete its JSON + HTML files in the repo.`
-          );
-          if (!ok) return;
-
+          // Open the custom delete modal instead of using confirm()
+          openDeleteModal(slug, title);
+        });
+      });
           try {
             // 1) Remove entry from posts.json
             await removeFromPostsJson(slug);
