@@ -140,9 +140,9 @@
         <!-- MIDDLE: Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
           <a class="u-underline font-semibold text-accent" href="features/">Features</a>
-          <a class="u-underline" href="latest/">Latest</a>
-          <a class="u-underline" href="sections/">Sections</a>
-          <a class="u-underline" href="about/">About</a>
+          <a class="u-underline" href="../latest/">Latest</a>
+          <a class="u-underline" href="../sections/">Sections</a>
+          <a class="u-underline" href="../about/">About</a>
         </nav>
 
         <!-- RIGHT: Desktop Search + Hamburger -->
@@ -192,9 +192,9 @@
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
         <a class="block u-underline font-semibold text-accent" href="features/">Features</a>
-        <a class="block u-underline" href="latest/">Latest</a>
-        <a class="block u-underline" href="sections/">Sections</a>
-        <a class="block u-underline" href="about/">About</a>
+        <a class="block u-underline" href="../latest/">Latest</a>
+        <a class="block u-underline" href="../sections/">Sections</a>
+        <a class="block u-underline" href="../about/">About</a>
 
         <!-- Mobile search -->
         <label class="relative block mt-3" aria-label="Search site">
@@ -899,8 +899,8 @@
     function goSearch(q){
       const term = (q || '').trim();
       const url = toRoot(term
-        ? `search/?q=${encodeURIComponent(term)}`
-        : `search/`
+        ? `../search/?q=${encodeURIComponent(term)}`
+        : `../search/`
       );
       window.location.href = url;
     }
