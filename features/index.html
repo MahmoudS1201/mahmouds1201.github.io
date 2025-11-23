@@ -110,58 +110,108 @@
   <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Flex row for ALL header items -->
       <div class="flex items-center justify-between h-20">
-        <!-- Brand -->
-        <a href="../" class="flex items-center gap-2" aria-label="Home">
-          <img src="../assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
-          <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+
+        <!-- LEFT: Brand -->
+        <a href="/CamilaTiburcioRubio/" 
+           class="flex items-center gap-3 group" 
+           aria-label="Home">
+
+          <img 
+            src="assets/logo.png" 
+            alt="Lot K8 logo" 
+            class="h-12 w-12 object-contain transition group-hover:opacity-90"
+          />
+
+          <!-- Title + Subtitle -->
+          <div class="flex flex-col leading-tight">
+            <span class="font-serif text-2xl tracking-[0.015em]">
+              Lot K8
+            </span>
+            <span class="text-xs text-ink-300 tracking-wide -mt-0.5">
+              Essays, interviews & visual culture
+            </span>
+          </div>
+
         </a>
 
-        <!-- Desktop nav -->
+        <!-- MIDDLE: Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8" aria-label="Primary">
-          <a class="u-underline font-semibold text-accent" href="../features/" aria-current="page">Features</a>
-          <a class="u-underline" href="../latest/">Latest</a>
-          <a class="u-underline" href="../sections/">Sections</a>
-          <a class="u-underline" href="../about/">About</a>
+          <a class="u-underline" href="features/">Features</a>
+          <a class="u-underline" href="latest/">Latest</a>
+          <a class="u-underline" href="sections/">Sections</a>
+          <a class="u-underline" href="about/">About</a>
         </nav>
 
-        <!-- Desktop search (IDENTICAL to Latest) -->
+        <!-- RIGHT: Desktop Search + Hamburger -->
         <div class="hidden md:flex items-center gap-4">
+          <!-- Desktop search -->
           <label class="relative" aria-label="Search site">
-            <input id="q-desktop" type="search" placeholder="Search…"
-                   class="pl-10 pr-9 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
-            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/>
+            <input id="qHeader" type="search" placeholder="Search…" 
+                   class="pl-10 pr-10 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+            <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" 
+                 viewBox="0 0 24 24" aria-hidden="true">
+                 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+                 <path d="M21 21l-3.5-3.5" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
-            <button id="qHeaderBtn" class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" aria-label="Go to search">↵</button>
+            <button id="qHeaderBtn" 
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" 
+                    aria-label="Search">↵</button>
           </label>
         </div>
 
         <!-- Mobile hamburger -->
         <div class="md:hidden">
-          <button id="menuToggle" class="p-2 rounded-md border border-black/10 focus:outline-none" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
-            <svg id="menuIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <button id="menuToggle" 
+                  class="p-2 rounded-md border border-black/10 focus:outline-none" 
+                  aria-expanded="false" 
+                  aria-controls="mobileMenu" 
+                  aria-label="Open menu">
+            <svg id="menuIcon" 
+                 xmlns="http://www.w3.org/2000/svg" 
+                 class="h-6 w-6" 
+                 fill="none" 
+                 viewBox="0 0 24 24" 
+                 stroke="currentColor" 
+                 aria-hidden="true">
+              <path stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    stroke-width="2" 
+                    d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
         </div>
-      </div>
+
+      </div> <!-- END flex row -->
+
     </div>
 
     <!-- Mobile dropdown menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/10">
       <nav class="px-4 py-4 space-y-3" aria-label="Mobile">
-        <a class="block u-underline font-semibold text-accent" href="../features/">Features</a>
-        <a class="block u-underline" href="../latest/">Latest</a>
-        <a class="block u-underline" href="../sections/">Sections</a>
-        <a class="block u-underline" href="../about/">About</a>
-        <!-- Mobile HEADER search — routes to /search -->
+        <a class="block u-underline font-semibold text-accent" href="features/">Features</a>
+        <a class="block u-underline" href="latest/">Latest</a>
+        <a class="block u-underline" href="sections/">Sections</a>
+        <a class="block u-underline" href="about/">About</a>
+
+        <!-- Mobile search -->
         <label class="relative block mt-3" aria-label="Search site">
-          <input id="q-mobile" type="search" placeholder="Search…" class="w-full pl-10 pr-3 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
-          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"/><path stroke-width="2" d="M21 21l-3.5-3.5"/></svg>
+          <input id="qHeaderMobile" type="search" placeholder="Search…" 
+                 class="w-full pl-10 pr-10 py-2 rounded-full border border-black/10 bg-white/70 focus:bg-white outline-none focus:ring-2 focus:ring-accent/40" />
+          <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-ink-300" 
+               viewBox="0 0 24 24" aria-hidden="true">
+               <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/>
+               <path d="M21 21l-3.5-3.5" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          <button id="qHeaderMobileBtn" 
+                  class="absolute right-2 top-1/2 -translate-y-1/2 text-ink-300 hover:text-ink-500" 
+                  aria-label="Search">↵</button>
         </label>
       </nav>
     </div>
+
   </header>
 
   <!-- Page header -->
