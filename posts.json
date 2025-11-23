@@ -1,18 +1,5 @@
 [
   {
-    "slug": "test-dis-mf",
-    "title": "Test dis mf",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "yuh",
-    "date": "2025-11-23T00:33",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": null,
-    "url": "test-dis-mf/"
-  },
-  {
     "slug": "test-again-again-again",
     "title": "Test Again Again Again",
     "section": "Essay",
