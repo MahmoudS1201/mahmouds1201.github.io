@@ -2610,11 +2610,7 @@
         });
       });
 
-      function articleHtmlPath(slug) {
-        // adjust this if your folder name is different
-        return `articles/${slug}/index.html`;
-      }
-            // wire up Delete buttons
+      // wire up Delete buttons (OPEN MODAL ONLY)
       publishedList.querySelectorAll("[data-delete-published]").forEach(btn => {
         btn.addEventListener("click", () => {
           const slug = btn.getAttribute("data-delete-published");
@@ -2622,48 +2618,11 @@
           const title =
             card?.querySelector(".font-medium")?.textContent?.trim() || slug;
 
-          // Open the custom delete modal instead of using confirm()
           openDeleteModal(slug, title);
         });
       });
-          try {
-            // 1) Remove entry from posts.json
-            await removeFromPostsJson(slug);
-
-            // 2) Delete JSON source
-            const jsonPath = `data/posts/${slug}.json`;
-            await deleteRepoFile(jsonPath, `delete ${jsonPath}`);
-
-            // 3) Try all plausible HTML locations:
-            const htmlCandidates = [
-              `${slug}.html`,
-              `${slug}/index.html`,
-              `articles/${slug}/index.html`,
-            ];
-
-            for (const path of htmlCandidates) {
-              try {
-                await deleteRepoFile(path, `delete ${path}`);
-              } catch (err) {
-                console.warn("Could not delete", path, err?.message || err);
-              }
-            }
-
-            // 4) Local cache cleanup
-            try {
-              localStorage.removeItem(`ctr:admin:published:${slug}`);
-            } catch {}
-
-            // 5) Show confirmation + refresh list
-            openDeleteModal(title);
-            await renderPublishedList();
-          } catch (e) {
-            console.error(e);
-            alert("Failed to delete article: " + e.message);
-          }
-        });
-      });
     }
+
 
     async function editPublishedArticle(slug) {
       try {
