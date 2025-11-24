@@ -914,9 +914,11 @@
               class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
               aria-label="Back to top">↑ Top</button>
 
-      <!-- Footer -->
+            <!-- Footer -->
       <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+        <!-- Desktop footer -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+          <!-- Brand -->
           <div>
             <div class="-ml-1.5">
               <div class="flex items-center gap-1">
@@ -928,6 +930,7 @@
               Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
             </p>
           </div>
+          <!-- Explore -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
             <ul class="space-y-2">
@@ -938,6 +941,7 @@
               <li><a href="../search/" class="u-underline">Search</a></li>
             </ul>
           </div>
+          <!-- About -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">About</h3>
             <ul class="space-y-2">
@@ -948,6 +952,7 @@
               <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
             </ul>
           </div>
+          <!-- Follow -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
             <ul class="space-y-2">
@@ -959,6 +964,112 @@
             </ul>
           </div>
         </div>
+
+        <!-- Mobile accordion footer -->
+        <div class="sm:hidden border-t border-black/10">
+          <div class="max-w-6xl mx-auto px-4 py-6">
+            <!-- Brand -->
+            <div class="mb-6">
+              <div class="-ml-1.5">
+                <div class="flex items-center gap-1">
+                  <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                  <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+                </div>
+              </div>
+              <p class="mt-2 text-ink-400 text-sm max-w-xs">
+                Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+              </p>
+            </div>
+
+            <!-- Explore -->
+            <div class="border-t border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="explore"
+                aria-expanded="false"
+              >
+                <span>Explore</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="explore"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="explore">
+                <a href="../features/" class="block u-underline">Features</a>
+                <a href="../latest/" class="block u-underline">Latest</a>
+                <a href="../sections/" class="block u-underline">Sections</a>
+                <a href="../archive/" class="block u-underline">Archive</a>
+                <a href="../search/" class="block u-underline">Search</a>
+              </div>
+            </div>
+
+            <!-- About -->
+            <div class="border-t border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="about"
+                aria-expanded="false"
+              >
+                <span>About</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="about"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="about">
+                <a href="../about/" class="block u-underline">About</a>
+                <a href="../contact/" class="block u-underline">Contact</a>
+                <a href="../mission/" class="block u-underline">Mission</a>
+                <a href="../resume/" class="block u-underline">Résumé</a>
+                <a href="../newsletter/" class="block u-underline">Newsletter</a>
+              </div>
+            </div>
+
+            <!-- Follow -->
+            <div class="border-t border-black/10 border-b border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="follow"
+                aria-expanded="false"
+              >
+                <span>Follow</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="follow"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="follow">
+                <a href="https://instagram.com" class="block u-underline">Instagram</a>
+                <a href="https://twitter.com" class="block u-underline">X / Twitter</a>
+                <a href="https://facebook.com" class="block u-underline">Facebook</a>
+                <a href="https://linkedin.com" class="block u-underline">Linkedin</a>
+                <a href="https://youtube.com" class="block u-underline">YouTube</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
           © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
         </div>
@@ -1261,6 +1372,7 @@
             }
           }
 
+
           window.addEventListener('scroll', updateActive, { passive:true });
           window.addEventListener('scroll', updateVisibility, { passive:true });
 
@@ -1340,6 +1452,32 @@
 
             node.parentNode.replaceChild(frag, node);
           }
+
+          // Footer year
+          (function () {
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+          })();
+
+          (function () {
+            document.querySelectorAll('[data-acc-btn]').forEach(btn => {
+              const name = btn.getAttribute('data-acc-btn');
+              const panel = document.querySelector('[data-acc-panel="' + name + '"]');
+              const chevron = document.querySelector('[data-acc-chevron="' + name + '"]');
+
+              if (!panel) return;
+
+              btn.addEventListener('click', () => {
+                const isOpen = !panel.classList.contains('hidden');
+                panel.classList.toggle('hidden');
+                btn.setAttribute('aria-expanded', String(!isOpen));
+
+                if (chevron) {
+                  chevron.classList.toggle('rotate-180', !isOpen);
+                }
+              });
+            });
+          })();
 
           function walk(node) {
             if (node.nodeType === Node.TEXT_NODE) {
