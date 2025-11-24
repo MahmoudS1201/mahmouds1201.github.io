@@ -1,5 +1,39 @@
 [
   {
+    "slug": "en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics",
+    "title": "En La Ventanita de Versailles: Coladas, Pastelitos, and Far-Right Poltics",
+    "section": "Essay",
+    "tags": [
+      "Cuba",
+      "Castro",
+      "Miami"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Examining the popular cuban restaurant, Versailles, emergence as as a home for far-right politics through Maria Cristina Garcia's \"Three C's\" framework.",
+    "date": "2025-11-24T01:32",
+    "readMinutes": 14,
+    "featured": false,
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics/cover.jpg",
+    "url": "en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics/"
+  },
+  {
+    "slug": "dr-franke-spain-and-the-creation-of-the-far-right-in-spain",
+    "title": "Dr. Franke-Spain and the Creation of the Far-Right in Spain",
+    "section": "Essay",
+    "tags": [
+      "Politics",
+      "Spain",
+      "Law"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "Topics: Contemporary Spanish Politics in Comparative Perspective",
+    "date": "2024-06-24T06:07",
+    "readMinutes": 9,
+    "featured": false,
+    "cover": "images/2024/06/dr-franke-spain-and-the-creation-of-the-far-right-in-spain/cover.jpg",
+    "url": "dr-franke-spain-and-the-creation-of-the-far-right-in-spain/"
+  },
+  {
     "slug": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba",
     "title": "La Pelicula de Ana: A Look At Jineteras in Cuba",
     "section": "Essay",
@@ -12,7 +46,7 @@
     "excerpt": "Sex Work and the City: New York-Buenos Aires",
     "date": "2023-12-10T17:48",
     "readMinutes": 20,
-    "featured": false,
+    "featured": true,
     "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg",
     "url": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba/"
   }
