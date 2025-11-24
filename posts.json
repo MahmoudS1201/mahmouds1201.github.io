@@ -1,18 +1,5 @@
 [
   {
-    "slug": "testing-this",
-    "title": "Testing this",
-    "section": "Essay",
-    "tags": [],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "lets see it",
-    "date": "2025-11-23T04:28",
-    "readMinutes": 1,
-    "featured": false,
-    "cover": null,
-    "url": "testing-this/"
-  },
-  {
     "slug": "yeth",
     "title": "Yeth",
     "section": "Essay",
