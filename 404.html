@@ -74,12 +74,25 @@
   <main class="min-h-screen flex flex-col items-center justify-center px-4">
     
     <!-- Logo and name -->
-    <div class="flex items-center gap-2 mb-10">
-      <a href="/CamilaTiburcioRubio/" class="flex items-center gap-2" aria-label="Home">
-        <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
+    <div class="flex items-center gap-3 mb-10">
+      <a href="/CamilaTiburcioRubio/" class="flex items-center gap-3 group" aria-label="Home">
+        <img 
+          src="assets/logo.png" 
+          alt="Lot K8 logo" 
+          class="h-12 w-12 object-contain transition group-hover:opacity-90"
+        />
       </a>
-      <a href="/CamilaTiburcioRubio/" class="font-serif text-2xl tracking-tight">Lot K8</a>
+
+      <a href="/CamilaTiburcioRubio/" class="flex flex-col leading-tight group">
+        <span class="font-serif text-2xl tracking-[0.015em]">
+          Lot K8
+        </span>
+        <span class="text-xs text-ink-300 tracking-wide -mt-0.5">
+          Essays, interviews & visual culture
+        </span>
+      </a>
     </div>
+
 
     <div class="w-full max-w-2xl text-center -mt-2">
       <!-- Candela container with red counter above -->
