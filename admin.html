@@ -4119,12 +4119,11 @@
             if (yearEl) yearEl.textContent = new Date().getFullYear();
           })();
 
-          /* ---------- Mobile footer accordion ---------- */
           (function () {
             document.querySelectorAll('[data-acc-btn]').forEach(btn => {
               const name = btn.getAttribute('data-acc-btn');
-              const panel = document.querySelector(`[data-acc-panel="${name}"]`);
-              const chevron = document.querySelector(`[data-acc-chevron="${name}"]`);
+              const panel = document.querySelector('[data-acc-panel="' + name + '"]');
+              const chevron = document.querySelector('[data-acc-chevron="' + name + '"]');
 
               if (!panel) return;
 
