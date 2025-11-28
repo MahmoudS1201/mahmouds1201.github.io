@@ -2680,6 +2680,11 @@
       // canonical URL for this article
       const canonicalUrl = `https://mahmouds1201.github.io/${encodeURIComponent(data.slug)}/`;
 
+      const fixedBodyHtml = (data.bodyHtml || '').replace(
+        /src="images\//g,
+        'src="../images/'
+      );
+
       // make og:image absolute
       const rawCover = data.cover?.src || "";
       const ogImage = rawCover
@@ -3329,7 +3334,7 @@
 
       ${data.cover ? `
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="${data.cover.src}" alt="${escapeHtml(data.cover.alt||'')}"/>
+        <img class="hero-img" src="../${data.cover.src}" alt="${escapeHtml(data.cover.alt||'')}"/>
         ${coverCredit ? `<figcaption class="text-center text-xs text-ink-300 mt-2">Image credit: ${escapeHtml(coverCredit)}</figcaption>` : ``}
       </figure>` : ``}
 
@@ -3363,7 +3368,7 @@
           <div class="fade-top"></div>
           <div class="fade-bottom"></div>
           <article class="prose prose-neutral max-w-none">
-            ${data.bodyHtml}
+            ${fixedBodyHtml}
           </article>
         </div>
 
@@ -4490,7 +4495,7 @@
           }
 
           try {
-            const res = await fetch('posts.json', { cache: 'no-store' });
+            const res = await fetch('../posts.json', { cache: 'no-store' });
             if (!res.ok) throw new Error('posts.json not found');
             const list = await res.json();
 
