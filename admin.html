@@ -2685,8 +2685,17 @@
         'src="../images/'
       );
 
-      // make og:image absolute
       const rawCover = data.cover?.src || "";
+
+        // ✅ NEW: heroSrc that works for both local + absolute URLs
+      const heroSrc = rawCover
+        ? (rawCover.startsWith('http')
+            ? rawCover
+            : `../${rawCover.replace(/^\.?\//, '')}`)
+        : "";
+
+
+      // make og:image absolute
       const ogImage = rawCover
         ? (rawCover.startsWith('http')
             ? rawCover
@@ -3334,7 +3343,7 @@
 
       ${data.cover ? `
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="../${data.cover.src}" alt="${escapeHtml(data.cover.alt||'')}"/>
+        <img class="hero-img" src="${heroSrc}" alt="${escapeHtml(data.cover.alt||'')}"/>
         ${coverCredit ? `<figcaption class="text-center text-xs text-ink-300 mt-2">Image credit: ${escapeHtml(coverCredit)}</figcaption>` : ``}
       </figure>` : ``}
 
