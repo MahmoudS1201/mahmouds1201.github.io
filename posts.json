@@ -1,5 +1,21 @@
 [
   {
+    "slug": "female-visions",
+    "title": "Female Visions",
+    "section": "Essay",
+    "tags": [
+      "Art",
+      "Women"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of the apparent obsession and constant focus of the female figure and experience.",
+    "date": "2025-11-28T22:58",
+    "readMinutes": 8,
+    "featured": false,
+    "cover": "images/2025/11/female-visions/cover.png",
+    "url": "female-visions/"
+  },
+  {
     "slug": "en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics",
     "title": "En La Ventanita de Versailles: Coladas, Pastelitos, and Far-Right Poltics",
     "section": "Essay",
