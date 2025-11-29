@@ -556,20 +556,21 @@
      function fixEncoding(str) {
       if (typeof str !== "string" || !str) return str;
 
-      let out = str;
-      let safety = 0;
+      // quick skip if nothing looks broken
+      if (!/[ÃÂ]/.test(str)) return str;
 
-      // If we see mojibake markers (Ã or Â), try to re-decode a few times
-      while (/[ÃÂ]/.test(out) && safety < 4) {
+      let out = str;
+
+      // Try decoding up to 3 times – this fixes single *and* double-encoded cases
+      for (let i = 0; i < 3; i++) {
         try {
-          const bytes = Uint8Array.from([...out].map(ch => ch.charCodeAt(0)));
+          const bytes   = new Uint8Array([...out].map(c => c.charCodeAt(0)));
           const decoded = new TextDecoder("utf-8").decode(bytes);
 
-          // If decoding doesn't change it anymore, stop
+          // if a pass didn’t change anything, we’re done
           if (decoded === out) break;
 
           out = decoded;
-          safety++;
         } catch {
           break;
         }
