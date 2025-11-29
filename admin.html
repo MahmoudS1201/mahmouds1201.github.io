@@ -1671,29 +1671,40 @@
 
           if (hadSel) {
             const selected = bodyEl.value.slice(start, end);
-            const quoted   = selected.split('\n').map(l => '> ' + l).join('\n');
-            const insert   = quoted + '\n>\n> - Attribution';
+            const quoted   = selected
+              .split('\n')
+              .map(l => '> ' + l)
+              .join('\n');
+
+            // 👇 No extra ">\n" line in the middle anymore
+            const insert   = quoted + '\n> - Attribution';
+
             bodyEl.setRangeText(insert, start, end, 'end');
 
             requestAnimationFrame(() => {
               bodyEl.focus({ preventScroll: true });
               bodyEl.scrollTop = prevScroll;
-              const caretPos = start + insert.length - ' Attribution'.length - 2;
+
+              // Put caret on "Attribution" so you can type over it
+              const caretPos = start + insert.length - ' Attribution'.length;
               bodyEl.setSelectionRange(caretPos, caretPos);
             });
           } else {
-            const tmpl = '> Quote\n>\n> - Attribution\n';
+            // 👇 Template without the empty quoted line
+            const tmpl = '> Quote\n> - Attribution\n';
             const v     = bodyEl.value;
             const pos   = bodyEl.selectionStart ?? 0;
             const atBOL = pos === 0 || v[pos - 1] === '\n';
             const text  = (atBOL ? '' : '\n') + tmpl;
 
             insertAtCursor(bodyEl, text);
+
             requestAnimationFrame(() => {
               bodyEl.focus({ preventScroll: true });
               bodyEl.scrollTop = prevScroll;
+
               const base = pos + (atBOL ? 0 : 1);
-              const quoteStartOffset = 2;
+              const quoteStartOffset = 2; // after "> "
               const quoteEndOffset   = quoteStartOffset + 'Quote'.length;
               bodyEl.setSelectionRange(base + quoteStartOffset, base + quoteEndOffset);
             });
