@@ -2621,15 +2621,28 @@
 
     async function editPublishedArticle(slug) {
       try {
-        const path = `data/posts/${slug}.json`;
-        const file = await getRepoFile(path);
-        if (!file || !file.content) {
-          alert("No editable JSON found for this article yet.\nTry re-publishing it once with this updated admin.");
-          return;
+        let data = null;
+
+        // 1) Preferred path: raw.githubusercontent.com (works for large files)
+        data = await loadPostJsonRaw(slug);
+
+        // 2) Fallback: GitHub Contents API for older/smaller posts
+        if (!data) {
+          const path = `data/posts/${slug}.json`;
+          const file = await getRepoFile(path);
+          if (file && file.content) {
+            const jsonText = b64ToUtf8(file.content.replace(/\n/g, ""));
+            data = JSON.parse(jsonText);
+          }
         }
 
-        const jsonText = b64ToUtf8(file.content.replace(/\n/g, ""));
-        const data = JSON.parse(jsonText);
+        if (!data) {
+          alert(
+            "No editable JSON found for this article.\n" +
+            "If this keeps happening, try re-publishing it once with this updated admin."
+          );
+          return;
+        }
 
         // Load into the form using your existing helper
         populateFromJSON(data);
@@ -4626,6 +4639,23 @@
     const GH_BRANCH = 'main';
     const GH_IMAGES_ROOT = 'images';
     let   GH_TOKEN = localStorage.getItem('ctr:gh:token') || '';
+
+    // Load a post's JSON directly from raw.githubusercontent.com
+    async function loadPostJsonRaw(slug) {
+      const url = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/data/posts/${slug}.json`;
+
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) {
+          console.warn("Raw JSON fetch failed", res.status, url);
+          return null;
+        }
+        return await res.json();
+      } catch (err) {
+        console.error("Raw JSON parse/fetch error:", err);
+        return null;
+      }
+    }
 
     function apiPath(p){ return (p||'').split('/').map(encodeURIComponent).join('/'); }
     function stripLeadingSlash(p){ return (p||'').replace(/^\/+/, ''); }
