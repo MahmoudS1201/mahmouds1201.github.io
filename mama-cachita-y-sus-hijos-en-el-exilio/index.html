@@ -1248,7 +1248,7 @@
             wrapper.querySelectorAll('ol li, ul li, p'),
             function (item) {
               var raw = (item.textContent || '').trim();
-              var m = raw.match(/^(d+).s*(.*)$/);
+              var m = raw.match(/^(\d+)\.\s*(.*)$/);
               if (m) {
                 item.textContent = m[2];
                 item.setAttribute('data-bib-index', m[1]);
@@ -1317,7 +1317,7 @@
           function makeId(text, index){
             var slug = (text || '')
               .toLowerCase()
-              .replace(/[^w]+/g, '-')
+              .replace(/[^\w]+/g, '-')
               .replace(/^-+|-+$/g, '');
             if (!slug) slug = 'section-' + (index + 1);
             if (!document.getElementById(slug)) return slug;
@@ -1545,7 +1545,7 @@
           }
 
           var totalLength = speechText.length;
-          var wordsCount = speechText.split(/s+/).filter(Boolean).length;
+          var wordsCount = speechText.split(/\s+/).filter(Boolean).length;
           var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
           var totalSeconds =
             typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
