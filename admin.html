@@ -980,15 +980,39 @@
       s = s.replace(/^#\s+(.+)$/gm,  '<h1>$1</h1>');
 
       // blockquotes with optional last-line attribution
-      s = s.replace(/(^|\n)(>(?:[^\n]*)(?:\n>.*)*)/g, (_, lead, block) => {
-        const lines = block.trim().split(/\n/).map(l => l.replace(/^>\s?/, '').trim());
-        const quote = lines.slice(0, -1).join('<br/>');
-        const last = lines[lines.length - 1];
-        const isAttr = /^[-–—]\s?/.test(last);
-        const attribution = isAttr ? `<cite class="quote-cite">${last.replace(/^[-–—]\s?/, '')}</cite>` : '';
-        const content = isAttr ? quote : lines.join('<br/>');
-        return `${lead}<blockquote>${content}${attribution}</blockquote>`;
-      });
+      // Last line is treated as attribution if it starts with - or —
+      s = s.replace(
+        /(^|\n)( {0,3}>[^\n]+(?:\n {0,3}>[^\n]+)*)/g,
+        (match, lead, block) => {
+          // strip leading "> " and trim each line
+          const lines = block
+            .trim()
+            .split('\n')
+            .map(l => l.replace(/^ {0,3}>\s?/, '').trim())
+            .filter(Boolean);
+
+          if (!lines.length) return match;
+
+          const last = lines[lines.length - 1];
+          const attrMatch = /^[-—]\s*(.+)$/.exec(last); // <- dash OR em-dash
+
+          let quoteHtml;
+          let attributionHtml = '';
+
+          if (attrMatch) {
+            // everything except last line is the quote
+            const quoteLines = lines.slice(0, -1);
+            quoteHtml = quoteLines.join('<br/>');
+            // we drop the leading dash and wrap as attribution
+            attributionHtml = `<p class="quote-attrib">— ${attrMatch[1]}</p>`;
+          } else {
+            // no attribution, whole block is the quote
+            quoteHtml = lines.join('<br/>');
+          }
+
+          return `${lead}<blockquote>${quoteHtml}${attributionHtml}</blockquote>`;
+        }
+      );
 
       // unordered lists
       s = s.replace(/(?:^|\n)(-\s+.+(?:\n-\s+.+)*)/g, (m) => {
