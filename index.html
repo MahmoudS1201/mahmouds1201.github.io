@@ -552,6 +552,19 @@
 
   <!-- ====== Posts loader + full-card click behavior ====== -->
   <script type="module">
+
+     function fixEncoding(str) {
+      if (typeof str !== "string" || !str) return str;
+      if (!/[ÃÂ]/.test(str)) return str; // quick skip if clean
+
+      try {
+        const bytes = new Uint8Array([...str].map(c => c.charCodeAt(0)));
+        return new TextDecoder("utf-8").decode(bytes);
+      } catch {
+        return str;
+      }
+    }
+
     /* ---------- Subpath helper (GitHub Pages safe) ---------- */
     const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
     const toBase = (u) => {
@@ -584,16 +597,24 @@
     function normalize(item){
       const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
       const cover = item.cover || '';
-      const tags  = Array.isArray(item.tags)
+
+      let rawTags = Array.isArray(item.tags)
         ? item.tags
         : (typeof item.tags === 'string'
-            ? item.tags.split(',').map(s=>s.trim()).filter(Boolean)
+            ? item.tags.split(',').map(s => s.trim()).filter(Boolean)
             : []);
+
+      const tags = rawTags.map(t => fixEncoding(t));
+
+      const rawTitle   = item.title || '';
+      const rawSection = item.section || 'Article';
+      const rawDesc    = item.excerpt || item.description || '';
+
       return {
-        title: item.title || '',
+        title: fixEncoding(rawTitle),
         href: toBase(href),
-        section: item.section || 'Article',
-        description: item.excerpt || item.description || '',
+        section: fixEncoding(rawSection),
+        description: fixEncoding(rawDesc),
         date: item.date || '',
         readMinutes: item.readMinutes || '',
         featured: !!item.featured,
@@ -601,6 +622,7 @@
         tags,
       };
     }
+    
     const byNewest = (a,b)=> new Date(b.date) - new Date(a.date);
     const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
     const $ = s => document.querySelector(s);
