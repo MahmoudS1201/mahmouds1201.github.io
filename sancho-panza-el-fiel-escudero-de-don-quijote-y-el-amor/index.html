@@ -11,13 +11,13 @@
       <meta property="og:title" content="Sancho Panza: El Fiel Escudero de Don Quijote y el Amor — Camila Tiburcio Rubio" />
       <meta property="og:description" content="In this essay by Camila Tiburcio Rubio, “Sancho Panza: El Fiel Escudero de Don Quijote y el Amor,” This essay is about Don Quijote and is entirely in…" />
       <meta property="og:url" content="https://mahmouds1201.github.io/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/" />
-      <meta property="og:image" content="https://mahmouds1201.github.io/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" />
+      <meta property="og:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" />
 
       <!-- Twitter card (also used by some preview engines) -->
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="Sancho Panza: El Fiel Escudero de Don Quijote y el Amor — Camila Tiburcio Rubio" />
       <meta name="twitter:description" content="In this essay by Camila Tiburcio Rubio, “Sancho Panza: El Fiel Escudero de Don Quijote y el Amor,” This essay is about Don Quijote and is entirely in…" />
-      <meta name="twitter:image" content="https://mahmouds1201.github.io/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" />
+      <meta name="twitter:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -569,11 +569,11 @@
         
           <div class="mt-3 flex justify-center flex-wrap gap-2">
             
-                <a class="tag" href="search.html?q=Love">
+                <a class="tag" href="../search.html?q=Love">
                   Love
                 </a>
               
-                <a class="tag" href="search.html?q=Don%20Quijote">
+                <a class="tag" href="../search.html?q=Don%20Quijote">
                   Don Quijote
                 </a>
               
@@ -639,7 +639,7 @@
 
       
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="../images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" alt="Don Quijote and Sancho Panza"/>
+        <img class="hero-img" src="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg" alt="Don Quijote and Sancho Panza"/>
         
       </figure>
 
@@ -1061,6 +1061,7 @@
       </footer>
 
       <!-- Define CURRENT so related-posts JS works -->
+            <!-- Define CURRENT so related-posts JS works -->
       <script>
         window.CURRENT = {
           slug: "sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor",
@@ -1102,7 +1103,7 @@
           onScroll();
         })();
 
-        // Back/Top buttons
+        // Back button behavior
         (function () {
           const link = document.getElementById('backBtn');
           if (!link) return;
@@ -1116,24 +1117,61 @@
           });
         })();
 
-        const backTop = document.getElementById('backTop');
-        const toggleTop = () => {
-          if (window.scrollY > 600) backTop.classList.remove('hidden');
-          else backTop.classList.add('hidden');
-        };
-        window.addEventListener('scroll', toggleTop, { passive:true });
-        backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+        // Back-to-top button
+        (function () {
+          const backTop = document.getElementById('backTop');
+          if (!backTop) return;
 
+          const toggleTop = () => {
+            if (window.scrollY > 600) backTop.classList.remove('hidden');
+            else backTop.classList.add('hidden');
+          };
+          window.addEventListener('scroll', toggleTop, { passive:true });
+          toggleTop();
+
+          backTop.addEventListener('click', () =>
+            window.scrollTo({ top:0, behavior:'smooth' })
+          );
+        })();
+
+        // Dropcap on first paragraph
         (function addDropcap(){
           const firstP = document.querySelector('article.prose p');
           if(firstP) firstP.classList.add('dropcap');
         })();
 
+        // Footer year
+        (function () {
+          const yearEl = document.getElementById('year');
+          if (yearEl) yearEl.textContent = new Date().getFullYear();
+        })();
+
+        // Mobile footer accordion
+        (function () {
+          document.querySelectorAll('[data-acc-btn]').forEach(btn => {
+            const name    = btn.getAttribute('data-acc-btn');
+            const panel   = document.querySelector('[data-acc-panel="' + name + '"]');
+            const chevron = document.querySelector('[data-acc-chevron="' + name + '"]');
+
+            if (!panel) return;
+
+            btn.addEventListener('click', () => {
+              const isOpen = !panel.classList.contains('hidden');
+              panel.classList.toggle('hidden');
+              btn.setAttribute('aria-expanded', String(!isOpen));
+
+              if (chevron) {
+                chevron.classList.toggle('rotate-180', !isOpen);
+              }
+            });
+          });
+        })();
+
+        // Bibliography wrapper
         (function enhanceBibliographyOnPage() {
           var article = document.querySelector('article.prose');
           if (!article) return;
 
-          // 1) Find the “Bibliography / References / Works Cited” heading
           var headings = Array.prototype.filter.call(
             article.querySelectorAll('h2'),
             function (h) {
@@ -1152,7 +1190,6 @@
           var parent = h.parentNode;
           if (!parent) return;
 
-          // 2) Wrap the heading + following content until next H1/H2
           var wrapper = document.createElement('section');
           wrapper.className = 'bibliography-section';
           parent.insertBefore(wrapper, h);
@@ -1171,18 +1208,14 @@
             node = next;
           }
 
-          // 3) Turn either <li> OR <p> references into .bibliography-items
           var index = 1;
           Array.prototype.forEach.call(
             wrapper.querySelectorAll('ol li, ul li, p'),
             function (item) {
               var raw = (item.textContent || '').trim();
-
-              // If the text already starts with "1. ...", strip that out
-              // and keep the number as data-bib-index.
               var m = raw.match(/^(d+).s*(.*)$/);
               if (m) {
-                item.textContent = m[2];          // drop the "1." in the visible text
+                item.textContent = m[2];
                 item.setAttribute('data-bib-index', m[1]);
               } else {
                 item.setAttribute('data-bib-index', String(index));
@@ -1194,7 +1227,6 @@
           );
         })();
 
-
         // Share links
         (function(){
           const url  = encodeURIComponent(location.href);
@@ -1203,24 +1235,35 @@
           const fb   = document.getElementById('share-fb');
           const mail = document.getElementById('share-mail');
           const copy = document.getElementById('share-copy');
+
           if (x)  x.href  = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
           if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+
           if (mail){
             mail.href = 'mailto:?subject=' + text + '&body=' + url;
             mail.addEventListener('click', async (e) => {
-              if (navigator.share) { e.preventDefault(); try { await navigator.share({ title: document.title, url: location.href }); } catch {} }
+              if (navigator.share) {
+                e.preventDefault();
+                try { await navigator.share({ title: document.title, url: location.href }); }
+                catch {}
+              }
             });
           }
+
           if (copy){
             copy.addEventListener('click', async () => {
-              try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(function(){ copy.style.transform = ''; }, 120); }
-              catch { alert("Couldn't copy the link."); }
+              try {
+                await navigator.clipboard.writeText(location.href);
+                copy.style.transform = 'scale(0.96)';
+                setTimeout(function(){ copy.style.transform = ''; }, 120);
+              } catch {
+                alert("Couldn't copy the link.");
+              }
             });
           }
         })();
 
-        // Jump-to-section menu (auto from <h2> headings)
-        // Jump-to-section menu (auto from <h2> headings)
+        // Jump-to-section menu (auto from <h2> & <h3>)
         (function setupJumpMenu(){
           const article    = document.querySelector('article.prose');
           const mobileBox  = document.getElementById('jumpMenu');
@@ -1229,10 +1272,7 @@
 
           if (!article) return;
 
-          // 🔹 1) Look at BOTH h2 and h3
           const headings = Array.from(article.querySelectorAll('h2, h3'));
-
-          // Option: only show jump menu if there are at least 2 H2s
           const h2Count = headings.filter(h => h.tagName === 'H2').length;
           if (h2Count < 2) {
             if (mobileBox) mobileBox.classList.add('hidden');
@@ -1249,11 +1289,10 @@
             return slug;
           }
 
-          // 🔹 2) Store level (2 for H2, 3 for H3)
           const items = headings.map(function(h, index){
             const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
             const id    = h.id || makeId(label, index);
-            const level = h.tagName === 'H2' ? 2 : 3;   // 👈 key line
+            const level = h.tagName === 'H2' ? 2 : 3;
 
             if (!h.id) h.id = id;
             return { id: id, label: label, el: h, level: level };
@@ -1278,14 +1317,12 @@
               b.type = 'button';
               b.textContent = item.label;
 
-              // base mobile classes
               b.className =
                 'block w-full text-left text-sm py-1 ' +
                 (item.level === 3
-                  ? 'pl-5 text-ink-400'           // 👈 indented + softer for H3
+                  ? 'pl-5 text-ink-400'
                   : 'pl-2 text-ink-500 hover:text-ink-900');
 
-              // 🔹 3) expose level for CSS if you want
               b.dataset.level = String(item.level);
 
               b.addEventListener('click', function () {
@@ -1321,10 +1358,7 @@
             btn.type = 'button';
             btn.textContent = item.label;
             btn.dataset.id = item.id;
-
-            // 🔹 THIS is the line you were asking about
-            //     (not hard-coded 3; we use the real level)
-            btn.dataset.level = String(item.level);   // 👈 here
+            btn.dataset.level = String(item.level);
 
             if (idx === 0) btn.dataset.active = 'true';
             btn.addEventListener('click', function () { scrollToId(item.id); });
@@ -1357,7 +1391,6 @@
             }
           }
 
-
           window.addEventListener('scroll', updateActive, { passive:true });
           window.addEventListener('scroll', updateVisibility, { passive:true });
 
@@ -1365,10 +1398,27 @@
           updateVisibility();
         })();
 
+        // Estimated TTS total time (from readMinutes)
         var TTS_TOTAL_SECONDS = 840;
 
-                // Read-aloud / text-to-speech for article with progress + scrubbing
-                // Read-aloud / text-to-speech with sticky bar + word highlight
+        // --- Site root helper so carousel links don't nest under this slug ---
+        const basePath = (() => {
+          const parts = location.pathname.split('/').filter(Boolean);
+          if (!parts.length) return '/';
+          return '/' + parts[0] + '/';
+        })();
+
+        function toBase(u) {
+          if (!u) return '';
+          if (/^https?:///i.test(u)) return u;
+          if (u.startsWith('./') || u.startsWith('../')) {
+            return new URL(u, location.origin + basePath).pathname;
+          }
+          if (u.startsWith('/')) return basePath + u.slice(1);
+          return basePath + u;
+        }
+
+        // Read-aloud / text-to-speech with sticky bar + word highlight
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
             var btn = document.getElementById('ttsToggle');
@@ -1389,9 +1439,6 @@
 
           if (!article || !listenBtn || !stickyBar || !playPause || !range || !label) return;
 
-          /* ===========
-             Sentence-level wrapping for highlight
-          =========== */
           var sentenceSpans  = [];
           var sentenceStarts = [];
           var speechText     = '';
@@ -1438,32 +1485,6 @@
             node.parentNode.replaceChild(frag, node);
           }
 
-          // Footer year
-          (function () {
-            const yearEl = document.getElementById('year');
-            if (yearEl) yearEl.textContent = new Date().getFullYear();
-          })();
-
-          (function () {
-            document.querySelectorAll('[data-acc-btn]').forEach(btn => {
-              const name = btn.getAttribute('data-acc-btn');
-              const panel = document.querySelector('[data-acc-panel="' + name + '"]');
-              const chevron = document.querySelector('[data-acc-chevron="' + name + '"]');
-
-              if (!panel) return;
-
-              btn.addEventListener('click', () => {
-                const isOpen = !panel.classList.contains('hidden');
-                panel.classList.toggle('hidden');
-                btn.setAttribute('aria-expanded', String(!isOpen));
-
-                if (chevron) {
-                  chevron.classList.toggle('rotate-180', !isOpen);
-                }
-              });
-            });
-          })();
-
           function walk(node) {
             if (node.nodeType === Node.TEXT_NODE) {
               processTextNode(node);
@@ -1489,10 +1510,6 @@
           }
 
           var totalLength = speechText.length;
-
-          /* ===========
-             Time estimate fallback
-          =========== */
           var wordsCount = speechText.split(/s+/).filter(Boolean).length;
           var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
           var totalSeconds =
@@ -1507,9 +1524,6 @@
             return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
           }
 
-          /* ===========
-             Highlight helpers
-          =========== */
           function highlightSentence(index) {
             if (index < 0 || index >= sentenceSpans.length) return;
             if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
@@ -1544,9 +1558,6 @@
             return ans;
           }
 
-          /* ===========
-             Player State
-          =========== */
           var utterance  = null;
           var isActive   = false;
           var isPlaying  = false;
@@ -1612,9 +1623,6 @@
             listenBtn.textContent = 'Listen to article';
           }
 
-          /* ===========
-             Create utterance from offset
-          =========== */
           function createUtteranceFromOffset(offset) {
             if (!totalLength) return;
 
@@ -1662,10 +1670,6 @@
             setPlayState('playing');
             synth.speak(utterance);
           }
-
-          /* ===========
-             HANDLERS
-          =========== */
 
           listenBtn.addEventListener('click', function () {
             if (!isActive) {
@@ -1733,6 +1737,7 @@
           updateProgressUI(0);
         })();
 
+        // Related articles
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
           const scrollerTags    = document.getElementById('moreTagsScroller');
@@ -1745,9 +1750,11 @@
 
           function makeCard(p) {
             const card = document.createElement('a');
-            card.href = p.url || (p.slug + '/');
+
+            const href = p.url || (p.slug ? p.slug + '/' : '#');
+            card.href = toBase(href);
             card.className =
-              'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
+              'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
             if (p.cover) {
               const wrap = document.createElement('div');
@@ -1819,17 +1826,15 @@
             if (!res.ok) throw new Error('posts.json not found');
             const list = await res.json();
 
-            const currentSlug   = window.CURRENT && window.CURRENT.slug || '';
-            const currentTags   = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
-            const currentSection= window.CURRENT && window.CURRENT.section || '';
+            const currentSlug    = window.CURRENT && window.CURRENT.slug || '';
+            const currentTags    = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
+            const currentSection = window.CURRENT && window.CURRENT.section || '';
 
             const baseList = list.filter(function(p){ return p.slug !== currentSlug; });
-
             const usedSlugs = new Set();
 
             let sectionPicks = [];
             if (scrollerSection) {
-              // 🔹 only consider posts in the same section
               const sectionCandidates = baseList.filter(function (p) {
                 return p.section === currentSection;
               });
@@ -1840,7 +1845,6 @@
                   const overlap = tags.filter(function (t) {
                     return currentTags.includes(t);
                   }).length;
-                  // you can use overlap just to sort, no cross-section mixing
                   return Object.assign({}, p, { score: overlap });
                 })
                 .sort(function (a, b) {
@@ -1850,7 +1854,6 @@
               let pool = scored;
 
               if (!pool.length) {
-                // no other Memoirs → hide the section carousel instead of showing essays
                 if (sectionBlock) sectionBlock.classList.add('hidden');
               } else {
                 sectionPicks = pool.slice(0, 6);

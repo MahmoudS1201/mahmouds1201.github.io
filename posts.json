@@ -1,7 +1,7 @@
 [
   {
     "slug": "mama-cachita-y-sus-hijos-en-el-exilio",
-    "title": "Mamá Cachita Y Sus Hijos en el Exilio",
+    "title": "MamÃ¡ Cachita Y Sus Hijos en el Exilio",
     "section": "Essay",
     "tags": [
       "Cuba",
@@ -14,7 +14,7 @@
     "date": "2025-11-29T01:35",
     "readMinutes": 20,
     "featured": true,
-    "cover": "images/2025/11/mama-cachita-y-sus-hijos-en-el-exilio/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/mama-cachita-y-sus-hijos-en-el-exilio/cover.jpg",
     "url": "mama-cachita-y-sus-hijos-en-el-exilio/"
   },
   {
@@ -30,12 +30,12 @@
     "date": "2025-11-29T00:51",
     "readMinutes": 14,
     "featured": false,
-    "cover": "images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/cover.jpg",
     "url": "sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor/"
   },
   {
     "slug": "camila-sabes-donde-esta-mi-mama",
-    "title": "¿Camila, sabes dónde está mi mamá?",
+    "title": "ÃÂ¿Camila, sabes dÃÂ³nde estÃÂ¡ mi mamÃÂ¡?",
     "section": "Memoirs",
     "tags": [
       "Violence",
