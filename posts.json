@@ -1,5 +1,21 @@
 [
   {
+    "slug": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy",
+    "title": "The Cult of the Big Lie: A “How- to-Guide” On Becoming A Threat to Democracy",
+    "section": "Essay",
+    "tags": [
+      "Politics",
+      "Trump"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of the Donald Trump as a catalyst for far-right extremism at its crescendo, January 6th.",
+    "date": "2025-11-29T05:32",
+    "readMinutes": 16,
+    "featured": true,
+    "cover": "images/2025/11/the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/cover.jpg",
+    "url": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/"
+  },
+  {
     "slug": "the-journey-finding-peace",
     "title": "The Journey: Finding Peace",
     "section": "Memoirs",
@@ -13,7 +29,7 @@
     "date": "2025-11-29T05:08",
     "readMinutes": 16,
     "featured": false,
-    "cover": "images/2025/11/the-journey-finding-peace/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/the-journey-finding-peace/cover.jpg",
     "url": "the-journey-finding-peace/"
   },
   {
