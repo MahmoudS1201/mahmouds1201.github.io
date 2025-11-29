@@ -1,5 +1,22 @@
 [
   {
+    "slug": "camila-sabes-donde-esta-mi-mama",
+    "title": "¿Camila, sabes dónde está mi mamá?",
+    "section": "Memoirs",
+    "tags": [
+      "Violence",
+      "Drugs",
+      "Women"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An exploration into the trafficking of women in Mexico through Camila's own personal experience.",
+    "date": "2025-11-28T23:59",
+    "readMinutes": 15,
+    "featured": true,
+    "cover": "images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg",
+    "url": "camila-sabes-donde-esta-mi-mama/"
+  },
+  {
     "slug": "female-visions",
     "title": "Female Visions",
     "section": "Essay",
