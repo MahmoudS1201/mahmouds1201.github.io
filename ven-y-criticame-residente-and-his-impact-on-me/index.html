@@ -87,12 +87,15 @@
         article.prose blockquote p:first-of-type {
           margin-top:0;
         }
+        /* Attribution line inside blockquotes */
         article.prose blockquote p:last-of-type {
-          margin-bottom:0;
-          font-size:0.85rem;
-          color:#9CA3AF;
-          font-style:normal;
-          text-align:right;   /* visually bottom-right because it's last line */
+          margin-top: 0.4rem;
+          margin-bottom: 0;
+          font-size: 0.85rem;
+          color: #9CA3AF;      /* grey */
+          font-style: normal;  /* no italics */
+          text-align: right;      /* RIGHT side */
+          align-self: flex-end;   /* physically place it on the right inside flex */
         }
 
         #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
@@ -515,7 +518,7 @@
           }
         }
       </style>
-      
+
     </head>
 
     <body class="bg-cream text-ink-900 antialiased">
