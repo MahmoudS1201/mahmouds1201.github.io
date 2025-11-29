@@ -1,5 +1,23 @@
 [
   {
+    "slug": "mama-cachita-y-sus-hijos-en-el-exilio",
+    "title": "Mamá Cachita Y Sus Hijos en el Exilio",
+    "section": "Essay",
+    "tags": [
+      "Cuba",
+      "Miami",
+      "Religion",
+      "Politics"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "A history of the The formation of the cult of Cachita in Miami.",
+    "date": "2025-11-29T01:35",
+    "readMinutes": 20,
+    "featured": true,
+    "cover": "images/2025/11/mama-cachita-y-sus-hijos-en-el-exilio/cover.jpg",
+    "url": "mama-cachita-y-sus-hijos-en-el-exilio/"
+  },
+  {
     "slug": "sancho-panza-el-fiel-escudero-de-don-quijote-y-el-amor",
     "title": "Sancho Panza: El Fiel Escudero de Don Quijote y el Amor",
     "section": "Essay",
@@ -17,7 +35,7 @@
   },
   {
     "slug": "camila-sabes-donde-esta-mi-mama",
-    "title": "Â¿Camila, sabes dÃ³nde estÃ¡ mi mamÃ¡?",
+    "title": "ÃÂ¿Camila, sabes dÃÂ³nde estÃÂ¡ mi mamÃÂ¡?",
     "section": "Memoirs",
     "tags": [
       "Violence",
