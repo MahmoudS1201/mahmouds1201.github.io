@@ -4524,37 +4524,33 @@
 
             let sectionPicks = [];
             if (scrollerSection) {
-              const scored = baseList
-                .map(function(p){
+              // 🔹 only consider posts in the same section
+              const sectionCandidates = baseList.filter(function (p) {
+                return p.section === currentSection;
+              });
+
+              const scored = sectionCandidates
+                .map(function (p) {
                   const tags = Array.isArray(p.tags) ? p.tags : [];
-                  const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
-                  const sameSection = p.section === currentSection ? 1 : 0;
-                  return Object.assign({}, p, { score: sameSection * 3 + overlap });
+                  const overlap = tags.filter(function (t) {
+                    return currentTags.includes(t);
+                  }).length;
+                  // you can use overlap just to sort, no cross-section mixing
+                  return Object.assign({}, p, { score: overlap });
                 })
-                .sort(function(a, b){
+                .sort(function (a, b) {
                   return (b.score - a.score) || (new Date(b.date) - new Date(a.date));
                 });
 
-              let pool = scored.filter(function(p){ return p.score > 0; });
+              let pool = scored;
+
               if (!pool.length) {
-                pool = baseList
-                  .filter(function(p){ return p.section === currentSection; })
-                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
-
-                if (!pool.length) {
-                  pool = baseList.slice().sort(function(a, b){
-                    return new Date(b.date) - new Date(a.date);
-                  });
-                }
-              }
-
-              sectionPicks = pool.slice(0, 6);
-
-              if (!sectionPicks.length) {
-                if (emptySection) emptySection.classList.remove('hidden');
+                // no other Memoirs → hide the section carousel instead of showing essays
+                if (sectionBlock) sectionBlock.classList.add('hidden');
               } else {
+                sectionPicks = pool.slice(0, 6);
                 scrollerSection.replaceChildren();
-                sectionPicks.forEach(function(p){
+                sectionPicks.forEach(function (p) {
                   usedSlugs.add(p.slug);
                   scrollerSection.appendChild(makeCard(p));
                 });
