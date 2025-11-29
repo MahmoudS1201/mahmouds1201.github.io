@@ -829,7 +829,7 @@
     </div>
   </div>
 
-    <!-- Delete confirmation modal -->
+      <!-- Delete confirmation modal -->
   <div id="deleteModal"
        class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-soft max-w-sm w-full mx-4 p-6 text-center">
@@ -855,8 +855,8 @@
     </div>
   </div>
 
-    <!-- Delete confirmation modal -->
-  <div id="deleteModal"
+  <!-- Delete success modal -->
+  <div id="deleteSuccessModal"
        class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40">
     <div class="bg-white rounded-2xl shadow-soft max-w-sm w-full mx-4 p-6 text-center">
       <div class="mx-auto mb-3 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
@@ -864,15 +864,16 @@
       </div>
       <h2 class="font-serif text-xl mb-2">Article deleted</h2>
       <p class="text-sm text-ink-500 mb-4">
-        <span id="deleteModalTitle" class="font-semibold"></span> has been removed.
+        <span id="deleteSuccessTitle" class="font-semibold"></span> has been removed.
         The live site may take a few minutes to update as GitHub Pages rebuilds.
       </p>
-      <button id="deleteModalClose"
+      <button id="deleteSuccessClose"
               class="btn bg-accent text-white border-transparent hover:bg-accent-dark w-full">
         Got it
       </button>
     </div>
   </div>
+
 
   <script>
     /* =========================
@@ -1431,10 +1432,15 @@
       });
     }
 
-    const deleteModal       = $('#deleteModal');
-    const deleteModalTitle  = $('#deleteModalTitle');
-    const deleteModalCancel = $('#deleteModalCancel');
-    const deleteModalConfirm= $('#deleteModalConfirm');
+    const deleteModal        = $('#deleteModal');
+    const deleteModalTitle   = $('#deleteModalTitle');
+    const deleteModalCancel  = $('#deleteModalCancel');
+    const deleteModalConfirm = $('#deleteModalConfirm');
+
+    // Success modal elements
+    const deleteSuccessModal = $('#deleteSuccessModal');
+    const deleteSuccessTitle = $('#deleteSuccessTitle');
+    const deleteSuccessClose = $('#deleteSuccessClose');
 
     let deleteTargetSlug  = null;
     let deleteTargetTitle = null;
@@ -1461,6 +1467,21 @@
       deleteModal.classList.remove('flex');
     }
 
+    function openDeleteSuccessModal(title) {
+      if (deleteSuccessTitle) {
+        deleteSuccessTitle.textContent = title || '';
+      }
+      if (!deleteSuccessModal) return;
+      deleteSuccessModal.classList.remove('hidden');
+      deleteSuccessModal.classList.add('flex');
+    }
+
+    function closeDeleteSuccessModal() {
+      if (!deleteSuccessModal) return;
+      deleteSuccessModal.classList.add('hidden');
+      deleteSuccessModal.classList.remove('flex');
+    }
+
     async function handleDeleteConfirm() {
       if (!deleteTargetSlug) {
         closeDeleteModal();
@@ -1481,12 +1502,17 @@
         // 3) Local cache cleanup (best-effort)
         try { localStorage.removeItem(`ctr:admin:published:${slug}`); } catch {}
 
-        // 4) Status + refresh list
+        // 4) Refresh list in the drawer
+        await renderPublishedList();
+
+        // 5) Show nice success modal
+        openDeleteSuccessModal(title);
+
+        // Optional: also status text at the bottom of the form
         statusMsg.textContent =
           `Deleted "${title}". The live site will update to reflect this in a few minutes.`;
         setTimeout(() => { statusMsg.textContent = ''; }, 4000);
 
-        await renderPublishedList();
       } catch (e) {
         console.error(e);
         alert('Failed to delete article: ' + e.message);
@@ -1505,9 +1531,19 @@
       });
     }
     if (deleteModal) {
-      // click backdrop to close
+      // click backdrop to close confirm modal
       deleteModal.addEventListener('click', (e) => {
         if (e.target === deleteModal) closeDeleteModal();
+      });
+    }
+
+    if (deleteSuccessClose) {
+      deleteSuccessClose.addEventListener('click', closeDeleteSuccessModal);
+    }
+    if (deleteSuccessModal) {
+      // click backdrop to close success modal
+      deleteSuccessModal.addEventListener('click', (e) => {
+        if (e.target === deleteSuccessModal) closeDeleteSuccessModal();
       });
     }
 
