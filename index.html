@@ -553,32 +553,6 @@
   <!-- ====== Posts loader + full-card click behavior ====== -->
   <script type="module">
 
-     function fixEncoding(str) {
-      if (typeof str !== "string" || !str) return str;
-
-      // quick skip if nothing looks broken
-      if (!/[ÃÂ]/.test(str)) return str;
-
-      let out = str;
-
-      // Try decoding up to 3 times – this fixes single *and* double-encoded cases
-      for (let i = 0; i < 3; i++) {
-        try {
-          const bytes   = new Uint8Array([...out].map(c => c.charCodeAt(0)));
-          const decoded = new TextDecoder("utf-8").decode(bytes);
-
-          // if a pass didn’t change anything, we’re done
-          if (decoded === out) break;
-
-          out = decoded;
-        } catch {
-          break;
-        }
-      }
-
-      return out;
-    }
-
     /* ---------- Subpath helper (GitHub Pages safe) ---------- */
     const basePath = location.pathname.replace(/[^/]*$/, ''); // e.g. "/CamilaTiburcioRubio/"
     const toBase = (u) => {
@@ -612,28 +586,23 @@
       const href  = item.url || (item.slug ? `${item.slug}.html` : '#');
       const cover = item.cover || '';
 
+      // tags as-is
       let rawTags = Array.isArray(item.tags)
         ? item.tags
         : (typeof item.tags === 'string'
             ? item.tags.split(',').map(s => s.trim()).filter(Boolean)
             : []);
 
-      const tags = rawTags.map(t => fixEncoding(t));
-
-      const rawTitle   = item.title || '';
-      const rawSection = item.section || 'Article';
-      const rawDesc    = item.excerpt || item.description || '';
-
       return {
-        title: fixEncoding(rawTitle),
+        title: item.title || '',
         href: toBase(href),
-        section: fixEncoding(rawSection),
-        description: fixEncoding(rawDesc),
+        section: item.section || 'Article',
+        description: item.excerpt || item.description || '',
         date: item.date || '',
         readMinutes: item.readMinutes || '',
         featured: !!item.featured,
         cover: cover ? toBase(cover) : '',
-        tags,
+        tags: rawTags,
       };
     }
 
