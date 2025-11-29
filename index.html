@@ -555,14 +555,27 @@
 
      function fixEncoding(str) {
       if (typeof str !== "string" || !str) return str;
-      if (!/[ÃÂ]/.test(str)) return str; // quick skip if clean
 
-      try {
-        const bytes = new Uint8Array([...str].map(c => c.charCodeAt(0)));
-        return new TextDecoder("utf-8").decode(bytes);
-      } catch {
-        return str;
+      let out = str;
+      let safety = 0;
+
+      // If we see mojibake markers (Ã or Â), try to re-decode a few times
+      while (/[ÃÂ]/.test(out) && safety < 4) {
+        try {
+          const bytes = Uint8Array.from([...out].map(ch => ch.charCodeAt(0)));
+          const decoded = new TextDecoder("utf-8").decode(bytes);
+
+          // If decoding doesn't change it anymore, stop
+          if (decoded === out) break;
+
+          out = decoded;
+          safety++;
+        } catch {
+          break;
+        }
       }
+
+      return out;
     }
 
     /* ---------- Subpath helper (GitHub Pages safe) ---------- */
@@ -622,7 +635,7 @@
         tags,
       };
     }
-    
+
     const byNewest = (a,b)=> new Date(b.date) - new Date(a.date);
     const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});} catch { return ''; } };
     const $ = s => document.querySelector(s);
