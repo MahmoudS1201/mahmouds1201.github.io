@@ -623,14 +623,14 @@
             aria-label="Play or pause article audio"
           >
             <!-- Play icon -->
-            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <polygon points="8,5 19,12 8,19"></polygon>
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
             </svg>
 
             <!-- Pause icon -->
-            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
-              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <rect x="7" y="5" width="3.2" height="14" rx="1" />
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
             </svg>
           </button>
         </div>
@@ -880,14 +880,14 @@
             aria-label="Play or pause article audio"
           >
             <!-- Play icon -->
-            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <polygon points="8,5 19,12 8,19"></polygon>
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
             </svg>
 
             <!-- Pause icon -->
-            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
-              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <rect x="7" y="5" width="3.2" height="14" rx="1" />
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
             </svg>
           </button>
         </div>
@@ -1213,7 +1213,7 @@
             wrapper.querySelectorAll('ol li, ul li, p'),
             function (item) {
               var raw = (item.textContent || '').trim();
-              var m = raw.match(/^(d+).s*(.*)$/);
+              var m = raw.match(/^(\d+)\.\s*(.*)$/);
               if (m) {
                 item.textContent = m[2];
                 item.setAttribute('data-bib-index', m[1]);
@@ -1282,7 +1282,7 @@
           function makeId(text, index){
             var slug = (text || '')
               .toLowerCase()
-              .replace(/[^w]+/g, '-')
+              .replace(/[^\w]+/g, '-')
               .replace(/^-+|-+$/g, '');
             if (!slug) slug = 'section-' + (index + 1);
             if (!document.getElementById(slug)) return slug;
@@ -1510,7 +1510,7 @@
           }
 
           var totalLength = speechText.length;
-          var wordsCount = speechText.split(/s+/).filter(Boolean).length;
+          var wordsCount = speechText.split(/\s+/).filter(Boolean).length;
           var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
           var totalSeconds =
             typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
