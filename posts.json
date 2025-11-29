@@ -1,5 +1,22 @@
 [
   {
+    "slug": "the-journey-finding-peace",
+    "title": "The Journey: Finding Peace",
+    "section": "Memoirs",
+    "tags": [
+      "Friendship",
+      "Peace",
+      "Family"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "The story of Camila's childhood friend who taught her peace could be found in unexpected people and places",
+    "date": "2025-11-29T05:08",
+    "readMinutes": 16,
+    "featured": false,
+    "cover": "images/2025/11/the-journey-finding-peace/cover.jpg",
+    "url": "the-journey-finding-peace/"
+  },
+  {
     "slug": "mama-cachita-y-sus-hijos-en-el-exilio",
     "title": "Mamá Cachita Y Sus Hijos en el Exilio",
     "section": "Essay",
