@@ -11,13 +11,13 @@
       <meta property="og:title" content="¿Camila, sabes dónde está mi mamá? — Camila Tiburcio Rubio" />
       <meta property="og:description" content="In this memoirs by Camila Tiburcio Rubio, “¿Camila, sabes dónde está mi mamá?,” An exploration into the trafficking of women in Mexico through Camila&#39;s…" />
       <meta property="og:url" content="https://mahmouds1201.github.io/camila-sabes-donde-esta-mi-mama/" />
-      <meta property="og:image" content="https://mahmouds1201.github.io/images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" />
+      <meta property="og:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" />
 
       <!-- Twitter card (also used by some preview engines) -->
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="¿Camila, sabes dónde está mi mamá? — Camila Tiburcio Rubio" />
       <meta name="twitter:description" content="In this memoirs by Camila Tiburcio Rubio, “¿Camila, sabes dónde está mi mamá?,” An exploration into the trafficking of women in Mexico through Camila&#39;s…" />
-      <meta name="twitter:image" content="https://mahmouds1201.github.io/images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" />
+      <meta name="twitter:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -643,7 +643,7 @@
 
       
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="../images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" alt="Photo of many missing poster of women and children in mexico"/>
+        <img class="hero-img" src="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/camila-sabes-donde-esta-mi-mama/cover.jpg" alt="Photo of many missing poster of women and children in mexico"/>
         
       </figure>
 
@@ -775,7 +775,9 @@
 
         <section id="more" class="mt-12 border-t border-black/10 pt-8">
           <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="font-serif text-2xl">More Memoirss</h2>
+            <h2 class="font-serif text-2xl">
+              More Memoirss
+            </h2>
             <div class="hidden sm:flex items-center gap-2">
               <button
                 id="morePrev"
@@ -1841,37 +1843,33 @@
 
             let sectionPicks = [];
             if (scrollerSection) {
-              const scored = baseList
-                .map(function(p){
+              // 🔹 only consider posts in the same section
+              const sectionCandidates = baseList.filter(function (p) {
+                return p.section === currentSection;
+              });
+
+              const scored = sectionCandidates
+                .map(function (p) {
                   const tags = Array.isArray(p.tags) ? p.tags : [];
-                  const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
-                  const sameSection = p.section === currentSection ? 1 : 0;
-                  return Object.assign({}, p, { score: sameSection * 3 + overlap });
+                  const overlap = tags.filter(function (t) {
+                    return currentTags.includes(t);
+                  }).length;
+                  // you can use overlap just to sort, no cross-section mixing
+                  return Object.assign({}, p, { score: overlap });
                 })
-                .sort(function(a, b){
+                .sort(function (a, b) {
                   return (b.score - a.score) || (new Date(b.date) - new Date(a.date));
                 });
 
-              let pool = scored.filter(function(p){ return p.score > 0; });
+              let pool = scored;
+
               if (!pool.length) {
-                pool = baseList
-                  .filter(function(p){ return p.section === currentSection; })
-                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
-
-                if (!pool.length) {
-                  pool = baseList.slice().sort(function(a, b){
-                    return new Date(b.date) - new Date(a.date);
-                  });
-                }
-              }
-
-              sectionPicks = pool.slice(0, 6);
-
-              if (!sectionPicks.length) {
-                if (emptySection) emptySection.classList.remove('hidden');
+                // no other Memoirs → hide the section carousel instead of showing essays
+                if (sectionBlock) sectionBlock.classList.add('hidden');
               } else {
+                sectionPicks = pool.slice(0, 6);
                 scrollerSection.replaceChildren();
-                sectionPicks.forEach(function(p){
+                sectionPicks.forEach(function (p) {
                   usedSlugs.add(p.slug);
                   scrollerSection.appendChild(makeCard(p));
                 });
