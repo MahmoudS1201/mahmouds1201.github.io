@@ -2821,33 +2821,29 @@
         .prose p{margin:1.05em 0;line-height:1.8}
         .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
         .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+
+        /* Blockquotes: main quote left, attribution bottom-right */
         blockquote{
           border-left:4px solid #C53D2F;
           background:rgba(197,61,47,.08);
           padding:1rem 1.25rem;
           border-radius:.5rem;
           font-style:italic;
-          display: flex;              /* NEW */
-          flex-direction: column;     /* NEW */
         }
 
-                /* Make quote + attribution play nice inside blockquote */
+        /* Normal spacing for lines inside blockquote */
         article.prose blockquote p {
-          margin: 0;
+          margin:0.35rem 0;
         }
-
-        /* small gap between quote text and attribution */
-        article.prose blockquote p + p {
-          margin-top: 0.4rem;
+        article.prose blockquote p:first-of-type {
+          margin-top:0;
         }
-
-        /* Attribution: bottom-right, small, grey, not italic */
         article.prose blockquote p:last-of-type {
-          align-self: flex-end;            /* push to right edge of blockquote */
-          text-align: right;
-          font-size: 0.85rem;
-          color: #9CA3AF !important;       /* override inline color */
-          font-style: normal !important;   /* override italics */
+          margin-bottom:0;
+          font-size:0.85rem;
+          color:#9CA3AF;
+          font-style:normal;
+          text-align:right;   /* visually bottom-right because it's last line */
         }
 
         #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
@@ -2899,7 +2895,7 @@
         .fill-icon path{ fill: currentColor; }
         .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
-                /* Stronger section headers inside article */
+        /* Stronger section headers inside article */
         article.prose h2 {
           font-family: 'Source Serif 4', Georgia, serif;
           font-size: 1.9rem;              /* bigger — feels like a true section */
@@ -3095,7 +3091,6 @@
 
         #ttsProgressRange::-webkit-slider-thumb {
           margin-top: 0px !important;
-
         }
         #ttsProgressRange::-moz-range-thumb {
           margin-top: -3px !important;
@@ -3169,7 +3164,6 @@
           font-variant-numeric: tabular-nums;
           color: #6B7280;
         }
-
 
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
@@ -3271,8 +3265,8 @@
             display: none;
           }
         }
-
       </style>
+      
     </head>
 
     <body class="bg-cream text-ink-900 antialiased">
