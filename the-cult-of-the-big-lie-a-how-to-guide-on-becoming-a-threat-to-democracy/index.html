@@ -70,7 +70,35 @@
         .prose p{margin:1.05em 0;line-height:1.8}
         .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
         .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-        blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+        blockquote{
+          border-left:4px solid #C53D2F;
+          background:rgba(197,61,47,.08);
+          padding:1rem 1.25rem;
+          border-radius:.5rem;
+          font-style:italic;
+          display: flex;              /* NEW */
+          flex-direction: column;     /* NEW */
+        }
+
+                /* Make quote + attribution play nice inside blockquote */
+        article.prose blockquote p {
+          margin: 0;
+        }
+
+        /* small gap between quote text and attribution */
+        article.prose blockquote p + p {
+          margin-top: 0.4rem;
+        }
+
+        /* Attribution: bottom-right, small, grey, not italic */
+        article.prose blockquote p:last-of-type {
+          align-self: flex-end;            /* push to right edge of blockquote */
+          text-align: right;
+          font-size: 0.85rem;
+          color: #9CA3AF !important;       /* override inline color */
+          font-style: normal !important;   /* override italics */
+        }
+
         #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
         #progress-label{
           position:fixed;
@@ -104,16 +132,6 @@
           display:inline-flex; flex-direction:row; align-items:center; gap:14px;
           width:fit-content; padding:16px 18px; border-radius:9999px; background:#fff;
           border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto;
-        }
-
-        /* Quote attribution (inside blockquotes) */
-        blockquote footer,
-        blockquote cite {
-          display: block;
-          margin-top: 0.6rem;
-          font-size: 0.875rem;   /* smaller */
-          color: #9CA3AF;        /* ink-300 */
-          font-style: normal;    /* body-style, not italic */
         }
 
         .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
