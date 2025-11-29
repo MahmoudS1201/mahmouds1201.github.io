@@ -3452,7 +3452,13 @@
 
         <section id="more" class="mt-12 border-t border-black/10 pt-8">
           <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="font-serif text-2xl">More ${escapeHtml(data.section)}s</h2>
+            <h2 class="font-serif text-2xl">
+              More ${
+                data.section && data.section.toLowerCase() === "memoir"
+                  ? "Memoirs"
+                  : escapeHtml(data.section + "s")
+              }
+            </h2>
             <div class="hidden sm:flex items-center gap-2">
               <button
                 id="morePrev"
