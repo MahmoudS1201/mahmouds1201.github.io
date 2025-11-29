@@ -2867,6 +2867,17 @@
           font-style: normal;    /* body-style, not italic */
         }
 
+        /* Quote attribution inside blockquotes */
+        article.prose blockquote p:last-of-type,
+        article.prose blockquote p:last-of-type em,
+        article.prose blockquote p:last-of-type i,
+        article.prose blockquote p:last-of-type cite {
+          margin-top: 0.6rem;
+          font-size: 0.875rem;
+          color: #9CA3AF;
+          font-style: normal !important;
+        }
+
         .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
         .socialContainer{
           width:40px; height:40px; border-radius:12px; background:transparent;
