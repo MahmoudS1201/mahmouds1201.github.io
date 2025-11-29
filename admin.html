@@ -4859,7 +4859,7 @@
 
       if (existing && existing.content){
         try {
-          const json = atob(existing.content.replace(/\n/g,''));
+          const json = b64ToUtf8(existing.content.replace(/\n/g, ''));
           list = JSON.parse(json);
           if (!Array.isArray(list)) list = [];
         } catch { list = []; }
@@ -4881,7 +4881,7 @@
 
       let list = [];
       try {
-        const json = atob(existing.content.replace(/\n/g, ''));
+        const json = b64ToUtf8(existing.content.replace(/\n/g, ''));
         list = JSON.parse(json);
         if (!Array.isArray(list)) list = [];
       } catch {
