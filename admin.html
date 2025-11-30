@@ -4298,10 +4298,12 @@
         // --- Simple helper: keep things at site root ---
         function toBase(u) {
           if (!u) return '';
-          if (/^https?:\/\//i.test(u)) return u;     // already absolute
+          if (/^https?:\\/\\//i.test(u)) return u;     // already absolute
           if (u.startsWith('/')) return u;           // already root-relative
           // make "slug/" or "images/..." → "/slug/" or "/images/..."
-          return '/' + u.replace(/^\.?\//, '');
+          if (u.startsWith('./')) return '/' + u.slice(2);
+          if (u.startsWith('.')) return '/' + u.slice(1);
+          return '/' + u;
         }
 
         // Read-aloud / text-to-speech with sticky bar + word highlight
