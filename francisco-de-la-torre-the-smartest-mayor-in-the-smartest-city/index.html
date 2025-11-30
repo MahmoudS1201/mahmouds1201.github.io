@@ -118,6 +118,29 @@
           font-variant-numeric:tabular-nums;
           white-space:nowrap;
         }
+
+        /* On small screens, move % READ down near the bottom-right */
+        @media (max-width: 640px) {
+          #progress-label {
+            top: auto;
+            bottom: 72px;         /* sits above your bottom-right "↑ Top" button */
+            right: 16px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          #progress-label {
+            font-size: 9px;
+            padding: 2px 7px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          #progress-label {
+            bottom: 62px;
+          }
+        }
+
         blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
         .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
         .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
@@ -1091,10 +1114,17 @@
 
       <script>
         (function(){
-          const bar   = document.getElementById('progress-bar');
-          const label = document.getElementById('progress-label');
-          const textSpan = label ? label.querySelector('[data-progress-text]') : null;
-          if (!bar) return;
+          const bar = document.getElementById('progress-bar');
+          let label = document.getElementById('progress-label');
+
+          if (!bar || !label) return;
+
+          // 🔥 Make sure the label is attached directly to <body>
+          if (label.parentElement !== document.body) {
+            document.body.appendChild(label);
+          }
+
+          const textSpan = label.querySelector('[data-progress-text]');
 
           function onScroll(){
             const max = document.body.scrollHeight - innerHeight;
