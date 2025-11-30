@@ -584,7 +584,7 @@
                 By <span class="u-underline">Camila Tiburcio Rubio</span>
               </div>
               <div class="text-ink-300">
-                November 30, 2025
+                November 1, 2025
                 • 13 min read
               </div>
             </div>
@@ -1116,7 +1116,7 @@
           slug: "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
           section: "Essay",
           tags: ["Spain","Cuba"],
-          date: "2025-11-30T01:49",
+          date: "2025-11-01T01:49",
           title: "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas"
         };
       </script>
@@ -1818,8 +1818,8 @@
 
               if (coverSrc) {
                 // If it's not absolute or data URL, normalize relative to repo root
-                if (!/^https?:///i.test(coverSrc) && !coverSrc.startsWith('data:')) {
-                  coverSrc = toBase(coverSrc.replace(/^[.]?[/]/, ''));
+                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  coverSrc = toBase(coverSrc.replace(/^\./, '').replace(/^\//, ''));
                 }
               }
             }

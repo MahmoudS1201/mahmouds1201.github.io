@@ -70,7 +70,34 @@
         .prose p{margin:1.05em 0;line-height:1.8}
         .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
         .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-        blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+
+        /* Blockquotes: main quote left, attribution bottom-right */
+        blockquote{
+          border-left:4px solid #C53D2F;
+          background:rgba(197,61,47,.08);
+          padding:1rem 1.25rem;
+          border-radius:.5rem;
+          font-style:italic;
+        }
+
+        /* Normal spacing for lines inside blockquote */
+        article.prose blockquote p {
+          margin:0.35rem 0;
+        }
+        article.prose blockquote p:first-of-type {
+          margin-top:0;
+        }
+        /* Attribution line inside blockquotes */
+        article.prose blockquote p:last-of-type {
+          margin-top: 0.4rem;
+          margin-bottom: 0;
+          font-size: 0.85rem;
+          color: #9CA3AF;      /* grey */
+          font-style: normal;  /* no italics */
+          text-align: right;      /* RIGHT side */
+          align-self: flex-end;   /* physically place it on the right inside flex */
+        }
+
         #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
         #progress-label{
           position:fixed;
@@ -105,6 +132,7 @@
           width:fit-content; padding:16px 18px; border-radius:9999px; background:#fff;
           border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto;
         }
+
         .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
         .socialContainer{
           width:40px; height:40px; border-radius:12px; background:transparent;
@@ -119,7 +147,7 @@
         .fill-icon path{ fill: currentColor; }
         .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
-                /* Stronger section headers inside article */
+        /* Stronger section headers inside article */
         article.prose h2 {
           font-family: 'Source Serif 4', Georgia, serif;
           font-size: 1.9rem;              /* bigger — feels like a true section */
@@ -315,7 +343,6 @@
 
         #ttsProgressRange::-webkit-slider-thumb {
           margin-top: 0px !important;
-
         }
         #ttsProgressRange::-moz-range-thumb {
           margin-top: -3px !important;
@@ -389,7 +416,6 @@
           font-variant-numeric: tabular-nums;
           color: #6B7280;
         }
-
 
         /* --- Jump-to-section: desktop floating card (softer) --- */
         #jumpFloatingDesktop {
@@ -491,8 +517,8 @@
             display: none;
           }
         }
-
       </style>
+
     </head>
 
     <body class="bg-cream text-ink-900 antialiased">
@@ -1784,20 +1810,39 @@
           if (!scrollerSection && !scrollerTags) return;
 
           function makeCard(p) {
-            const card = document.createElement('a');
+            var card = document.createElement('a');
 
-            const href = p.url || (p.slug ? p.slug + '/' : '#');
+            var href = p.url || (p.slug ? p.slug + '/' : '#');
             card.href = toBase(href);
             card.className =
               'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
+            // Work out cover URL
+            var coverSrc = '';
+
             if (p.cover) {
-              const wrap = document.createElement('div');
+              // posts.json might store cover as a string OR as { src: '...' }
+              if (typeof p.cover === 'string') {
+                coverSrc = p.cover;
+              } else if (typeof p.cover === 'object' && typeof p.cover.src === 'string') {
+                coverSrc = p.cover.src;
+              }
+
+              if (coverSrc) {
+                // If it's not absolute or data URL, normalize relative to repo root
+                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  coverSrc = toBase(coverSrc.replace(/^\./, '').replace(/^\//, ''));
+                }
+              }
+            }
+
+            if (coverSrc) {
+              var wrap = document.createElement('div');
               wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
-              const img = document.createElement('img');
-              img.src = p.cover;
-              img.alt = '';
+              var img = document.createElement('img');
+              img.src = coverSrc;
+              img.alt = p.title || '';
               img.loading = 'lazy';
               img.className =
                 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
@@ -1806,23 +1851,23 @@
               card.appendChild(wrap);
             }
 
-            const info = document.createElement('div');
+            var info = document.createElement('div');
             info.className = 'p-3';
 
-            const sec = document.createElement('div');
+            var sec = document.createElement('div');
             sec.className =
               'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
             sec.textContent = p.section || '';
             info.appendChild(sec);
 
-            const h3 = document.createElement('h3');
+            var h3 = document.createElement('h3');
             h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
             h3.textContent = p.title || '';
             info.appendChild(h3);
 
-            const meta = document.createElement('div');
+            var meta = document.createElement('div');
             meta.className = 'mt-1 text-xs text-ink-300';
-            const dateStr = p.date
+            var dateStr = p.date
               ? new Date(p.date).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'short',

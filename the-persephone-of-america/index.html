@@ -11,13 +11,13 @@
       <meta property="og:title" content="The Persephone of America — Camila Tiburcio Rubio" />
       <meta property="og:description" content="In this essay by Camila Tiburcio Rubio, “The Persephone of America,” An analysis of the United States and its close ties to Neoliberalism." />
       <meta property="og:url" content="https://mahmouds1201.github.io/the-persephone-of-america/" />
-      <meta property="og:image" content="https://mahmouds1201.github.io/images/2023/04/the-persephone-of-america/cover.jpg" />
+      <meta property="og:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2023/04/the-persephone-of-america/cover.jpg" />
 
       <!-- Twitter card (also used by some preview engines) -->
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="The Persephone of America — Camila Tiburcio Rubio" />
       <meta name="twitter:description" content="In this essay by Camila Tiburcio Rubio, “The Persephone of America,” An analysis of the United States and its close ties to Neoliberalism." />
-      <meta name="twitter:image" content="https://mahmouds1201.github.io/images/2023/04/the-persephone-of-america/cover.jpg" />
+      <meta name="twitter:image" content="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2023/04/the-persephone-of-america/cover.jpg" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -665,7 +665,7 @@
 
       
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="../images/2023/04/the-persephone-of-america/cover.jpg" alt="Neoliberalism photo of Neoliberal political chmapions"/>
+        <img class="hero-img" src="https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2023/04/the-persephone-of-america/cover.jpg" alt="Neoliberalism photo of Neoliberal political chmapions"/>
         
       </figure>
 
@@ -1758,20 +1758,39 @@
           if (!scrollerSection && !scrollerTags) return;
 
           function makeCard(p) {
-            const card = document.createElement('a');
+            var card = document.createElement('a');
 
-            const href = p.url || (p.slug ? p.slug + '/' : '#');
+            var href = p.url || (p.slug ? p.slug + '/' : '#');
             card.href = toBase(href);
             card.className =
               'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
+            // Work out cover URL
+            var coverSrc = '';
+
             if (p.cover) {
-              const wrap = document.createElement('div');
+              // posts.json might store cover as a string OR as { src: '...' }
+              if (typeof p.cover === 'string') {
+                coverSrc = p.cover;
+              } else if (typeof p.cover === 'object' && typeof p.cover.src === 'string') {
+                coverSrc = p.cover.src;
+              }
+
+              if (coverSrc) {
+                // If it's not absolute or data URL, normalize relative to repo root
+                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  coverSrc = toBase(coverSrc.replace(/^\./, '').replace(/^\//, ''));
+                }
+              }
+            }
+
+            if (coverSrc) {
+              var wrap = document.createElement('div');
               wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
-              const img = document.createElement('img');
-              img.src = p.cover;
-              img.alt = '';
+              var img = document.createElement('img');
+              img.src = coverSrc;
+              img.alt = p.title || '';
               img.loading = 'lazy';
               img.className =
                 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
@@ -1780,23 +1799,23 @@
               card.appendChild(wrap);
             }
 
-            const info = document.createElement('div');
+            var info = document.createElement('div');
             info.className = 'p-3';
 
-            const sec = document.createElement('div');
+            var sec = document.createElement('div');
             sec.className =
               'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
             sec.textContent = p.section || '';
             info.appendChild(sec);
 
-            const h3 = document.createElement('h3');
+            var h3 = document.createElement('h3');
             h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
             h3.textContent = p.title || '';
             info.appendChild(h3);
 
-            const meta = document.createElement('div');
+            var meta = document.createElement('div');
             meta.className = 'mt-1 text-xs text-ink-300';
-            const dateStr = p.date
+            var dateStr = p.date
               ? new Date(p.date).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'short',

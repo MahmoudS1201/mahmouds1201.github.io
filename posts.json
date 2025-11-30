@@ -13,24 +13,8 @@
     "date": "2025-11-30T02:08",
     "readMinutes": 3,
     "featured": false,
-    "cover": "images/2025/11/congressional-brief-green-spaces/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/congressional-brief-green-spaces/cover.jpg",
     "url": "congressional-brief-green-spaces/"
-  },
-  {
-    "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
-    "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
-    "section": "Essay",
-    "tags": [
-      "Spain",
-      "Cuba"
-    ],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "An investigative research piece which compares the modern day migrations of Cuba and Spain.",
-    "date": "2025-11-30T01:49",
-    "readMinutes": 13,
-    "featured": true,
-    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/cover.jpg",
-    "url": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/"
   },
   {
     "slug": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city",
@@ -47,7 +31,7 @@
     "date": "2025-11-30T01:16",
     "readMinutes": 6,
     "featured": false,
-    "cover": "images/2025/11/francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/cover.jpg",
     "url": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/"
   },
   {
@@ -184,6 +168,22 @@
     "url": "en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics/"
   },
   {
+    "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
+    "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
+    "section": "Essay",
+    "tags": [
+      "Spain",
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An investigative research piece which compares the modern day migrations of Cuba and Spain.",
+    "date": "2025-11-01T01:49",
+    "readMinutes": 13,
+    "featured": true,
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/cover.jpg",
+    "url": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/"
+  },
+  {
     "slug": "dr-franke-spain-and-the-creation-of-the-far-right-in-spain",
     "title": "Dr. Franke-Spain and the Creation of the Far-Right in Spain",
     "section": "Essay",
@@ -230,7 +230,7 @@
     "date": "2023-04-18T01:28",
     "readMinutes": 4,
     "featured": false,
-    "cover": "images/2023/04/the-persephone-of-america/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2023/04/the-persephone-of-america/cover.jpg",
     "url": "the-persephone-of-america/"
   },
   {
@@ -246,7 +246,7 @@
     "date": "2023-02-27T01:40",
     "readMinutes": 4,
     "featured": false,
-    "cover": "images/2023/02/father-issues/cover.jpg",
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2023/02/father-issues/cover.jpg",
     "url": "father-issues/"
   }
 ]
