@@ -4559,7 +4559,7 @@
             card.className =
               'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
-            // Figure out a safe cover URL
+            // Work out cover URL
             var coverSrc = '';
 
             if (p.cover) {
@@ -4571,9 +4571,9 @@
               }
 
               if (coverSrc) {
-                // If it's not absolute or a data URL, normalize as relative to repo root
+                // If it's not absolute or data URL, normalize relative to repo root
                 if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
-                  coverSrc = toBase(coverSrc.replace(/^\.?\//, ''));
+                  coverSrc = toBase(coverSrc.replace(/^\\.?\\//, ''));
                 }
               }
             }
