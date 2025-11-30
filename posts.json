@@ -1,5 +1,56 @@
 [
   {
+    "slug": "congressional-brief-green-spaces",
+    "title": "Congressional Brief: Green Spaces",
+    "section": "Community",
+    "tags": [
+      "Politics",
+      "Enviornment",
+      "Miami"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "A mock congressional brief on the Importance of green spaces",
+    "date": "2025-11-30T02:08",
+    "readMinutes": 3,
+    "featured": false,
+    "cover": "images/2025/11/congressional-brief-green-spaces/cover.jpg",
+    "url": "congressional-brief-green-spaces/"
+  },
+  {
+    "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
+    "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
+    "section": "Essay",
+    "tags": [
+      "Spain",
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An investigative research piece which compares the modern day migrations of Cuba and Spain.",
+    "date": "2025-11-30T01:49",
+    "readMinutes": 13,
+    "featured": true,
+    "cover": "images/2025/11/cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/cover.jpg",
+    "url": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/"
+  },
+  {
+    "slug": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city",
+    "title": "Francisco De la Torre, the Smartest Mayor in the Smartest City?",
+    "section": "Essay",
+    "tags": [
+      "Europe",
+      "Technology",
+      "Politics",
+      "Globalization"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of Málaga, Spain and the role technology plays in modern day globalization.",
+    "date": "2025-11-30T01:16",
+    "readMinutes": 6,
+    "featured": false,
+    "cover": "images/2025/11/francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/cover.jpg",
+    "url": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/"
+  },
+  {
     "slug": "ven-y-criticame-residente-and-his-impact-on-me",
     "title": "Ven Y Criticame: Residente and His Impact On Me",
     "section": "Memoirs",
@@ -165,5 +216,37 @@
     "featured": true,
     "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg",
     "url": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba/"
+  },
+  {
+    "slug": "the-persephone-of-america",
+    "title": "The Persephone of America",
+    "section": "Essay",
+    "tags": [
+      "United States",
+      "Politics"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of the United States and its close ties to Neoliberalism.",
+    "date": "2023-04-18T01:28",
+    "readMinutes": 4,
+    "featured": false,
+    "cover": "images/2023/04/the-persephone-of-america/cover.jpg",
+    "url": "the-persephone-of-america/"
+  },
+  {
+    "slug": "father-issues",
+    "title": "Father Issues",
+    "section": "Essay",
+    "tags": [
+      "United States",
+      "Politics"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An exploration of the problematic nature of the sustained legacy of United States' founding fathers.",
+    "date": "2023-02-27T01:40",
+    "readMinutes": 4,
+    "featured": false,
+    "cover": "images/2023/02/father-issues/cover.jpg",
+    "url": "father-issues/"
   }
 ]
