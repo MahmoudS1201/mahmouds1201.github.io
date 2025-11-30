@@ -780,6 +780,17 @@
               Mark as Published
             </button>
 
+            <!-- Bulk rebuild all published articles -->
+            <div class="mt-6 border-t border-black/10 pt-4">
+              <button
+                id="rebuildAllBtn"
+                type="button"
+                class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-ink-600 shadow-soft hover:border-black/20 hover:text-ink-900 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                Rebuild all published articles
+              </button>
+              <div id="rebuildAllStatus" class="mt-2 text-xs text-ink-300"></div>
+            </div>
           </div>
           <p id="statusMsg" class="text-sm text-ink-300"></p>
         </form>
@@ -5082,6 +5093,105 @@
         location.reload();
       }
     });
+
+    // ===============================
+    // Bulk rebuild all published HTML
+    // ===============================
+    (function setupBulkRebuild() {
+      const btn    = document.getElementById('rebuildAllBtn');
+      const status = document.getElementById('rebuildAllStatus');
+
+      if (!btn || !status) return;
+
+      function setStatus(msg) {
+        status.textContent = msg;
+      }
+
+      async function rebuildAllPublished() {
+        // safety: avoid double-clicks
+        btn.disabled = true;
+        setStatus('Loading posts list…');
+
+        try {
+          // 1) Get posts.json list via your existing helper
+          const posts = await fetchPostsList();
+
+          // 2) Filter to published posts
+          //    🔧 If you use a different flag (e.g. post.published),
+          //    change this line accordingly.
+          const published = posts.filter(p => p && p.slug && p.draft !== true);
+
+          if (!published.length) {
+            setStatus('No published articles found to rebuild.');
+            btn.disabled = false;
+            return;
+          }
+
+          let okCount = 0;
+          let failCount = 0;
+
+          setStatus(`Found ${published.length} published articles. Starting rebuild…`);
+
+          // 3) Process sequentially to avoid API rate issues
+          for (let i = 0; i < published.length; i++) {
+            const post = published[i];
+            const slug = post.slug;
+
+            try {
+              setStatus(`(${i + 1}/${published.length}) Rebuilding “${post.title || slug}”…`);
+
+              // 3a) Load the source JSON for this article
+              const jsonUrl = `data/posts/${encodeURIComponent(slug)}.json?nocache=${Date.now()}`;
+              const res = await fetch(jsonUrl, { cache: 'no-store' });
+              if (!res.ok) {
+                throw new Error(`JSON not found (${res.status})`);
+              }
+              const data = await res.json();
+
+              // 3b) Build fresh HTML with your existing function
+              const html = buildArticleHtml(data);
+
+              // 3c) Figure out the HTML path using your helper
+              const htmlPath = articleHtmlPath(slug); // e.g. `${slug}/index.html`
+
+              // 3d) Save to GitHub using your existing helper
+              await upsertRepoFile(
+                htmlPath,
+                html,
+                `rebuild article HTML for ${slug}`
+              );
+
+              okCount++;
+            } catch (err) {
+              console.error(`Failed to rebuild ${post.slug}:`, err);
+              failCount++;
+            }
+          }
+
+          // 4) Final status
+          let msg = `Rebuild complete. Success: ${okCount}`;
+          if (failCount) msg += `, Failed: ${failCount} (check console)`;
+          msg += '. GitHub Pages may take a few minutes to update.';
+          setStatus(msg);
+        } catch (err) {
+          console.error('Bulk rebuild error:', err);
+          setStatus('Something went wrong while rebuilding articles. See console for details.');
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        const ok = confirm(
+          'Rebuild ALL published articles?\n\n' +
+          'This will regenerate each article’s HTML using the latest template ' +
+          'and push updates to GitHub. It will not touch drafts.'
+        );
+        if (!ok) return;
+        rebuildAllPublished();
+      });
+    })();
+
 
     /* ===============================
        Init
