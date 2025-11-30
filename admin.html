@@ -4813,6 +4813,21 @@
 
     function apiPath(p){ return (p||'').split('/').map(encodeURIComponent).join('/'); }
     function stripLeadingSlash(p){ return (p||'').replace(/^\/+/, ''); }
+    function cleanCoverSrc(src) {
+      if (!src) return null;
+
+      // If it's an absolute URL, strip protocol + host -> keep only the path
+      const m = /^https?:\/\/[^/]+(\/.*)$/i.exec(src);
+      if (m) {
+        src = m[1]; // e.g. "/CamilaTiburcioRubio/images/2025/11/slug/cover.jpg"
+      }
+
+      // Strip old repo prefix if it sneaks in
+      src = src.replace(/^\/?CamilaTiburcioRubio\//, '/');
+
+      // Now remove leading slash so posts.json stores "images/…"
+      return stripLeadingSlash(src);
+    }
     function yyyymm(dateIso){
       const d = dateIso ? new Date(dateIso) : new Date();
       const y = d.getUTCFullYear();
@@ -4978,7 +4993,7 @@
         date: entry.date,
         readMinutes: entry.readMinutes || 1,
         featured: !!entry.featured,
-        cover: entry.cover?.src ? stripLeadingSlash(entry.cover.src) : null,
+        cover: entry.cover?.src ? cleanCoverSrc(entry.cover.src) : null,
         url: `${entry.slug}/`
       };
     }
