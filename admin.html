@@ -4552,15 +4552,15 @@
           if (!scrollerSection && !scrollerTags) return;
 
           function makeCard(p) {
-            const card = document.createElement('a');
+            var card = document.createElement('a');
 
-            const href = p.url || (p.slug ? p.slug + '/' : '#');
+            var href = p.url || (p.slug ? p.slug + '/' : '#');
             card.href = toBase(href);
             card.className =
               'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
-            // --- figure out cover URL safely ---
-            let coverSrc = '';
+            // Figure out a safe cover URL
+            var coverSrc = '';
 
             if (p.cover) {
               // posts.json might store cover as a string OR as { src: '...' }
@@ -4571,20 +4571,18 @@
               }
 
               if (coverSrc) {
-                // absolute URL or data URL → leave alone
+                // If it's not absolute or a data URL, normalize as relative to repo root
                 if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
-                  // normalize relative path so it’s relative to the repo root,
-                  // not the current article folder
                   coverSrc = toBase(coverSrc.replace(/^\.?\//, ''));
                 }
               }
             }
 
             if (coverSrc) {
-              const wrap = document.createElement('div');
+              var wrap = document.createElement('div');
               wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
-              const img = document.createElement('img');
+              var img = document.createElement('img');
               img.src = coverSrc;
               img.alt = p.title || '';
               img.loading = 'lazy';
@@ -4595,23 +4593,23 @@
               card.appendChild(wrap);
             }
 
-            const info = document.createElement('div');
+            var info = document.createElement('div');
             info.className = 'p-3';
 
-            const sec = document.createElement('div');
+            var sec = document.createElement('div');
             sec.className =
               'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
             sec.textContent = p.section || '';
             info.appendChild(sec);
 
-            const h3 = document.createElement('h3');
+            var h3 = document.createElement('h3');
             h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
             h3.textContent = p.title || '';
             info.appendChild(h3);
 
-            const meta = document.createElement('div');
+            var meta = document.createElement('div');
             meta.className = 'mt-1 text-xs text-ink-300';
-            const dateStr = p.date
+            var dateStr = p.date
               ? new Date(p.date).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'short',
