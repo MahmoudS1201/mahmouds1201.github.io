@@ -3,8 +3,21 @@
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Test — Camila Tiburcio Rubio</title>
+      <title>Test — Camila Tiburcio Rubio — Camila Tiburcio Rubio</title>
       <meta name="description" content="Test" />
+
+      <!-- OpenGraph for iMessage / FB / etc -->
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content="Test — Camila Tiburcio Rubio" />
+      <meta property="og:description" content="Test" />
+      <meta property="og:url" content="https://mahmouds1201.github.io/test/" />
+      <meta property="og:image" content="https://mahmouds1201.github.io/images/2025/12/test/cover.jpg" />
+
+      <!-- Twitter card (also used by some preview engines) -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Test — Camila Tiburcio Rubio" />
+      <meta name="twitter:description" content="Test" />
+      <meta name="twitter:image" content="https://mahmouds1201.github.io/images/2025/12/test/cover.jpg" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
@@ -28,15 +41,63 @@
         }
       </script>
       <style>
-        .u-underline{position:relative}
-        .u-underline:after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .25s}
-        .u-underline:hover:after{transform:scaleX(1)}
+        .u-underline{
+          position:relative;
+        }
+        .u-underline::after{
+          content:'';
+          position:absolute;
+          left:0;
+          bottom:-2px;
+          height:2px;
+          width:100%;
+          background:currentColor;
+          transform:scaleX(0);
+          transform-origin:left;
+          transition:transform .25s;
+        }
+        .u-underline:hover::after{
+          transform:scaleX(1);
+        }
+
+        /* Keep underline when hovering the whole author link */
+        .author-link:hover .u-underline::after {
+          transform: scaleX(1);
+        }
+
         .prose h1,.prose h2,.prose h3,.prose h4{font-family:'Source Serif 4',Georgia,serif}
         .prose img{ width:100%; height:480px; object-fit:cover; object-position:center; display:block; border-radius:0.75rem; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin:1.25rem 0; }
         .prose p{margin:1.05em 0;line-height:1.8}
         .tag{display:inline-block;padding:.35rem .65rem;border-radius:9999px;background:rgba(197,61,47,.08);color:#C53D2F;font-weight:600;font-size:.8rem;border:1px solid rgba(0,0,0,.06)}
         .hero-img{width:100%;height:480px;object-fit:cover;object-position:center;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
-        blockquote{border-left:4px solid #C53D2F;background:rgba(197,61,47,.08);padding:1rem 1.25rem;border-radius:.5rem;font-style:italic}
+
+        /* Blockquotes: main quote left, attribution bottom-right */
+        blockquote{
+          border-left:4px solid #C53D2F;
+          background:rgba(197,61,47,.08);
+          padding:1rem 1.25rem;
+          border-radius:.5rem;
+          font-style:italic;
+        }
+
+        /* Normal spacing for lines inside blockquote */
+        article.prose blockquote p {
+          margin:0.35rem 0;
+        }
+        article.prose blockquote p:first-of-type {
+          margin-top:0;
+        }
+        /* Attribution line inside blockquotes */
+        article.prose blockquote p:last-of-type {
+          margin-top: 0.4rem;
+          margin-bottom: 0;
+          font-size: 0.85rem;
+          color: #9CA3AF;      /* grey */
+          font-style: normal;  /* no italics */
+          text-align: right;      /* RIGHT side */
+          align-self: flex-end;   /* physically place it on the right inside flex */
+        }
+
         #progress-bar{position:fixed;top:0;left:0;height:3px;background:#C53D2F;width:0;z-index:60}
         #progress-label{
           position:fixed;
@@ -57,6 +118,29 @@
           font-variant-numeric:tabular-nums;
           white-space:nowrap;
         }
+
+        /* On small screens, move % READ down near the bottom-right */
+        @media (max-width: 640px) {
+          #progress-label {
+            top: auto;
+            bottom: 72px;         /* sits above your bottom-right "↑ Top" button */
+            right: 16px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          #progress-label {
+            font-size: 9px;
+            padding: 2px 7px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          #progress-label {
+            bottom: 62px;
+          }
+        }
+
         blockquote::before { content: "“"; font-size: 3rem; line-height: 0; vertical-align: -0.4rem; color: #C53D2F; margin-right: 0.25rem; }
         .prose .dropcap::first-letter { font-family: 'Source Serif 4', Georgia, serif; float: left; font-size: 5.5rem; line-height: 0.9; margin-right: 0.1rem; font-weight: 500; margin-top: -0.2rem; color: #C53D2F; }
         .prose p.dropcap { text-indent: 0; margin-top: 0.4em; }
@@ -71,6 +155,7 @@
           width:fit-content; padding:16px 18px; border-radius:9999px; background:#fff;
           border:1px solid rgba(0,0,0,.10); box-shadow:0 10px 30px rgba(0,0,0,.04); margin:0 auto;
         }
+
         .shareLabel{ font-weight:700; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; color:#111; user-select:none; margin-right:2px; }
         .socialContainer{
           width:40px; height:40px; border-radius:12px; background:transparent;
@@ -85,7 +170,7 @@
         .fill-icon path{ fill: currentColor; }
         .clipboard-svg{ width:18px; height:18px; stroke: currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
 
-                /* Stronger section headers inside article */
+        /* Stronger section headers inside article */
         article.prose h2 {
           font-family: 'Source Serif 4', Georgia, serif;
           font-size: 1.9rem;              /* bigger — feels like a true section */
@@ -97,6 +182,24 @@
           scroll-margin-top: 110px;       /* fixes jump-to offset nicely */
           border-left: 4px solid #C53D2F; /* subtle accent mark */
           padding-left: 0.85rem;
+        }
+
+        /* Subheaders inside article */
+        article.prose h3 {
+          font-family: 'Source Serif 4', Georgia, serif;
+          font-size: 1.45rem;
+          line-height: 1.3;
+          color: #3A3A3A;
+          font-weight: 600;
+
+          margin-top: 2.2rem;
+          margin-bottom: 1rem;
+
+          scroll-margin-top: 110px;
+
+          /* soft accent guide bar */
+          border-left: 3px solid rgba(197, 61, 47, 0.35);
+          padding-left: 0.6rem;
         }
 
         #ttsToggle[data-state="playing"] {
@@ -226,11 +329,115 @@
           background: rgba(15,23,42,0.08);
         }
 
-          #ttsProgressRange::-webkit-slider-thumb {
-          margin-top: -10px !important;
+        /* Base track */
+        #ttsProgressRange {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 4px;
+          background: rgba(0,0,0,0.1);
+          border-radius: 999px;
+          outline: none;
+        }
+
+        /* WebKit thumb (Safari + Chrome) */
+        #ttsProgressRange::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          background: #C53D2F;
+          border-radius: 50%;
+          cursor: pointer;
+
+          /* THIS controls vertical alignment */
+          margin-top: 0px; /* Adjust between -4 and -8 until perfect */
+        }
+
+        /* Firefox thumb */
+        #ttsProgressRange::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          background: #C53D2F;
+          border-radius: 50%;
+          cursor: pointer;
+
+          margin-top: 0; /* Firefox centers by default */
+        }
+
+        #ttsProgressRange::-webkit-slider-thumb {
+          margin-top: 0px !important;
         }
         #ttsProgressRange::-moz-range-thumb {
           margin-top: -3px !important;
+        }
+
+        /* Sticky TTS mini-player container */
+        #ttsStickyBar {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 1rem;
+          z-index: 60;
+          display: none;       /* shown when listening starts */
+          pointer-events: none; /* inner card handles clicks */
+        }
+
+        /* Inner card gets actual pointer events */
+        #ttsStickyInner {
+          pointer-events: auto;
+        }
+
+        /* Highlight for the sentence currently being read */
+        .tts-sentence--active {
+          background: rgba(197, 61, 47, 0.14);
+          border-radius: 4px;
+          padding: 0 1px;
+          transition: background 0.08s ease-out;
+        }
+
+        /* Bibliography / citations block on article page */
+        .bibliography-section {
+          margin-top: 2.5rem;
+          padding-top: 1.25rem;
+          border-top: 1px solid rgba(0,0,0,0.08);
+          font-size: 0.95rem;
+        }
+
+        .bibliography-section h2 {
+          font-size: 1.1rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: #374151;
+          margin-bottom: 0.75rem;
+        }
+
+        /* Remove default bullets / numbers – we'll draw our own */
+        .bibliography-section ol,
+        .bibliography-section ul {
+          list-style: none;
+          padding-left: 0;
+          margin: 0;
+        }
+
+        /* One “item” per reference (works for <li> or <p>) */
+        .bibliography-item {
+          position: relative;
+          margin-bottom: 0.75rem;
+          line-height: 1.7;
+          padding-left: 2.25rem;   /* where the text block starts */
+        }
+
+        /* Number column */
+        .bibliography-item::before {
+          content: attr(data-bib-index) ".";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1.75rem;
+          text-align: right;
+          font-variant-numeric: tabular-nums;
+          color: #6B7280;
         }
 
         /* --- Jump-to-section: desktop floating card (softer) --- */
@@ -274,6 +481,19 @@
           margin-bottom: 6px;
           border-bottom: 1px solid rgba(0,0,0,0.10);
           padding-bottom: 3px;
+        }
+
+        /* Indented H3 in Jump-To menu */
+        #jumpFloatingDesktop .jump-list button[data-level="3"] {
+          padding-left: 18px !important;
+          font-size: 11px;
+          color: #6B7280;
+        }
+
+        #jumpFloatingDesktop .jump-list button[data-level="3"][data-active="true"] {
+          background: rgba(197, 61, 47, 0.12);
+          color: #C53D2F;
+          font-weight: 500;
         }
 
         /* List container */
@@ -320,8 +540,8 @@
             display: none;
           }
         }
-
       </style>
+
     </head>
 
     <body class="bg-cream text-ink-900 antialiased">
@@ -332,13 +552,26 @@
 
       <header class="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-cream/80 bg-cream/95 border-b border-black/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div class="flex items-center gap-1">
-            <a href="index.html" class="flex items-center gap-2" aria-label="Home">
-              <img src="assets/logo.png" alt="Camila Tiburcio Rubio logo" class="h-12 w-12 object-contain" />
-              <span class="font-serif text-2xl tracking-tight">Camila Tiburcio Rubio</span>
+          
+          <div class="flex items-center gap-3">
+            <!-- Lot K8 Brand -->
+            <a href="../" class="flex items-center gap-3 group" aria-label="Home">
+              <img
+                src="../assets/logo.png"
+                alt="Lot K8 logo"
+                class="h-12 w-12 object-contain transition group-hover:opacity-90"
+              />
+              <div class="flex flex-col leading-tight">
+                <span class="font-serif text-2xl tracking-[0.015em]">Lot K8</span>
+                <span class="text-xs text-ink-300 tracking-wide -mt-0.5">
+                  Essays, interviews & visual culture
+                </span>
+              </div>
             </a>
           </div>
-          <a id="backBtn" class="u-underline text-sm" href="index.html" title="Go back">← Go back</a>
+
+          <a id="backBtn" class="u-underline text-sm" href="../" title="Go back">← Go back</a>
+
         </div>
       </header>
 
@@ -355,17 +588,32 @@
 
 
         <div class="mt-4 flex items-center justify-center gap-3 text-sm">
-          <div class="w-9 h-9 rounded-full overflow-hidden bg-ink-300">
-            <img src="assets/camila.jpg" alt="Camila Tiburcio Rubio" class="w-full h-full object-cover"/>
-          </div>
-          <div class="text-left">
-            <div class="font-medium">By Camila Tiburcio Rubio</div>
-            <div class="text-ink-300">
-              November 15, 2025
-              • 9 min read
+          <a
+            href="../about/"
+            class="author-link flex items-center gap-3 group"
+            aria-label="About Camila Tiburcio Rubio"
+          >
+            <div
+              class="w-9 h-9 rounded-full bg-ink-300 group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+            >
+              <img
+                     src="../assets/camila.jpg"
+                     alt="Camila Tiburcio Rubio"
+                     class="w-full h-full rounded-full object-cover"
+                   />
             </div>
-          </div>
+            <div class="text-left">
+              <div class="font-medium">
+                By <span class="u-underline">Camila Tiburcio Rubio</span>
+              </div>
+              <div class="text-ink-300">
+                November 30, 2025
+                • 1 min read
+              </div>
+            </div>
+          </a>
         </div>
+
 
         
 
@@ -388,7 +636,7 @@
           <!-- Slider & Time -->
           <div class="flex items-center gap-2">
             <input
-              id="ttsProgressRange"
+              id="ttsProgressRangeInLine"
               type="range"
               min="0"
               max="100"
@@ -397,7 +645,7 @@
               style="width:260px;max-width:100%;"
             />
             <div
-              id="ttsProgressLabel"
+              id="ttsProgressLabelInLine"
               class="text-[11px] text-ink-400 font-medium tabular-nums"
             >
               00:00
@@ -406,21 +654,21 @@
 
           <!-- Play / Pause button (now aligned vertically) -->
           <button
-            id="ttsPlayPause"
+            id="ttsPlayPauseInLine"
             type="button"
             data-state="paused"
             class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition"
             aria-label="Play or pause article audio"
           >
             <!-- Play icon -->
-            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <polygon points="8,5 19,12 8,19"></polygon>
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
             </svg>
 
             <!-- Pause icon -->
-            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true">
-              <rect x="7" y="5" width="3.2" height="14" rx="1"></rect>
-              <rect x="13.8" y="5" width="3.2" height="14" rx="1"></rect>
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <rect x="7" y="5" width="3.2" height="14" rx="1" />
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
             </svg>
           </button>
         </div>
@@ -428,6 +676,10 @@
       </section>
 
       
+      <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <img class="hero-img" src="../images/2025/12/test/cover.jpg" alt=""/>
+        
+      </figure>
 
       <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <!-- Jump to section menu -->
@@ -455,19 +707,13 @@
           </div>
         </div>
 
-        <article class="prose prose-neutral max-w-none"><p>Dr. Franke-Spain and the Creation of the Far-Right in Spain<br/>By Camila Tiburcio</p>
-<p>Prof. Lavezzolo<br/>Topics: Contemporary Spanish Politics in Comparative Perspective Word Count: 1816</p>
-<h2>Test1</h2>
-Politics over the last decades have experienced a shift. Governments around the world have noticed the increased presence of “far-right” or “extremist” conservative ideology. The rhetoric of this ideology tends to foster a sense of elitism, in which the members preach the vitality of cultural and racial conservation (Carleton-Taylor, 2017). Specifically, this type of ideology reduces space for immigration policies, government intervention, and increases support for the lack of separation of church and state (only when policy is centered around the Christian or Catholic faith) (Carleton-Taylor, 2017). The rise of far-right politics in the Western world can be attributed to various factors, including the beginning of the age of globalization in the early 2000s and the rapid multiculturalism that it brought (Worth, 2017).
-Nonetheless, the perseverance and continuous growth of the ideology among Western countries is due to the ability of far-right politicians to connect the key ideas of the far-right to national problems. In the United States, for example, far-right ideology spreads to the generation of nostalgia for the “good old days,” in which the nation was a white and proper country, gaining special strength during the aftermath of the 9/11 terrorist attacks. In Britain, the far-right generated support through the Brexit phenomenon. Spain is one of the other Western nations with a boom in far-right presence. Having endured a dictatorship for nearly forty years, the rise of extremist ideologies in the country would seem to be impossible as one would think that the country would be more protective of the discourses it highlights and the politics that it allows.
-However, Spain has failed to properly address the legacy of the Francisco Franco era and it is precisely that failure that has allowed the far-right to rise in the nation. The far-right party, Vox, has gained prominence among the Spanish public due to the lack of acknowledgment of the Franco regime brought on by the Law of Amnesty of 1977 and the lack of proactive action by the Law of Historical Memory (2007).
-<h2>Test2</h2>
-<p>After the death of Franco, the country entered a “transition” period into democracy. It was during this period that the “Law of Amnesty of 1977” was adopted. For those leaders who sought to take Spain onto the path of democracy, it was crucial to find a quick way to address the legacy of the Francoist past without taking away the spotlight from the move to democracy.<br/>Thus, Spanish political scientist, Ignacio Sanchez-Cuenca, writes that the politicians passed the Law of Amnesty which granted freedom to political prisoners and immunity to Francoist leaders (2020). The law was seen as a way to put behind the crimes and enter an era of silence, in which unity would be key to the development of a democratic Spain. The lack of reparations and acknowledgment would allow the government and its constituents to focus on rebuilding the nation.<br/>However, the whispers of the Francoist regime were hard to ignore. During his era, a period of terror took over the streets. He instituted concentration camps in which over 500,000 people were forced to live in horrible conditions and produce labor for the regime. While captive, they were forced to build infrastructure for the country such as The Valley of the Fallen (which would eventually become Franco’s tomb), highways, and dams among others (Preston, 2006). Moreover, thousands of babies were stolen from their families and given to conservative families in an attempt to eradicate the “red gene” (a gene that led to Marxist ideologies) from children born to left-wing parents (Casey, 2022). Not to mention, the hundreds of thousands of people who were executed and oppressed throughout the regime. The families of the victims and the survivors recognized that a “pact of silence” overlooked the trauma and prevented the nation from truly moving forward.<br/>Moreover, this silence brought on by the Law of Amnesty of 1977 also allowed for the protection and amnesty of international war criminals. According to predoctoral researcher,<br/> <br/>Daniel Morente, after World War II war criminals like Ante Pavelić -a Croatian dictator who furthered the fascist movement- and Vjekoslav Luburić -an army general who oversaw a network of concentration camps- were allowed to reside in Spain under the Franco regime (2021).<br/>Needless to say, the pact of silence did little to acknowledge the protection of national and international war criminals by the state nor did it try to expel them as doing so would violate the silence and shift the attention from the transition to democracy.<br/>For over thirty years, victims of the Franco regime were forced to push to the sidelines the questions of their missing family members and to continue to witness the preservation of Francoist monuments. In 2007, Parliament passed the “Law of Historic Memory.” This law aimed to bring forward recognition and measures to aid those who suffered persecution at the hands of the dictatorship. It passed educational reforms to teach children about the regime, officially recognized the victims, called for the removal of Francoist symbols, the exhumation and categorization of mass graves, publicized access to archives about the Civil War and Franco, and brought to an end the “pact of silence” (Ministerio de la Presidencia, Justicia, Y Relaciones con las Cortes, 2007). To the survivors, this law seemed to be the right path toward ensuring that extremist ideologies are never carried out again. However, the law has failed to reach its full potential.<br/>One of the main failures of the law has been the failure to remove Francoist symbols and monuments. While the law made it clear that symbols and monuments of the Francoist era would be removed, conservative municipalities and judicial officers posed a big obstacle to achieving this goal (Baquero, 2018). Before the passing of the law, the “pact of silence” failed to stigmatize and reject Francoist ideals and officials. Similarly to when he was alive, the lack of recognition for the crime committed during his regime allowed those who supported him to continue to</p>
-<h2>Test3</h2>
-<p>idolize the Francoist era and what they recognized as its successes. Without the public discussion and education (for the generations that grew up during the “pact of silence”) of the regime there is no way for civilians -who were not personally affected- to understand the extent of the terror that the regime brought on. Thus, those who idolize the Franco regime fail to understand why there is a need to address the past or even to attempt to “tarnish” the image of a dead man (Franco).<br/>A 2019 research study published in the journal, Western European Politics, demonstrates how different approaches to reconciliation of a country’s fascist past yield different political responses (Caramani &amp; Manucci). Specifically, we can contrast Germany’s response to its past versus that of Spain. Germany adopted a policy of “culpabilization” in which they acknowledged their role with fascism and their culpability in World War II, meanwhile following Caramani and Manucci’s analysis we can categorize Spain as having adopted a policy of “cancellation”, in which the country’s role with fascism is not acknowledged nor stigmatized (2019). Thus, we see how Germany’s model of recognition brings a social stigma to ideologies similar to that reproduced by the Nazi regime and makes it harder for social acceptance of figures associated with fascism to be publicly celebrated or protected. On the other hand, Spain’s policy of cancellation makes it easier for ideologies similar to that held during the fascist regime to resurface in the political sphere and for fascist figures to be protected as there have been generations that have grown up without learning the full extent of the Francoist reign of terror; therefore, it is harder to stigmatize a person that to many was a mere historical figure.<br/>Thus, the implementation of the Law of Amnesty of 1977 and the Law of Historical Memory of 2007 have allowed the rise of far-right political ideologies in Spain. Specifically, since 2014 with the rise of Vox. With discontent as to the handling of the economic crisis of<br/> <br/>2008, the far-right party Vox was launched; the party’s platform focuses on anti-immigration, anti-Islam, anti-LGBTQ, and skepticism of the European Union (Zhou, 2023). The party has also advanced its agenda through an appeal towards nationalism and a strong rejection of multiculturalism.<br/>The nationalist stance of Vox can be observed as an attempt to preserve the idolized era in which Spain was of the Spaniards. Precisely, the Francoist era in which Franco emphasized the preservation of traditional values as vital for Spain’s national identity, thus, members of Vox who seek to reject multiculturalism -that globalization and increased migration to Spain brought- and return to the formation of a collective national identity can identify strongly with the Francoist era. The thirty years of the pact of silence failed to educate many Spaniards about the horrors of the regime, thus, the idolization of Franco as a nationalist leader is plausible under Vox’s platform.<br/>In turn, we see the opportunity for membership growth when policies such as the Law of Historic Memory are enacted. The attempt to remove Francoist symbols and monuments can be viewed by Spaniards -who feel displaced by the rapidly diversifying nation- as another attempt to erase the Spanish identity. Therefore, it is unsurprising that a study by Francisco Villanil and Laila Balcells for publication in Research and Politics found that the removal of Francoist street names in Spanish municipalities increased support for Vox while reducing the support for the more moderate conservative party Partido Popular (2021). The jump into the far-right extreme is not shocking given that PP has not been as aggressive in its attempt to re-establish the collective Spanish identity that the nation held under Franco. Rather, the party has fluctuated in its stance about the regime. Thus, for those Spaniards who seek to “re-establish” the collective Spanish<br/> <br/>identity, Vox is the party that has proven it will get them there through their anti-immigration speeches and anti-reparations and removal stances.<br/>Ultimately, it is the prolonged “pact of silence” brought by the Law of Amnesty of 1977 that allowed for Franco’s legacy to be an individual memory in which an individual either benefited from his regime or suffered. It allowed Francoists to solidify the good that Franco did while maintaining buried the horrors of his regime. On the other hand, the implementation of the Law of Historic Memory is thirty years too late and its passing (along with the newer revised law now known as the Law of Democratic Memory) has entered into a political world led by people who grew up with different versions of who Franco was. Thus, the two policies have set up the stage for Vox to thrive and become notable as the party seeks to reinstitute the “pact of silence” by fighting to disregard the resolutions of the laws of reparation (Historic Memory and Democratic Memory) and by appealing to those who hold Franco as the representation of Spanish identity.<br/> <br/>References<br/>Baquero, J. M. (2018, January 30). Diez casos en los que los tribunales frenaron la Ley de Memoria Histórica. El Diario. Retrieved February 19, 2024, from https://www.eldiario.es/sociedad/tribunales-frenaron-ley-memoria-historica_1_2814922.h tml<br/>Caramani, D., &amp; Manucci, L. (2019). National past and populism: the re-elaboration of fascism and its impact on right-wing populism in Western Europe. West European Politics, 42(6).<br/>Carleton, R. (2017, July 7). What Exactly Do We Mean By 'Far Right'. HuffPost UK. Retrieved February 19, 2024, from<br/>https://www.huffingtonpost.co.uk/roanna-carletontaylor/what-exactly-do-we-mean-b_b_1 7393486.html<br/>Ministerio de la Presidencia, Justicia, Y Relaciones con las Cortes. (2023, December 26). MPR. Ley de la Memoria Histórica (Ley 52/2007 de 26 de Diciembre) [Memoria Democrática/Normativa]. Ministerio de la Presidencia, Relaciones con las Cortes y Memoria Democrática. Retrieved February 19, 2024, from https://www.mpr.gob.es/memoriademocratica/normativa-y-otros-recusos/Paginas/ley-me moria-historica.aspx<br/>Morente, D. (2021, February 19). War Criminals in Spain During and After Franco’s Dictatorship. Balkan Diskurs. Retrieved February 19, 2024, from https://balkandiskurs.com/en/2021/02/19/war-criminals-in-spain/<br/>Preston, P. (2006). The Spanish Civil War: Reaction, Revolution and Revenge. Harper Perennial.</p>
-<p>Sánchez-Cuenca, I. (2020). Spanish Democratization: transition, consolidation, and its meaning in contemporary Spain. The Oxford Handbook of Spanish Politics.<br/> <br/>Villamil, F., &amp; Balcells, L. (2021). Do TJ policies cause backlash? Evidence from street name changes in Spain. Research and Politics.<br/>Worth, O. (2017). Globalisation and the 'Far-right' Turn in International Affairs. Irish Studies in International Affairs, 28.<br/>Zhou, L. (2023, July 24). Spain election 2023: Far-right party Vox threatens to make gains.<br/>What's at stake? Vox. Retrieved February 19, 2024, from</p>
-<p>https://www.vox.com/world-politics/23801966/spain-elections-2023-results-vox-far-right</p>
-<p>-partido-popular</p></article>
+        <div class="relative">
+          <div class="fade-top"></div>
+          <div class="fade-bottom"></div>
+          <article class="prose prose-neutral max-w-none">
+            <p>Test</p>
+          </article>
+        </div>
 
         <div class="mt-10 not-prose flex justify-center">
           <div class="shareCard" role="group" aria-label="Share">
@@ -501,21 +747,35 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
         </div>
 
         <section class="mt-12 border-t border-black/10 pt-6">
-          <div class="flex items-start gap-4">
-            <img src="assets/camila.jpg" alt="Photo of Camila Tiburcio Rubio" class="w-14 h-14 rounded-full object-cover" />
+          
+          <a
+            href="../about/"
+            class="author-link flex items-start gap-4 group"
+            aria-label="About Camila Tiburcio Rubio"
+          >
+            <img
+              src="../assets/camila.jpg"
+              alt="Photo of Camila Tiburcio Rubio"
+              class="w-14 h-14 rounded-full object-cover group-hover:ring-2 group-hover:ring-accent group-hover:ring-offset-2 group-hover:ring-offset-cream"
+            />
             <div>
-              <p class="font-semibold">Camila Tiburcio Rubio</p>
+              <p class="font-semibold">
+                <span class="u-underline">Camila Tiburcio Rubio</span>
+              </p>
               <p class="text-sm text-ink-300 mt-1">
                 Writer and cultural researcher focusing on Cuba and the Caribbean,
                 Masters Candidate in Latin America and Caribbean Studies at NYU.
               </p>
             </div>
-          </div>
+          </a>
+          
         </section>
 
         <section id="more" class="mt-12 border-t border-black/10 pt-8">
           <div class="flex items-center justify-between gap-3 mb-4">
-            <h2 class="font-serif text-2xl">More Essays</h2>
+            <h2 class="font-serif text-2xl">
+              More Essays
+            </h2>
             <div class="hidden sm:flex items-center gap-2">
               <button
                 id="morePrev"
@@ -585,18 +845,81 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
         </section>
       </main>
 
+      <!-- Sticky TTS mini-player -->
+      <div
+        id="ttsStickyBar"
+        class="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        style="display:none;"
+      >
+        <div
+          id="ttsStickyInner"
+          class="max-w-2xl w-full rounded-full border border-black/10 bg-white/95 shadow-soft backdrop-blur flex items-center gap-3 px-3 py-2"
+        >
+          <!-- Optional stop button on the left (desktop only) -->
+          <button
+            id="ttsStickyStop"
+            type="button"
+            class="hidden sm:inline-flex text-[11px] px-2.5 py-1 rounded-full border border-black/10 bg-white text-ink-400 hover:text-ink-900"
+          >
+            Stop
+          </button>
+
+          <!-- Progress bar -->
+          <input
+            id="ttsProgressRange"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="flex-1 mx-2"
+          />
+
+          <!-- Time label -->
+          <span
+            id="ttsProgressLabel"
+            class="text-[11px] text-ink-400 font-medium tabular-nums whitespace-nowrap"
+          >
+            00:00 / 00:00
+          </span>
+
+          <!-- Play / Pause circle on the right -->
+          <button
+            id="ttsPlayPause"
+            type="button"
+            data-state="paused"
+            class="inline-flex items-center justify-center rounded-full border border-black/10 bg-white/90 w-8 h-8 text-ink-500 shadow-soft hover:border-black/20 hover:text-ink-900 transition ml-1"
+            aria-label="Play or pause article audio"
+          >
+            <!-- Play icon -->
+            <svg data-icon="play" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <polygon points="8,5 19,12 8,19" />
+            </svg>
+
+            <!-- Pause icon -->
+            <svg data-icon="pause" viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true" fill="currentColor">
+              <rect x="7" y="5" width="3.2" height="14" rx="1" />
+              <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
       <!-- Back to top -->
       <button id="backTop"
               class="fixed right-4 bottom-4 hidden px-3 py-2 rounded-full border border-black/10 bg-white shadow-soft text-sm"
               aria-label="Back to top">↑ Top</button>
 
-      <!-- Footer -->
+            <!-- Footer -->
       <footer class="mt-16 bg-white border-t border-black/10 text-sm text-ink-500">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+        <!-- Desktop footer -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 hidden sm:grid sm:grid-cols-2 md:grid-cols-4 gap-10">
+          <!-- Brand -->
           <div>
             <div class="-ml-1.5">
               <div class="flex items-center gap-1">
-                <img src="assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
                 <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
               </div>
             </div>
@@ -604,26 +927,29 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
               Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
             </p>
           </div>
+          <!-- Explore -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">Explore</h3>
             <ul class="space-y-2">
-              <li><a href="features.html" class="u-underline">Features</a></li>
-              <li><a href="latest.html" class="u-underline">Latest</a></li>
-              <li><a href="sections.html" class="u-underline">Sections</a></li>
-              <li><a href="archive.html" class="u-underline">Archive</a></li>
-              <li><a href="search.html" class="u-underline">Search</a></li>
+              <li><a href="../features/" class="u-underline">Features</a></li>
+              <li><a href="../latest/" class="u-underline">Latest</a></li>
+              <li><a href="../sections/" class="u-underline">Sections</a></li>
+              <li><a href="../archive/" class="u-underline">Archive</a></li>
+              <li><a href="../search/" class="u-underline">Search</a></li>
             </ul>
           </div>
+          <!-- About -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">About</h3>
             <ul class="space-y-2">
-              <li><a href="about2.html" class="u-underline">About</a></li>
-              <li><a href="contact.html" class="u-underline">Contact</a></li>
-              <li><a href="mission.html" class="u-underline">Mission</a></li>
-              <li><a href="resume.html" class="u-underline">Résumé</a></li>
-              <li><a href="newsletter.html" class="u-underline">Newsletter</a></li>
+              <li><a href="../about/" class="u-underline">About</a></li>
+              <li><a href="../contact/" class="u-underline">Contact</a></li>
+              <li><a href="../mission/" class="u-underline">Mission</a></li>
+              <li><a href="../resume/" class="u-underline">Résumé</a></li>
+              <li><a href="../newsletter/" class="u-underline">Newsletter</a></li>
             </ul>
           </div>
+          <!-- Follow -->
           <div>
             <h3 class="font-semibold text-ink-900 mb-3">Follow</h3>
             <ul class="space-y-2">
@@ -635,28 +961,142 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             </ul>
           </div>
         </div>
+
+        <!-- Mobile accordion footer -->
+        <div class="sm:hidden border-t border-black/10">
+          <div class="max-w-6xl mx-auto px-4 py-6">
+            <!-- Brand -->
+            <div class="mb-6">
+              <div class="-ml-1.5">
+                <div class="flex items-center gap-1">
+                  <img src="../assets/logo.png" alt="Camila Tiburcio Rubio Logo" class="h-8 w-8 object-contain" />
+                  <span class="font-semibold text-ink-900">Camila Tiburcio Rubio</span>
+                </div>
+              </div>
+              <p class="mt-2 text-ink-400 text-sm max-w-xs">
+                Essays, interviews, and conversations from the life and mind of Camila Tiburcio Rubio.
+              </p>
+            </div>
+
+            <!-- Explore -->
+            <div class="border-t border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="explore"
+                aria-expanded="false"
+              >
+                <span>Explore</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="explore"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="explore">
+                <a href="../features/" class="block u-underline">Features</a>
+                <a href="../latest/" class="block u-underline">Latest</a>
+                <a href="../sections/" class="block u-underline">Sections</a>
+                <a href="../archive/" class="block u-underline">Archive</a>
+                <a href="../search/" class="block u-underline">Search</a>
+              </div>
+            </div>
+
+            <!-- About -->
+            <div class="border-t border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="about"
+                aria-expanded="false"
+              >
+                <span>About</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="about"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="about">
+                <a href="../about/" class="block u-underline">About</a>
+                <a href="../contact/" class="block u-underline">Contact</a>
+                <a href="../mission/" class="block u-underline">Mission</a>
+                <a href="../resume/" class="block u-underline">Résumé</a>
+                <a href="../newsletter/" class="block u-underline">Newsletter</a>
+              </div>
+            </div>
+
+            <!-- Follow -->
+            <div class="border-t border-black/10 border-b border-black/10">
+              <button
+                class="w-full flex items-center justify-between py-4 text-base font-medium text-ink-900"
+                data-acc-btn="follow"
+                aria-expanded="false"
+              >
+                <span>Follow</span>
+                <svg
+                  class="w-4 h-4 transform transition-transform"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-acc-chevron="follow"
+                  aria-hidden="true"
+                >
+                  <path d="M5 7.5L10 12.5L15 7.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="pb-4 space-y-2 text-sm text-ink-500 hidden" data-acc-panel="follow">
+                <a href="https://instagram.com" class="block u-underline">Instagram</a>
+                <a href="https://twitter.com" class="block u-underline">X / Twitter</a>
+                <a href="https://facebook.com" class="block u-underline">Facebook</a>
+                <a href="https://linkedin.com" class="block u-underline">Linkedin</a>
+                <a href="https://youtube.com" class="block u-underline">YouTube</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center text-xs text-ink-300 border-t border-black/10 py-6">
           © <span id="year"></span> Camila Tiburcio Rubio. All rights reserved.
         </div>
       </footer>
 
       <!-- Define CURRENT so related-posts JS works -->
+            <!-- Define CURRENT so related-posts JS works -->
       <script>
         window.CURRENT = {
           slug: "test",
           section: "Essay",
           tags: [],
-          date: "2025-11-15T02:45",
+          date: "2025-11-30T19:59",
           title: "Test"
         };
       </script>
 
       <script>
         (function(){
-          const bar   = document.getElementById('progress-bar');
-          const label = document.getElementById('progress-label');
-          const textSpan = label ? label.querySelector('[data-progress-text]') : null;
-          if (!bar) return;
+          const bar = document.getElementById('progress-bar');
+          let label = document.getElementById('progress-label');
+
+          if (!bar || !label) return;
+
+          // 🔥 Make sure the label is attached directly to <body>
+          if (label.parentElement !== document.body) {
+            document.body.appendChild(label);
+          }
+
+          const textSpan = label.querySelector('[data-progress-text]');
 
           function onScroll(){
             const max = document.body.scrollHeight - innerHeight;
@@ -682,7 +1122,7 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           onScroll();
         })();
 
-        // Back/Top buttons
+        // Back button behavior
         (function () {
           const link = document.getElementById('backBtn');
           if (!link) return;
@@ -696,17 +1136,114 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           });
         })();
 
-        const backTop = document.getElementById('backTop');
-        const toggleTop = () => {
-          if (window.scrollY > 600) backTop.classList.remove('hidden');
-          else backTop.classList.add('hidden');
-        };
-        window.addEventListener('scroll', toggleTop, { passive:true });
-        backTop.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+        // Back-to-top button
+        (function () {
+          const backTop = document.getElementById('backTop');
+          if (!backTop) return;
 
+          const toggleTop = () => {
+            if (window.scrollY > 600) backTop.classList.remove('hidden');
+            else backTop.classList.add('hidden');
+          };
+          window.addEventListener('scroll', toggleTop, { passive:true });
+          toggleTop();
+
+          backTop.addEventListener('click', () =>
+            window.scrollTo({ top:0, behavior:'smooth' })
+          );
+        })();
+
+        // Dropcap on first paragraph
         (function addDropcap(){
           const firstP = document.querySelector('article.prose p');
           if(firstP) firstP.classList.add('dropcap');
+        })();
+
+        // Footer year
+        (function () {
+          const yearEl = document.getElementById('year');
+          if (yearEl) yearEl.textContent = new Date().getFullYear();
+        })();
+
+        // Mobile footer accordion
+        (function () {
+          document.querySelectorAll('[data-acc-btn]').forEach(btn => {
+            const name    = btn.getAttribute('data-acc-btn');
+            const panel   = document.querySelector('[data-acc-panel="' + name + '"]');
+            const chevron = document.querySelector('[data-acc-chevron="' + name + '"]');
+
+            if (!panel) return;
+
+            btn.addEventListener('click', () => {
+              const isOpen = !panel.classList.contains('hidden');
+              panel.classList.toggle('hidden');
+              btn.setAttribute('aria-expanded', String(!isOpen));
+
+              if (chevron) {
+                chevron.classList.toggle('rotate-180', !isOpen);
+              }
+            });
+          });
+        })();
+
+        // Bibliography wrapper
+        (function enhanceBibliographyOnPage() {
+          var article = document.querySelector('article.prose');
+          if (!article) return;
+
+          var headings = Array.prototype.filter.call(
+            article.querySelectorAll('h2'),
+            function (h) {
+              var text = (h.textContent || '').trim().toLowerCase();
+              return (
+                text === 'bibliography' ||
+                text === 'references' ||
+                text === 'works cited'
+              );
+            }
+          );
+
+          if (!headings.length) return;
+
+          var h = headings[0];
+          var parent = h.parentNode;
+          if (!parent) return;
+
+          var wrapper = document.createElement('section');
+          wrapper.className = 'bibliography-section';
+          parent.insertBefore(wrapper, h);
+
+          var node = h;
+          while (node) {
+            var next = node.nextSibling;
+            wrapper.appendChild(node);
+
+            if (next && next.nodeType === 1) {
+              var tag = next.tagName;
+              if (tag === 'H1' || tag === 'H2') {
+                break;
+              }
+            }
+            node = next;
+          }
+
+          var index = 1;
+          Array.prototype.forEach.call(
+            wrapper.querySelectorAll('ol li, ul li, p'),
+            function (item) {
+              var raw = (item.textContent || '').trim();
+              var m = raw.match(/^(\d+)\.\s*(.*)$/);
+              if (m) {
+                item.textContent = m[2];
+                item.setAttribute('data-bib-index', m[1]);
+              } else {
+                item.setAttribute('data-bib-index', String(index));
+              }
+
+              item.classList.add('bibliography-item');
+              index++;
+            }
+          );
         })();
 
         // Share links
@@ -717,24 +1254,35 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           const fb   = document.getElementById('share-fb');
           const mail = document.getElementById('share-mail');
           const copy = document.getElementById('share-copy');
+
           if (x)  x.href  = 'https://twitter.com/intent/tweet?text=' + text + '&url=' + url;
           if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+
           if (mail){
             mail.href = 'mailto:?subject=' + text + '&body=' + url;
             mail.addEventListener('click', async (e) => {
-              if (navigator.share) { e.preventDefault(); try { await navigator.share({ title: document.title, url: location.href }); } catch {} }
+              if (navigator.share) {
+                e.preventDefault();
+                try { await navigator.share({ title: document.title, url: location.href }); }
+                catch {}
+              }
             });
           }
+
           if (copy){
             copy.addEventListener('click', async () => {
-              try { await navigator.clipboard.writeText(location.href); copy.style.transform = 'scale(0.96)'; setTimeout(function(){ copy.style.transform = ''; }, 120); }
-              catch { alert("Couldn't copy the link."); }
+              try {
+                await navigator.clipboard.writeText(location.href);
+                copy.style.transform = 'scale(0.96)';
+                setTimeout(function(){ copy.style.transform = ''; }, 120);
+              } catch {
+                alert("Couldn't copy the link.");
+              }
             });
           }
         })();
 
-        // Jump-to-section menu (auto from <h2> headings)
-        // Jump-to-section menu (auto from <h2> headings)
+        // Jump-to-section menu (auto from <h2> & <h3>)
         (function setupJumpMenu(){
           const article    = document.querySelector('article.prose');
           const mobileBox  = document.getElementById('jumpMenu');
@@ -743,8 +1291,9 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
 
           if (!article) return;
 
-          const headings = Array.from(article.querySelectorAll('h2'));
-          if (headings.length < 2) {
+          const headings = Array.from(article.querySelectorAll('h2, h3'));
+          const h2Count = headings.filter(h => h.tagName === 'H2').length;
+          if (h2Count < 2) {
             if (mobileBox) mobileBox.classList.add('hidden');
             return;
           }
@@ -752,7 +1301,7 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           function makeId(text, index){
             var slug = (text || '')
               .toLowerCase()
-              .replace(/[^w]+/g, '-')
+              .replace(/[^\w]+/g, '-')
               .replace(/^-+|-+$/g, '');
             if (!slug) slug = 'section-' + (index + 1);
             if (!document.getElementById(slug)) return slug;
@@ -762,8 +1311,10 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           const items = headings.map(function(h, index){
             const label = (h.textContent || '').trim() || ('Section ' + (index + 1));
             const id    = h.id || makeId(label, index);
+            const level = h.tagName === 'H2' ? 2 : 3;
+
             if (!h.id) h.id = id;
-            return { id: id, label: label, el: h };
+            return { id: id, label: label, el: h, level: level };
           });
 
           const headerOffset = 90;
@@ -784,8 +1335,15 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
               const b = document.createElement('button');
               b.type = 'button';
               b.textContent = item.label;
+
               b.className =
-                'block w-full text-left text-sm text-ink-500 hover:text-ink-900 py-1';
+                'block w-full text-left text-sm py-1 ' +
+                (item.level === 3
+                  ? 'pl-5 text-ink-400'
+                  : 'pl-2 text-ink-500 hover:text-ink-900');
+
+              b.dataset.level = String(item.level);
+
               b.addEventListener('click', function () {
                 scrollToId(item.id);
                 mobileList.classList.add('hidden');
@@ -819,6 +1377,8 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             btn.type = 'button';
             btn.textContent = item.label;
             btn.dataset.id = item.id;
+            btn.dataset.level = String(item.level);
+
             if (idx === 0) btn.dataset.active = 'true';
             btn.addEventListener('click', function () { scrollToId(item.id); });
 
@@ -842,7 +1402,6 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             });
           }
 
-          // NEW: fade-in behavior when scrolling down a bit
           function updateVisibility() {
             if (window.scrollY > 320) {
               desktopCard.classList.add('jump-visible');
@@ -858,86 +1417,204 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           updateVisibility();
         })();
 
-        var TTS_TOTAL_SECONDS = 540;
+        // Estimated TTS total time (from readMinutes)
+        var TTS_TOTAL_SECONDS = 60;
 
-                // Read-aloud / text-to-speech for article with progress + scrubbing
-                // Read-aloud / text-to-speech with "Stop listening" + play/pause + scrubbing
+        // --- Site root helper so carousel links don't nest under this slug ---
+        const basePath = (() => {
+          const parts = location.pathname.split('/').filter(Boolean);
+          if (!parts.length) return '/';
+          return '/' + parts[0] + '/';
+        })();
+
+        function toBase(u) {
+          if (!u) return '';
+          if (/^https?:\/\//i.test(u)) return u;
+          if (u.startsWith('./') || u.startsWith('../')) {
+            return new URL(u, location.origin + basePath).pathname;
+          }
+          if (u.startsWith('/')) return basePath + u.slice(1);
+          return basePath + u;
+        }
+
+        // Read-aloud / text-to-speech with sticky bar + word highlight
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
-            const btn = document.getElementById('ttsToggle');
-            const controls = document.getElementById('ttsControls');
+            var btn = document.getElementById('ttsToggle');
+            var bar = document.getElementById('ttsStickyBar');
             if (btn) btn.style.display = 'none';
-            if (controls) controls.style.display = 'none';
+            if (bar) bar.style.display = 'none';
             return;
           }
 
-          const synth       = window.speechSynthesis;
-          const article     = document.querySelector('article.prose');
-          const listenBtn   = document.getElementById('ttsToggle');
-          const controls    = document.getElementById('ttsControls');
-          const playPause   = document.getElementById('ttsPlayPause');
-          const range       = document.getElementById('ttsProgressRange');
-          const label       = document.getElementById('ttsProgressLabel');
+          var synth      = window.speechSynthesis;
+          var article    = document.querySelector('article.prose');
+          var listenBtn  = document.getElementById('ttsToggle');
+          var stickyBar  = document.getElementById('ttsStickyBar');
+          var playPause  = document.getElementById('ttsPlayPause');
+          var range      = document.getElementById('ttsProgressRange');
+          var label      = document.getElementById('ttsProgressLabel');
+          var stopBtn    = document.getElementById('ttsStickyStop');
 
-          if (!article || !listenBtn || !controls || !playPause || !range || !label) return;
+          if (!article || !listenBtn || !stickyBar || !playPause || !range || !label) return;
 
-          // Prepare text once
-          var fullText    = (article.innerText || article.textContent || '').trim();
-          var totalLength = fullText.length;
-          var totalSeconds = (typeof TTS_TOTAL_SECONDS === 'number' && TTS_TOTAL_SECONDS > 0)
-            ? TTS_TOTAL_SECONDS
-            : (data && data.readMinutes ? data.readMinutes * 60 : 0); // fallback if needed
+          var sentenceSpans  = [];
+          var sentenceStarts = [];
+          var speechText     = '';
+          var lastSentenceIndex = -1;
 
-          if (!totalLength) {
+          function processTextNode(node) {
+            var text = node.textContent;
+            if (!text || !text.trim()) return;
+
+            var frag = document.createDocumentFragment();
+            var sentenceRegex = /[^.!?]+[.!?]+/g;
+            var match;
+            var lastIndex = 0;
+
+            while ((match = sentenceRegex.exec(text)) !== null) {
+              var sentence  = match[0];
+              var startIdx  = match.index;
+
+              if (startIdx > lastIndex) {
+                var before = text.slice(lastIndex, startIdx);
+                frag.appendChild(document.createTextNode(before));
+                speechText += before;
+              }
+
+              var span = document.createElement('span');
+              span.textContent = sentence;
+              span.className = 'tts-sentence';
+              span.setAttribute('data-sentence-index', String(sentenceSpans.length));
+
+              sentenceSpans.push(span);
+              sentenceStarts.push(speechText.length);
+              speechText += sentence;
+
+              frag.appendChild(span);
+              lastIndex = startIdx + sentence.length;
+            }
+
+            if (lastIndex < text.length) {
+              var tail = text.slice(lastIndex);
+              frag.appendChild(document.createTextNode(tail));
+              speechText += tail;
+            }
+
+            node.parentNode.replaceChild(frag, node);
+          }
+
+          function walk(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              processTextNode(node);
+              return;
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) return;
+            if (node.classList && node.classList.contains('tts-sentence')) return;
+
+            var child = node.firstChild;
+            while (child) {
+              var next = child.nextSibling;
+              walk(child);
+              child = next;
+            }
+          }
+
+          walk(article);
+
+          if (!speechText.trim().length || !sentenceSpans.length) {
             listenBtn.style.display = 'none';
-            controls.style.display = 'none';
+            stickyBar.style.display = 'none';
             return;
           }
 
-          var utterance   = null;
-          var isActive    = false;
-          var isPlaying   = false;
-          var isPaused    = false;
-          var baseOffset  = 0;  // start index of current utterance
-          var currentIdx  = 0;  // charIndex within utterance
+          var totalLength = speechText.length;
+          var wordsCount = speechText.split(/\s+/).filter(Boolean).length;
+          var estimatedSeconds = Math.max(10, Math.round((wordsCount / 180) * 60));
+          var totalSeconds =
+            typeof window.TTS_TOTAL_SECONDS === 'number' && window.TTS_TOTAL_SECONDS > 0
+              ? window.TTS_TOTAL_SECONDS
+              : estimatedSeconds;
 
           function formatTime(sec) {
-            sec = Math.max(0, Math.round(sec || 0));
+            sec = Math.max(0, Math.round(sec));
             var m = Math.floor(sec / 60);
             var s = sec % 60;
             return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
           }
 
-          function updateProgressUI(percent) {
-            var pct = Math.max(0, Math.min(100, percent || 0));
-            range.value = pct;
-
-            if (totalSeconds > 0) {
-              var elapsed = totalSeconds * (pct / 100);
-              label.textContent = formatTime(elapsed) + ' / ' + formatTime(totalSeconds);
-            } else {
-              label.textContent = Math.round(pct) + '%';
+          function highlightSentence(index) {
+            if (index < 0 || index >= sentenceSpans.length) return;
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
             }
-
-            // Red fill left of thumb, neutral right
-            var fill  = '#C53D2F';
-            var track = 'rgba(15,23,42,0.08)';
-            range.style.background =
-              'linear-gradient(to right, ' +
-                fill + ' 0%, ' +
-                fill + ' ' + pct + '%, ' +
-                track + ' ' + pct + '%, ' +
-                track + ' 100%)';
+            sentenceSpans[index].classList.add('tts-sentence--active');
+            lastSentenceIndex = index;
           }
 
-          function computePercent() {
-            if (!totalLength) return 0;
-            var absolute = baseOffset + currentIdx;
-            return (absolute / totalLength) * 100;
+          function clearHighlight() {
+            if (lastSentenceIndex >= 0 && sentenceSpans[lastSentenceIndex]) {
+              sentenceSpans[lastSentenceIndex].classList.remove('tts-sentence--active');
+            }
+            lastSentenceIndex = -1;
           }
+
+          function findSentenceIndexFromChar(charIndex) {
+            if (!sentenceStarts.length) return -1;
+            var lo = 0;
+            var hi = sentenceStarts.length - 1;
+            var ans = 0;
+
+            while (lo <= hi) {
+              var mid = (lo + hi) >> 1;
+              if (sentenceStarts[mid] <= charIndex) {
+                ans = mid;
+                lo = mid + 1;
+              } else {
+                hi = mid - 1;
+              }
+            }
+            return ans;
+          }
+
+          var utterance  = null;
+          var isActive   = false;
+          var isPlaying  = false;
+          var isPaused   = false;
+          var baseOffset = 0;
+          var currentIdx = 0;
 
           function setPlayState(state) {
-            playPause.dataset.state = state;  // "playing" or "paused"
+            playPause.setAttribute('data-state', state);
+
+            var playIcon  = playPause.querySelector('[data-icon="play"]');
+            var pauseIcon = playPause.querySelector('[data-icon="pause"]');
+
+            if (state === 'playing') {
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+            } else {
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+            }
+          }
+
+          function updateProgressUI(percent) {
+            var pct = Math.max(0, Math.min(100, percent));
+            range.value = pct;
+
+            var currentSeconds = (totalSeconds * pct) / 100;
+            label.textContent = formatTime(currentSeconds) + ' / ' + formatTime(totalSeconds);
+
+            var fill  = '#C53D2F';
+            var track = 'rgba(15,23,42,0.08)';
+
+            range.style.background =
+              'linear-gradient(to right, '
+              + fill  + ' 0%, '
+              + fill  + ' ' + pct + '%, '
+              + track + ' ' + pct + '%, '
+              + track + ' 100%)';
           }
 
           function resetPlayback(keepProgress) {
@@ -945,24 +1622,31 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             utterance  = null;
             isPlaying  = false;
             isPaused   = false;
-            currentIdx = 0;
             baseOffset = 0;
+            currentIdx = 0;
             setPlayState('paused');
-            if (!keepProgress) updateProgressUI(0);
+            if (!keepProgress) {
+              updateProgressUI(0);
+              clearHighlight();
+            }
           }
+
+          function hideStickyBar() { stickyBar.style.display = 'none'; }
+          function showStickyBar() { stickyBar.style.display = 'flex'; }
 
           function stopListeningMode() {
             resetPlayback(false);
             isActive = false;
-            controls.style.display = 'none';
+            hideStickyBar();
+            clearHighlight();
             listenBtn.textContent = 'Listen to article';
           }
 
           function createUtteranceFromOffset(offset) {
             if (!totalLength) return;
 
-            var clamped = Math.max(0, Math.min(totalLength - 1, offset || 0));
-            var slice   = fullText.slice(clamped);
+            var clamped = Math.max(0, Math.min(totalLength - 1, offset));
+            var slice   = speechText.slice(clamped);
             if (!slice.trim()) {
               resetPlayback(false);
               updateProgressUI(100);
@@ -980,13 +1664,18 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             utterance.onboundary = function (e) {
               if (typeof e.charIndex === 'number') {
                 currentIdx = e.charIndex;
-                updateProgressUI(computePercent());
+                var absolute = baseOffset + currentIdx;
+                var pct = (absolute / totalLength) * 100;
+                updateProgressUI(pct);
+
+                var sentenceIndex = findSentenceIndexFromChar(absolute);
+                if (sentenceIndex >= 0) highlightSentence(sentenceIndex);
               }
             };
 
             utterance.onend = function () {
               isPlaying = false;
-              isPaused  = false;
+              isPaused = false;
               updateProgressUI(100);
               setPlayState('paused');
             };
@@ -1001,20 +1690,19 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             synth.speak(utterance);
           }
 
-          // Main button: enter/exit listening mode
           listenBtn.addEventListener('click', function () {
             if (!isActive) {
               isActive = true;
-              controls.style.display = 'flex';
+              showStickyBar();
               listenBtn.textContent = 'Stop listening';
               updateProgressUI(0);
+              clearHighlight();
               createUtteranceFromOffset(0);
             } else {
               stopListeningMode();
             }
           });
 
-          // Play/pause button
           playPause.addEventListener('click', function () {
             if (!isActive) return;
 
@@ -1039,29 +1727,36 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
             }
           });
 
-          // Scrub
+          if (stopBtn) {
+            stopBtn.addEventListener('click', function () {
+              if (!isActive) return;
+              stopListeningMode();
+            });
+          }
+
           range.addEventListener('input', function () {
             if (!isActive || !totalLength) return;
 
-            var pct = Math.max(0, Math.min(100, parseFloat(range.value) || 0));
+            var pct = Math.max(0, Math.min(100, parseFloat(range.value)));
             updateProgressUI(pct);
 
+            var absolute = Math.floor((pct / 100) * totalLength);
+            var sIdx = findSentenceIndexFromChar(absolute);
+            if (sIdx >= 0) highlightSentence(sIdx);
+
             if (isPlaying) {
-              var offset = Math.floor((pct / 100) * totalLength);
-              createUtteranceFromOffset(offset);
+              createUtteranceFromOffset(absolute);
             }
           });
 
-          // Stop reading on page unload
           window.addEventListener('beforeunload', function () {
             synth.cancel();
           });
 
-          // Initialize label once
           updateProgressUI(0);
         })();
 
-
+        // Related articles
         async function loadRelated () {
           const scrollerSection = document.getElementById('moreScroller');
           const scrollerTags    = document.getElementById('moreTagsScroller');
@@ -1073,18 +1768,39 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           if (!scrollerSection && !scrollerTags) return;
 
           function makeCard(p) {
-            const card = document.createElement('a');
-            card.href = p.url || (p.slug + '.html');
+            var card = document.createElement('a');
+
+            var href = p.url || (p.slug ? p.slug + '/' : '#');
+            card.href = toBase(href);
             card.className =
-              'group relative shrink-0 w-[260px] sm:w-[280px] md:w-[320px] snap-start rounded-2xl border border-black/10 bg-white overflow-hidden hover:shadow-soft transition';
+              'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
+
+            // Work out cover URL
+            var coverSrc = '';
 
             if (p.cover) {
-              const wrap = document.createElement('div');
+              // posts.json might store cover as a string OR as { src: '...' }
+              if (typeof p.cover === 'string') {
+                coverSrc = p.cover;
+              } else if (typeof p.cover === 'object' && typeof p.cover.src === 'string') {
+                coverSrc = p.cover.src;
+              }
+
+              if (coverSrc) {
+                // If it's not absolute or data URL, normalize relative to repo root
+                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  coverSrc = toBase(coverSrc.replace(/^\./, '').replace(/^\//, ''));
+                }
+              }
+            }
+
+            if (coverSrc) {
+              var wrap = document.createElement('div');
               wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
-              const img = document.createElement('img');
-              img.src = p.cover;
-              img.alt = '';
+              var img = document.createElement('img');
+              img.src = coverSrc;
+              img.alt = p.title || '';
               img.loading = 'lazy';
               img.className =
                 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
@@ -1093,23 +1809,23 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
               card.appendChild(wrap);
             }
 
-            const info = document.createElement('div');
+            var info = document.createElement('div');
             info.className = 'p-3';
 
-            const sec = document.createElement('div');
+            var sec = document.createElement('div');
             sec.className =
               'mb-1 text-[10px] tracking-[.14em] font-semibold uppercase text-accent';
             sec.textContent = p.section || '';
             info.appendChild(sec);
 
-            const h3 = document.createElement('h3');
+            var h3 = document.createElement('h3');
             h3.className = 'font-serif text-lg leading-snug text-ink-900 line-clamp-2';
             h3.textContent = p.title || '';
             info.appendChild(h3);
 
-            const meta = document.createElement('div');
+            var meta = document.createElement('div');
             meta.className = 'mt-1 text-xs text-ink-300';
-            const dateStr = p.date
+            var dateStr = p.date
               ? new Date(p.date).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'short',
@@ -1144,51 +1860,43 @@ However, Spain has failed to properly address the legacy of the Francisco Franco
           }
 
           try {
-            const res = await fetch('posts.json', { cache: 'no-store' });
+            const res = await fetch('../posts.json', { cache: 'no-store' });
             if (!res.ok) throw new Error('posts.json not found');
             const list = await res.json();
 
-            const currentSlug   = window.CURRENT && window.CURRENT.slug || '';
-            const currentTags   = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
-            const currentSection= window.CURRENT && window.CURRENT.section || '';
+            const currentSlug    = window.CURRENT && window.CURRENT.slug || '';
+            const currentTags    = Array.isArray(window.CURRENT && window.CURRENT.tags) ? window.CURRENT.tags : [];
+            const currentSection = window.CURRENT && window.CURRENT.section || '';
 
             const baseList = list.filter(function(p){ return p.slug !== currentSlug; });
-
             const usedSlugs = new Set();
 
             let sectionPicks = [];
             if (scrollerSection) {
-              const scored = baseList
-                .map(function(p){
+              const sectionCandidates = baseList.filter(function (p) {
+                return p.section === currentSection;
+              });
+
+              const scored = sectionCandidates
+                .map(function (p) {
                   const tags = Array.isArray(p.tags) ? p.tags : [];
-                  const overlap = tags.filter(function(t){ return currentTags.includes(t); }).length;
-                  const sameSection = p.section === currentSection ? 1 : 0;
-                  return Object.assign({}, p, { score: sameSection * 3 + overlap });
+                  const overlap = tags.filter(function (t) {
+                    return currentTags.includes(t);
+                  }).length;
+                  return Object.assign({}, p, { score: overlap });
                 })
-                .sort(function(a, b){
+                .sort(function (a, b) {
                   return (b.score - a.score) || (new Date(b.date) - new Date(a.date));
                 });
 
-              let pool = scored.filter(function(p){ return p.score > 0; });
+              let pool = scored;
+
               if (!pool.length) {
-                pool = baseList
-                  .filter(function(p){ return p.section === currentSection; })
-                  .sort(function(a, b){ return new Date(b.date) - new Date(a.date); });
-
-                if (!pool.length) {
-                  pool = baseList.slice().sort(function(a, b){
-                    return new Date(b.date) - new Date(a.date);
-                  });
-                }
-              }
-
-              sectionPicks = pool.slice(0, 6);
-
-              if (!sectionPicks.length) {
-                if (emptySection) emptySection.classList.remove('hidden');
+                if (sectionBlock) sectionBlock.classList.add('hidden');
               } else {
+                sectionPicks = pool.slice(0, 6);
                 scrollerSection.replaceChildren();
-                sectionPicks.forEach(function(p){
+                sectionPicks.forEach(function (p) {
                   usedSlugs.add(p.slug);
                   scrollerSection.appendChild(makeCard(p));
                 });
