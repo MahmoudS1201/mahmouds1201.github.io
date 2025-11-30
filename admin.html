@@ -780,16 +780,16 @@
               Mark as Published
             </button>
 
-            <!-- Bulk rebuild all published articles -->
-            <div class="mt-6 border-t border-black/10 pt-4">
-              <button
-                id="rebuildAllBtn"
-                type="button"
-                class="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-ink-600 shadow-soft hover:border-black/20 hover:text-ink-900 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
+            <div class="space-y-3 mt-4">
+              <button id="publishBtn"
+                      class="w-full bg-accent text-white font-medium py-2.5 rounded-xl">
+                Mark as Published
+              </button>
+
+              <button id="rebuildAllBtn"
+                      class="w-full bg-white border border-black/10 py-2.5 rounded-xl text-sm hover:bg-black/5">
                 Rebuild all published articles
               </button>
-              <div id="rebuildAllStatus" class="mt-2 text-xs text-ink-300"></div>
             </div>
           </div>
           <p id="statusMsg" class="text-sm text-ink-300"></p>
