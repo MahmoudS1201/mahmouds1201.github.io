@@ -199,5 +199,21 @@
     "featured": false,
     "cover": "images/2023/04/the-persephone-of-america/cover.jpg",
     "url": "the-persephone-of-america/"
+  },
+  {
+    "slug": "father-issues",
+    "title": "Father Issues",
+    "section": "Essay",
+    "tags": [
+      "United States",
+      "Politics"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An exploration of the problematic nature of the sustained legacy of United States' founding fathers.",
+    "date": "2023-02-27T01:40",
+    "readMinutes": 4,
+    "featured": false,
+    "cover": "images/2023/02/father-issues/cover.jpg",
+    "url": "father-issues/"
   }
 ]
