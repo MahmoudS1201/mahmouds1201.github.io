@@ -1129,10 +1129,17 @@
 
       <script>
         (function(){
-          const bar   = document.getElementById('progress-bar');
-          const label = document.getElementById('progress-label');
-          const textSpan = label ? label.querySelector('[data-progress-text]') : null;
-          if (!bar) return;
+          const bar = document.getElementById('progress-bar');
+          let label = document.getElementById('progress-label');
+
+          if (!bar || !label) return;
+
+          // 🔥 Make sure the label is attached directly to <body>
+          if (label.parentElement !== document.body) {
+            document.body.appendChild(label);
+          }
+
+          const textSpan = label.querySelector('[data-progress-text]');
 
           function onScroll(){
             const max = document.body.scrollHeight - innerHeight;
