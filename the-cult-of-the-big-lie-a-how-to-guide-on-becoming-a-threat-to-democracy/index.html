@@ -607,7 +607,7 @@
                 By <span class="u-underline">Camila Tiburcio Rubio</span>
               </div>
               <div class="text-ink-300">
-                November 29, 2025
+                November 30, 2025
                 • 16 min read
               </div>
             </div>
@@ -1139,7 +1139,7 @@
           slug: "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy",
           section: "Essay",
           tags: ["Politics","Trump"],
-          date: "2025-11-29T23:46",
+          date: "2025-11-30T23:46",
           title: "The Cult of the Big Lie: A “How- to-Guide” On Becoming A Threat to Democracy"
         };
       </script>
@@ -1490,6 +1490,33 @@
           if (u.startsWith('./')) return '/' + u.slice(2);
           if (u.startsWith('.')) return '/' + u.slice(1);
           return '/' + u;
+        }
+
+        // Normalize image paths to /images/... format
+        function normalizeImagePath(src) {
+          if (!src) return '';
+          
+          // Strip any full URL down to just the path part
+          if (src.includes('://')) {
+            const urlParts = src.split('/');
+            const imagesIndex = urlParts.indexOf('images');
+            if (imagesIndex !== -1) {
+              src = '/' + urlParts.slice(imagesIndex).join('/');
+              return src;
+            }
+          }
+          
+          // If it starts with "images/..." (no slash), make it "/images/..."
+          if (src.startsWith('images/')) {
+            return '/' + src;
+          }
+          
+          // If already starts with /, keep it
+          if (src.startsWith('/')) {
+            return src;
+          }
+          
+          return '/' + src;
         }
 
         // Read-aloud / text-to-speech with sticky bar + word highlight
