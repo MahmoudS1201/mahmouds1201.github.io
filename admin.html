@@ -4306,6 +4306,33 @@
           return '/' + u;
         }
 
+        // Normalize image paths to /images/... format
+        function normalizeImagePath(src) {
+          if (!src) return '';
+          
+          // Strip any full URL down to just the path part
+          if (src.includes('://')) {
+            const urlParts = src.split('/');
+            const imagesIndex = urlParts.indexOf('images');
+            if (imagesIndex !== -1) {
+              src = '/' + urlParts.slice(imagesIndex).join('/');
+              return src;
+            }
+          }
+          
+          // If it starts with "images/..." (no slash), make it "/images/..."
+          if (src.startsWith('images/')) {
+            return '/' + src;
+          }
+          
+          // If already starts with /, keep it
+          if (src.startsWith('/')) {
+            return src;
+          }
+          
+          return '/' + src;
+        }
+
         // Read-aloud / text-to-speech with sticky bar + word highlight
         (function setupTTS() {
           if (!('speechSynthesis' in window)) {
