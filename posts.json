@@ -183,5 +183,21 @@
     "featured": true,
     "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/la-pelicula-de-ana-a-look-at-jineteras-in-cuba/cover.jpg",
     "url": "la-pelicula-de-ana-a-look-at-jineteras-in-cuba/"
+  },
+  {
+    "slug": "the-persephone-of-america",
+    "title": "The Persephone of America",
+    "section": "Essay",
+    "tags": [
+      "United States",
+      "Politics"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of the United States and its close ties to Neoliberalism.",
+    "date": "2023-04-18T01:28",
+    "readMinutes": 4,
+    "featured": false,
+    "cover": "images/2023/04/the-persephone-of-america/cover.jpg",
+    "url": "the-persephone-of-america/"
   }
 ]
