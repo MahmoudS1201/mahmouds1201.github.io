@@ -1,5 +1,22 @@
 [
   {
+    "slug": "congressional-brief-green-spaces",
+    "title": "Congressional Brief: Green Spaces",
+    "section": "Community",
+    "tags": [
+      "Politics",
+      "Enviornment",
+      "Miami"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "A mock congressional brief on the Importance of green spaces",
+    "date": "2025-11-30T02:08",
+    "readMinutes": 3,
+    "featured": false,
+    "cover": "images/2025/11/congressional-brief-green-spaces/cover.jpg",
+    "url": "congressional-brief-green-spaces/"
+  },
+  {
     "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
     "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
     "section": "Essay",
