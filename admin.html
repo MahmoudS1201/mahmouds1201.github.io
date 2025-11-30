@@ -4559,13 +4559,34 @@
             card.className =
               'group min-w-[240px] max-w-[280px] snap-start rounded-2xl border border-black/10 bg-white shadow-soft overflow-hidden flex-shrink-0';
 
+            // --- figure out cover URL safely ---
+            let coverSrc = '';
+
             if (p.cover) {
+              // posts.json might store cover as a string OR as { src: '...' }
+              if (typeof p.cover === 'string') {
+                coverSrc = p.cover;
+              } else if (typeof p.cover === 'object' && typeof p.cover.src === 'string') {
+                coverSrc = p.cover.src;
+              }
+
+              if (coverSrc) {
+                // absolute URL or data URL → leave alone
+                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  // normalize relative path so it’s relative to the repo root,
+                  // not the current article folder
+                  coverSrc = toBase(coverSrc.replace(/^\.?\//, ''));
+                }
+              }
+            }
+
+            if (coverSrc) {
               const wrap = document.createElement('div');
               wrap.className = 'aspect-[16/9] w-full overflow-hidden bg-ink-900/5';
 
               const img = document.createElement('img');
-              img.src = p.cover;
-              img.alt = '';
+              img.src = coverSrc;
+              img.alt = p.title || '';
               img.loading = 'lazy';
               img.className =
                 'h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]';
