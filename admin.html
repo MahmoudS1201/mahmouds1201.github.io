@@ -791,6 +791,7 @@
           </div>
 
           <p id="statusMsg" class="text-sm text-ink-300"></p>
+          <p id="rebuildAllStatus" class="text-xs text-ink-300 mt-1"></p>
         </form>
       </section>
 
@@ -4872,6 +4873,17 @@
       });
 
       return res;
+    }
+
+    // 🔧 NEW: helper that takes raw text and base64-encodes it before PUT
+    async function upsertRepoFile(path, rawContent, message) {
+      const contentB64 = b64utf8(rawContent);
+      return await putRepoFile(path, contentB64, message);
+    }
+
+    // 🔧 NEW: central place to define where article HTML lives
+    function articleHtmlPath(slug) {
+      return `${slug}/index.html`;
     }
 
     // Delete a file in the repo (needs current SHA)
