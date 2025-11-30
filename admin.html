@@ -4572,8 +4572,8 @@
 
               if (coverSrc) {
                 // If it's not absolute or data URL, normalize relative to repo root
-                if (!/^https?:\/\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
-                  coverSrc = toBase(coverSrc.replace(/^[.]?[/]/, ''));
+                if (!/^https?:\\/\\//i.test(coverSrc) && !coverSrc.startsWith('data:')) {
+                  coverSrc = toBase(coverSrc.replace(/^\\./, '').replace(/^\\//, ''));
                 }
               }
             }
