@@ -607,7 +607,7 @@
                 By <span class="u-underline">Camila Tiburcio Rubio</span>
               </div>
               <div class="text-ink-300">
-                November 30, 2025
+                November 29, 2025
                 • 16 min read
               </div>
             </div>
@@ -1139,7 +1139,7 @@
           slug: "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy",
           section: "Essay",
           tags: ["Politics","Trump"],
-          date: "2025-11-30T23:46:13.349Z",
+          date: "2025-11-29T23:46",
           title: "The Cult of the Big Lie: A “How- to-Guide” On Becoming A Threat to Democracy"
         };
       </script>
@@ -1484,10 +1484,12 @@
         // --- Simple helper: keep things at site root ---
         function toBase(u) {
           if (!u) return '';
-          if (/^https?:///i.test(u)) return u;     // already absolute
+          if (/^https?:\/\//i.test(u)) return u;     // already absolute
           if (u.startsWith('/')) return u;           // already root-relative
           // make "slug/" or "images/..." → "/slug/" or "/images/..."
-          return '/' + u.replace(/^.?//, '');
+          if (u.startsWith('./')) return '/' + u.slice(2);
+          if (u.startsWith('.')) return '/' + u.slice(1);
+          return '/' + u;
         }
 
         // Read-aloud / text-to-speech with sticky bar + word highlight
