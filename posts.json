@@ -17,6 +17,22 @@
     "url": "congressional-brief-green-spaces/"
   },
   {
+    "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
+    "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
+    "section": "Essay",
+    "tags": [
+      "Spain",
+      "Cuba"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An investigative research piece which compares the modern day migrations of Cuba and Spain.",
+    "date": "2025-11-30T01:49",
+    "readMinutes": 13,
+    "featured": true,
+    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/cover.jpg",
+    "url": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/"
+  },
+  {
     "slug": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city",
     "title": "Francisco De la Torre, the Smartest Mayor in the Smartest City?",
     "section": "Essay",
@@ -166,22 +182,6 @@
     "featured": false,
     "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics/cover.jpg",
     "url": "en-la-ventanita-de-versailles-coladas-pastelitos-and-far-right-poltics/"
-  },
-  {
-    "slug": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas",
-    "title": "Cubanos Por El Mundo: España Y las Organizaciones Culturales Cubanas",
-    "section": "Essay",
-    "tags": [
-      "Spain",
-      "Cuba"
-    ],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "An investigative research piece which compares the modern day migrations of Cuba and Spain.",
-    "date": "2025-11-01T01:49",
-    "readMinutes": 13,
-    "featured": true,
-    "cover": "https://mahmouds1201.github.io/CamilaTiburcioRubio/images/2025/11/cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/cover.jpg",
-    "url": "cubanos-por-el-mundo-espana-y-las-organizaciones-culturales-cubanas/"
   },
   {
     "slug": "dr-franke-spain-and-the-creation-of-the-far-right-in-spain",
