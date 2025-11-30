@@ -2772,32 +2772,68 @@
       return s.replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
+    // Base origin for canonical URLs
+    const SITE_ORIGIN = 'https://lotk8.com';
+
+    // Turn any stored image path into a site-root URL like "/images/2025/11/slug/cover.jpg"
+    function normalizeImagePath(src) {
+      if (!src) return '';
+
+      // Strip old domains + optional repo prefix down to /images/...
+      src = src.replace(
+        /^https?:\/\/[^\/]+\/(?:CamilaTiburcioRubio\/)?images\//,
+        '/images/'
+      );
+
+      // If it starts with "images/..." (no slash), make it "/images/..."
+      if (src.startsWith('images/')) {
+        src = '/' + src;
+      }
+
+      // Ensure a single leading slash
+      src = '/' + src.replace(/^\/+/, '');
+
+      return src;
+    }
+
+    // Fix inline <img> tags in the article body HTML
+    function fixImageSrcs(html) {
+      if (!html) return '';
+
+      return html
+        // Old absolute URLs with the old repo path
+        .replace(
+          /src="https?:\/\/[^"]*CamilaTiburcioRubio\/images\//g,
+          'src="/images/'
+        )
+        .replace(
+          /src='https?:\/\/[^']*CamilaTiburcioRubio\/images\//g,
+          "src='/images/"
+        )
+        // Plain relative "images/..." (no leading slash)
+        .replace(/src="images\//g, 'src="/images/')
+        .replace(/src='images\//g, "src='/images/");
+    }
+
     /* =========================
        Build Article HTML
     ========================= */
     function buildArticleHtml(data){
-      const hasTags   = Array.isArray(data.tags) && data.tags.length;
+      const hasTags     = Array.isArray(data.tags) && data.tags.length;
       const coverCredit = data.cover?.credit || "";
 
-      const seoTitle = escapeHtml(data.seo?.title || data.title);
+      const seoTitle       = escapeHtml(data.seo?.title || data.title);
       const seoDescription = escapeHtml(data.seo?.description || data.excerpt || "");
 
-      // canonical URL for this article
-      const canonicalUrl = `https://mahmouds1201.github.io/${encodeURIComponent(data.slug)}/`;
+      // canonical URL for this article → use your custom domain
+      const canonicalUrl = `${SITE_ORIGIN}/${encodeURIComponent(data.slug)}/`;
 
-      const fixedBodyHtml = (data.bodyHtml || '').replace(
-        /src="images\//g,
-        'src="../images/'
-      );
-
+      // Normalize cover path for the hero image
       const rawCover = data.cover?.src || "";
+      const heroSrc  = normalizeImagePath(rawCover);
 
-        // ✅ NEW: heroSrc that works for both local + absolute URLs
-      const heroSrc = rawCover
-        ? (rawCover.startsWith('http')
-            ? rawCover
-            : `../${rawCover.replace(/^\.?\//, '')}`)
-        : "";
+      // Fix any inline <img> srcs in the article body HTML
+      const bodyHtmlFixed = fixImageSrcs(data.bodyHtml || '');
 
       const ogImage = rawCover
         ? (rawCover.startsWith('http')
@@ -3495,7 +3531,11 @@
 
       ${data.cover ? `
       <figure class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <img class="hero-img" src="${heroSrc}" alt="${escapeHtml(data.cover.alt||'')}"/>
+        <img
+          class="hero-img"
+          src="${heroSrc}"
+          alt="${escapeHtml(data.title || '')}"
+        />
         ${coverCredit ? `<figcaption class="text-center text-xs text-ink-300 mt-2">Image credit: ${escapeHtml(coverCredit)}</figcaption>` : ``}
       </figure>` : ``}
 
@@ -3529,7 +3569,7 @@
           <div class="fade-top"></div>
           <div class="fade-bottom"></div>
           <article class="prose prose-neutral max-w-none">
-            ${fixedBodyHtml}
+            ${bodyHtmlFixed}
           </article>
         </div>
 
