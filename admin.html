@@ -2826,7 +2826,8 @@
       const seoDescription = escapeHtml(data.seo?.description || data.excerpt || "");
 
       // canonical URL for this article → use your custom domain
-      const canonicalUrl = `${SITE_ORIGIN}/${encodeURIComponent(data.slug)}/`;
+      const slugClean   = (data.slug || '').replace(/^\/+|\/+$/g, ''); // no leading/trailing slashes
+      const canonicalUrl = `${SITE_ORIGIN}/${slugClean}/`;
 
       // Normalize cover path for the hero image
       const rawCover = data.cover?.src || "";
@@ -2838,14 +2839,15 @@
       // Open Graph image: always use lotk8.com + normalized cover path
       const ogImage = heroSrc
         ? `${SITE_ORIGIN}${heroSrc}`
-        : `${SITE_ORIGIN}/assets/default-share.jpg`;
+        : `${SITE_ORIGIN}/assets/share_logo.jpeg`;
 
       return `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>${seoTitle} — Camila Tiburcio Rubio</title>
+      <title>${seoTitle}</title>
+      <link rel="canonical" href="${canonicalUrl}" />
       <meta name="description" content="${seoDescription}" />
 
       <!-- OpenGraph for iMessage / FB / etc -->
@@ -2860,6 +2862,7 @@
       <meta name="twitter:title" content="${seoTitle}" />
       <meta name="twitter:description" content="${seoDescription}" />
       <meta name="twitter:image" content="${ogImage}" />
+
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400..800&display=swap" rel="stylesheet">
