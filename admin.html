@@ -2847,7 +2847,8 @@
       const sectionName  = data.section || 'Essay';
       const tagList      = Array.isArray(data.tags) ? data.tags : [];
 
-      const schemaOrg = JSON.stringify({
+      // Article JSON-LD (this is what you already had)
+      const articleJson = {
         "@context": "https://schema.org",
         "@type": "Article",
         "mainEntityOfPage": {
@@ -2874,7 +2875,30 @@
         "articleSection": sectionName,
         "keywords": tagList.join(", "),
         "inLanguage": "en"
-      });
+      };
+
+      // Breadcrumb JSON-LD
+      const breadcrumbJson = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": `${SITE_ORIGIN}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": data.title || seoTitle,
+            "item": canonicalUrl
+          }
+        ]
+      };
+
+      // Final JSON-LD string (Article + Breadcrumb together)
+      const schemaOrg = JSON.stringify([articleJson, breadcrumbJson]);
 
       return `<!DOCTYPE html>
     <html lang="en">
