@@ -1844,7 +1844,14 @@
         })();
 
           document.addEventListener('DOMContentLoaded', function () {
-            const imgs = document.querySelectorAll('article.prose img');
+            // Select all inline article images
+            let imgs = Array.prototype.slice.call(
+              document.querySelectorAll('article.prose img')
+            );
+
+            // Also include the cover image if present
+            var cover = document.querySelector('.hero-img');
+            if (cover) imgs.push(cover);
             if (!imgs.length) return;
 
             // Create overlay element once
