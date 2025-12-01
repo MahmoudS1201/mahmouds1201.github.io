@@ -2841,6 +2841,41 @@
         ? `${SITE_ORIGIN}${heroSrc}`
         : `${SITE_ORIGIN}/assets/share_logo.jpeg`;
 
+            // Structured data (Schema.org Article)
+      const publishedIso = data.date || new Date().toISOString();
+      const modifiedIso  = data.updatedAt || publishedIso;
+      const sectionName  = data.section || 'Essay';
+      const tagList      = Array.isArray(data.tags) ? data.tags : [];
+
+      const schemaOrg = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": canonicalUrl
+        },
+        "headline": seoTitle,
+        "description": seoDescription,
+        "image": ogImage,
+        "author": {
+          "@type": "Person",
+          "name": data.author || "Camila Tiburcio Rubio"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Lot K8",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${SITE_ORIGIN}/assets/logo.png`
+          }
+        },
+        "datePublished": publishedIso,
+        "dateModified": modifiedIso,
+        "articleSection": sectionName,
+        "keywords": tagList.join(", "),
+        "inLanguage": "en"
+      });
+
       return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -2857,11 +2892,16 @@
       <meta property="og:url" content="${canonicalUrl}" />
       <meta property="og:image" content="${ogImage}" />
 
+
       <!-- Twitter card (also used by some preview engines) -->
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="${seoTitle}" />
       <meta name="twitter:description" content="${seoDescription}" />
       <meta name="twitter:image" content="${ogImage}" />
+
+      <script type="application/ld+json">
+        ${schemaOrg}
+      </scr${''}ipt>
 
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
