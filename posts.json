@@ -1,5 +1,21 @@
 [
   {
+    "slug": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy",
+    "title": "The Cult of the Big Lie: A “How- to-Guide” On Becoming A Threat to Democracy",
+    "section": "Essay",
+    "tags": [
+      "Politics",
+      "Trump"
+    ],
+    "author": "Camila Tiburcio Rubio",
+    "excerpt": "An analysis of the Donald Trump as a catalyst for far-right extremism at its crescendo, January 6th.",
+    "date": "2025-11-30T23:46",
+    "readMinutes": 16,
+    "featured": true,
+    "cover": "images/2025/11/the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/cover.jpg",
+    "url": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/"
+  },
+  {
     "slug": "congressional-brief-green-spaces",
     "title": "Congressional Brief: Green Spaces",
     "section": "Community",
@@ -31,24 +47,8 @@
     "date": "2025-11-30T01:16",
     "readMinutes": 6,
     "featured": false,
-    "cover": "/images/2025/11/francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/cover.jpg",
+    "cover": "images/2025/11/francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/cover.jpg",
     "url": "francisco-de-la-torre-the-smartest-mayor-in-the-smartest-city/"
-  },
-  {
-    "slug": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy",
-    "title": "The Cult of the Big Lie: A “How- to-Guide” On Becoming A Threat to Democracy",
-    "section": "Essay",
-    "tags": [
-      "Politics",
-      "Trump"
-    ],
-    "author": "Camila Tiburcio Rubio",
-    "excerpt": "An analysis of the Donald Trump as a catalyst for far-right extremism at its crescendo, January 6th.",
-    "date": "2025-11-29T23:46",
-    "readMinutes": 16,
-    "featured": true,
-    "cover": "images/2025/11/the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/cover.jpg",
-    "url": "the-cult-of-the-big-lie-a-how-to-guide-on-becoming-a-threat-to-democracy/"
   },
   {
     "slug": "ven-y-criticame-residente-and-his-impact-on-me",
