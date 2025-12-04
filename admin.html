@@ -2815,6 +2815,51 @@
         .replace(/src='images\//g, "src='/images/");
     }
 
+    // Strip HTML tags → plain text
+    function stripHtml(html) {
+      if (!html) return "";
+      return html
+        .replace(/<script[\s\S]*?<\/script>/gi, " ") // remove scripts just in case
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")   // remove styles
+        .replace(/<[^>]+>/g, " ")                   // strip all tags
+        .replace(/\s+/g, " ")                       // collapse whitespace
+        .trim();
+    }
+
+    // Build a short, readable summary from the article itself
+    function makeAutoSeoDescription(data) {
+      // Prefer an explicit excerpt field if you’re setting that in the admin
+      const fromExcerpt = (data.excerpt || "").trim();
+
+      // Otherwise fall back to full body text with HTML removed
+      const fromBody = stripHtml(data.bodyHtml || "");
+
+      let base = fromExcerpt || fromBody || "";
+      if (!base) return "";
+
+      // Clean characters that can be annoying inside meta tags
+      base = base.replace(/["<>]/g, "");
+
+      const MAX_LEN = 155;
+      if (base.length <= MAX_LEN) return base;
+
+      // Take the first MAX_LEN chars, then try to end at a sentence
+      let snippet = base.slice(0, MAX_LEN);
+
+      // prefer a period near the end so it reads like a complete thought
+      const periodIdx = snippet.lastIndexOf(".");
+      if (periodIdx > 60) {
+        return snippet.slice(0, periodIdx + 1).trim();
+      }
+
+      // otherwise cut at last space and add an ellipsis
+      const spaceIdx = snippet.lastIndexOf(" ");
+      if (spaceIdx > 40) {
+        snippet = snippet.slice(0, spaceIdx);
+      }
+      return snippet.trim() + "…";
+    }
+
     /* =========================
        Build Article HTML
     ========================= */
@@ -2823,7 +2868,7 @@
       const coverCredit = data.cover?.credit || "";
 
       const seoTitle       = escapeHtml(data.seo?.title || data.title);
-      const seoDescription = escapeHtml(data.seo?.description || data.excerpt || "");
+      const seoDescription = escapeHtml(makeAutoSeoDescription(data));
 
       // canonical URL for this article → use your custom domain
       const slugClean   = (data.slug || '').replace(/^\/+|\/+$/g, ''); // no leading/trailing slashes
